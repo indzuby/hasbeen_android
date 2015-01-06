@@ -12,6 +12,18 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+
+import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfFloat;
+import org.opencv.core.MatOfInt;
+import org.opencv.highgui.Highgui;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.photo.Photo;
+
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -21,6 +33,16 @@ public class GalleryAdapter extends BaseAdapter {
     private Context mContext;
     private List<PhotoData> mImagePath;
     ImageLoader mimageLoader;
+
+    static {
+        if (!OpenCVLoader.initDebug()) {
+            // Handle initialization error
+        } else {
+            System.loadLibrary("opencv_java");
+            System.loadLibrary("opencv_info");
+            //System.loadLibrary("opencv_core");
+        }
+    }
     public static class PhotoData {
 
         int photoID;
@@ -66,7 +88,7 @@ public class GalleryAdapter extends BaseAdapter {
             imageView.setImageResource(R.drawable.loading);
         }
         int width = mContext.getResources().getDisplayMetrics().widthPixels;
-        imageView.setLayoutParams(new AbsListView.LayoutParams(width / 4 - 12, width / 4 - 12));
+        imageView.setLayoutParams(new AbsListView.LayoutParams(width / 3 - 10, width / 3 - 10));
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageView.setPadding(2, 2, 2, 2);
 
@@ -74,43 +96,57 @@ public class GalleryAdapter extends BaseAdapter {
             imageView.setImageResource(R.drawable.loading);
         } else {
             Log.i("Photo path", photo.photoPath);
-            imageView.setImageBitmap(mimageLoader.getImage(photo.photoID, photo.photoPath));
-//                imageView.setImageBitmap(getImage(photo.photoID, photo.photoPath));
+            Bitmap fromImg,toImg;
+            fromImg = mimageLoader.getImage(photo.photoID, photo.photoPath);
+            if(position>0) {
+                PhotoData before = getItem(position-1);
+                toImg = mimageLoader.getImage(before.photoID,before.photoPath);
+                if(fromImg!=null && toImg!=null) {
+                    double hist = compareHistogram(fromImg,toImg);
+                    Log.e("유사도 ",hist+"");
+                   if(hist<0.8)
+                        imageView.setImageBitmap(fromImg);
+                    else {
+                        mImagePath.remove(position);
+                        notifyDataSetChanged();
+                    }
+                }
+            }else
+                imageView.setImageBitmap(fromImg);
         }
         return imageView;
     }
-    public Bitmap getImage(Integer uid, String path){
-        ContentResolver resolver = mContext.getContentResolver();
-        String[] proj = { MediaStore.Images.Thumbnails.DATA };
-        Bitmap micro = MediaStore.Images.Thumbnails.getThumbnail(resolver, uid, MediaStore.Images.Thumbnails.MICRO_KIND, null);
-        if( micro != null ) {
-            return micro;
-        }
-        else {
-            Cursor mini = MediaStore.Images.Thumbnails.queryMiniThumbnail(resolver, uid, MediaStore.Images.Thumbnails.MINI_KIND, proj);
-            if( mini != null && mini.moveToFirst() ) {
-                path = mini.getString(mini.getColumnIndex(proj[0]));
-            }
-        }
+    protected double compareHistogram(Bitmap fromImg, Bitmap toImg) {
+        Mat hsvFrom = new Mat(fromImg.getWidth(),fromImg.getHeight(), CvType.CV_8UC1);
+        Utils.bitmapToMat(fromImg, hsvFrom);
+        Mat hsvTo = new Mat(toImg.getWidth(),toImg.getHeight(),CvType.CV_8UC1);
+        Utils.bitmapToMat(toImg,hsvTo);
+//        hsvFrom = new Mat();
+//        hsvTo = new Mat();
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, options);
-        options.inJustDecodeBounds = false;
-        options.inSampleSize = 1;
-        if( options.outWidth > 96 ) {
+//        Imgproc.cvtColor(fromMat,hsvFrom,Imgproc.COLOR_BGR2HSV);
+//        Imgproc.cvtColor(toMat,hsvTo,Imgproc.COLOR_BGR2HSV);
 
-            int ws = options.outWidth / 96 + 1;
-            if( ws > options.inSampleSize )
-                options.inSampleSize = ws;
-        }
-        if( options.outHeight > 96 ) {
+        Imgproc.cvtColor(hsvFrom, hsvFrom, Imgproc.COLOR_BGR2HSV);
+        Imgproc.cvtColor(hsvTo,hsvTo,Imgproc.COLOR_BGR2HSV);
+        MatOfInt histSize = new MatOfInt(25);
+        MatOfFloat ranges = new MatOfFloat(0f,256f); ;
+        MatOfInt channels = new MatOfInt(0,1);
 
-            int hs = options.outHeight / 96 + 1;
-            if( hs > options.inSampleSize )
-                options.inSampleSize = hs;
-        }
-        return BitmapFactory.decodeFile(path, options);
+        Mat histFrom = new Mat();
+        Mat histTo = new Mat();
+
+
+//        Imgproc.calcHist(Arrays.asList(hsvFrom), channels, new Mat(), histFrom, histSize, ranges,true);
+//        Core.normalize(histFrom,histFrom, 0, 1, Core.NORM_MINMAX, -1, new Mat());
+//
+//        Imgproc.calcHist(Arrays.asList(hsvTo),channels,new Mat(),histTo,histSize,ranges,true);
+//        Core.normalize(histTo, histTo, 0, 1, Core.NORM_MINMAX, -1, new Mat());
+
+        Imgproc.calcHist(Arrays.asList(hsvFrom), new MatOfInt(0), new Mat(), histFrom, histSize, ranges);
+        Imgproc.calcHist(Arrays.asList(hsvTo),new MatOfInt(0),new Mat(),histTo,histSize,ranges);
+
+        return Imgproc.compareHist(histFrom,histTo,Imgproc.CV_COMP_CORREL);
     }
 
 }

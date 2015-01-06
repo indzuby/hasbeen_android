@@ -23,10 +23,12 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfFloat;
 import org.opencv.core.MatOfInt;
+import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.photo.Photo;
 
@@ -62,14 +64,8 @@ public class GalleryActivity extends ActionBarActivity {
             MediaStore.Images.Media.DATE_TAKEN
     };
     int[] idx = new int[proj.length];
-    Mat hsvFrom;
-    Mat hsvTo;
+    Bitmap fromImg,toImg;
 
-    MatOfInt histSize;
-    MatOfFloat ranges ;
-    MatOfInt[] channels ;
-    Mat histFrom;
-    Mat histTo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,10 +92,16 @@ public class GalleryActivity extends ActionBarActivity {
                         GalleryAdapter.PhotoData beforePhoto = mImagePath.get(mImagePath.size() - 1);
                         Log.i("Photo Taken", Math.abs(beforePhoto.photoTaken - dataTaken) + "");
                         if( Math.abs(beforePhoto.photoTaken - dataTaken)<=5000) continue;
-                        Bitmap fromBitmap = MediaStore.Images.Thumbnails.getThumbnail(resolver, beforePhoto.photoID,MediaStore.Images.Thumbnails.MICRO_KIND, null);
-                        Bitmap toBitmap = MediaStore.Images.Thumbnails.getThumbnail(resolver, photoID,MediaStore.Images.Thumbnails.MICRO_KIND, null);
-                        double hist = compareHistogram(fromBitmap,toBitmap);
-                        if(hist<80)
+//                        Mat fromMat = new Mat();
+//                        Mat toMat = new Mat();
+//                        fromImg = MediaStore.Images.Thumbnails.getThumbnail(resolver, beforePhoto.photoID,MediaStore.Images.Thumbnails.MICRO_KIND, null);
+////                        Utils.bitmapToMat(fromImg,fromMat);
+//                        toImg = MediaStore.Images.Thumbnails.getThumbnail(resolver, photoID,MediaStore.Images.Thumbnails.MICRO_KIND, null);
+////                        Utils.bitmapToMat(toImg,fromMat);
+//                        fromMat = Highgui.imread(beforePhoto.photoPath,1);
+//                        toMat = Highgui.imread(photoPath,1);
+//                        double hist = compareHistogram(fromMat,toMat);
+//                        if(hist<80)
                             mImagePath.add(photo);
                     }
                     else
@@ -118,18 +120,6 @@ public class GalleryActivity extends ActionBarActivity {
 //        galleryAdapter = new GalleryAdapter(getBaseContext(),mImagePath);
         gallery.setAdapter(galleryAdapter);
         imageLoader.setListener(galleryAdapter);
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        histSize = new MatOfInt(25);
-        ranges = new MatOfFloat(0f,256f);
-        channels = new MatOfInt[]{new MatOfInt(0),new MatOfInt(1)};
-
-
-
-        overridePendingTransition(0, 0);
-        //   OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_10, this, mLoaderCallback);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -151,24 +141,5 @@ public class GalleryActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-    protected double compareHistogram(Bitmap fromImg, Bitmap toImg) {
-        hsvFrom = new Mat(fromImg.getWidth(),fromImg.getHeight(),CvType.CV_8UC1);
-        Utils.bitmapToMat(fromImg,hsvFrom);
-        hsvTo = new Mat(toImg.getWidth(),toImg.getHeight(),CvType.CV_8UC1);
-        Utils.bitmapToMat(toImg,hsvTo);
-//        if(!hsvFrom.empty())
-        Imgproc.cvtColor(hsvFrom,hsvFrom,Imgproc.COLOR_BGR2HSV);
-//        if(!hsvTo.empty())
-        Imgproc.cvtColor(hsvTo,hsvTo,Imgproc.COLOR_BGR2HSV);
-        histFrom=new Mat();
-        histTo=new Mat();
-
-        Imgproc.calcHist(Arrays.asList(hsvFrom), new MatOfInt(0), new Mat(), histFrom, histSize, ranges);
-//        Core.normalize(histFrom, histFrom, sizeFrom.height / 2, 0, Core.NORM_INF);
-        Imgproc.calcHist(Arrays.asList(hsvTo),new MatOfInt(0),new Mat(),histTo,histSize,ranges);
-//        Core.normalize(histTo, histTo, sizeTo.height / 2, 0, Core.NORM_INF);
-
-        return Imgproc.compareHist(histFrom,histTo,Imgproc.CV_COMP_CORREL);
     }
 }
