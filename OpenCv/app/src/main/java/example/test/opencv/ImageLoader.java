@@ -23,7 +23,7 @@ public class ImageLoader {
     int runningCount = 0;
     Stack<ItemPair> queue;
     ContentResolver resolver;
-
+    final int imgSize = 128;
     public ImageLoader(ContentResolver r) {
 
         loadImages = new Hashtable<Integer, Bitmap>();
@@ -88,12 +88,12 @@ public class ImageLoader {
             String[] proj = { MediaStore.Images.Thumbnails.DATA };
 
             Bitmap micro = MediaStore.Images.Thumbnails.getThumbnail(resolver, uid, MediaStore.Images.Thumbnails.MICRO_KIND, null);
+//            micro = null;
             if( micro != null ) {
 
                 return micro;
             }
             else {
-
                 Cursor mini = MediaStore.Images.Thumbnails.queryMiniThumbnail(resolver, uid, MediaStore.Images.Thumbnails.MINI_KIND, proj);
                 if( mini != null && mini.moveToFirst() ) {
 
@@ -106,19 +106,27 @@ public class ImageLoader {
             BitmapFactory.decodeFile(path, options);
             options.inJustDecodeBounds = false;
             options.inSampleSize = 1;
-            if( options.outWidth > 96 ) {
+            if( options.outWidth > imgSize ) {
 
-                int ws = options.outWidth / 96 + 1;
+                int ws = options.outWidth / imgSize + 1;
                 if( ws > options.inSampleSize )
                     options.inSampleSize = ws;
             }
-            if( options.outHeight > 96 ) {
+            if( options.outHeight > imgSize ) {
 
-                int hs = options.outHeight / 96 + 1;
+                int hs = options.outHeight / imgSize + 1;
                 if( hs > options.inSampleSize )
                     options.inSampleSize = hs;
             }
-            return BitmapFactory.decodeFile(path, options);
+            Bitmap src = BitmapFactory.decodeFile(path, options);
+            int a=src.getHeight(),b=src.getWidth();
+            if(src.getWidth()>=src.getHeight()) {
+                a = src.getWidth();
+                b = src.getHeight();
+                return Bitmap.createBitmap(src,a/2-b/2,0,b,b);
+            }
+            return Bitmap.createBitmap(src,0,a/2-b/2,b,b);
+            //return src.createScaledBitmap(src,src.getHeight(),src.getHeight(),true);
         }
 
         @Override

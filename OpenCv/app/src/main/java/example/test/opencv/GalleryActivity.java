@@ -28,6 +28,9 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfFloat;
 import org.opencv.core.MatOfInt;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.photo.Photo;
@@ -74,6 +77,7 @@ public class GalleryActivity extends ActionBarActivity {
         mImagePath = new ArrayList<GalleryAdapter.PhotoData>();
         ContentResolver resolver = getContentResolver();
         Cursor cursor = MediaStore.Images.Media.query(resolver, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, proj);
+        imageLoader = new ImageLoader(resolver);
         if (cursor != null && cursor.moveToFirst()){
             idx[0] = cursor.getColumnIndex(proj[0]);
             idx[1] = cursor.getColumnIndex(proj[1]);
@@ -92,17 +96,7 @@ public class GalleryActivity extends ActionBarActivity {
                         GalleryAdapter.PhotoData beforePhoto = mImagePath.get(mImagePath.size() - 1);
                         Log.i("Photo Taken", Math.abs(beforePhoto.photoTaken - dataTaken) + "");
                         if( Math.abs(beforePhoto.photoTaken - dataTaken)<=5000) continue;
-//                        Mat fromMat = new Mat();
-//                        Mat toMat = new Mat();
-//                        fromImg = MediaStore.Images.Thumbnails.getThumbnail(resolver, beforePhoto.photoID,MediaStore.Images.Thumbnails.MICRO_KIND, null);
-////                        Utils.bitmapToMat(fromImg,fromMat);
-//                        toImg = MediaStore.Images.Thumbnails.getThumbnail(resolver, photoID,MediaStore.Images.Thumbnails.MICRO_KIND, null);
-////                        Utils.bitmapToMat(toImg,fromMat);
-//                        fromMat = Highgui.imread(beforePhoto.photoPath,1);
-//                        toMat = Highgui.imread(photoPath,1);
-//                        double hist = compareHistogram(fromMat,toMat);
-//                        if(hist<80)
-                            mImagePath.add(photo);
+                        mImagePath.add(photo);
                     }
                     else
                         mImagePath.add(photo);
@@ -111,15 +105,12 @@ public class GalleryActivity extends ActionBarActivity {
             }
             while( cursor.moveToNext() );
         }
-//        Collections.reverse(mImagePath);
-
-
-
-        imageLoader = new ImageLoader(resolver);
         galleryAdapter = new GalleryAdapter(getBaseContext(),mImagePath,imageLoader);
 //        galleryAdapter = new GalleryAdapter(getBaseContext(),mImagePath);
         gallery.setAdapter(galleryAdapter);
         imageLoader.setListener(galleryAdapter);
+//        Collections.reverse(mImagePath);
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -141,5 +132,20 @@ public class GalleryActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    protected int detectEdge(Bitmap img) {
+        int threshold = 100;
+        Mat srcGray = new Mat();
+        Mat hierarchy = new Mat();
+        List<MatOfPoint> countours = new ArrayList<>();
+        Mat src = new Mat();
+        Utils.bitmapToMat(img,src);
+        Imgproc.cvtColor(src,srcGray,Imgproc.COLOR_BGR2GRAY);
+        Imgproc.blur(srcGray,srcGray, new Size(3,3));
+        Mat cannyOutput = new Mat();
+        Imgproc.Canny(srcGray, cannyOutput, threshold, threshold * 2, 3, true);
+        Imgproc.findContours(cannyOutput,countours,hierarchy,Imgproc.RETR_TREE,Imgproc.CHAIN_APPROX_SIMPLE,new Point(0,0));
+        int edgeCnt = countours.size();
+        return edgeCnt;
     }
 }

@@ -23,9 +23,14 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfFloat;
 import org.opencv.core.MatOfInt;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -82,8 +87,10 @@ public class MainActivity extends ActionBarActivity {
         btnCalc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               double similarity = compareHistogram(fromMat,toMat);
-               Toast.makeText(getBaseContext(),similarity+"",Toast.LENGTH_LONG).show();
+               //double similarity = compareHistogram(fromMat,toMat);
+               int det1 = detectEdge(fromImg);
+               int det2 = detectEdge(toImg);
+               Toast.makeText(getBaseContext(),det1+" "+det2,Toast.LENGTH_LONG).show();
             }
         });
         btnGallery.setOnClickListener(new View.OnClickListener() {
@@ -128,10 +135,9 @@ public class MainActivity extends ActionBarActivity {
         histTo=new Mat();
 
         overridePendingTransition(0, 0);
-     //   OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_10, this, mLoaderCallback);
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_CODE_IMAGE && resultCode == RESULT_OK && data!=null) {
             Uri selectUri = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -140,7 +146,7 @@ public class MainActivity extends ActionBarActivity {
             int columnIndex = imageCursor.getColumnIndex(filePathColumn[0]);
             String imgPath = imageCursor.getString(columnIndex);
             imageCursor.close();
-         //   Toast.makeText(getBaseContext(),imgPath,Toast.LENGTH_LONG).show();
+
             if(btnNumber == 1) {
                 fromImg = BitmapFactory.decodeFile(imgPath);
                 fromMat = new Mat();
@@ -148,8 +154,25 @@ public class MainActivity extends ActionBarActivity {
                 Log.i("bitmapToMat from",fromMat.toString());
             }
             else {
-                toImg = BitmapFactory.decodeFile(imgPath);
                 toMat = new Mat();
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile(imgPath, options);
+                options.inJustDecodeBounds = false;
+                options.inSampleSize = 1;
+                if( options.outWidth > 256 ) {
+
+                    int ws = options.outWidth / 256 + 1;
+                    if( ws > options.inSampleSize )
+                        options.inSampleSize = ws;
+                }
+                if( options.outHeight > 256 ) {
+
+                    int hs = options.outHeight / 256 + 1;
+                    if( hs > options.inSampleSize )
+                        options.inSampleSize = hs;
+                }
+                toImg = BitmapFactory.decodeFile(imgPath,options);
                 Utils.bitmapToMat(toImg, toMat);
                 Log.i("bitmapToMat to",toMat.toString());
             }
@@ -171,6 +194,21 @@ public class MainActivity extends ActionBarActivity {
 //        Core.normalize(histTo, histTo, sizeTo.height / 2, 0, Core.NORM_INF);
 
         return Imgproc.compareHist(histFrom,histTo,Imgproc.CV_COMP_CORREL);
+    }
+    protected int detectEdge(Bitmap img) {
+        int threshold = 100;
+        Mat srcGray = new Mat();
+        Mat hierarchy = new Mat();
+        List<MatOfPoint> countours = new ArrayList<>();
+        Mat src = new Mat();
+        Utils.bitmapToMat(img, src);
+        Imgproc.cvtColor(src,srcGray,Imgproc.COLOR_BGR2GRAY);
+        Imgproc.blur(srcGray, srcGray, new Size(3, 3));
+        Mat cannyOutput = new Mat();
+        Imgproc.Canny(srcGray, cannyOutput, threshold, threshold * 2, 3, true);
+        Imgproc.findContours(cannyOutput, countours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE, new Point(0, 0));
+        int edgeCnt = countours.size();
+        return edgeCnt;
     }
 
     @Override
