@@ -131,36 +131,5 @@ public class GalleryAdapter extends BaseAdapter {
                 .into(imageView);
         return imageView;
     }
-    protected double compareHistogram(Bitmap fromImg, Bitmap toImg) {
-        Mat hsvFrom = new Mat(fromImg.getWidth(),fromImg.getHeight(), CvType.CV_8UC1);
-        Utils.bitmapToMat(fromImg, hsvFrom);
-        Mat hsvTo = new Mat(toImg.getWidth(),toImg.getHeight(),CvType.CV_8UC1);
-        Utils.bitmapToMat(toImg,hsvTo);
-//        hsvFrom = new Mat();
-//        hsvTo = new Mat();
 
-//        Imgproc.cvtColor(fromMat,hsvFrom,Imgproc.COLOR_BGR2HSV);
-//        Imgproc.cvtColor(toMat,hsvTo,Imgproc.COLOR_BGR2HSV);
-
-        Imgproc.cvtColor(hsvFrom, hsvFrom, Imgproc.COLOR_BGR2HSV);
-        Imgproc.cvtColor(hsvTo,hsvTo,Imgproc.COLOR_BGR2HSV);
-        MatOfInt histSize = new MatOfInt(25);
-        MatOfFloat ranges = new MatOfFloat(0f,256f); ;
-        MatOfInt channels = new MatOfInt(0,1);
-
-        Mat histFrom = new Mat();
-        Mat histTo = new Mat();
-
-
-//        Imgproc.calcHist(Arrays.asList(hsvFrom), channels, new Mat(), histFrom, histSize, ranges,true);
-//        Core.normalize(histFrom,histFrom, 0, 1, Core.NORM_MINMAX, -1, new Mat());
-//
-//        Imgproc.calcHist(Arrays.asList(hsvTo),channels,new Mat(),histTo,histSize,ranges,true);
-//        Core.normalize(histTo, histTo, 0, 1, Core.NORM_MINMAX, -1, new Mat());
-
-        Imgproc.calcHist(Arrays.asList(hsvFrom), new MatOfInt(0), new Mat(), histFrom, histSize, ranges);
-        Imgproc.calcHist(Arrays.asList(hsvTo),new MatOfInt(0),new Mat(),histTo,histSize,ranges);
-
-        return Imgproc.compareHist(histFrom,histTo,Imgproc.CV_COMP_CORREL);
-    }
 }
