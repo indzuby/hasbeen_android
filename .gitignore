@@ -12,6 +12,7 @@
 bin/
 gen/
 jniLibs/
+facebook/
 
 # Gradle files
 .gradle/
