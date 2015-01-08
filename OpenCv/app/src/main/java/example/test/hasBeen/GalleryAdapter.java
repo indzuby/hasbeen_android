@@ -1,13 +1,6 @@
-package example.test.opencv;
+package example.test.hasBeen;
 
-import android.content.ContentResolver;
 import android.content.Context;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,23 +11,8 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
 import org.opencv.android.OpenCVLoader;
-import org.opencv.android.Utils;
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfFloat;
-import org.opencv.core.MatOfInt;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Point;
-import org.opencv.core.Size;
-import org.opencv.highgui.Highgui;
-import org.opencv.imgproc.Imgproc;
-import org.opencv.photo.Photo;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.zip.Inflater;
 
 /**
  * Created by zuby on 2015-01-05.

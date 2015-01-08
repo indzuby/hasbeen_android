@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package example.test.opencv;
+package example.test.hasBeen;
 
 import android.os.Bundle;
 import android.util.Log;

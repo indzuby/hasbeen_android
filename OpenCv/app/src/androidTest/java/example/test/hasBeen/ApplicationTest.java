@@ -1,4 +1,4 @@
-package example.test.opencv;
+package example.test.hasBeen;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

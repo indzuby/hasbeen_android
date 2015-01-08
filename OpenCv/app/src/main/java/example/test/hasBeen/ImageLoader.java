@@ -1,4 +1,4 @@
-package example.test.opencv;
+package example.test.hasBeen;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
-import android.util.LruCache;
 import android.widget.BaseAdapter;
 
 import java.util.Hashtable;

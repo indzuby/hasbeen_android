@@ -1,4 +1,4 @@
-package example.test.opencv;
+package example.test.hasBeen;
 
 import android.content.Intent;
 import android.os.Bundle;
