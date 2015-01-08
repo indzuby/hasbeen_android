@@ -46,6 +46,7 @@ public class GalleryActivity extends ActionBarActivity {
     GridView gallery;
     Bitmap fromImg, toImg;
     Cursor cursor;
+    Thread photoThread;
 
     protected void init() {
         gallery = (GridView) findViewById(R.id.Grid_gallery);
@@ -73,7 +74,7 @@ public class GalleryActivity extends ActionBarActivity {
             for (int i = 0; i < idx.length; i++)
                 idx[i] = cursor.getColumnIndex(proj[i]);
 
-            new Thread(new Runnable() {
+            photoThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     GalleryAdapter.PhotoData goodPhoto;
@@ -124,10 +125,19 @@ public class GalleryActivity extends ActionBarActivity {
 //                            Log.i("Photo Path", displayName);
                         }
                     }
-                    while (cursor.moveToNext());
+                    while (cursor.moveToNext() && !Thread.currentThread().isInterrupted());
                 }
-            }).start();
+            });
+            photoThread.start();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        photoThread.interrupt();
+        finish();
+
     }
 
     @Override
@@ -174,6 +184,7 @@ public class GalleryActivity extends ActionBarActivity {
         Imgproc.findContours(cannyOutput, countours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE, new Point(0, 0));
         int edgeCnt = countours.size();
         return edgeCnt;
+
     }
 
     protected double compareHistogram(Bitmap fromImg, Bitmap toImg) {
@@ -192,7 +203,7 @@ public class GalleryActivity extends ActionBarActivity {
 
         Imgproc.calcHist(Arrays.asList(hsvFrom), new MatOfInt(0), new Mat(), histFrom, histSize, ranges);
         Imgproc.calcHist(Arrays.asList(hsvTo), new MatOfInt(0), new Mat(), histTo, histSize, ranges);
-
         return Imgproc.compareHist(histFrom, histTo, Imgproc.CV_COMP_CORREL);
+
     }
 }

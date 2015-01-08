@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/facebook" />
             <option value="$PROJECT_DIR$/lib" />
             <option value="$PROJECT_DIR$/lib/opencv" />
+            <option value="$PROJECT_DIR$/maputils" />
           </set>
         </option>
       </GradleProjectSettings>

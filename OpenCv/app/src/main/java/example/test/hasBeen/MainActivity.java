@@ -26,7 +26,7 @@ import java.util.Arrays;
 public class MainActivity extends ActionBarActivity {
 
     private String TAG = "MainActivity";
-    Button btnGallery;
+    Button btnGallery,btnMap;
 
     static {
         if (!OpenCVLoader.initDebug()) {
@@ -49,6 +49,14 @@ public class MainActivity extends ActionBarActivity {
                 Intent intent = new Intent(getBaseContext(), GalleryActivity.class);
                 startActivity(intent);
 
+            }
+        });
+        btnMap = (Button) findViewById(R.id.btn_map);
+        btnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), MapActivity.class);
+                startActivity(intent);
             }
         });
         LoginButton authButton = (LoginButton) findViewById(R.id.btn_facebookLogin);
