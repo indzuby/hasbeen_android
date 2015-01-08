@@ -48,4 +48,5 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.4.+'
     compile project(':lib:opencv')
     compile project(':facebook')
+    compile 'com.google.android.gms:play-services:6.5.87'
 }

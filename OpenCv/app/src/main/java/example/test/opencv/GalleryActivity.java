@@ -41,72 +41,76 @@ public class GalleryActivity extends ActionBarActivity {
 
     List<GalleryAdapter.PhotoData> mImagePath;
     GalleryAdapter galleryAdapter;
-    int beforeScroll = 0;
-    int viewCount = 0;
+    ContentResolver resolver;
     ImageLoader imageLoader;
     GridView gallery;
-    String[] proj = {
-            MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.DATA,
-            MediaStore.Images.Media.DISPLAY_NAME,
-            MediaStore.Images.Media.DATE_TAKEN,
-            MediaStore.Images.Media.MIME_TYPE
-    };
-    int[] idx = new int[proj.length];
     Bitmap fromImg, toImg;
+    Cursor cursor;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery);
+    protected void init() {
         gallery = (GridView) findViewById(R.id.Grid_gallery);
         mImagePath = new ArrayList<GalleryAdapter.PhotoData>();
-        final ContentResolver resolver = getContentResolver();
-        final Cursor cursor = MediaStore.Images.Media.query(resolver, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, proj,null, MediaStore.MediaColumns.DATE_ADDED+" desc");
+        resolver = getContentResolver();
         galleryAdapter = new GalleryAdapter(getBaseContext(), mImagePath, imageLoader);
         gallery.setAdapter(galleryAdapter);
-        if (cursor != null && cursor.moveToFirst()) {
+    }
 
-            idx[0] = cursor.getColumnIndex(proj[0]);
-            idx[1] = cursor.getColumnIndex(proj[1]);
-            idx[2] = cursor.getColumnIndex(proj[2]);
-            idx[3] = cursor.getColumnIndex(proj[3]);
-            idx[4] = cursor.getColumnIndex(proj[4]);
+    protected Bitmap getThunbmail(int id) {
+        return MediaStore.Images.Thumbnails.getThumbnail(resolver, id, MediaStore.Images.Thumbnails.MICRO_KIND, null);
+    }
+
+    protected void takePhoto() {
+        String[] proj = {
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DATA,
+                MediaStore.Images.Media.DISPLAY_NAME,
+                MediaStore.Images.Media.DATE_TAKEN,
+                MediaStore.Images.Media.MIME_TYPE
+        };
+        final int[] idx = new int[proj.length];
+        cursor = MediaStore.Images.Media.query(resolver, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, proj, null, MediaStore.MediaColumns.DATE_ADDED + " desc");
+        if (cursor != null && cursor.moveToFirst()) {
+            for (int i = 0; i < idx.length; i++)
+                idx[i] = cursor.getColumnIndex(proj[i]);
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     GalleryAdapter.PhotoData goodPhoto;
-                    int maxEdge=-1;
+                    int maxEdge = -1;
                     do {
                         int photoID = cursor.getInt(idx[0]);
                         String photoPath = cursor.getString(idx[1]);
                         String displayName = cursor.getString(idx[2]);
                         int dataTaken = cursor.getInt(idx[3]);
                         String format = cursor.getString(idx[4]);
-                        Log.i("Image format",format);
-                        if(!format.endsWith("jpg") && !format.endsWith("jpeg")) continue;
+                        Log.i("Image format", format);
+
+                        if (!format.endsWith("jpg") && !format.endsWith("jpeg")) continue;
+
                         if (displayName != null) {
                             GalleryAdapter.PhotoData photo = new GalleryAdapter.PhotoData(photoID, photoPath, dataTaken);
                             if (mImagePath.size() > 0) {
                                 GalleryAdapter.PhotoData beforePhoto = mImagePath.get(mImagePath.size() - 1);
-
                                 if (Math.abs(beforePhoto.photoTaken - dataTaken) <= 5000) continue;
-                                double hist = compareHistogram(
-                                        MediaStore.Images.Thumbnails.getThumbnail(resolver, beforePhoto.photoID, MediaStore.Images.Thumbnails.MICRO_KIND, null),
-                                        MediaStore.Images.Thumbnails.getThumbnail(resolver, photoID, MediaStore.Images.Thumbnails.MICRO_KIND, null));
+
+                                Bitmap beforePhotoMap = getThunbmail(beforePhoto.photoID);
+                                Bitmap currentPhotoMap = getThunbmail(photoID);
+
+                                double hist = compareHistogram(beforePhotoMap, currentPhotoMap);
 //                                Log.i("Photo histogram", hist + "");
                                 if (hist > 0.8) {
-                                    if(maxEdge==-1)
-                                        maxEdge = detectEdge(MediaStore.Images.Thumbnails.getThumbnail(resolver, beforePhoto.photoID, MediaStore.Images.Thumbnails.MICRO_KIND, null));
-                                    int edge = detectEdge(MediaStore.Images.Thumbnails.getThumbnail(resolver, photoID, MediaStore.Images.Thumbnails.MICRO_KIND, null));
-                                    if(maxEdge<edge) {
+                                    if (maxEdge == -1)
+                                        maxEdge = detectEdge(beforePhotoMap);
+                                    int edge = detectEdge(currentPhotoMap);
+                                    if (maxEdge < edge) {
                                         maxEdge = edge;
-                                        goodPhoto = new GalleryAdapter.PhotoData(photoID,photoPath,dataTaken);
+                                        goodPhoto = new GalleryAdapter.PhotoData(photoID, photoPath, dataTaken);
                                     }
                                     continue;
                                 }
                                 goodPhoto = photo;
-                            }else
+                            } else
                                 goodPhoto = photo;
                             maxEdge = -1;
                             mImagePath.add(goodPhoto);
@@ -124,6 +128,14 @@ public class GalleryActivity extends ActionBarActivity {
                 }
             }).start();
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_gallery);
+        init();
+        takePhoto();
     }
 
     @Override

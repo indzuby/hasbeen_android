@@ -14,4 +14,13 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View map"
+        android:id="@+id/btn_map"
+        android:layout_below="@+id/btn_gallery"
+        android:layout_alignRight="@+id/btn_gallery"
+        android:layout_alignEnd="@+id/btn_gallery"/>
+
 </RelativeLayout>

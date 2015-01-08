@@ -13,7 +13,7 @@ import org.opencv.android.OpenCVLoader;
 
 public class MainActivity extends ActionBarActivity {
 
-    Button btnGallery;
+    Button btnGallery,btnMap;
     static {
         if (!OpenCVLoader.initDebug()) {
             // Handle initialization error
@@ -29,10 +29,19 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         btnGallery = (Button) findViewById(R.id.btn_gallery);
+        btnMap = (Button) findViewById(R.id.btn_map);
         btnGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(),GalleryActivity.class);
+                startActivity(intent);
+
+            }
+        });
+        btnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(),MapActivity.class);
                 startActivity(intent);
 
             }
