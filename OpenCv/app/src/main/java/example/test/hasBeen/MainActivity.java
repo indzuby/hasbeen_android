@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.facebook.FacebookException;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -22,11 +21,16 @@ import org.opencv.android.OpenCVLoader;
 
 import java.util.Arrays;
 
+import example.test.hasBeen.database.DBHelper;
+import example.test.hasBeen.gallery.GalleryActivity;
+import example.test.hasBeen.model.HasBeenDay;
+
 
 public class MainActivity extends ActionBarActivity {
 
     private String TAG = "MainActivity";
-    Button btnGallery,btnMap;
+    Button btnGallery,btnMap,btnDB,btnDBclear;
+    LoginButton authButton;
 
     static {
         if (!OpenCVLoader.initDebug()) {
@@ -59,14 +63,7 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(intent);
             }
         });
-        LoginButton authButton = (LoginButton) findViewById(R.id.btn_facebookLogin);
-        authButton.setOnErrorListener(new LoginButton.OnErrorListener() {
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.i(TAG, "Error " + error.getMessage());
-            }
-        });
+        authButton = (LoginButton) findViewById(R.id.btn_facebookLogin);
         // set permission list, Don't foeget to add email
         authButton.setReadPermissions(Arrays.asList("user_likes", "email"));
         // session state call back event
@@ -89,9 +86,26 @@ public class MainActivity extends ActionBarActivity {
                                 }
                             });
                 }
+            }
+        });
+        final DBHelper db = new DBHelper(getBaseContext());
+        btnDB = (Button) findViewById(R.id.btn_db);
+        btnDB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HasBeenDay day = new HasBeenDay(0,"title","des",3,"Mon Jan 12 16:10:15 GMT+09:00 2015","Korea","Seoul",0);
+                db.insertDay(day);
 
             }
         });
+        btnDBclear = (Button) findViewById(R.id.btn_db_clear);
+        btnDBclear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.clearTable();
+            }
+        });
+
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

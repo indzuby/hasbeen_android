@@ -1,4 +1,4 @@
-package example.test.hasBeen;
+package example.test.hasBeen.gallery;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,6 +13,9 @@ import com.bumptech.glide.Glide;
 import org.opencv.android.OpenCVLoader;
 
 import java.util.List;
+
+import example.test.hasBeen.ImageLoader;
+import example.test.hasBeen.R;
 
 /**
  * Created by zuby on 2015-01-05.
@@ -35,8 +38,8 @@ public class GalleryAdapter extends BaseAdapter {
 
         int photoID;
         String photoPath;
-        int photoTaken;
-        public PhotoData(int id, String path, int taken) {
+        long photoTaken;
+        public PhotoData(int id, String path, long taken) {
             photoID = id;
             photoPath = path;
             photoTaken = taken;

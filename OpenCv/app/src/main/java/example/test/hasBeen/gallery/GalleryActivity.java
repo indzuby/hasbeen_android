@@ -1,9 +1,11 @@
-package example.test.hasBeen;
+package example.test.hasBeen.gallery;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -24,7 +26,18 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+
+import example.test.hasBeen.ImageLoader;
+import example.test.hasBeen.R;
+import example.test.hasBeen.database.DBHelper;
+import example.test.hasBeen.geolocation.GeoFourSquare;
+import example.test.hasBeen.geolocation.GeoGoogle;
+import example.test.hasBeen.model.HasBeenPhoto;
 
 
 public class GalleryActivity extends ActionBarActivity {
@@ -40,20 +53,24 @@ public class GalleryActivity extends ActionBarActivity {
     }
 
     List<GalleryAdapter.PhotoData> mImagePath;
+    List<HasBeenPhoto> mPhotoList;
     GalleryAdapter galleryAdapter;
     ContentResolver resolver;
     ImageLoader imageLoader;
     GridView gallery;
-    Bitmap fromImg, toImg;
     Cursor cursor;
     Thread photoThread;
-
+    DBHelper db;
+    GeoGoogle geo;
     protected void init() {
         gallery = (GridView) findViewById(R.id.Grid_gallery);
         mImagePath = new ArrayList<GalleryAdapter.PhotoData>();
         resolver = getContentResolver();
         galleryAdapter = new GalleryAdapter(getBaseContext(), mImagePath, imageLoader);
         gallery.setAdapter(galleryAdapter);
+        db = new DBHelper(this);
+        geo = new GeoGoogle(this);
+        mPhotoList = new ArrayList();
     }
 
     protected Bitmap getThunbmail(int id) {
@@ -66,7 +83,9 @@ public class GalleryActivity extends ActionBarActivity {
                 MediaStore.Images.Media.DATA,
                 MediaStore.Images.Media.DISPLAY_NAME,
                 MediaStore.Images.Media.DATE_TAKEN,
-                MediaStore.Images.Media.MIME_TYPE
+                MediaStore.Images.Media.MIME_TYPE,
+                MediaStore.Images.Media.LATITUDE,
+                MediaStore.Images.Media.LONGITUDE
         };
         final int[] idx = new int[proj.length];
         cursor = MediaStore.Images.Media.query(resolver, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, proj, null, MediaStore.MediaColumns.DATE_ADDED + " desc");
@@ -83,15 +102,22 @@ public class GalleryActivity extends ActionBarActivity {
                         int photoID = cursor.getInt(idx[0]);
                         String photoPath = cursor.getString(idx[1]);
                         String displayName = cursor.getString(idx[2]);
-                        int dataTaken = cursor.getInt(idx[3]);
+                        long dataTaken = cursor.getLong(idx[3]);
                         String format = cursor.getString(idx[4]);
-                        Log.i("Image format", format);
+                        float lat = cursor.getFloat(idx[5]);
+                        float lon = cursor.getFloat(idx[6]);
+                        if(lat==0 && lon==0){
+                            continue;
+                            // position : others
+                        }
+
 
                         if (!format.endsWith("jpg") && !format.endsWith("jpeg")) continue;
 
                         if (displayName != null) {
                             GalleryAdapter.PhotoData photo = new GalleryAdapter.PhotoData(photoID, photoPath, dataTaken);
                             if (mImagePath.size() > 0) {
+
                                 GalleryAdapter.PhotoData beforePhoto = mImagePath.get(mImagePath.size() - 1);
                                 if (Math.abs(beforePhoto.photoTaken - dataTaken) <= 5000) continue;
 
@@ -115,7 +141,13 @@ public class GalleryActivity extends ActionBarActivity {
                                 goodPhoto = photo;
                             maxEdge = -1;
                             mImagePath.add(goodPhoto);
-
+                            if(lat==0 && lon==0){
+                                // position : others
+                            }else {
+                                HasBeenPhoto dbphoto = new HasBeenPhoto(goodPhoto.photoID,"tmp","tmp","tmp","tmp","tmp",lat,lon,dateIntToString(dataTaken),0,0);
+                                mPhotoList.add(dbphoto);
+//                                HasBeenPhoto(int id,String title, String description, String country, String city, String place_name, float lat, float lon, String taken_date,int day_id, int position_id)
+                            }
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -126,6 +158,16 @@ public class GalleryActivity extends ActionBarActivity {
                         }
                     }
                     while (cursor.moveToNext() && !Thread.currentThread().isInterrupted());
+                    Collections.sort(mPhotoList,new Comparator<HasBeenPhoto>() {
+                        @Override
+                        public int compare(HasBeenPhoto lhs, HasBeenPhoto rhs) {
+                            if(new Date(lhs.getTaken_date()).getTime() < new Date(rhs.getTaken_date()).getTime())
+                                return 1;
+                            return -1;
+                        }
+                    });
+                    Log.i("first photo",mPhotoList.get(0).getTaken_date());
+                    setGeoData();
                 }
             });
             photoThread.start();
@@ -206,4 +248,50 @@ public class GalleryActivity extends ActionBarActivity {
         return Imgproc.compareHist(histFrom, histTo, Imgproc.CV_COMP_CORREL);
 
     }
+    protected String dateIntToString(long taken_date){
+        Date date = new Date(taken_date);
+//        Log.i("milliseconds",taken_date+"");
+        Log.i("date ",date.toString());
+        return date.toString();
+    }
+    protected void insertDB(){
+        Iterator iterator = mPhotoList.iterator();
+        while(iterator.hasNext()) {
+            HasBeenPhoto photo = (HasBeenPhoto) iterator.next();
+            long id = db.insertPhoto(photo);
+            Log.i("DataBase id",id+"");
+        }
+    }
+    protected void setGeoData(){
+        Iterator iterator = mPhotoList.iterator();
+        while(iterator.hasNext()) {
+            HasBeenPhoto photo = (HasBeenPhoto) iterator.next();
+            if(photo.getLat()==0 && photo.getLon()==0) {
+
+            }else {
+                photo.setCity(geo.getCity(photo.getLat(), photo.getLon()));
+                photo.setCountry(geo.getCountry(photo.getLat(),photo.getLon()));
+                new GeoFourSquare(handler).execute(photo.getLat(),photo.getLon(),photo);
+            }
+        }
+
+    }
+    private Handler handler = new Handler() {
+        int cnt=0;
+        public void handleMessage(Message msg) {
+            switch(msg.what) {
+                case -1:
+                    // 에러 처리
+                    break;
+                case 0:
+                    // 정상 응답 처리
+                    Log.i("Call back",msg.obj+"");
+                    cnt++;
+                    if(cnt == mPhotoList.size()) {
+                        insertDB();
+                    }
+                    break;
+            }
+        }
+    };
 }
