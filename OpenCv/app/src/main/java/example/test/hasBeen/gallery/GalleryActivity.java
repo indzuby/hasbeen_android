@@ -24,6 +24,7 @@ import org.opencv.core.Point;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,15 +35,19 @@ import java.util.List;
 
 import example.test.hasBeen.ImageLoader;
 import example.test.hasBeen.R;
-import example.test.hasBeen.database.DBHelper;
+import example.test.hasBeen.database.DatabaseHelper;
 import example.test.hasBeen.geolocation.GeoFourSquare;
 import example.test.hasBeen.geolocation.GeoGoogle;
+import example.test.hasBeen.model.HasBeenDay;
 import example.test.hasBeen.model.HasBeenPhoto;
+import example.test.hasBeen.model.HasBeenPlace;
+import example.test.hasBeen.model.HasBeenPosition;
 
 
 public class GalleryActivity extends ActionBarActivity {
 
     static {
+
         if (!OpenCVLoader.initDebug()) {
             // Handle initialization error
         } else {
@@ -60,20 +65,24 @@ public class GalleryActivity extends ActionBarActivity {
     GridView gallery;
     Cursor cursor;
     Thread photoThread;
-    DBHelper db;
+//    DBHelper db;
+    DatabaseHelper database;
     GeoGoogle geo;
+    boolean flag;
     protected void init() {
         gallery = (GridView) findViewById(R.id.Grid_gallery);
         mImagePath = new ArrayList<GalleryAdapter.PhotoData>();
         resolver = getContentResolver();
         galleryAdapter = new GalleryAdapter(getBaseContext(), mImagePath, imageLoader);
         gallery.setAdapter(galleryAdapter);
-        db = new DBHelper(this);
+//        db = new DBHelper(this);
+        database = new DatabaseHelper(this);
         geo = new GeoGoogle(this);
         mPhotoList = new ArrayList();
+        flag = true;
     }
 
-    protected Bitmap getThunbmail(int id) {
+    protected Bitmap getThumbnail(int id) {
         return MediaStore.Images.Thumbnails.getThumbnail(resolver, id, MediaStore.Images.Thumbnails.MICRO_KIND, null);
     }
 
@@ -121,8 +130,8 @@ public class GalleryActivity extends ActionBarActivity {
                                 GalleryAdapter.PhotoData beforePhoto = mImagePath.get(mImagePath.size() - 1);
                                 if (Math.abs(beforePhoto.photoTaken - dataTaken) <= 5000) continue;
 
-                                Bitmap beforePhotoMap = getThunbmail(beforePhoto.photoID);
-                                Bitmap currentPhotoMap = getThunbmail(photoID);
+                                Bitmap beforePhotoMap = getThumbnail(beforePhoto.photoID);
+                                Bitmap currentPhotoMap = getThumbnail(photoID);
 
                                 double hist = compareHistogram(beforePhotoMap, currentPhotoMap);
 //                                Log.i("Photo histogram", hist + "");
@@ -144,7 +153,7 @@ public class GalleryActivity extends ActionBarActivity {
                             if(lat==0 && lon==0){
                                 // position : others
                             }else {
-                                HasBeenPhoto dbphoto = new HasBeenPhoto(goodPhoto.photoID,"tmp","tmp","tmp","tmp","tmp",lat,lon,dateIntToString(dataTaken),0,0);
+                                HasBeenPhoto dbphoto = new HasBeenPhoto("","","","","",lat,lon,getDate(dataTaken),new Long(0),new Long(0));
                                 mPhotoList.add(dbphoto);
 //                                HasBeenPhoto(int id,String title, String description, String country, String city, String place_name, float lat, float lon, String taken_date,int day_id, int position_id)
                             }
@@ -157,16 +166,16 @@ public class GalleryActivity extends ActionBarActivity {
 //                            Log.i("Photo Path", displayName);
                         }
                     }
-                    while (cursor.moveToNext() && !Thread.currentThread().isInterrupted());
+                    while (cursor.moveToNext() && flag);
                     Collections.sort(mPhotoList,new Comparator<HasBeenPhoto>() {
                         @Override
                         public int compare(HasBeenPhoto lhs, HasBeenPhoto rhs) {
-                            if(new Date(lhs.getTaken_date()).getTime() < new Date(rhs.getTaken_date()).getTime())
+                            if(lhs.getTakenDate().getTime() > rhs.getTakenDate().getTime())
                                 return 1;
                             return -1;
                         }
                     });
-                    Log.i("first photo",mPhotoList.get(0).getTaken_date());
+                    Log.i("first photo",mPhotoList.get(0).getTakenDate().toGMTString());
                     setGeoData();
                 }
             });
@@ -177,9 +186,12 @@ public class GalleryActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        photoThread.interrupt();
-        finish();
-
+        flag = false;
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        flag=true;
     }
 
     @Override
@@ -248,19 +260,138 @@ public class GalleryActivity extends ActionBarActivity {
         return Imgproc.compareHist(histFrom, histTo, Imgproc.CV_COMP_CORREL);
 
     }
-    protected String dateIntToString(long taken_date){
-        Date date = new Date(taken_date);
-//        Log.i("milliseconds",taken_date+"");
-        Log.i("date ",date.toString());
-        return date.toString();
+    protected Date getDate(long taken_date){
+        return new Date(taken_date);
+
     }
     protected void insertDB(){
         Iterator iterator = mPhotoList.iterator();
-        while(iterator.hasNext()) {
-            HasBeenPhoto photo = (HasBeenPhoto) iterator.next();
-            long id = db.insertPhoto(photo);
-            Log.i("DataBase id",id+"");
+        try {
+            HasBeenPhoto lastPhoto = database.getLastPhoto();
+            List<HasBeenPhoto> photoList = new ArrayList<>();
+            if(lastPhoto!=null)
+                Log.i("lastPhoto",lastPhoto.getTakenDate().toString());
+            while (iterator.hasNext()) {
+                HasBeenPhoto photo = (HasBeenPhoto) iterator.next();
+                if(isBeforeThatDate(lastPhoto, photo))
+                    continue;
+                database.insertPhoto(photo);
+                if(photo.getPlaceName().length()>0 ) {
+                    if(!database.hasVenueId(photo.getVenueId())) {
+                        HasBeenPlace place = new HasBeenPlace(photo.getVenueId(), photo.getCategoryId(), photo.getCategryName(), photo.getCountry(), photo.getCity(), photo.getPlaceName(), photo.getLat(), photo.getLon(), photo.getCategoryIconPrefix(), photo.getCategoryIconSuffix());
+                        Long place_id = database.insertPlace(place);
+                        photo.setPlaceId(place_id);
+                        database.updatePhoto(photo);
+                    }else
+                        photo.setPlaceId(database.getPlaceIdByVenueId(photo.getVenueId()));
+
+                }
+                if(photoList.size()==0) {
+                    photoList.add(photo);
+                }
+                else {
+                    HasBeenPhoto beforePhoto = photoList.get(0);
+                    if (!isSameThatDate(beforePhoto, photo)) {
+                        HasBeenDay day = new HasBeenDay("","",photoList.size(),beforePhoto.getTakenDate(),beforePhoto.getCountry(),beforePhoto.getCity(),beforePhoto.getId());
+                        Long dayId = database.insertDay(day);
+                        updateDayId(dayId,photoList);
+                        photoList = new ArrayList<>();
+                        photoList.add(photo);
+                    } else {
+                        photoList.add(photo);
+                    }
+                }
+                if(!iterator.hasNext()) {
+                    HasBeenPhoto beforePhoto = photoList.get(0);
+                    HasBeenDay day = new HasBeenDay("","",photoList.size(),beforePhoto.getTakenDate(),beforePhoto.getCountry(),beforePhoto.getCity(),beforePhoto.getId());
+                    Long dayId = database.insertDay(day);
+                    updateDayId(dayId,photoList);
+                }
+            }
+            Log.i("Day id",database.getLastPhoto().getDayId()+"");
+            Log.i("photo_id",database.getLastPhoto().getId()+"");
+//            Log.i("place cnt",database.getPlaceDao().countOf()+"");
+//            Log.i("day cnt",database.getDayDao().countOf()+"");
+        }catch(Exception e) {
+            e.printStackTrace();
         }
+    }
+    protected  void updateDayId(Long dayId, List photoList) {
+        List<HasBeenPhoto> positions = new ArrayList<>();
+        Iterator iter = photoList.iterator();
+        while(iter.hasNext()) {
+            HasBeenPhoto photo = (HasBeenPhoto) iter.next();
+            photo.setDayId(dayId);
+            if(photo.getPlaceId()==null) {
+                if(positions.size()>0) {
+                   insertPosition(positions);
+                }
+                insertPosition(photo);
+                positions = new ArrayList<>();
+            }else {
+                positions.add(photo);
+                if(!iter.hasNext())
+                    insertPosition(positions);
+            }
+            try {
+                database.updatePhoto(photo);
+            }catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+//    public HasBeenPosition(Long day_id, String type, Date startDate, Date endDate,Long mainPhotoId, Long placeId, String categoryIconPrefix, String categoryIconSuffix) {
+    protected void insertPosition(List<HasBeenPhoto> positions) {
+        HasBeenPhoto photo = (HasBeenPhoto) positions.get(0);
+
+        HasBeenPosition position = new HasBeenPosition(
+                photo.getDayId(),
+                "Place",
+                photo.getTakenDate(),
+                positions.get(positions.size()-1).getTakenDate(),
+                photo.getId(),
+                photo.getPlaceId(),
+                photo.getCategoryIconPrefix(),
+                photo.getCategoryIconSuffix());
+        try {
+            Long id = database.insertPosition(position);
+            Log.i("Position id",id+"");
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+    protected void insertPosition(HasBeenPhoto photo) {
+        HasBeenPosition position = new HasBeenPosition(
+                photo.getDayId(),
+                "",
+                photo.getTakenDate(),
+                photo.getTakenDate(),
+                photo.getId(),
+                null,
+                null,
+                null);
+        try {
+            Long id = database.insertPosition(position);
+            Log.i("Position id",id+"");
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    protected boolean isBeforeThatDate(HasBeenPhoto lastPhoto , HasBeenPhoto currentPhoto){
+        if(lastPhoto==null) return false;
+//        Log.i("photo time",lastPhoto.getTakenDate().getTime()+"");
+//        Log.i("photo time",currentPhoto.getTakenDate().getTime()+"");
+        if(currentPhoto.getTakenDate().getTime() - lastPhoto.getTakenDate().getTime() > 1000) return false;
+        return true;
+    }
+    protected boolean isSameThatDate(HasBeenPhoto beforePhoto, HasBeenPhoto currentPhoto) {
+        Log.i("beforePhoto",beforePhoto.getTakenDate().toString());
+        Log.i("currentPhoto",currentPhoto.getTakenDate().toString());
+        if(currentPhoto.getTakenDate().getYear() == beforePhoto.getTakenDate().getYear() &&
+                currentPhoto.getTakenDate().getMonth() == beforePhoto.getTakenDate().getMonth() &&
+                currentPhoto.getTakenDate().getDate() == beforePhoto.getTakenDate().getDate()) return true;
+        return false;
     }
     protected void setGeoData(){
         Iterator iterator = mPhotoList.iterator();
@@ -285,7 +416,7 @@ public class GalleryActivity extends ActionBarActivity {
                     break;
                 case 0:
                     // 정상 응답 처리
-                    Log.i("Call back",msg.obj+"");
+//                    Log.i("Call back",msg.obj+"");
                     cnt++;
                     if(cnt == mPhotoList.size()) {
                         insertDB();

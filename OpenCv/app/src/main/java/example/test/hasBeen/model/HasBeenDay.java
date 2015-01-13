@@ -1,23 +1,38 @@
 package example.test.hasBeen.model;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+import java.util.Date;
+
 /**
  * Created by zuby on 2015-01-09.
  */
+@DatabaseTable(tableName = "day")
 public class HasBeenDay {
-    int id;
+    @DatabaseField(generatedId = true)
+    Long id;
+    @DatabaseField(canBeNull = false)
     String title;
+    @DatabaseField(canBeNull = false)
     String description;
-    int photo_count;
-    String date;
+    @DatabaseField(columnName = "photo_count",canBeNull = false)
+    int photoCount;
+    @DatabaseField(canBeNull = false,dataType = DataType.DATE_STRING,format = "yyyy-MM-dd")
+    Date date;
+    @DatabaseField(canBeNull = false)
     String country;
+    @DatabaseField(canBeNull = false)
     String city;
-    int main_photo_id;
+    @DatabaseField(columnName = "main_photo_id",canBeNull = false)
+    Long mainPhotoId;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -37,19 +52,19 @@ public class HasBeenDay {
         this.description = description;
     }
 
-    public int getPhoto_count() {
-        return photo_count;
+    public int getPhotoCount() {
+        return photoCount;
     }
 
-    public void setPhoto_count(int photo_count) {
-        this.photo_count = photo_count;
+    public void setPhotoCount(int photoCount) {
+        this.photoCount = photoCount;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -69,22 +84,25 @@ public class HasBeenDay {
         this.city = city;
     }
 
-    public int getMain_photo_id() {
-        return main_photo_id;
+    public Long getMainPhotoId() {
+        return mainPhotoId;
     }
 
-    public void setMain_photo_id(int main_photo_id) {
-        this.main_photo_id = main_photo_id;
+    public void setMainPhotoId(Long mainPhotoId) {
+        this.mainPhotoId = mainPhotoId;
     }
 
-    public HasBeenDay(int id, String title ,String description, int photo_count, String date, String country,String city,int main_photo_id){
-        this.id = id;
+    public HasBeenDay(String title ,String description, int photoCount, Date date, String country,String city,Long mainPhotoId){
+
         this.title = title;
         this.description = description;
-        this.photo_count = photo_count;
+        this.photoCount = photoCount;
         this.date = date;
         this.country = country;
         this.city = city;
-        this.main_photo_id = main_photo_id;
+        this.mainPhotoId = mainPhotoId;
+    }
+
+    public HasBeenDay() {
     }
 }

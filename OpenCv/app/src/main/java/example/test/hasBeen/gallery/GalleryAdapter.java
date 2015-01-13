@@ -1,6 +1,10 @@
 package example.test.hasBeen.gallery;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,7 +114,20 @@ public class GalleryAdapter extends BaseAdapter {
                 .centerCrop()
                 .crossFade().placeholder(R.drawable.loading)
                 .into(imageView);
+
         return imageView;
     }
 
+    protected Bitmap getThumbnail(int id) {
+        return MediaStore.Images.Thumbnails.getThumbnail(mContext.getContentResolver(), id, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND, null);
+    }
+    protected String getTumbnailPath(int id, String path) {
+        Cursor cursor = MediaStore.Images.Thumbnails.queryMiniThumbnail(mContext.getContentResolver(), id,MediaStore.Images.Thumbnails.MINI_KIND,null );
+        if(cursor!=null && cursor.getCount()>0) {
+
+            cursor.moveToFirst();
+            return cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA));
+        }
+        return path;
+    }
 }

@@ -46,8 +46,9 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.github.bumptech.glide:glide:3.4.+'
-    compile project(':lib:opencv')
-    compile project(':facebook')
     compile 'com.google.maps.android:android-maps-utils:0.3+'
     compile 'com.google.android.gms:play-services:6.5.87'
+    compile project(':opencv')
+    compile 'com.facebook.android:facebook-android-sdk:3.22.0'
+    compile 'com.j256.ormlite:ormlite-android:4.48'
 }

@@ -1,49 +1,67 @@
 package example.test.hasBeen.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 /**
  * Created by zuby on 2015-01-09.
  */
+@DatabaseTable(tableName = "place")
 public class HasBeenPlace {
-    int id;
-    int venue_id;
-    int category_id;
-    String category_name;
+    @DatabaseField(generatedId = true)
+    Long id;
+    @DatabaseField(columnName = "venue_id",unique=true)
+    String venueId;
+    @DatabaseField(columnName = "category_id")
+    String categoryId;
+    @DatabaseField(columnName = "category_name")
+    String categoryName;
+    @DatabaseField(canBeNull = false)
     String country;
+    @DatabaseField(canBeNull = false)
     String city;
+    @DatabaseField(canBeNull = false)
     String name;
-    float lat,lon;
-    String category_icon;
+    @DatabaseField(canBeNull = false)
+    float lat;
+    @DatabaseField(canBeNull = false)
+    float lon;
+    @DatabaseField(columnName = "category_icon_prefix",canBeNull = false)
+    String categoryIconPrefix;
+    @DatabaseField(columnName = "category_icon_suffix",canBeNull = false)
+    String categoryIconSuffix;
 
-    public int getId() {
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public int getVenue_id() {
-        return venue_id;
+    public String getVenueId() {
+        return venueId;
     }
 
-    public void setVenue_id(int venue_id) {
-        this.venue_id = venue_id;
+    public void setVenueId(String venueId) {
+        this.venueId = venueId;
     }
 
-    public int getCategory_id() {
-        return category_id;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory_id(int category_id) {
-        this.category_id = category_id;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public String getCategory_name() {
-        return category_name;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setCategory_name(String category_name) {
-        this.category_name = category_name;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public String getCountry() {
@@ -86,24 +104,28 @@ public class HasBeenPlace {
         this.lon = lon;
     }
 
-    public String getCategory_icon() {
-        return category_icon;
+    public String getCategoryIconPrefix() {
+        return categoryIconPrefix;
     }
 
-    public void setCategory_icon(String category_icon) {
-        this.category_icon = category_icon;
+    public void setCategoryIconPrefix(String categoryIconPrefix) {
+        this.categoryIconPrefix = categoryIconPrefix;
     }
 
-    public HasBeenPlace(int venue_id, int category_id, String category_name, String country, String city, String name, float lat, float lon, String category_icon) {
-        this.venue_id = venue_id;
-        this.category_id = category_id;
-        this.category_name = category_name;
+    public HasBeenPlace(String venue_id, String category_id, String category_name, String country, String city, String name, float lat, float lon, String categoryIconPrefix,String categoryIconSuffix) {
+        this.venueId = venue_id;
+        this.categoryId = category_id;
+        this.categoryName = category_name;
         this.country = country;
         this.city = city;
         this.name = name;
 
         this.lat = lat;
         this.lon = lon;
-        this.category_icon = category_icon;
+        this.categoryIconPrefix = categoryIconPrefix;
+        this.categoryIconSuffix = categoryIconSuffix;
+    }
+
+    public HasBeenPlace() {
     }
 }

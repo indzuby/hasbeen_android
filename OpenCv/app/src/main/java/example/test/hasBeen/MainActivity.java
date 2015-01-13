@@ -2,6 +2,7 @@ package example.test.hasBeen;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -20,8 +21,9 @@ import com.facebook.widget.LoginButton;
 import org.opencv.android.OpenCVLoader;
 
 import java.util.Arrays;
+import java.util.Date;
 
-import example.test.hasBeen.database.DBHelper;
+import example.test.hasBeen.database.DatabaseHelper;
 import example.test.hasBeen.gallery.GalleryActivity;
 import example.test.hasBeen.model.HasBeenDay;
 
@@ -88,13 +90,19 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         });
-        final DBHelper db = new DBHelper(getBaseContext());
+//        final DBHelper db = new DBHelper(getBaseContext());
+        final DatabaseHelper dbHelper = new DatabaseHelper(this);
         btnDB = (Button) findViewById(R.id.btn_db);
         btnDB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HasBeenDay day = new HasBeenDay(0,"title","des",3,"Mon Jan 12 16:10:15 GMT+09:00 2015","Korea","Seoul",0);
-                db.insertDay(day);
+                HasBeenDay day = new HasBeenDay("title","des",3,new Date(),"Korea","Seoul",null);
+                try {
+                    dbHelper.getDayDao().create(day);
+                    Log.i("Last Day",dbHelper.getDayDao().query(dbHelper.getDayDao().queryBuilder().orderBy("id",false).limit(1L).prepare()).get(0).getDate().toString());
+                }catch(Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -102,7 +110,7 @@ public class MainActivity extends ActionBarActivity {
         btnDBclear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.clearTable();
+                dbHelper.clearTable();
             }
         });
 

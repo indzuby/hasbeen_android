@@ -1,66 +1,139 @@
 package example.test.hasBeen.model;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+import java.util.Date;
 
 /**
  * Created by zuby on 2015-01-09.
  */
+@DatabaseTable(tableName = "photo")
 public class HasBeenPhoto {
-    int id;
+    @DatabaseField(generatedId = true)
+    Long id;
+    @DatabaseField(canBeNull = false)
     String title;
+    @DatabaseField(canBeNull = false)
     String description;
+    @DatabaseField(canBeNull = false)
     String country;
+    @DatabaseField(canBeNull = false)
     String city;
 
-    public int getDay_id() {
-        return day_id;
+    public Long getDayId() {
+        return dayId;
     }
 
-    public void setDay_id(int day_id) {
-        this.day_id = day_id;
+    public void setDayId(Long dayId) {
+        this.dayId = dayId;
     }
 
-    public int getPosition_id() {
-        return position_id;
+    public Long getPositionId() {
+        return positionId;
     }
 
-    public void setPosition_id(int position_id) {
-        this.position_id = position_id;
+    public void setPositionId(Long positionId) {
+        this.positionId = positionId;
     }
 
-    public int getPlace_id() {
-        return place_id;
+    public Long getPlaceId() {
+        return placeId;
     }
 
-    public void setPlace_id(int place_id) {
-        this.place_id = place_id;
+    public void setPlaceId(Long placeId) {
+        this.placeId = placeId;
+    }
+    @DatabaseField(columnName = "place_name",canBeNull = false)
+    String placeName;
+    @DatabaseField(canBeNull = false)
+    float lat;
+    @DatabaseField(canBeNull = false)
+    float lon;
+    @DatabaseField(columnName = "taken_date",canBeNull = false,dataType = DataType.DATE_STRING,format = "yyyy-MM-dd HH:mm::ss")
+    Date takenDate;
+    @DatabaseField(columnName = "day_id",canBeNull = false)
+    Long dayId;
+    @DatabaseField(columnName = "position_id",canBeNull = false)
+    Long positionId;
+    @DatabaseField(columnName = "place_id")
+    Long placeId;
+
+    public void setFourSquare(String venueId,String categoryId, String categoryName,String categoryIconPrefix,String categoryIconSuffix) {
+        setVenueId(venueId);
+        setCategoryId(categoryId);
+        setCategryName(categoryName);
+        setCategoryIconPrefix(categoryIconPrefix);
+        setCategoryIconSuffix(categoryIconSuffix);
+    }
+    public String getVenueId() {
+        return venueId;
     }
 
-    String place_name;
-    float lat,lon;
-    String taken_date;
-    int day_id;
-    int position_id;
-    int place_id;
-    public HasBeenPhoto(int id,String title, String description, String country, String city, String place_name, float lat, float lon, String taken_date,int day_id, int position_id) {
-        this.id = id;
+    public void setVenueId(String venueId) {
+        this.venueId = venueId;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCategryName() {
+        return categryName;
+    }
+
+    public void setCategryName(String categryName) {
+        this.categryName = categryName;
+    }
+
+    String venueId;
+    String categoryId;
+    String categryName;
+    String categoryIconPrefix;
+
+    public String getCategoryIconPrefix() {
+        return categoryIconPrefix;
+    }
+
+    public void setCategoryIconPrefix(String categoryIconPrefix) {
+        this.categoryIconPrefix = categoryIconPrefix;
+    }
+
+    public String getCategoryIconSuffix() {
+        return categoryIconSuffix;
+    }
+
+    public void setCategoryIconSuffix(String categoryIconSuffix) {
+        this.categoryIconSuffix = categoryIconSuffix;
+    }
+
+    String categoryIconSuffix;
+    public HasBeenPhoto(String title, String description, String country, String city, String place_name, float lat, float lon, Date takenDate,Long day_id, Long position_id) {
         this.title = title;
         this.description = description;
         this.country = country;
         this.city = city;
-        this.place_name = place_name;
+        this.placeName = place_name;
         this.lat = lat;
         this.lon = lon;
-        this.taken_date = taken_date;
-        this.day_id = day_id;
-        this.position_id = position_id;
+        this.takenDate = takenDate;
+        this.dayId = day_id;
+        this.positionId = position_id;
     }
 
-    public int getId() {
+    public HasBeenPhoto() {
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -96,12 +169,12 @@ public class HasBeenPhoto {
         this.city = city;
     }
 
-    public String getPlace_name() {
-        return place_name;
+    public String getPlaceName() {
+        return placeName;
     }
 
-    public void setPlace_name(String place_name) {
-        this.place_name = place_name;
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
     }
 
     public float getLat() {
@@ -120,11 +193,21 @@ public class HasBeenPhoto {
         this.lon = lon;
     }
 
-    public String getTaken_date() {
-        return taken_date;
+    public Date getTakenDate() {
+        return takenDate;
     }
 
-    public void setTaken_date(String taken_date) {
-        this.taken_date = taken_date;
+    public void setTakenDate(Date takenDate) {
+        this.takenDate = takenDate;
     }
+//    public HasBeenPhoto clone(HasBeenPhoto photo){
+//        HasBeenPhoto copyPhoto = new HasBeenPhoto();
+//        copyPhoto.setId(photo.getId());
+//        copyPhoto.setCategoryIconSuffix(photo.getCategoryIconSuffix());
+//        copyPhoto.setCategoryIconPrefix(photo.getCategoryIconPrefix());
+//        copyPhoto.setCity(photo.getCity());
+//        copyPhoto.setCategryName(photo.getCategryName());
+//
+//    }
+
 }

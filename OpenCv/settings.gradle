@@ -1,2 +1,2 @@
-include ':app', ':facebook'
-include ':lib:opencv'
+include ':app', ':opencv'
+project(':opencv').projectDir = new File('lib/opencv')

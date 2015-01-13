@@ -3,7 +3,7 @@
     android:layout_height="match_parent" android:paddingLeft="2dp"
     android:paddingRight="2dp"
     android:paddingTop="2dp"
-    android:paddingBottom="2dp" tools:context=".MainActivity">
+    android:paddingBottom="2dp" tools:context=".MainActivity" android:background="#CCCCCC">
 
 
 

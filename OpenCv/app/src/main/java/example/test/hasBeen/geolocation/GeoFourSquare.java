@@ -69,11 +69,20 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
         try {
 //                Log.e("object",result.toString());
             JSONObject jsonObject = result.getJSONObject("response");
-            JSONArray jsonArray = new JSONArray(jsonObject.get("venues").toString());
-//                Toast.makeText(mContext, jsonArray.getJSONObject(0).get("name") + "", Toast.LENGTH_LONG).show();
+            JSONArray jsonArray = jsonObject.getJSONArray("venues");
+            if (jsonArray.length() == 0) {
+                photo.setPlaceId(null);
+            } else {
+    //          Toast.makeText(mContext, jsonArray.getJSONObject(0).get("name") + "", Toast.LENGTH_LONG).show();
+
+                msg.obj = jsonArray.getJSONObject(0).getString("name");
+                photo.setPlaceName(jsonArray.getJSONObject(0).getString("name"));
+                JSONObject category = jsonArray.getJSONObject(0).getJSONArray("categories").getJSONObject(0);
+                JSONObject icon = category.getJSONObject("icon");
+                photo.setFourSquare(jsonArray.getJSONObject(0).getString("id"), category.getString("id"), category.getString("name"), icon.getString("prefix"), icon.getString("suffix"));
+
+            }
             msg.what = 0;
-            msg.obj = jsonArray.getJSONObject(0).get("name").toString();
-            photo.setPlace_name(jsonArray.getJSONObject(0).get("name").toString());
             mHandler.sendMessage(msg);
         } catch (Exception e) {
             e.printStackTrace();
