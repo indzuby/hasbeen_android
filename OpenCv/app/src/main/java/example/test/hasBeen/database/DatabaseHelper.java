@@ -7,11 +7,16 @@ import android.database.sqlite.SQLiteException;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.ColumnArg;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
+import org.joda.time.LocalDateTime;
+
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import example.test.hasBeen.model.HasBeenDay;
 import example.test.hasBeen.model.HasBeenPhoto;
@@ -122,9 +127,96 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         Dao<HasBeenPhoto,Long> photoDao = getPhotoDao();
         photoDao.update(photo);
     }
+    public  void updateDay(HasBeenDay day) throws SQLException{
+        Dao<HasBeenDay,Long> dayDao = getDayDao();
+        dayDao.update(day);
+    }
+    public void updatePosition(HasBeenPosition position) throws SQLException {
+        Dao<HasBeenPosition,Long> positionDao = getPositionDao();
+        positionDao.update(position);
+    }
+
+    public void updateDayMainPhotoId(Long dayId,Long photoId) throws SQLException {
+        HasBeenDay day = selectDay(dayId);
+        day.setMainPhotoId(photoId);
+        updateDay(day);
+    }
+    public void updatePositionMainPhotoId(Long positionId,Long photoId) throws SQLException {
+        HasBeenPosition position = selectPosition(positionId);
+        position.setMainPhotoId(photoId);
+        updatePosition(position);
+    }
+    public void updatePositionEndTime(Long positionId, Date endTime) throws SQLException {
+        HasBeenPosition position = selectPosition(positionId);
+        position.setEndDate(endTime);
+        updatePosition(position);
+    }
     public Long getPlaceIdByVenueId(String venueId) throws SQLException{
         Dao<HasBeenPlace,Long> placeDao = getPlaceDao();
         return placeDao.queryForEq("venue_id",venueId).get(0).getId();
     }
+    public List<HasBeenPhoto> selectAllPhoto() throws  SQLException{
+        Dao<HasBeenPhoto,Long> photoDao = getPhotoDao();
+        return photos.queryBuilder().orderBy("id",true).query();
+    }
+    public boolean hasPhotoId(Long photoId) throws SQLException{
+        Dao<HasBeenPhoto,Long> photoDao = getPhotoDao();
+        if(photoDao.queryForEq("photo_id",photoId).size()!=0) return true;
+        return false;
+    }
+    public void increasePhotoCount(Long dayId) throws SQLException{
+        Dao<HasBeenDay,Long> dayDao = getDayDao();
+        HasBeenDay day = selectDay(dayId);
+        day.setPhotoCount(day.getPhotoCount()+1);
+        dayDao.update(day);
+    }
+    public HasBeenDay selectDay(Long dayId) throws SQLException {
+        Dao<HasBeenDay,Long> dayDao = getDayDao();
+        return dayDao.queryForId(dayId);
+    }
+    public HasBeenPosition selectPosition(Long positionId) throws SQLException {
+        Dao<HasBeenPosition,Long> PositionDao = getPositionDao();
+        return PositionDao.queryForId(positionId);
+    }
+    public boolean hasMainPhotoIdInDay(Long dayId) throws  SQLException{
+        HasBeenDay day = selectDay(dayId);
+        if(day.getMainPhotoId()==null) return false;
+        return true;
+    }
+    public boolean hasMainPhotoIdInPosition(Long positionId) throws  SQLException{
+        HasBeenPosition position= selectPosition(positionId);
+        if(position.getMainPhotoId()==null) return false;
+        return true;
+    }
+    public List<HasBeenPhoto> selectPhotoByPositionId(Long positionId) throws  SQLException{
+        Dao<HasBeenPhoto,Long> photoDao = getPhotoDao();
+        return photoDao.queryBuilder().orderBy("id",true).where().eq("position_id",positionId).and().eq("clearest_id", new ColumnArg("id")).query();
+    }
+    public List<HasBeenPhoto> selectPhotoClearestPhoto() throws SQLException {
+        Dao<HasBeenPhoto,Long> photoDao = getPhotoDao();
+        return photoDao.queryBuilder().orderBy("id",false).where().eq("clearest_id",new ColumnArg("id")).query();
+    }
+    public List<HasBeenDay> selectBeforeFiveDay() throws SQLException {
+        Dao<HasBeenDay,Long> dayDao = getDayDao();
+        Date date = new LocalDateTime(getLastPhoto().getTakenDate()).minusDays(5).toDate();
+        return dayDao.queryBuilder().orderBy("id",false).where().ge("date", date).query();
+    }
+    public List<HasBeenPosition> selectPositionByDayId(Long dayId) throws SQLException{
+        Dao<HasBeenPosition,Long> positionDao = getPositionDao();
 
+        return positionDao.queryBuilder().orderBy("id", true).groupBy("place_id").where().eq("day_id",dayId).query();
+    }
+    public int selectPhotoByDayid(Long dayId) throws SQLException{
+        List<HasBeenPosition> positions = selectPositionByDayId(dayId);
+        Iterator iterator = positions.iterator();
+        int photoCnt=0;
+        while(iterator.hasNext())
+            photoCnt += Math.ceil(selectPhotoByPositionId(((HasBeenPosition)iterator.next()).getId()).size()/3.0);
+        return photoCnt;
+    }
+    public String selectPlaceNameByPlaceId(Long placeId) throws SQLException {
+        Dao<HasBeenPlace,Long> placeDao = getPlaceDao();
+        return place.queryForId(placeId).getName();
+    }
 }
+//select * from photo where id = clearest_id

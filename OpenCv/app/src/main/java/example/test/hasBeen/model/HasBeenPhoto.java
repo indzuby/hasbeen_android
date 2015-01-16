@@ -13,13 +13,13 @@ import java.util.Date;
 public class HasBeenPhoto {
     @DatabaseField(generatedId = true)
     Long id;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField
     String title;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField
     String description;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField
     String country;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField
     String city;
 
     public Long getDayId() {
@@ -45,20 +45,61 @@ public class HasBeenPhoto {
     public void setPlaceId(Long placeId) {
         this.placeId = placeId;
     }
-    @DatabaseField(columnName = "place_name",canBeNull = false)
+    @DatabaseField(columnName = "place_name")
     String placeName;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField
     float lat;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField
     float lon;
-    @DatabaseField(columnName = "taken_date",canBeNull = false,dataType = DataType.DATE_STRING,format = "yyyy-MM-dd HH:mm::ss")
+    @DatabaseField(columnName = "taken_date",dataType = DataType.DATE_STRING,format = "yyyy-MM-dd HH:mm::ss")
     Date takenDate;
-    @DatabaseField(columnName = "day_id",canBeNull = false)
+    @DatabaseField(columnName = "day_id")
     Long dayId;
-    @DatabaseField(columnName = "position_id",canBeNull = false)
+    @DatabaseField(columnName = "position_id")
     Long positionId;
     @DatabaseField(columnName = "place_id")
     Long placeId;
+    @DatabaseField(columnName = "photo_path")
+    String photoPath;
+    @DatabaseField(columnName = "photo_id")
+    Long photoId;
+    @DatabaseField(columnName = "clearest_id")
+    Long clearestId;
+
+    public Long getClearestId() {
+        return clearestId;
+    }
+
+    public void setClearestId(Long clearestId) {
+        this.clearestId = clearestId;
+    }
+
+    public Integer getEdgeCount() {
+        return edgeCount;
+    }
+
+    public void setEdgeCount(Integer edgeCount) {
+        this.edgeCount = edgeCount;
+    }
+
+    @DatabaseField(columnName = "edge_count")
+
+    Integer edgeCount;
+    public String getPhotoPath() {
+        return photoPath;
+    }
+
+    public void setPhotoPath(String photoPath) {
+        this.photoPath = photoPath;
+    }
+
+    public Long getPhotoId() {
+        return photoId;
+    }
+
+    public void setPhotoId(Long photoId) {
+        this.photoId = photoId;
+    }
 
     public void setFourSquare(String venueId,String categoryId, String categoryName,String categoryIconPrefix,String categoryIconSuffix) {
         setVenueId(venueId);
@@ -113,19 +154,6 @@ public class HasBeenPhoto {
     }
 
     String categoryIconSuffix;
-    public HasBeenPhoto(String title, String description, String country, String city, String place_name, float lat, float lon, Date takenDate,Long day_id, Long position_id) {
-        this.title = title;
-        this.description = description;
-        this.country = country;
-        this.city = city;
-        this.placeName = place_name;
-        this.lat = lat;
-        this.lon = lon;
-        this.takenDate = takenDate;
-        this.dayId = day_id;
-        this.positionId = position_id;
-    }
-
     public HasBeenPhoto() {
     }
 

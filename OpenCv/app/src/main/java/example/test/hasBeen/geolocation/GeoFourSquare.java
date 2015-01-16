@@ -70,12 +70,14 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
 //                Log.e("object",result.toString());
             JSONObject jsonObject = result.getJSONObject("response");
             JSONArray jsonArray = jsonObject.getJSONArray("venues");
+
+            msg.obj = photo;
             if (jsonArray.length() == 0) {
                 photo.setPlaceId(null);
+                photo.setFourSquare(null,null,null,"","");
             } else {
     //          Toast.makeText(mContext, jsonArray.getJSONObject(0).get("name") + "", Toast.LENGTH_LONG).show();
 
-                msg.obj = jsonArray.getJSONObject(0).getString("name");
                 photo.setPlaceName(jsonArray.getJSONObject(0).getString("name"));
                 JSONObject category = jsonArray.getJSONObject(0).getJSONArray("categories").getJSONObject(0);
                 JSONObject icon = category.getJSONObject("icon");

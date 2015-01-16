@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -66,26 +67,30 @@ public class GeoGoogle {
         }
         return new LatLng(0, 0);
     }
-    public String getCountry(double lat , double lon) {
+    public static String getCountry(Context context, double lat , double lon) {
+        List<Address> address = new ArrayList<>();
+        Geocoder gcd = new Geocoder(context, Locale.getDefault());
         try {
             address = gcd.getFromLocation(lat,lon, 1);
         }catch(Exception e) {
             e.printStackTrace();
         }
         if (address.size()>0) {
-            Log.i("Address Country", address.get(0).getCountryName());
+//            Log.i("Address Country", address.get(0).getCountryName());
             return address.get(0).getCountryName();
         }
         return null;
     }
-    public String getCity(double lat , double lon){
+    public static String getCity(Context context, double lat , double lon){
+        List<Address> address = new ArrayList<>();
+        Geocoder gcd = new Geocoder(context, Locale.getDefault());
         try {
-            address = gcd.getFromLocation(getLocation().latitude, getLocation().longitude, 1);
+            address = gcd.getFromLocation(lat, lon, 1);
         }catch(Exception e) {
             e.printStackTrace();
         }
         if (address.size()>0) {
-            Log.i("Address City", address.get(0).getAdminArea());
+//            Log.i("Address City", address.get(0).getAdminArea());
             return address.get(0).getAdminArea();
         }
         return null;

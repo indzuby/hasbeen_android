@@ -51,4 +51,5 @@ dependencies {
     compile project(':opencv')
     compile 'com.facebook.android:facebook-android-sdk:3.22.0'
     compile 'com.j256.ormlite:ormlite-android:4.48'
+    compile 'joda-time:joda-time:2.7'
 }

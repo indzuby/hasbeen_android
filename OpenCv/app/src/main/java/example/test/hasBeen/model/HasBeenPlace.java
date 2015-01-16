@@ -10,30 +10,47 @@ import com.j256.ormlite.table.DatabaseTable;
 public class HasBeenPlace {
     @DatabaseField(generatedId = true)
     Long id;
-    @DatabaseField(columnName = "venue_id",unique=true)
+    @DatabaseField(columnName = "venue_id")
     String venueId;
     @DatabaseField(columnName = "category_id")
     String categoryId;
     @DatabaseField(columnName = "category_name")
     String categoryName;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField
     String country;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField
     String city;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField
     String name;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField
     float lat;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField
     float lon;
-    @DatabaseField(columnName = "category_icon_prefix",canBeNull = false)
+    @DatabaseField(columnName = "category_icon_prefix")
     String categoryIconPrefix;
-    @DatabaseField(columnName = "category_icon_suffix",canBeNull = false)
+    @DatabaseField(columnName = "category_icon_suffix")
     String categoryIconSuffix;
+    @DatabaseField(columnName = "main_photo_id")
+    Long mainPhotoId;
 
+    public Long getMainPhotoId() {
+        return mainPhotoId;
+    }
+
+    public void setMainPhotoId(Long mainPhotoId) {
+        this.mainPhotoId = mainPhotoId;
+    }
 
     public Long getId() {
         return id;
+    }
+
+    public String getCategoryIconSuffix() {
+        return categoryIconSuffix;
+    }
+
+    public void setCategoryIconSuffix(String categoryIconSuffix) {
+        this.categoryIconSuffix = categoryIconSuffix;
     }
 
     public void setId(Long id) {

@@ -13,13 +13,13 @@ import java.util.Date;
 public class HasBeenPosition {
     @DatabaseField(generatedId = true)
     Long id;
-    @DatabaseField(columnName = "day_id",canBeNull = false)
+    @DatabaseField(columnName = "day_id")
     Long dayId;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField
     String type;
-    @DatabaseField(columnName = "start_date",canBeNull = false,dataType = DataType.DATE_STRING,format = "yyyy-MM-dd HH:mm::ss")
+    @DatabaseField(columnName = "start_date",dataType = DataType.DATE_STRING,format = "yyyy-MM-dd HH:mm::ss")
     Date startDate;
-    @DatabaseField(columnName = "end_date",canBeNull = false,dataType = DataType.DATE_STRING,format = "yyyy-MM-dd HH:mm::ss")
+    @DatabaseField(columnName = "end_date",dataType = DataType.DATE_STRING,format = "yyyy-MM-dd HH:mm::ss")
     Date endDate;
     @DatabaseField(columnName = "place_id")
     Long placeId;
@@ -27,10 +27,19 @@ public class HasBeenPosition {
     String categoryIconPrefix;
     @DatabaseField(columnName = "category_icon_suffix")
     String categoryIconSuffix;
-    @DatabaseField(columnName = "main_photo_id",canBeNull = false)
+    @DatabaseField(columnName = "main_photo_id")
     Long mainPhotoId;
 
+    public Long getMainPhotoId() {
+        return mainPhotoId;
+    }
+
+    public void setMainPhotoId(Long mainPhotoId) {
+        this.mainPhotoId = mainPhotoId;
+    }
+
     public HasBeenPosition() {
+
     }
 
     public Long getId() {
@@ -97,15 +106,4 @@ public class HasBeenPosition {
         this.categoryIconSuffix = categoryIconSuffix;
     }
 
-    public HasBeenPosition(Long day_id, String type, Date startDate, Date endDate,Long mainPhotoId, Long placeId, String categoryIconPrefix, String categoryIconSuffix) {
-
-        this.dayId = day_id;
-        this.type = type;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.mainPhotoId = mainPhotoId;
-        this.placeId = placeId;
-        this.categoryIconPrefix = categoryIconPrefix;
-        this.categoryIconSuffix = categoryIconSuffix;
-    }
 }

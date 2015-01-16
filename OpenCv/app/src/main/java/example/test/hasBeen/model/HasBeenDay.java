@@ -13,19 +13,19 @@ import java.util.Date;
 public class HasBeenDay {
     @DatabaseField(generatedId = true)
     Long id;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField
     String title;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField
     String description;
-    @DatabaseField(columnName = "photo_count",canBeNull = false)
+    @DatabaseField(columnName = "photo_count")
     int photoCount;
-    @DatabaseField(canBeNull = false,dataType = DataType.DATE_STRING,format = "yyyy-MM-dd")
+    @DatabaseField(dataType = DataType.DATE_STRING,format = "yyyy-MM-dd")
     Date date;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField
     String country;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField
     String city;
-    @DatabaseField(columnName = "main_photo_id",canBeNull = false)
+    @DatabaseField(columnName = "main_photo_id")
     Long mainPhotoId;
 
     public Long getId() {
@@ -92,16 +92,7 @@ public class HasBeenDay {
         this.mainPhotoId = mainPhotoId;
     }
 
-    public HasBeenDay(String title ,String description, int photoCount, Date date, String country,String city,Long mainPhotoId){
 
-        this.title = title;
-        this.description = description;
-        this.photoCount = photoCount;
-        this.date = date;
-        this.country = country;
-        this.city = city;
-        this.mainPhotoId = mainPhotoId;
-    }
 
     public HasBeenDay() {
     }

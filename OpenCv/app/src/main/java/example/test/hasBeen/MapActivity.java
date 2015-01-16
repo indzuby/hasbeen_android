@@ -73,7 +73,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 return false;
             }
         });
-        Toast.makeText(this,geo.getCity(geo.getLocation().latitude,geo.getLocation().longitude),Toast.LENGTH_LONG).show();;
+        Toast.makeText(this,GeoGoogle.getCity(this,geo.getLocation().latitude,geo.getLocation().longitude),Toast.LENGTH_LONG).show();;
         addItems();
         displayRoute(geo.getLocation(),new LatLng(geo.getLocation().latitude+0.03,geo.getLocation().longitude+0.03));
 

@@ -2,7 +2,11 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarSize">@style/hasBeenActionBar</item>
         <!-- Customize your theme here. -->
+    </style>
+    <style name="hasBeenActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:background">@color/theme_color</item>
     </style>
 
 </resources>
