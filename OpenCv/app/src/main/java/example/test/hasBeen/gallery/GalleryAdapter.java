@@ -2,10 +2,6 @@ package example.test.hasBeen.gallery;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +11,8 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
-import org.opencv.android.OpenCVLoader;
-
 import java.util.List;
 
-import example.test.hasBeen.ImageLoader;
 import example.test.hasBeen.R;
 import example.test.hasBeen.model.HasBeenPhoto;
 import example.test.hasBeen.utils.Util;
@@ -28,8 +21,9 @@ import example.test.hasBeen.utils.Util;
  * Created by zuby on 2015-01-05.
  */
 public class GalleryAdapter extends BaseAdapter {
-    private Context mContext;
-    private List<HasBeenPhoto> mImagePath;
+    protected Context mContext;
+    protected List<HasBeenPhoto> mImagePath;
+    boolean flag=false;
     public GalleryAdapter(Context context, List imagePath) {
         mContext = context;
         mImagePath = imagePath;
@@ -51,7 +45,7 @@ public class GalleryAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ImageView imageView = (ImageView) convertView;
         final HasBeenPhoto photo = getItem(position);
         if (imageView == null || photo.getPhotoId() == 0) {
@@ -61,19 +55,25 @@ public class GalleryAdapter extends BaseAdapter {
         } else
             imageView.setImageResource(R.drawable.loading);
         int width = mContext.getResources().getDisplayMetrics().widthPixels;
-        imageView.setLayoutParams(new AbsListView.LayoutParams(width * 7 / 24 - 12, width * 7 / 24 - 12));
-        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         int px = Util.pxFromDp(mContext,2);
+        imageView.setLayoutParams(new AbsListView.LayoutParams(width * 4 / 15, width * 4 / 15));
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageView.setPadding(px, px, px, px);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext,GalleryFullPhoto.class);
-                intent.putExtra("path",photo.getPhotoPath());
-                mContext.startActivity(intent);
+                if(!flag) {
+                    flag = true;
+                    Intent intent = new Intent(mContext, GalleryPhoto.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("photoId",photo.getId());
+                    intent.putExtra("photoCount",getCount());
+                    intent.putExtra("photoNth",position+1);
+                    mContext.startActivity(intent);
+                    flag = false;
+                }
             }
         });
-        Log.i("Clearest id = id", photo.getClearestId() + " " + photo.getId());
         Glide.with(mContext).load(photo.getPhotoPath())
                 .centerCrop()
                 .crossFade().placeholder(R.drawable.loading)
@@ -82,3 +82,4 @@ public class GalleryAdapter extends BaseAdapter {
     }
 
 }
+

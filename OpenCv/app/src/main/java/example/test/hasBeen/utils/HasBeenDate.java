@@ -48,9 +48,9 @@ public class HasBeenDate {
     public static String convertTime(Date startTime, Date endTime) {
         LocalDateTime start = new LocalDateTime(startTime);
         LocalDateTime end = new LocalDateTime(endTime);
-        if(start.toString("kk:mm").equals(end.toString("kk:mm")))
-            return start.toString("kk : mm");
-        return start.toString("kk : mm ~ ")+end.toString("kk : mm");
+        if(start.toString("hh:mma").equals(end.toString("hh:mma")))
+            return start.toString("hh : mma");
+        return start.toString("hh : mma – ")+end.toString("hh : mma");
     }
     public static boolean isTimeRangeInFive(Date a, Date b){
 

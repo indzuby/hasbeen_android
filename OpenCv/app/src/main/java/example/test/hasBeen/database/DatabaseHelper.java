@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteException;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.ColumnArg;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
@@ -204,7 +205,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public List<HasBeenPosition> selectPositionByDayId(Long dayId) throws SQLException{
         Dao<HasBeenPosition,Long> positionDao = getPositionDao();
 
-        return positionDao.queryBuilder().orderBy("id", true).groupBy("place_id").where().eq("day_id",dayId).query();
+        return positionDao.queryBuilder().orderBy("id", true).where().eq("day_id",dayId).query();
     }
     public int selectPhotoByDayid(Long dayId) throws SQLException{
         List<HasBeenPosition> positions = selectPositionByDayId(dayId);
@@ -215,8 +216,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return photoCnt;
     }
     public String selectPlaceNameByPlaceId(Long placeId) throws SQLException {
+        return selectPlace(placeId).getName();
+    }
+    public HasBeenPhoto selectPhoto(Long photoId) throws SQLException {
+        Dao<HasBeenPhoto,Long> photoDao = getPhotoDao();
+        return photos.queryForId(photoId);
+    }
+    public HasBeenPlace selectPlace(Long placeId) throws SQLException {
         Dao<HasBeenPlace,Long> placeDao = getPlaceDao();
-        return place.queryForId(placeId).getName();
+        return place.queryForId(placeId);
+    }
+    public void updatePhotosPlaceId(Long positionId, Long placeId) throws SQLException {
+        Dao<HasBeenPhoto,Long> photoDao = getPhotoDao();
+        UpdateBuilder<HasBeenPhoto,Long> updateBuilder = photoDao.updateBuilder();
+        updateBuilder.updateColumnValue("place_id",placeId).where().eq("position_id",positionId);
+        updateBuilder.update();
     }
 }
 //select * from photo where id = clearest_id

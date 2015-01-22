@@ -2,9 +2,14 @@ package example.test.hasBeen.gallery;
 
 import android.content.ContentResolver;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 
@@ -17,76 +22,37 @@ import example.test.hasBeen.geolocation.GeoGoogle;
 import example.test.hasBeen.model.HasBeenPhoto;
 
 
-public class GalleryActivity extends ActionBarActivity {
+public class GalleryActivity extends Fragment {
 
     List<HasBeenPhoto> mPhotoList;
-    List<HasBeenPhoto> mPhotoByDB;
-    LinearLayout line;
     GalleryAdapter galleryAdapter;
     ContentResolver resolver;
     GridView gallery;
-    //    DBHelper db;
     DatabaseHelper database;
     GeoGoogle geo;
     boolean flag;
-
+    View view;
     protected void init() {
-        gallery = (GridView) findViewById(R.id.galleryL2GridView);
-        line = (LinearLayout) findViewById(R.id.galleryL2Line);
-        database = new DatabaseHelper(this);
-        resolver = getContentResolver();
+        gallery = (GridView) view.findViewById(R.id.galleryL2GridView);
+        database = new DatabaseHelper(getActivity().getBaseContext());
+        resolver = getActivity().getContentResolver();
         mPhotoList = new ArrayList<>();
         try {
-//            mPhotoByDB = database.selectAllPhoto();
-//            mPhotoList = database.selectAllPhoto();
             mPhotoList = database.selectPhotoClearestPhoto();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        galleryAdapter = new GalleryAdapter(getBaseContext(), mPhotoList);
+        galleryAdapter = new GalleryAdapter(getActivity().getBaseContext(), mPhotoList);
         gallery.setAdapter(galleryAdapter);
-        geo = new GeoGoogle(this);
+        geo = new GeoGoogle(getActivity().getBaseContext());
         flag = true;
     }
-
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.gallery_level_2_item);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container , Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.gallery_level_2_item,container,false);
         init();
+        return view;
     }
 
 

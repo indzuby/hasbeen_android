@@ -52,8 +52,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 //        LatLng location = geo.getLocation();
 //        for(int i = 0; i <5;i++) {
 //            map.addMarker(new MarkerOptions()
-//                    .position(new LatLng(location.latitude-0.01*i,location.longitude-0.01*i))
-//                    .title("hasBeen").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher)).flat(true));
+//                    .position(new LatLng(location.latitude-0.01*i,location.longitude-0.01*i));
 //        }
         mClusterManager = new ClusterManager<MyItem>(this,map);
         setting.setZoomControlsEnabled(true);

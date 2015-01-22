@@ -1,18 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
-
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/view_map"
-              android:layout_width="match_parent"
-              android:layout_height="216dp"
-              android:name="com.google.android.gms.maps.MapFragment" />
-    <ListView
+<LinearLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="?android:listPreferredItemHeight"
-        android:divider="#00000000"
-        android:id="@+id/galleryL1ListView"/>
+        android:id="@+id/map_box"
+        android:layout_height="wrap_content">
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/view_map"
+                  android:layout_width="match_parent"
+                  android:layout_height="216dp"
+                  android:name="com.google.android.gms.maps.MapFragment" />
+    </LinearLayout>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:layout_width="match_parent"
+                 android:id="@+id/galleryTopLayout"
+                 android:background="@color/list_background"
+                 android:layout_height="wrap_content">
+
+        <ListView
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="#00000000"
+            android:id="@+id/galleryL1ListView"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:orientation="vertical"
+            android:background="@color/day_background"
+            android:id="@+id/dayTopBox"
+            android:alpha="0.9">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/theme_color"
+                android:id="@+id/galleryL1dayTopTextDate"
+                android:paddingLeft="16dp"
+                android:paddingTop="16dp"
+                android:textSize="16sp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="2015년 1월 1일"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/galleryL1dayTopTextDate"
+                android:id="@+id/galleryL1dayTopTextArea"
+                android:paddingLeft="16dp"
+                android:textColor="@color/theme_black"
+                android:textSize="13sp"
+                android:text="Area1 - Araea7"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@drawable/day_shadow_bottom"
+                android:alpha="0.8"
+                android:id="@+id/shadow"
+                android:layout_alignParentBottom="true"
+                />
+        </RelativeLayout>
+
+        <!--<ImageView-->
+        <!--android:layout_width="76dp"-->
+        <!--android:layout_height="76dp"-->
+        <!--android:layout_gravity="bottom|right"-->
+        <!--android:layout_margin="6dp"-->
+        <!--android:src="@drawable/shadow"/>-->
+        <ImageButton
+            android:id="@+id/fab"
+            android:background="@drawable/share_effect"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_margin="8dp"
+            android:layout_gravity="bottom|right"
+            android:src="@drawable/share"
+            />
+
+    </FrameLayout>
 </LinearLayout>

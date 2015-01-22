@@ -5,6 +5,9 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
+import java.util.List;
+
+import example.test.hasBeen.gallery.GalleryPositionAdapter;
 
 /**
  * Created by zuby on 2015-01-09.
@@ -27,6 +30,15 @@ public class HasBeenDay {
     String city;
     @DatabaseField(columnName = "main_photo_id")
     Long mainPhotoId;
+    String area;
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
 
     public Long getId() {
         return id;
@@ -95,5 +107,23 @@ public class HasBeenDay {
 
 
     public HasBeenDay() {
+    }
+    List<HasBeenPosition> positions;
+
+    public List<HasBeenPosition> getPositions() {
+        return positions;
+    }
+
+    public void setPositions(List<HasBeenPosition> positions) {
+        this.positions = positions;
+    }
+    GalleryPositionAdapter positionAdapter;
+
+    public GalleryPositionAdapter getPositionAdapter() {
+        return positionAdapter;
+    }
+
+    public void setPositionAdapter(GalleryPositionAdapter positionAdapter) {
+        this.positionAdapter = positionAdapter;
     }
 }

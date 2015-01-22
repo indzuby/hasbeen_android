@@ -1,9 +1,14 @@
 package example.test.hasBeen.geolocation;
 
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+import android.widget.ImageView;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -13,9 +18,13 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import example.test.hasBeen.model.HasBeenCategory;
 import example.test.hasBeen.model.HasBeenPhoto;
 
 public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
@@ -30,15 +39,21 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
     final static String QUERY_PARAM = "query";
     String ll;
     HasBeenPhoto photo;
+    int placeCount = 25;
+    HasBeenCategory mCategory ;
+
     public GeoFourSquare(Handler handler) {
         mHandler = handler;
     }
+
     @Override
     protected JSONObject doInBackground(Object... params) {
 //            LatLng location = getLocation();
         ll = params[0] + "," + params[1];
-        if(params[2]!=null)
+        if (params[2] != null)
             photo = (HasBeenPhoto) params[2];
+        if (params[3] != null)
+            placeCount = (int) params[3];
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         Uri uri;
@@ -70,19 +85,40 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
 //                Log.e("object",result.toString());
             JSONObject jsonObject = result.getJSONObject("response");
             JSONArray jsonArray = jsonObject.getJSONArray("venues");
+            if (placeCount == 1) {
+                msg.obj = photo;
+                if (jsonArray.length() == 0) {
+                    photo.setPlaceId(null);
+                    photo.setFourSquare(null, null, null, "", "");
+                } else {
+                    //          Toast.makeText(mContext, jsonArray.getJSONObject(0).get("name") + "", Toast.LENGTH_LONG).show();
 
-            msg.obj = photo;
-            if (jsonArray.length() == 0) {
-                photo.setPlaceId(null);
-                photo.setFourSquare(null,null,null,"","");
+                    photo.setPlaceName(jsonArray.getJSONObject(0).getString("name"));
+                    JSONObject category = jsonArray.getJSONObject(0).getJSONArray("categories").getJSONObject(0);
+                    JSONObject icon = category.getJSONObject("icon");
+                    photo.setFourSquare(jsonArray.getJSONObject(0).getString("id"), category.getString("id"), category.getString("name"), icon.getString("prefix"), icon.getString("suffix"));
+
+                }
             } else {
-    //          Toast.makeText(mContext, jsonArray.getJSONObject(0).get("name") + "", Toast.LENGTH_LONG).show();
-
-                photo.setPlaceName(jsonArray.getJSONObject(0).getString("name"));
-                JSONObject category = jsonArray.getJSONObject(0).getJSONArray("categories").getJSONObject(0);
-                JSONObject icon = category.getJSONObject("icon");
-                photo.setFourSquare(jsonArray.getJSONObject(0).getString("id"), category.getString("id"), category.getString("name"), icon.getString("prefix"), icon.getString("suffix"));
-
+                Log.i("Geo", ll);
+                List<HasBeenCategory> categories = new ArrayList<>();
+                for (int i = 0; i < jsonArray.length() && i < placeCount; i++) {
+                    JSONObject item = jsonArray.getJSONObject(i);
+                    mCategory = new HasBeenCategory();
+                    if (item.getJSONArray("categories").length() > 0) {
+                        Log.i("place name", item.getString("name"));
+                        JSONObject category = item.getJSONArray("categories").getJSONObject(0);
+                        JSONObject icon = category.getJSONObject("icon");
+                        mCategory.setPlaceName(item.getString("name"));
+                        mCategory.setCategryName(category.getString("name"));
+                        mCategory.setVenueId(item.getString("id"));
+                        mCategory.setCategoryId(category.getString("id"));
+                        mCategory.setCategoryIconPrefix(icon.getString("prefix"));
+                        mCategory.setCategoryIconSuffix(icon.getString("suffix"));
+                        categories.add(mCategory);
+                    }
+                }
+                msg.obj = categories;
             }
             msg.what = 0;
             mHandler.sendMessage(msg);

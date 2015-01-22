@@ -5,6 +5,9 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
+import java.util.List;
+
+import example.test.hasBeen.gallery.GalleryAdapter;
 
 /**
  * Created by zuby on 2015-01-12.
@@ -105,5 +108,31 @@ public class HasBeenPosition {
     public void setCategoryIconSuffix(String categoryIconSuffix) {
         this.categoryIconSuffix = categoryIconSuffix;
     }
+    List<HasBeenPhoto> photos;
 
+    public List<HasBeenPhoto> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<HasBeenPhoto> photos) {
+        this.photos = photos;
+    }
+    HasBeenPlace place;
+
+    public HasBeenPlace getPlace() {
+        return place;
+    }
+
+    public void setPlace(HasBeenPlace place) {
+        this.place = place;
+    }
+    GalleryAdapter galleryAdapter;
+
+    public GalleryAdapter getGalleryAdapter() {
+        return galleryAdapter;
+    }
+
+    public void setGalleryAdapter(GalleryAdapter galleryAdapter) {
+        this.galleryAdapter = galleryAdapter;
+    }
 }

@@ -3,71 +3,74 @@
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:paddingTop="10dp"
-              android:weightSum="8"
-              >
+              android:background="@color/list_background"
+              android:weightSum="5">
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:orientation="vertical"
+        android:layout_marginTop="-2dp"
         android:id="@+id/searchView">
+        <View
+            android:layout_width="2dp"
+            android:layout_height="20dp"
+            android:layout_marginBottom="-4dp"
+            android:layout_gravity="center"
+            android:background="@color/theme_color"/>
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center|bottom"
+            android:background="@drawable/gallery_icon_oval"
             android:src="@drawable/ic_mountain"
-            android:id="@+id/galleryL2CategoryIcon"
-            android:layout_margin="0dp"
-            android:padding="0dp"/>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_gravity="center_horizontal"
-            android:id="@+id/galleryL2Line"
-            android:layout_margin="0dp">
+            android:id="@+id/place_category"/>
             <View
-                android:layout_width="3dp"
+                android:layout_width="2dp"
+                android:layout_marginTop="-7dp"
                 android:layout_height="wrap_content"
+                android:id="@+id/galleryL2Line"
+                android:layout_gravity="center"
                 android:background="@color/theme_color"
                 />
-
-        </LinearLayout>
-
      </LinearLayout>
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="7">
+        android:layout_weight="4"
+        android:paddingTop="16dp"
+        android:orientation="vertical">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:id="@+id/galleryL2TextTime"
-            android:layout_marginTop="5dp"
-            android:textSize="15dp"
-            android:text="10:22AM - 11:34Am"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_gravity="center_vertical"
             android:id="@+id/galleryL2TextArea"
-            android:textSize="15dp"
+            android:textSize="13sp"
+            android:textStyle="bold"
             android:text="Area 1, Norway"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/galleryL2TextTime"
+            android:textColor="#5A5A5A"
+            android:textSize="10sp"
+            android:text="10:22AM - 11:34Am"/>
 
         <GridView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/galleryL2GridView"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
+            android:scrollbars="none"
             android:numColumns="3"
             android:choiceMode="multipleChoiceModal"
             />
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:alpha="0.15"
+            android:background="#000000"
+            />
     </LinearLayout>
 
 </LinearLayout>

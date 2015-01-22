@@ -1,10 +1,15 @@
 package example.test.hasBeen.gallery;
 
+import android.app.ActionBar;
 import android.app.Fragment;
+import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Outline;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,16 +17,24 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AbsListView;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -29,6 +42,8 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
+import com.melnykov.fab.FloatingActionButton;
+import com.melnykov.fab.ScrollDirectionListener;
 
 import org.opencv.android.OpenCVLoader;
 
@@ -101,7 +116,6 @@ public class GalleryDayListActivity extends FragmentActivity implements OnMapRea
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Log.i(TAG,"Marker Selectd");
                 if(mMap.getCameraPosition().zoom>=8) {
                     Toast.makeText(getBaseContext(), "Max Zoom", Toast.LENGTH_LONG).show();
                 }else
@@ -136,26 +150,79 @@ public class GalleryDayListActivity extends FragmentActivity implements OnMapRea
     Cursor cursor;
     List<HasBeenPhoto> mPhotoList;
     ProgressDialog dialog;
-
+    TextView textDate;
+    TextView areaView;
     HasBeenPhoto lastPhoto ;
+    Long scrolledItem;
+    LinearLayout mMapBox;
     protected void init() throws Exception{
         setContentView(R.layout.gallery_level_1);
         listView = (ListView) findViewById(R.id.galleryL1ListView);
         mGalleryList = new ArrayList<>();
         listAdapter = new GalleryDayAdapter(this, mGalleryList);
+        textDate = (TextView) findViewById(R.id.galleryL1dayTopTextDate);
+        areaView = (TextView) findViewById(R.id.galleryL1dayTopTextArea);
+
         listView.setAdapter(listAdapter);
         database = new DatabaseHelper(this);
         resolver = this.getContentResolver();
         mPhotoList = new ArrayList<>();
         lastPhoto = database.getLastPhoto();
-        if(lastPhoto!=null)
-            Log.i("last photo",lastPhoto.getPlaceName());
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.view_map);
         mapFragment.getMapAsync(this);
-        geo = new GeoGoogle(this);
-    }
+//        geo = new GeoGoogle(this);
+        initEventListner();
+//        int diameter = getResources().getDimensionPixelSize(R.dimen.diameter);
+//        Outline outline = new Outline();
+//        outline.setOval(0, 0, diameter, diameter);
+//        View addButton = findViewById(R.id.fab);
+//        addButton.setOutline(outline);
+//        addButton.setClipToOutline(true);
+        ImageButton fab = (ImageButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+//                Toast.makeText(getBaseContext(),"Floating button pressed ",Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getBaseContext(),GalleryShare.class);
+                intent.putExtra("id",scrolledItem);
+                intent.putExtra("area",areaView.getText().toString());
+                intent.putExtra("date",textDate.getText().toString());
+                startActivity(intent);
+            }
+        });
+        mMapBox = (LinearLayout) findViewById(R.id.map_box);
+
+
+    }
+    protected void initEventListner (){
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            private int beforeItem=0;
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if(listAdapter!=null) {
+                    if(visibleItemCount>0) {
+                        textDate.setText(HasBeenDate.convertDate(listAdapter.mGalleryList.get(firstVisibleItem).getDate()));
+                        areaView.setText(listAdapter.mGalleryList.get(firstVisibleItem).getArea());
+                        scrolledItem = mGalleryList.get(firstVisibleItem).getId();
+                    }
+                    if(firstVisibleItem>beforeItem){
+                        mMapBox.setVisibility(View.INVISIBLE);
+                        Log.i("scroll","down");
+                    }else {
+                        mMapBox.setVisibility(View.VISIBLE);
+                        Log.i("scroll","up");
+                    }
+                    beforeItem = firstVisibleItem;
+                }
+            }
+        });
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,14 +236,14 @@ public class GalleryDayListActivity extends FragmentActivity implements OnMapRea
                         takePhoto();
                         buildDay();
 //                        mGalleryList = database.selectBeforeFiveDay();
-                        Log.i("databse cnt", mGalleryList.size() + "");
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 try {
                                     Iterator iterator = database.selectBeforeFiveDay().iterator();
                                     while (iterator.hasNext()) {
-                                        mGalleryList.add((HasBeenDay) iterator.next());
+                                        HasBeenDay day = (HasBeenDay) iterator.next();
+                                        mGalleryList.add(day);
                                         listAdapter.notifyDataSetChanged();
                                     }
                                 } catch (Exception e) {
@@ -229,7 +296,6 @@ public class GalleryDayListActivity extends FragmentActivity implements OnMapRea
                     null,
                     MediaStore.MediaColumns.DATE_ADDED);
 
-        Log.i("Images count", cursor.getCount() + "");
         if (cursor != null && cursor.moveToFirst()) {
             for (int i = 0; i < idx.length; i++)
                 idx[i] = cursor.getColumnIndex(proj[i]);
@@ -249,12 +315,10 @@ public class GalleryDayListActivity extends FragmentActivity implements OnMapRea
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Log.i("photo name",displayName);
                 if (isNotJpg(format)) continue;
 
                 if (displayName != null) {
                     HasBeenPhoto photo = new HasBeenPhoto();
-//                            "", "", "", "", "", lat, lon, getDate(dataTaken), new Long(0), null, new Long(photoID), photoPath,null
                     photo.setTitle("");
                     photo.setCity("");
                     photo.setCountry("");
@@ -280,7 +344,6 @@ public class GalleryDayListActivity extends FragmentActivity implements OnMapRea
         return false;
     }
     public void insertDB(){
-        Log.i("photo list size",mPhotoList.size()+"");
         Iterator iterator = mPhotoList.iterator();
         HasBeenDay day;
         try {
@@ -351,7 +414,6 @@ public class GalleryDayListActivity extends FragmentActivity implements OnMapRea
             while (iterator.hasNext()) {
                 if (!flag) continue;
                 final HasBeenPhoto photo = (HasBeenPhoto) iterator.next();
-                Log.i("photo city - clearest_id",photo.getPlaceName()+" - "+photo.getClearestId());
                 if (photo.getEdgeCount() != null){
                     if(photo.getId() == photo.getClearestId())
                         bestPhoto = photo;
@@ -397,7 +459,6 @@ public class GalleryDayListActivity extends FragmentActivity implements OnMapRea
                                                     updatedPhoto.setPositionId(bestPhoto.getPositionId());
                                                     database.updatePhoto(updatedPhoto);
                                                     database.updatePositionEndTime(updatedPhoto.getPositionId(), updatedPhoto.getTakenDate());
-                                                    Log.i("same place",updatedPhoto.getId()+"");
                                                 } else {
                                                     insertNewPosition(updatedPhoto);
                                                 }
@@ -410,13 +471,11 @@ public class GalleryDayListActivity extends FragmentActivity implements OnMapRea
                                     }
                                     flag = true;
                                 }
-                            }).execute(photo.getLat(), photo.getLon(), photo);
+                            }).execute(photo.getLat(), photo.getLon(), photo,1);
 
                         }
                     } else {
                         flag= false;
-                        Log.i("photos size",photos.size()+"");
-                        if(photos.size()>0) Log.i("BestPhoto ida",bestPhoto.getId()+"");
                         updateClearestId(photos, bestPhoto);
                         photos = new ArrayList<HasBeenPhoto>();
                         new GeoFourSquare(new Handler(Looper.getMainLooper()) {
@@ -438,7 +497,7 @@ public class GalleryDayListActivity extends FragmentActivity implements OnMapRea
                                 }
                                 flag = true;
                             }
-                        }).execute(photo.getLat(), photo.getLon(), photo);
+                        }).execute(photo.getLat(), photo.getLon(), photo,1);
                     }
                 }
             }
@@ -484,8 +543,7 @@ public class GalleryDayListActivity extends FragmentActivity implements OnMapRea
         database.updatePhoto(photo);
     }
     protected boolean isSamePlace(HasBeenPhoto aPhoto , HasBeenPhoto bPhoto){
-        Log.i("is same?",aPhoto.getPlaceName()+"=="+bPhoto.getPlaceName());
-        if(aPhoto.getVenueId().equals(bPhoto.getVenueId()))
+        if(aPhoto.getPlaceId().equals(bPhoto.getPlaceId()))
             return true;
         return false;
     }
@@ -517,9 +575,6 @@ public class GalleryDayListActivity extends FragmentActivity implements OnMapRea
             return true;
 
         double hist = HasBeenOpenCv.compareHistogram(getThumbnail(beforePhoto.getPhotoId()), getThumbnail(photo.getPhotoId()));
-        Log.i("from id",beforePhoto.getId()+"");
-        Log.i("to id",photo.getId()+"");
-        Log.i("similary",hist+"");
         if (hist >= 0.8)
             return true;
         return false;

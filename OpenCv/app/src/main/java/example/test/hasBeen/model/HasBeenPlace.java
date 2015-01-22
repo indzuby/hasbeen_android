@@ -1,5 +1,7 @@
 package example.test.hasBeen.model;
 
+import android.graphics.Bitmap;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -144,5 +146,14 @@ public class HasBeenPlace {
     }
 
     public HasBeenPlace() {
+    }
+    Bitmap bitmap;
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 }

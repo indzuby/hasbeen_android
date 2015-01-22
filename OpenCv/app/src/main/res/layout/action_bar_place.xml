@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:background="@color/theme_color"
+              android:paddingTop="12dp"
+              android:layout_marginLeft="0dp"
+              android:paddingRight="16dp"
+              android:paddingBottom="12dp"
+              android:layout_height="48dp">
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+
+        android:src="@drawable/ic_back"
+        android:id="@+id/action_bar_back"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF"
+        android:id="@+id/action_bar_title"
+        android:text="Share Photos"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/action_bar_back"
+        android:layout_toEndOf="@+id/action_bar_back"
+        android:layout_marginLeft="32dp"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:id="@+id/full_photo_more_vert"
+            android:src="@drawable/ic_more_vert"
+            android:layout_alignParentRight="true"
+            />
+        </LinearLayout>
+</RelativeLayout>
