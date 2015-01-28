@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:background="@color/list_background"
+             android:layout_height="wrap_content">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:id="@+id/listPhotos"
+        android:divider="@color/transparent"
+        android:layout_height="match_parent">
+
+    </ListView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#000000"
+            android:alpha="0.08"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:background="@color/theme_white"
+            android:layout_height="@dimen/social_bar"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/social_like"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:id="@+id/comment"
+                    android:src="@drawable/social_comment"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/social_share"/>
+
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <include
+        layout="@layout/day_title_box" android:id="@+id/dayTitleBox"/>
+</FrameLayout>

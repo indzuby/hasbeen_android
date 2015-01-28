@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import example.test.hasBeen.R;
-import example.test.hasBeen.model.HasBeenPhoto;
+import example.test.hasBeen.model.database.Photo;
 import example.test.hasBeen.utils.Util;
 
 /**
@@ -22,7 +22,7 @@ import example.test.hasBeen.utils.Util;
  */
 public class GalleryAdapter extends BaseAdapter {
     protected Context mContext;
-    protected List<HasBeenPhoto> mImagePath;
+    protected List<Photo> mImagePath;
     boolean flag=false;
     public GalleryAdapter(Context context, List imagePath) {
         mContext = context;
@@ -35,7 +35,7 @@ public class GalleryAdapter extends BaseAdapter {
     }
 
     @Override
-    public HasBeenPhoto getItem(int position) {
+    public Photo getItem(int position) {
         return mImagePath.get(position);
     }
 
@@ -47,7 +47,7 @@ public class GalleryAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ImageView imageView = (ImageView) convertView;
-        final HasBeenPhoto photo = getItem(position);
+        final Photo photo = getItem(position);
         if (imageView == null || photo.getPhotoId() == 0) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.gallery_view, null);

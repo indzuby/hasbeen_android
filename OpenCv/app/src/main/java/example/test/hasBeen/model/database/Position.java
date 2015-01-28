@@ -1,10 +1,8 @@
-package example.test.hasBeen.model;
+package example.test.hasBeen.model.database;
 
-import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import java.util.Date;
 import java.util.List;
 
 import example.test.hasBeen.gallery.GalleryAdapter;
@@ -13,17 +11,17 @@ import example.test.hasBeen.gallery.GalleryAdapter;
  * Created by zuby on 2015-01-12.
  */
 @DatabaseTable(tableName = "position")
-public class HasBeenPosition {
+public class Position {
     @DatabaseField(generatedId = true)
     Long id;
     @DatabaseField(columnName = "day_id")
     Long dayId;
     @DatabaseField
     String type;
-    @DatabaseField(columnName = "start_date",dataType = DataType.DATE_STRING,format = "yyyy-MM-dd HH:mm::ss")
-    Date startDate;
-    @DatabaseField(columnName = "end_date",dataType = DataType.DATE_STRING,format = "yyyy-MM-dd HH:mm::ss")
-    Date endDate;
+    @DatabaseField(columnName = "start_date")
+    Long startDate;
+    @DatabaseField(columnName = "end_date")
+    Long endDate;
     @DatabaseField(columnName = "place_id")
     Long placeId;
     @DatabaseField(columnName = "category_icon_prefix")
@@ -41,7 +39,7 @@ public class HasBeenPosition {
         this.mainPhotoId = mainPhotoId;
     }
 
-    public HasBeenPosition() {
+    public Position() {
 
     }
 
@@ -69,19 +67,19 @@ public class HasBeenPosition {
         this.type = type;
     }
 
-    public Date getStartDate() {
+    public Long getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(Long startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public Long getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(Long endDate) {
         this.endDate = endDate;
     }
 
@@ -108,22 +106,22 @@ public class HasBeenPosition {
     public void setCategoryIconSuffix(String categoryIconSuffix) {
         this.categoryIconSuffix = categoryIconSuffix;
     }
-    List<HasBeenPhoto> photos;
+    List<Photo> photos;
 
-    public List<HasBeenPhoto> getPhotos() {
+    public List<Photo> getPhotos() {
         return photos;
     }
 
-    public void setPhotos(List<HasBeenPhoto> photos) {
+    public void setPhotos(List<Photo> photos) {
         this.photos = photos;
     }
-    HasBeenPlace place;
+    Place place;
 
-    public HasBeenPlace getPlace() {
+    public Place getPlace() {
         return place;
     }
 
-    public void setPlace(HasBeenPlace place) {
+    public void setPlace(Place place) {
         this.place = place;
     }
     GalleryAdapter galleryAdapter;
@@ -134,5 +132,23 @@ public class HasBeenPosition {
 
     public void setGalleryAdapter(GalleryAdapter galleryAdapter) {
         this.galleryAdapter = galleryAdapter;
+    }
+    Photo mainPhoto;
+    List<Photo> photoList;
+
+    public Photo getMainPhoto() {
+        return mainPhoto;
+    }
+
+    public void setMainPhoto(Photo mainPhoto) {
+        this.mainPhoto = mainPhoto;
+    }
+
+    public List<Photo> getPhotoList() {
+        return photoList;
+    }
+
+    public void setPhotoList(List<Photo> photoList) {
+        this.photoList = photoList;
     }
 }

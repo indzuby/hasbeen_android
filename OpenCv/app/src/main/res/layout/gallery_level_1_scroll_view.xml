@@ -20,7 +20,7 @@
         android:layout_height="72dp"
         android:orientation="vertical"
         android:background="@color/day_background"
-        android:id="@+id/dayTopBox"
+        android:id="@+id/day_top_box"
         android:alpha="0.9">
 
         <TextView
@@ -40,7 +40,7 @@
             android:layout_below="@+id/galleryL1dayTopTextDate"
             android:id="@+id/galleryL1dayTopTextArea"
             android:paddingLeft="16dp"
-            android:textColor="@color/theme_black"
+            android:textColor="@color/light_black"
             android:textSize="13sp"
             android:text="Area1 - Araea7"
             />

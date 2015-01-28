@@ -6,15 +6,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
 
 import example.test.hasBeen.R;
 import example.test.hasBeen.database.DatabaseHelper;
-import example.test.hasBeen.model.HasBeenDay;
-import example.test.hasBeen.model.HasBeenPosition;
+import example.test.hasBeen.geolocation.MapRoute;
+import example.test.hasBeen.model.database.Day;
+import example.test.hasBeen.model.database.Position;
 import example.test.hasBeen.utils.HasBeenDate;
+import example.test.hasBeen.utils.SlidingUpPanelLayout;
 import example.test.hasBeen.utils.Util;
 
 /**
@@ -22,9 +25,14 @@ import example.test.hasBeen.utils.Util;
  */
 public class GalleryDayAdapter extends BaseAdapter {
     Context mContext;
-    List<HasBeenDay> mGalleryList;
+    List<Day> mGalleryList;
     DatabaseHelper database;
-    public GalleryDayAdapter(Context context, List<HasBeenDay> galleryList) {
+    MapRoute mMapRoute;
+    ListView mListview;
+    TextView parentDate;
+    TextView parentPlace;
+    SlidingUpPanelLayout parentSliding;
+    public GalleryDayAdapter(Context context, List<Day> galleryList) {
         mContext = context;
         mGalleryList = galleryList;
         database = new DatabaseHelper(context);
@@ -36,7 +44,7 @@ public class GalleryDayAdapter extends BaseAdapter {
     }
 
     @Override
-    public HasBeenDay getItem(int position) {
+    public Day getItem(int position) {
         return mGalleryList.get(position);
     }
 
@@ -46,31 +54,34 @@ public class GalleryDayAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent){
+    public View getView(final int position, View convertView, final ViewGroup parent){
         View view = convertView;
-        HasBeenDay day = getItem(position);
+        final Day day = getItem(position);
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.gallery_level_1_item, null);
         }
 
-        TextView timeView = (TextView) view.findViewById(R.id.galleryL1TextDate);
-        TextView areaView = (TextView) view.findViewById(R.id.galleryL1TextArea);
+        final TextView timeView = (TextView) view.findViewById(R.id.galleryL1TextDate);
+        final TextView areaView = (TextView) view.findViewById(R.id.galleryL1TextArea);
         ListView dayList = (ListView) view.findViewById(R.id.galleryL1DayView);
         try {
-            List<HasBeenPosition> mPositionList;
+            List<Position> mPositionList;
             if(day.getPositions()==null) {
                 mPositionList= database.selectPositionByDayId(day.getId());
                 day.setPositions(mPositionList);
             }else
                 mPositionList = day.getPositions();
-
+            String str;
             if (mPositionList.size() > 1)
-                areaView.setText(database.selectPlaceNameByPlaceId(mPositionList.get(0).getPlaceId())
+                str = database.selectPlaceNameByPlaceId(mPositionList.get(0).getPlaceId())
                         + " - "
-                        + database.selectPlaceNameByPlaceId(mPositionList.get(mPositionList.size() - 1).getPlaceId()));
+                        + database.selectPlaceNameByPlaceId(mPositionList.get(mPositionList.size() - 1).getPlaceId());
             else
-                areaView.setText(database.selectPlaceNameByPlaceId(mPositionList.get(0).getPlaceId()));
+                str = database.selectPlaceNameByPlaceId(mPositionList.get(0).getPlaceId());
+            if(str.length()>35)
+                str = str.substring(0,35)+"...";
+            areaView.setText(str);
             int width = mContext.getResources().getDisplayMetrics().widthPixels;
             int photoCnt = database.selectPhotoByDayid(day.getId());
 
@@ -92,6 +103,35 @@ public class GalleryDayAdapter extends BaseAdapter {
 
         timeView.setText(HasBeenDate.convertDate(day.getDate()));
         mGalleryList.get(position).setArea(areaView.getText().toString());
+
+        RelativeLayout dayBox = (RelativeLayout) view.findViewById(R.id.day_top_box);
+        dayBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMapRoute.createRouteDay(day.getId());
+//                mListview.setSelection(position);
+                parentSliding.collapsePane();
+//                mListview.smoothScrollToPositionFromTop(position,0,350);
+//                mListview.setSelection(position);
+                List<Position> mPositionList;
+                mPositionList = day.getPositions();
+                String str;
+                try {
+                    if (mPositionList.size() > 1)
+                        str = database.selectPlaceNameByPlaceId(mPositionList.get(0).getPlaceId())
+                                + " - "
+                                + database.selectPlaceNameByPlaceId(mPositionList.get(mPositionList.size() - 1).getPlaceId());
+                    else
+                        str = database.selectPlaceNameByPlaceId(mPositionList.get(0).getPlaceId());
+                    if(str.length()>35)
+                        str = str.substring(0,35)+"...";
+                    parentDate.setText(HasBeenDate.convertDate(day.getDate()));
+                    parentPlace.setText(str);
+                }catch (Exception e){
+                    e.printStackTrace();;
+                }
+            }
+        });
         return view;
     }
 }

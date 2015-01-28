@@ -14,7 +14,7 @@
         android:id="@+id/searchView">
         <View
             android:layout_width="2dp"
-            android:layout_height="20dp"
+            android:layout_height="14dp"
             android:layout_marginBottom="-4dp"
             android:layout_gravity="center"
             android:background="@color/theme_color"/>
@@ -24,7 +24,7 @@
             android:layout_gravity="center|bottom"
             android:background="@drawable/gallery_icon_oval"
             android:src="@drawable/ic_mountain"
-            android:id="@+id/place_category"/>
+            android:id="@+id/placeIcon"/>
             <View
                 android:layout_width="2dp"
                 android:layout_marginTop="-7dp"
@@ -38,20 +38,20 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="4"
-        android:paddingTop="16dp"
+        android:paddingTop="8dp"
         android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/galleryL2TextArea"
+            android:id="@+id/placeName"
+            android:textColor="@color/light_black"
             android:textSize="13sp"
-            android:textStyle="bold"
             android:text="Area 1, Norway"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/galleryL2TextTime"
-            android:textColor="#5A5A5A"
+            android:id="@+id/placeTime"
+            android:textColor="@color/light_gray"
             android:textSize="10sp"
             android:text="10:22AM - 11:34Am"/>
 
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/galleryL2GridView"
             android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="11dp"
             android:scrollbars="none"
             android:numColumns="3"
             android:choiceMode="multipleChoiceModal"

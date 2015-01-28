@@ -1,8 +1,6 @@
 package example.test.hasBeen;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -34,7 +32,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.view_map);
+                .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         geo = new GeoGoogle(this);
         /*Button selectPhoto = (Button) findViewById(R.id.btn_selectPhoto);

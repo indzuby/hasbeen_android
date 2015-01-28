@@ -1,4 +1,4 @@
-package example.test.hasBeen.model;
+package example.test.hasBeen.model.database;
 
 import android.graphics.Bitmap;
 
@@ -9,7 +9,7 @@ import com.j256.ormlite.table.DatabaseTable;
  * Created by zuby on 2015-01-09.
  */
 @DatabaseTable(tableName = "place")
-public class HasBeenPlace {
+public class Place {
     @DatabaseField(generatedId = true)
     Long id;
     @DatabaseField(columnName = "venue_id")
@@ -131,7 +131,7 @@ public class HasBeenPlace {
         this.categoryIconPrefix = categoryIconPrefix;
     }
 
-    public HasBeenPlace(String venue_id, String category_id, String category_name, String country, String city, String name, float lat, float lon, String categoryIconPrefix,String categoryIconSuffix) {
+    public Place(String venue_id, String category_id, String category_name, String country, String city, String name, float lat, float lon, String categoryIconPrefix, String categoryIconSuffix) {
         this.venueId = venue_id;
         this.categoryId = category_id;
         this.categoryName = category_name;
@@ -145,7 +145,7 @@ public class HasBeenPlace {
         this.categoryIconSuffix = categoryIconSuffix;
     }
 
-    public HasBeenPlace() {
+    public Place() {
     }
     Bitmap bitmap;
 
@@ -155,5 +155,14 @@ public class HasBeenPlace {
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
+    }
+    Photo mainPhoto;
+
+    public Photo getMainPhoto() {
+        return mainPhoto;
+    }
+
+    public void setMainPhoto(Photo mainPhoto) {
+        this.mainPhoto = mainPhoto;
     }
 }

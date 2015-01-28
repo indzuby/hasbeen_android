@@ -6,15 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import java.util.List;
 
 import example.test.hasBeen.R;
-import example.test.hasBeen.model.HasBeenPhoto;
-import example.test.hasBeen.model.HasBeenPosition;
+import example.test.hasBeen.model.database.Photo;
+import example.test.hasBeen.model.database.Position;
 import example.test.hasBeen.utils.HasBeenDate;
 
 /**
@@ -31,7 +30,7 @@ public class GalleryShareAdapter extends GalleryPositionAdapter {
     }
 
     @Override
-    public HasBeenPosition getItem(int position) {
+    public Position getItem(int position) {
         return super.getItem(position);
     }
 
@@ -43,7 +42,7 @@ public class GalleryShareAdapter extends GalleryPositionAdapter {
     @Override
     public View getView(int index, View convertView, ViewGroup parent) {
         View view = convertView;
-        HasBeenPosition position = getItem(index);
+        Position position = getItem(index);
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.gallery_share_item, null);
@@ -55,7 +54,7 @@ public class GalleryShareAdapter extends GalleryPositionAdapter {
         timeView.setText(HasBeenDate.convertTime(position.getStartDate(), position.getEndDate()));
         try{
             areaView.setText(database.selectPlaceNameByPlaceId(position.getPlaceId()));
-            List<HasBeenPhoto> photos = database.selectPhotoByPositionId(position.getId());
+            List<Photo> photos = database.selectPhotoByPositionId(position.getId());
             final GallerySharePhotoAdapter galleryAdapter = new GallerySharePhotoAdapter(mContext,photos);
             gridView.setAdapter(galleryAdapter);
             ViewGroup.LayoutParams params = gridView.getLayoutParams();

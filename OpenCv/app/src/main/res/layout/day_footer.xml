@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="#000000"
+        android:alpha="0.1"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:textColor="@color/light_gray"
+        android:paddingLeft="16dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:textSize="12sp"
+        android:text="Comments"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="#000000"
+        android:alpha="0.1"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:background="@color/theme_white"
+        android:textColor="@color/light_gray"
+        android:paddingLeft="16dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:textSize="12sp"
+        android:text="8 comments more"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="#000000"
+        android:alpha="0.1"
+        />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:background="@color/theme_white"
+        android:id="@+id/commetList"
+        android:layout_height="wrap_content">
+        <include layout="@layout/comment"></include>
+        <include layout="@layout/comment"></include>
+        <include layout="@layout/comment"></include>
+        </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="#000000"
+        android:alpha="0.1"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:orientation="vertical"
+        android:background="@color/theme_white"
+        android:layout_height="48dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:textColor="@color/light_gray"
+            android:focusableInTouchMode="false"
+            android:hint="Write a comment..."/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="@drawable/day_shadow_bottom"
+        android:alpha="0.1"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:text="Travels you might be interested in"
+        android:textColor="@color/light_gray"
+        android:textSize="12sp"
+        android:layout_height="48dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="@drawable/day_shadow_bottom"
+        android:alpha="0.1"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/social_bar"
+        android:background="#ffffff"/>
+</LinearLayout>

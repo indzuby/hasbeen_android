@@ -1,5 +1,6 @@
-package example.test.hasBeen.model;
+package example.test.hasBeen.model.database;
 
+import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -10,7 +11,7 @@ import java.util.Date;
  * Created by zuby on 2015-01-09.
  */
 @DatabaseTable(tableName = "photo")
-public class HasBeenPhoto {
+public class Photo {
     @DatabaseField(generatedId = true)
     Long id;
     @DatabaseField
@@ -51,8 +52,8 @@ public class HasBeenPhoto {
     float lat;
     @DatabaseField
     float lon;
-    @DatabaseField(columnName = "taken_date",dataType = DataType.DATE_STRING,format = "yyyy-MM-dd HH:mm::ss")
-    Date takenDate;
+    @DatabaseField(columnName = "taken_date")
+    Long takenDate;
     @DatabaseField(columnName = "day_id")
     Long dayId;
     @DatabaseField(columnName = "position_id")
@@ -154,7 +155,7 @@ public class HasBeenPhoto {
     }
 
     String categoryIconSuffix;
-    public HasBeenPhoto() {
+    public Photo() {
     }
 
     public Long getId() {
@@ -221,11 +222,11 @@ public class HasBeenPhoto {
         this.lon = lon;
     }
 
-    public Date getTakenDate() {
+    public Long getTakenDate() {
         return takenDate;
     }
 
-    public void setTakenDate(Date takenDate) {
+    public void setTakenDate(Long takenDate) {
         this.takenDate = takenDate;
     }
 //    public HasBeenPhoto clone(HasBeenPhoto photo){
@@ -238,4 +239,59 @@ public class HasBeenPhoto {
 //
 //    }
 
+    String smallUrl;
+    String mediumUrl;
+    String largeUrl;
+
+    public String getSmallUrl() {
+        return smallUrl;
+    }
+
+    public void setSmallUrl(String smallUrl) {
+        this.smallUrl = smallUrl;
+    }
+
+    public String getMediumUrl() {
+        return mediumUrl;
+    }
+
+    public void setMediumUrl(String mediumUrl) {
+        this.mediumUrl = mediumUrl;
+    }
+
+    public String getLargeUrl() {
+        return largeUrl;
+    }
+
+    public void setLargeUrl(String largeUrl) {
+        this.largeUrl = largeUrl;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public boolean isPortrait() {
+        return isPortrait;
+    }
+
+    public void setPortrait(boolean isPortrait) {
+        this.isPortrait = isPortrait;
+    }
+
+    int width;
+    int height;
+    boolean isPortrait;
 }

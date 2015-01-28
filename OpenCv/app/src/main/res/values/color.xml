@@ -2,9 +2,12 @@
 <resources>
     <color name="theme_color">#09DC9E</color>
     <color name="theme_bright_color">#75edc4</color>
-    <color name="theme_black">#5A5A5A</color>
-    <color name="list_background">#f0f0f4</color>
+    <color name="light_black">#5A5A5A</color>
+    <color name="theme_white">#FFFFFF</color>
+    <color name="list_background">#f4f6f9</color>
     <color name="list_background_pressed">#dcdcd0</color>
     <color name="day_background">#fafafa</color>
     <color name="transparent">#00ffffff</color>
+    <color name="light_gray">#969696</color>
+    <color name="light_gray2">#B4B4B4</color>
 </resources>

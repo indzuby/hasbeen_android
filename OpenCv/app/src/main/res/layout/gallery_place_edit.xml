@@ -5,7 +5,7 @@
               android:background="@color/list_background"
               android:layout_height="match_parent">
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/view_map"
+              android:id="@+id/map"
               android:layout_width="match_parent"
               android:layout_height="168dp"
               android:name="com.google.android.gms.maps.MapFragment" />
@@ -36,9 +36,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:textColor="#5A5A5A"
+            android:textColor="@color/light_black"
             android:text="Beatenberg,Swiss"
-            android:id="@+id/place_name"
+            android:id="@+id/name"
             android:layout_toRightOf="@+id/place_icon"
             android:layout_alignTop="@+id/place_icon"
             />
@@ -46,10 +46,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:textColor="#969696"
+            android:textColor="@color/light_gray"
             android:text="Mountain"
-            android:id="@+id/place_category"
-            android:layout_below="@+id/place_name"
+            android:id="@+id/placeIcon"
+            android:layout_below="@+id/name"
             android:layout_toRightOf="@+id/place_icon"
             />
         <View

@@ -1,14 +1,12 @@
 package example.test.hasBeen.geolocation;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.widget.ImageView;
+
+import com.google.gson.Gson;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -18,14 +16,13 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import example.test.hasBeen.model.HasBeenCategory;
-import example.test.hasBeen.model.HasBeenPhoto;
+import example.test.hasBeen.model.database.Category;
+import example.test.hasBeen.model.database.Photo;
 
 public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
     private Handler mHandler;
@@ -38,9 +35,9 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
     final static String LOCATION_PARAM = "ll";
     final static String QUERY_PARAM = "query";
     String ll;
-    HasBeenPhoto photo;
+    Photo photo;
     int placeCount = 25;
-    HasBeenCategory mCategory ;
+    Category mCategory ;
 
     public GeoFourSquare(Handler handler) {
         mHandler = handler;
@@ -51,7 +48,7 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
 //            LatLng location = getLocation();
         ll = params[0] + "," + params[1];
         if (params[2] != null)
-            photo = (HasBeenPhoto) params[2];
+            photo = (Photo) params[2];
         if (params[3] != null)
             placeCount = (int) params[3];
         HttpClient client = new DefaultHttpClient();
@@ -83,6 +80,7 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
         Message msg = mHandler.obtainMessage();
         try {
 //                Log.e("object",result.toString());
+            Gson gson = new Gson();
             JSONObject jsonObject = result.getJSONObject("response");
             JSONArray jsonArray = jsonObject.getJSONArray("venues");
             if (placeCount == 1) {
@@ -101,10 +99,10 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
                 }
             } else {
                 Log.i("Geo", ll);
-                List<HasBeenCategory> categories = new ArrayList<>();
+                List<Category> categories = new ArrayList<>();
                 for (int i = 0; i < jsonArray.length() && i < placeCount; i++) {
                     JSONObject item = jsonArray.getJSONObject(i);
-                    mCategory = new HasBeenCategory();
+                    mCategory = new Category();
                     if (item.getJSONArray("categories").length() > 0) {
                         Log.i("place name", item.getString("name"));
                         JSONObject category = item.getJSONArray("categories").getJSONObject(0);

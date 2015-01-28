@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/galleryShareTextTime"
-            android:textColor="#5A5A5A"
+            android:textColor="@color/light_black"
             android:textSize="10sp"
             android:text="10:22AM - 11:34Am"/>
 

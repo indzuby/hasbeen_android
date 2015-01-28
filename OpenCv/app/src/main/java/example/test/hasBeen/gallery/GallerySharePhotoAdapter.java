@@ -4,10 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
@@ -15,7 +13,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import example.test.hasBeen.R;
-import example.test.hasBeen.model.HasBeenPhoto;
+import example.test.hasBeen.model.database.Photo;
 import example.test.hasBeen.utils.Util;
 
 /**
@@ -33,7 +31,7 @@ public class GallerySharePhotoAdapter extends GalleryAdapter {
     }
 
     @Override
-    public HasBeenPhoto getItem(int position) {
+    public Photo getItem(int position) {
         return super.getItem(position);
     }
 
@@ -62,7 +60,7 @@ public class GallerySharePhotoAdapter extends GalleryAdapter {
     }
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
-        final HasBeenPhoto photo = getItem(position);
+        final Photo photo = getItem(position);
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.gallery_share_view, null);

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/slidingLayout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#ffffff"/>
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+              android:name="com.google.android.gms.maps.MapFragment"
+              android:id="@+id/map"
+
+              android:layout_width="match_parent"
+              android:layout_height="160dp"/>
+    <RelativeLayout
+        android:background="@color/theme_white"
+        android:layout_width="match_parent"
+        android:padding="16dp"
+        android:id="@+id/descriptionBox"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Day 2-Beautiful Swiss"
+            android:id="@+id/dayTitle"
+            android:textStyle="bold"
+            android:textColor="@color/light_black"
+            android:textSize="13sp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:includeFontPadding="false"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus id accumsan dui. Vivamus laoreet cursus pulvinar. Morbi eu ullamcorper neque, non faucibus"
+            android:id="@+id/dayDescription"
+            android:layout_below="@+id/dayTitle"
+            android:textColor="@color/light_black"
+            android:layout_marginBottom="8dp"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/light_gray"
+            android:id="@+id/socialAction"
+            android:text="8 Likes 3 Comments 2 Shared"
+            android:layout_below="@+id/dayDescription"
+            android:textSize="13sp"
+            />
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="#000000"
+        android:alpha="0.1"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:textColor="@color/light_gray"
+        android:paddingLeft="16dp"
+        android:paddingTop="4dp"
+        android:id="@+id/totalPhoto"
+        android:paddingBottom="4dp"
+        android:textSize="12sp"
+        android:text="Total 85 photos"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="#000000"
+        android:alpha="0.1"
+        />
+</LinearLayout>

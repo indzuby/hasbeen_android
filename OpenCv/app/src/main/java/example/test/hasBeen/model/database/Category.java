@@ -1,11 +1,11 @@
-package example.test.hasBeen.model;
+package example.test.hasBeen.model.database;
 
 import android.graphics.Bitmap;
 
 /**
  * Created by zuby on 2015-01-22.
  */
-public class HasBeenCategory {
+public class Category {
     String venueId;
     String categoryId;
     String categryName;
@@ -71,6 +71,6 @@ public class HasBeenCategory {
         this.categoryIconPrefix = categoryIconPrefix;
     }
 
-    public HasBeenCategory() {
+    public Category() {
     }
 }

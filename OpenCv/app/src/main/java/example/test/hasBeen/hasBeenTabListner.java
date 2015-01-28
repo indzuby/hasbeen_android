@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 
 import example.test.hasBeen.gallery.GalleryActivity;
 import example.test.hasBeen.gallery.GalleryFragment;
+import example.test.hasBeen.newsfeed.NewsFeedFragment;
 
 /**
  * Created by zuby on 2015-01-20.
@@ -28,12 +29,16 @@ public class hasBeenTabListner implements ActionBar.TabListener {
         if (mFragment == null) {
             // If not, instantiate and add it to the activity
 
-            if(mSelected != 3) {
-                mFragment = Fragment.instantiate(mActivity, GalleryActivity.class.getName());
-                ft.add(android.R.id.content, mFragment, "Gallery");
+
+            if(mSelected == 1) {
+                mFragment = Fragment.instantiate(mActivity, NewsFeedFragment.class.getName());
+                ft.add(android.R.id.content, mFragment, "NewsFeed");
             }
             else if(mSelected == 3) {
                 mFragment = Fragment.instantiate(mActivity, GalleryFragment.class.getName());
+                ft.add(android.R.id.content, mFragment, "Gallery");
+            }else {
+                mFragment = Fragment.instantiate(mActivity, GalleryActivity.class.getName());
                 ft.add(android.R.id.content, mFragment, "Gallery");
             }
 

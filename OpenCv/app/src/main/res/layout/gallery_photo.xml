@@ -39,29 +39,29 @@
                     android:src="@drawable/profile_sample"
                     android:adjustViewBounds="true"
                     android:background="@drawable/profile_oval"
-                    android:id="@+id/profile_image"/>
+                    android:id="@+id/profileImage"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Jun Lee"
-                    android:textColor="#5A5A5A"
+                    android:textColor="@color/light_black"
                     android:textSize="16sp"
-                    android:id="@+id/profile_name"
+                    android:id="@+id/profileName"
                     android:layout_marginLeft="16dp"
-                    android:layout_alignTop="@+id/profile_image"
-                    android:layout_toRightOf="@+id/profile_image"
+                    android:layout_alignTop="@+id/profileImage"
+                    android:layout_toRightOf="@+id/profileImage"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/date"
                     android:text="2014.1.1"
-                    android:textColor="#969696"
+                    android:textColor="@color/light_gray"
                     android:textSize="13sp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="4dp"
-                    android:layout_below="@+id/profile_name"
-                    android:layout_toRightOf="@+id/profile_image"
+                    android:layout_below="@+id/profileName"
+                    android:layout_toRightOf="@+id/profileImage"
                     />
             </RelativeLayout>
         </RelativeLayout>
@@ -72,7 +72,7 @@
                 android:src="@drawable/ic_edit"
                 android:id="@+id/edit_button"
                 android:layout_marginRight="8dp"
-                android:layout_alignBottom="@+id/profile_name"
+                android:layout_alignBottom="@+id/profileName"
                 android:layout_gravity="bottom|right"
                 android:layout_marginBottom="36dp"
                 />

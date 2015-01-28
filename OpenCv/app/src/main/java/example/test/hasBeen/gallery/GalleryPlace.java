@@ -22,15 +22,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.ClusterManager;
 
-import java.io.BufferedInputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -38,12 +33,9 @@ import java.util.List;
 import example.test.hasBeen.R;
 import example.test.hasBeen.database.DatabaseHelper;
 import example.test.hasBeen.geolocation.GeoFourSquare;
-import example.test.hasBeen.geolocation.GeoGoogle;
-import example.test.hasBeen.model.HasBeenCategory;
-import example.test.hasBeen.model.HasBeenPhoto;
-import example.test.hasBeen.model.HasBeenPlace;
-import example.test.hasBeen.model.HasBeenPosition;
-import example.test.hasBeen.utils.Util;
+import example.test.hasBeen.model.database.Category;
+import example.test.hasBeen.model.database.Place;
+import example.test.hasBeen.model.database.Position;
 
 /**
  * Created by zuby on 2015-01-22.
@@ -52,23 +44,24 @@ public class GalleryPlace extends ActionBarActivity implements OnMapReadyCallbac
     final static int SUCCESS = 0;
     final static int FAILED = - 1;
     GalleryPlaceAdapter mPlaceAdapter ;
-    List<HasBeenCategory> mCategories;
+    List<Category> mCategories;
     ListView mListView;
     Long mPositionId;
-    HasBeenPlace mPlace;
+    Place mPlace;
     DatabaseHelper database;
 
     float mLat,mLon;
     ImageView mPlaceIcon;
     TextView mPlaceName;
     TextView mPlaceCategory;
-    HasBeenPosition mPosition;
+    Position mPosition;
     GoogleMap mMap;
+
     private static final String TAG = "Map Activity";
     protected void initMap() throws Exception{
         mPlace = database.selectPlace(mPosition.getPlaceId());
         MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.view_map);
+                .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mLat = mPlace.getLat();
         mLon = mPlace.getLon();
@@ -115,8 +108,8 @@ public class GalleryPlace extends ActionBarActivity implements OnMapReadyCallbac
         setContentView(R.layout.gallery_place_edit);
         mPositionId = getIntent().getLongExtra("positionId",0);
 
-        mPlaceName = (TextView) findViewById(R.id.place_name);
-        mPlaceCategory = (TextView) findViewById(R.id.place_category);
+        mPlaceName = (TextView) findViewById(R.id.name);
+        mPlaceCategory = (TextView) findViewById(R.id.placeIcon);
         mPlaceIcon = (ImageView) findViewById(R.id.place_icon);
         database = new DatabaseHelper(this);
         mPosition = database.selectPosition(mPositionId);
@@ -128,6 +121,7 @@ public class GalleryPlace extends ActionBarActivity implements OnMapReadyCallbac
 //        first.setVenueId("first");
 //        mCategories.add(first);
         mPlaceAdapter = new GalleryPlaceAdapter(this,mCategories,mPosition);
+        mPlaceAdapter.mIndex = getIntent().getIntExtra("index",-1);
         mListView = (ListView) findViewById(R.id.place_list);
         mListView.setAdapter(mPlaceAdapter);
         new GeoFourSquare(new Handler(Looper.getMainLooper()){
@@ -142,10 +136,10 @@ public class GalleryPlace extends ActionBarActivity implements OnMapReadyCallbac
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    List<HasBeenCategory> categories = (List) msg.obj;
+                                    List<Category> categories = (List) msg.obj;
                                     Iterator iterator = categories.iterator();
                                     while(iterator.hasNext()) {
-                                        mCategories.add((HasBeenCategory) iterator.next());
+                                        mCategories.add((Category) iterator.next());
                                         mPlaceAdapter.notifyDataSetChanged();
                                     }
                                 }
@@ -168,8 +162,8 @@ public class GalleryPlace extends ActionBarActivity implements OnMapReadyCallbac
         actionBar.setBackgroundDrawable(colorDrawable);
 
         View mCustomActionBar = mInflater.inflate(R.layout.action_bar_place,null);
-        ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.action_bar_back);
-        TextView titleView = (TextView) mCustomActionBar.findViewById(R.id.action_bar_title);
+        ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
+        TextView titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
         titleView.setText("Select Place");
         back.setOnClickListener(new View.OnClickListener() {
             @Override

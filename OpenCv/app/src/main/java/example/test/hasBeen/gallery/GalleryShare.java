@@ -14,14 +14,14 @@ import java.util.List;
 
 import example.test.hasBeen.R;
 import example.test.hasBeen.database.DatabaseHelper;
-import example.test.hasBeen.model.HasBeenPosition;
+import example.test.hasBeen.model.database.Position;
 
 /**
  * Created by zuby on 2015-01-20.
  */
 public class GalleryShare extends ActionBarActivity{
     Long mDayId;
-    List<HasBeenPosition> mPositions;
+    List<Position> mPositions;
     DatabaseHelper database ;
     TextView mTextDate;
     TextView mTextArea;
@@ -51,7 +51,7 @@ public class GalleryShare extends ActionBarActivity{
         actionBar.setDisplayHomeAsUpEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(this);
         View mCustomActionBar = mInflater.inflate(R.layout.action_bar_default,null);
-        ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.action_bar_back);
+        ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

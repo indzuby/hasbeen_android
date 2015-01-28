@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import example.test.hasBeen.gallery.GalleryActivity;
 import example.test.hasBeen.gallery.GalleryFragment;
+import example.test.hasBeen.newsfeed.NewsFeedFragment;
 
 /**
  * Created by zuby on 2015-01-20.
@@ -22,7 +23,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
         switch (index) {
             case 0: // index에 따라서 다른 fragment 돌려준다.
                 if (mNewsFeed == null)
-                    mNewsFeed = new GalleryActivity();
+                    mNewsFeed = new NewsFeedFragment();
                 return mNewsFeed;
             case 1:
                 if (mSearch == null)

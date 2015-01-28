@@ -10,13 +10,13 @@
         android:layout_height="72dp"
         android:orientation="vertical"
         android:background="@color/day_background"
-        android:id="@+id/dayTopBox"
+        android:id="@+id/day_top_box"
         android:alpha="0.8">
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.8dp"
-            android:background="@drawable/day_shadow_top"
-            android:alpha="0.8"
+            android:layout_height="1dp"
+            android:background="#000000"
+            android:alpha="0.08"
             android:layout_alignParentTop="true"
             />
         <TextView
@@ -36,7 +36,7 @@
             android:layout_below="@+id/galleryL1TextDate"
             android:id="@+id/galleryL1TextArea"
             android:paddingLeft="16dp"
-            android:textColor="@color/theme_black"
+            android:textColor="@color/light_black"
             android:textSize="13sp"
             android:text="Area1 - Araea7"
             />
@@ -51,7 +51,7 @@
     </RelativeLayout>
 
     <ListView
-        android:layout_below="@+id/dayTopBox"
+        android:layout_below="@+id/day_top_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none"

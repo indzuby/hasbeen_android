@@ -21,7 +21,7 @@ import com.bumptech.glide.Glide;
 
 import example.test.hasBeen.R;
 import example.test.hasBeen.database.DatabaseHelper;
-import example.test.hasBeen.model.HasBeenPhoto;
+import example.test.hasBeen.model.database.Photo;
 import example.test.hasBeen.utils.HasBeenDate;
 
 /**
@@ -31,7 +31,7 @@ public class GalleryPhoto extends ActionBarActivity {
     Long mPhotoId;
     int mPhotoCount;
     int mPhotoNth;
-    HasBeenPhoto mPhoto;
+    Photo mPhoto;
     DatabaseHelper mDatabase;
     ScrollView mScrollView;
     ImageView mImageView;
@@ -43,7 +43,7 @@ public class GalleryPhoto extends ActionBarActivity {
     InputMethodManager mImm;
     boolean edit = false;
     protected void init(){
-        setContentView(R.layout.activity_photo);
+        setContentView(R.layout.gallery_photo);
         mScrollView = (ScrollView) findViewById(R.id.scroll_view);
         mDatabase = new DatabaseHelper(this);
         mPhotoId = (Long) getIntent().getSerializableExtra("photoId");
@@ -71,10 +71,13 @@ public class GalleryPhoto extends ActionBarActivity {
         actionBar.setDisplayHomeAsUpEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(this);
         View mCustomActionBar = mInflater.inflate(R.layout.full_photo_actionbar,null);
-        ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.full_photo_back);
-        mPlaceNameView = (TextView) mCustomActionBar.findViewById(R.id.place_name);
-        mPhotosCountView = (TextView) mCustomActionBar.findViewById(R.id.photo_count);
-        mPlaceNameView.setText(mPhoto.getPlaceName());
+        ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.photoBack);
+        mPlaceNameView = (TextView) mCustomActionBar.findViewById(R.id.name);
+        mPhotosCountView = (TextView) mCustomActionBar.findViewById(R.id.photoCount);
+        String str = mPhoto.getPlaceName();
+        if(str.length()>20)
+            str = str.substring(0,20)+"...";
+        mPlaceNameView.setText(str);
         mPhotosCountView.setText(mPhotoNth+" of "+mPhotoCount+" photos");
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,9 +101,9 @@ public class GalleryPhoto extends ActionBarActivity {
         actionBar.setBackgroundDrawable(colorDrawable);
 
         View mCustomActionBar = mInflater.inflate(R.layout.action_bar_default,null);
-        ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.action_bar_back);
-        TextView titleView = (TextView) mCustomActionBar.findViewById(R.id.action_bar_title);
-        TextView doneButton = (TextView) mCustomActionBar.findViewById(R.id.action_bar_done);
+        ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
+        TextView titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
+        TextView doneButton = (TextView) mCustomActionBar.findViewById(R.id.actionBarDone);
         titleView.setText("Edit Photo");
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,6 +121,7 @@ public class GalleryPhoto extends ActionBarActivity {
         actionBar.setDisplayShowCustomEnabled(true);
         
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +129,7 @@ public class GalleryPhoto extends ActionBarActivity {
 
         Glide.with(this).load(mPhoto.getPhotoPath())
                 .into(mImageView);
+        mScrollView.smoothScrollTo(mScrollView.getScrollX(),mScrollView.getLayoutParams().height);
         mDateView.setText(HasBeenDate.convertDate(mPhoto.getTakenDate()));
         mEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
