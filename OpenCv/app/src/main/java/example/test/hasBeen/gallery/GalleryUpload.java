@@ -1,81 +1,66 @@
 package example.test.hasBeen.gallery;
 
-import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.List;
-
 import example.test.hasBeen.R;
-import example.test.hasBeen.database.DatabaseHelper;
-import example.test.hasBeen.model.database.Position;
 
 /**
- * Created by zuby on 2015-01-20.
+ * Created by zuby on 2015-01-29.
  */
-public class GalleryShare extends ActionBarActivity{
+public class GalleryUpload extends ActionBarActivity{
     Long mDayId;
-    List<Position> mPositions;
-    DatabaseHelper database ;
     TextView mTextDate;
     TextView mTextArea;
-    ListView mListView;
-    GalleryShareAdapter mShareAdpater;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gallery_share_photos);
+        init();
+    }
+    protected void init(){
+        setContentView(R.layout.gallery_upload);
+        initActionBar();
         mDayId = getIntent().getLongExtra("id",0);
         mTextDate = (TextView) findViewById(R.id.date);
         mTextDate.setText(getIntent().getStringExtra("date"));
         mTextArea = (TextView) findViewById(R.id.area);
+
         mTextArea.setText(getIntent().getStringExtra("area"));
-        database = new DatabaseHelper(this);
-        mListView = (ListView) findViewById(R.id.galleryShareDayView);
-        try {
-            mPositions = database.selectPositionByDayId(mDayId);
-            mShareAdpater = new GalleryShareAdapter(this,mPositions);
-            mListView.setAdapter(mShareAdpater);
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
+
+    }
+    protected void initActionBar(){
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(false);
-
         actionBar.setDisplayHomeAsUpEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(this);
+        ColorDrawable colorDrawable = new ColorDrawable(getResources().getColor(R.color.theme_color));
+        actionBar.setBackgroundDrawable(colorDrawable);
+
         View mCustomActionBar = mInflater.inflate(R.layout.action_bar_default,null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
+        TextView titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
+        TextView doneButton = (TextView) mCustomActionBar.findViewById(R.id.actionBarDone);
+        titleView.setText("Upload");
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("back button clicked", "");
                 finish();
             }
         });
-        TextView done = (TextView) mCustomActionBar.findViewById(R.id.actionBarDone);
-        done.setOnClickListener(new View.OnClickListener() {
-            boolean flag=false;
+        doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!flag) {
-                    flag = true;
-                    Intent intent = new Intent(getBaseContext(), GalleryUpload.class);
-                    intent.putExtras(getIntent().getExtras());
-                    startActivity(intent);
-                    flag = false;
-                }
+
             }
         });
         actionBar.setCustomView(mCustomActionBar);
         actionBar.setDisplayShowCustomEnabled(true);
-    }
 
+    }
 }

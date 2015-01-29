@@ -139,6 +139,7 @@ public class GalleryPhoto extends ActionBarActivity {
                 mDescriptionView.setFocusableInTouchMode(true);
                 mDescriptionView.setClickable(true);
                 mDescriptionView.setSelected(true);
+                mDescriptionView.requestFocus();
                 mEditButton.setVisibility(View.INVISIBLE);
                 mImm.showSoftInput(mDescriptionView,InputMethodManager.SHOW_FORCED);
                 initActionBarEdit();

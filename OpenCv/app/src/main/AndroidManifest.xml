@@ -24,6 +24,8 @@
         </activity>
         <activity android:name=".gallery.GalleryPhoto" android:theme="@style/FullPhoto" android:label="@string/app_name" />
         <activity android:name=".gallery.GalleryShare"  android:theme="@style/hasBeenShare" />
+        <activity android:name=".gallery.GalleryUpload"  android:theme="@style/hasBeenShare"
+                  android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".gallery.GalleryPlace"  android:theme="@style/hasBeenShare" />
         <activity android:name=".day.DayView" android:theme="@style/hasBeenShare" android:label="@string/app_name" />
         <activity android:name=".comment.CommentView" android:theme="@style/hasBeenShare" android:label="@string/app_name" />

@@ -48,7 +48,7 @@ public class GalleryShareAdapter extends GalleryPositionAdapter {
             view = inflater.inflate(R.layout.gallery_share_item, null);
         }
         TextView timeView = (TextView) view.findViewById(R.id.galleryShareTextTime);
-        TextView areaView = (TextView) view.findViewById(R.id.galleryShareTextArea);
+        TextView areaView = (TextView) view.findViewById(R.id.area);
         GridView gridView = (GridView) view.findViewById(R.id.galleryShareGridView);
 
         timeView.setText(HasBeenDate.convertTime(position.getStartDate(), position.getEndDate()));
