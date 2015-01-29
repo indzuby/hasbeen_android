@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -20,6 +22,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 import example.test.hasBeen.model.api.DayApi;
+import example.test.hasBeen.model.api.PhotoApi;
 
 /**
  * Created by zuby on 2015-01-27.
@@ -27,6 +30,7 @@ import example.test.hasBeen.model.api.DayApi;
 public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
     Handler mHandler;
     final static String URL = "https://gist.githubusercontent.com/indzuby/a22f8ae73de9c3e3339c/raw/38c230fe9fe0a4b563cd40df6455dd28a7e0c77c/DayView";
+
     @Override
     protected DayApi doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
@@ -46,7 +50,21 @@ public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
 
 
                 GsonBuilder gsonBuilder = new GsonBuilder();
-                Gson gson = gsonBuilder.create();
+                Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
+                    @Override
+                    public boolean shouldSkipField(FieldAttributes f) {
+                        if(f.getDeclaredClass() == PhotoApi.class){
+                            if(f.getName().equals("day") || f.getName().equals("place"))
+                                return true;
+                        }
+                        return false;
+                    }
+
+                    @Override
+                    public boolean shouldSkipClass(Class<?> clazz) {
+                        return false;
+                    }
+                }).create();
                 DayApi day = gson.fromJson(reader, DayApi.class);
                 content.close();
                 return day;

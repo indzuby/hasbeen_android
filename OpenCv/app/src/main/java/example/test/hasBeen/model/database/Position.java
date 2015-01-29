@@ -133,22 +133,4 @@ public class Position {
     public void setGalleryAdapter(GalleryAdapter galleryAdapter) {
         this.galleryAdapter = galleryAdapter;
     }
-    Photo mainPhoto;
-    List<Photo> photoList;
-
-    public Photo getMainPhoto() {
-        return mainPhoto;
-    }
-
-    public void setMainPhoto(Photo mainPhoto) {
-        this.mainPhoto = mainPhoto;
-    }
-
-    public List<Photo> getPhotoList() {
-        return photoList;
-    }
-
-    public void setPhotoList(List<Photo> photoList) {
-        this.photoList = photoList;
-    }
 }

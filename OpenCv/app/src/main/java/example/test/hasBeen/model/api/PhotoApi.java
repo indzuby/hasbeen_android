@@ -1,5 +1,7 @@
 package example.test.hasBeen.model.api;
 
+import java.util.List;
+
 /**
  * Created by zuby on 2015-01-09.
  */
@@ -12,7 +14,7 @@ public class PhotoApi {
     String placeName;
     float lat;
     float lon;
-    Long takenDate;
+    Long takenTime;
 
     public PhotoApi() {
     }
@@ -57,8 +59,8 @@ public class PhotoApi {
     }
 
 
-    public Long getTakenDate() {
-        return takenDate;
+    public Long getTakenTime() {
+        return takenTime;
     }
 
 
@@ -98,4 +100,41 @@ public class PhotoApi {
     int width;
     int height;
     boolean isPortrait;
+    User user;
+    int commentCount;
+    int loveCount;
+
+    public User getUser() {
+        return user;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public int getLoveCount() {
+        return loveCount;
+    }
+
+    public int getShareCount() {
+        return shareCount;
+    }
+
+    public DayApi getDay() {
+        return day;
+    }
+
+    public PlaceApi getPlace() {
+        return place;
+    }
+
+    public List<Comment> getCommetList() {
+        return commentList;
+    }
+
+    int shareCount;
+    DayApi day;
+    PlaceApi place;
+    List<Comment> commentList;
+
 }

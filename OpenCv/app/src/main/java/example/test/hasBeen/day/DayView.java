@@ -13,13 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.ImageHeaderParser;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -80,8 +80,8 @@ public class DayView extends ActionBarActivity{
         TextView placeName = (TextView) titleBox.findViewById(R.id.placeName);
         TextView date = (TextView) titleBox.findViewById(R.id.date);
 
-        TextView dayTitle = (TextView) findViewById(R.id.dayTitle);
-        TextView description = (TextView) findViewById(R.id.dayDescription);
+        TextView dayTitle = (TextView) findViewById(R.id.title);
+        TextView description = (TextView) findViewById(R.id.description);
         TextView socialAction = (TextView) findViewById(R.id.socialAction);
         TextView totalPhoto = (TextView) findViewById(R.id.totalPhoto);
         Glide.with(this).load(mDay.getUser().getImageUrl()).centerCrop().into(profileImage);
@@ -132,6 +132,10 @@ public class DayView extends ActionBarActivity{
 
             }
         });
+        EditText enterComment = (EditText) findViewById(R.id.enterComment);
+        enterComment.setFocusable(false);
+        enterComment.setEnabled(false);
+        enterComment.setFocusableInTouchMode(false);
     }
     protected void init(){
         setContentView(R.layout.day);

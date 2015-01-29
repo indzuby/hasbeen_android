@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="2">
         <ImageView
-            android:src="@drawable/full_photo_sample"
+            android:src="@drawable/photo_sample"
             android:layout_width="wrap_content"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
@@ -29,14 +29,14 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/full_photo_sample"
+            android:src="@drawable/photo_sample"
             android:paddingBottom="4dp"
             />
         <ImageView
             android:layout_width="match_parent"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/full_photo_sample"
+            android:src="@drawable/photo_sample"
             android:layout_height="wrap_content"
             />
         </LinearLayout>

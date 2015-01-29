@@ -20,7 +20,7 @@ public class NewsFeedApi {
     int loveCount;
     int shareCount;
     int itineraryIndex;
-    Place mainPlace;
+    PlaceApi mainPlace;
     PhotoApi mainPhoto;
     ArrayList<Comment> commnetList;
 
@@ -72,7 +72,7 @@ public class NewsFeedApi {
         return itineraryIndex;
     }
 
-    public Place getMainPlace() {
+    public PlaceApi getMainPlace() {
         return mainPlace;
     }
 

@@ -136,7 +136,6 @@ public class Day {
     Place mainPlace;
     Photo mainPhoto;
     List<Position> positionList;
-    List<Comment> commentList;
 
     public User getUser() {
         return user;
@@ -210,11 +209,4 @@ public class Day {
         this.positionList = positionList;
     }
 
-    public List<Comment> getCommentList() {
-        return commentList;
-    }
-
-    public void setCommentList(List<Comment> commentList) {
-        this.commentList = commentList;
-    }
 }

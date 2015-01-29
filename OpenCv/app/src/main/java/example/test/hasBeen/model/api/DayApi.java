@@ -22,8 +22,8 @@ public class DayApi {
     int loveCount;
     int shareCount;
     int itineraryIndex;
-    Place mainPlace;
-    Photo mainPhoto;
+    PlaceApi mainPlace;
+    PhotoApi mainPhoto;
     List<PositionApi> positionList;
     List<Comment> commentList;
 
@@ -136,21 +136,16 @@ public class DayApi {
         this.itineraryIndex = itineraryIndex;
     }
 
-    public Place getMainPlace() {
+    public PlaceApi getMainPlace() {
         return mainPlace;
     }
 
-    public void setMainPlace(Place mainPlace) {
-        this.mainPlace = mainPlace;
-    }
 
-    public Photo getMainPhoto() {
+    public PhotoApi getMainPhoto() {
         return mainPhoto;
     }
 
-    public void setMainPhoto(Photo mainPhoto) {
-        this.mainPhoto = mainPhoto;
-    }
+
 
     public List<PositionApi> getPositionList() {
         return positionList;

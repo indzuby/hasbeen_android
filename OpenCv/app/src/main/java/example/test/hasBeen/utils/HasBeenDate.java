@@ -1,5 +1,7 @@
 package example.test.hasBeen.utils;
 
+import android.util.Log;
+
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -60,6 +62,19 @@ public class HasBeenDate {
     public static boolean isTimeRangeInFive(Long a, Long b){
 
         return Math.abs(a - b) < 5000;
+    }
+    public static String getGapTime(Long time) {
+        LocalDateTime currentTime = new LocalDateTime();
+        LocalDateTime commentTime = new LocalDateTime(time);
+        Log.i("TIME",new Date().getTime()+"");
+
+        if(Days.daysBetween(commentTime.toLocalDate(),currentTime.toLocalDate()).getDays()<1) {
+            if(commentTime.getHourOfDay()-currentTime.getHourOfDay()<1) {
+                return commentTime.getMinuteOfHour() - currentTime.getMinuteOfHour() +" minutes ago";
+            }else
+                return commentTime.getHourOfDay()-currentTime.getHourOfDay()+" hours ago";
+        }else
+            return commentTime.toString("MMMM dd, yyyy");
     }
 
 }

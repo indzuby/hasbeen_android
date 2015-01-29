@@ -57,20 +57,21 @@ public class PositionApi {
         return categoryIconSuffix;
     }
 
-    Place place;
+    PlaceApi place;
 
-    public Place getPlace() {
+    public PlaceApi getPlace() {
         return place;
     }
 
-    Photo mainPhoto;
-    List<Photo> photoList;
+    PhotoApi mainPhoto;
 
-    public Photo getMainPhoto() {
+    List<PhotoApi> photoList;
+
+    public PhotoApi getMainPhoto() {
         return mainPhoto;
     }
 
-    public List<Photo> getPhotoList() {
+    public List<PhotoApi> getPhotoList() {
         return photoList;
     }
 

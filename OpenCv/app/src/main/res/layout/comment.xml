@@ -36,6 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/name"
         android:text="Beautiful photo."
+        android:id="@+id/contents"
         android:textColor="@color/light_black"
         android:textSize="13sp"
         android:layout_toRightOf="@+id/name"

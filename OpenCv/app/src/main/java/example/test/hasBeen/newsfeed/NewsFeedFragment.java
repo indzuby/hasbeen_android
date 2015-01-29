@@ -132,6 +132,7 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
                                             mFeeds.add(feed);
                                             mFeedAdapter.notifyDataSetChanged();
                                         }
+                                        Log.i("mapRoute",mFeeds.get(0).getMainPlace().getLat()+"");
                                         mapRoute.addMarker(mFeeds.get(0).getMainPlace().getLat(),mFeeds.get(0).getMainPlace().getLon());
                                     }
                                 });

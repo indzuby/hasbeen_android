@@ -71,8 +71,8 @@ public class NewsFeedAdapter extends BaseAdapter {
             }
         });
         TextView date = (TextView) view.findViewById(R.id.date);
-        TextView dayTitle = (TextView) view.findViewById(R.id.dayTitle);
-        TextView dayDescription = (TextView) view.findViewById(R.id.dayDescription);
+        TextView dayTitle = (TextView) view.findViewById(R.id.title);
+        TextView dayDescription = (TextView) view.findViewById(R.id.description);
         TextView socialAction = (TextView) view.findViewById(R.id.socialAction);
         View imageBox = view.findViewById(R.id.imageBox);
         ImageView mainImage = (ImageView) imageBox.findViewById(R.id.mainImage);

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -44,6 +45,14 @@ public class CommentView extends ActionBarActivity {
         mListView.setAdapter(mCommnetAdapter);
         mListView.setSelection(mListView.getCount());
         mEnterComment = (EditText) enterView.findViewById(R.id.enterComment);
+        mEnterComment.requestFocus();
+        ImageView send = (ImageView) enterView.findViewById(R.id.send);
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
     protected void initActionBar(){
         ActionBar actionBar = getSupportActionBar();

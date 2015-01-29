@@ -1,6 +1,7 @@
 package example.test.hasBeen.day;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import example.test.hasBeen.R;
@@ -19,6 +21,7 @@ import example.test.hasBeen.model.api.PositionApi;
 import example.test.hasBeen.model.database.Day;
 import example.test.hasBeen.model.database.Photo;
 import example.test.hasBeen.model.database.Position;
+import example.test.hasBeen.photo.PhotoView;
 import example.test.hasBeen.utils.HasBeenDate;
 import it.sephiroth.android.library.widget.HListView;
 
@@ -66,8 +69,7 @@ public class DayAdapter extends BaseAdapter {
             placeName.setText(position.getPlace().getName());
             Glide.with(mContext).load(position.getPlace().getCategoryIconPrefix() + "88" + position.getPlace().getCategoryIconSuffix()).into(placeIcon);
         }else {
-            placeName.setHint("Enter the place name");
-            placeName.setText("");
+            placeName.setText("Can not find the place");
         }
         HListView hListView = (HListView) view.findViewById(R.id.hListView);
         if (position.getPhotoList() != null && position.getPhotoList().size() > 0) {
@@ -75,14 +77,20 @@ public class DayAdapter extends BaseAdapter {
             hListView.addHeaderView(transparentHeaderView);
             PhotoAdapter photoAdapter = new PhotoAdapter(position.getPhotoList());
             hListView.setAdapter(photoAdapter);
+        }else {
+            if(position.getType().equals("WALK")) {
+                List<PhotoApi> photos = new ArrayList<>();
+//                photos.add(position.getMainPhoto());
+                hListView.setAdapter(new PhotoAdapter(photos));
+            }
         }
         return view;
     }
 
     class PhotoAdapter extends BaseAdapter {
-        List<Photo> mPhotoList;
+        List<PhotoApi> mPhotoList;
 
-        public PhotoAdapter(List<Photo> mPhotoList) {
+        public PhotoAdapter(List<PhotoApi> mPhotoList) {
             this.mPhotoList = mPhotoList;
         }
 
@@ -92,7 +100,7 @@ public class DayAdapter extends BaseAdapter {
         }
 
         @Override
-        public Photo getItem(int position) {
+        public PhotoApi getItem(int position) {
             return mPhotoList.get(position);
         }
 
@@ -104,13 +112,27 @@ public class DayAdapter extends BaseAdapter {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = convertView;
-            Photo photo = getItem(position);
+            PhotoApi photo = getItem(position);
             if (view == null) {
                 LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.day_photo, null);
             }
             ImageView imageView = (ImageView) view.findViewById(R.id.photo);
             Glide.with(mContext).load(photo.getMediumUrl()).into(imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                boolean flag = false;
+                @Override
+                public void onClick(View v) {
+                    if(!flag) {
+                        flag = true;
+                        Intent intent = new Intent(mContext, PhotoView.class);
+                        mContext.startActivity(intent);
+                        flag = false;
+                    }
+                }
+            });
+
+
             return view;
         }
     }

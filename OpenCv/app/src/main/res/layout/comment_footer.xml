@@ -28,7 +28,6 @@
             android:focusableInTouchMode="true"
             android:layout_toLeftOf="@+id/send"
             android:hint="Write a comment...">
-            <requestFocus/>
             </EditText>
         android:layout_width="32dp"
         android:layout_height="32dp"

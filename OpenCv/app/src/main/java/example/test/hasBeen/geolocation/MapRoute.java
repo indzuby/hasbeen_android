@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import example.test.hasBeen.database.DatabaseHelper;
+import example.test.hasBeen.model.api.PlaceApi;
 import example.test.hasBeen.model.api.PositionApi;
 import example.test.hasBeen.model.database.Place;
 import example.test.hasBeen.model.database.Position;
@@ -62,9 +63,9 @@ public class MapRoute {
         mMap.clear();
         mMap.setOnCameraChangeListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
-        List<Place> placeList = new ArrayList<>();
+        List<PlaceApi> placeList = new ArrayList<>();
         for(PositionApi position : positions) {
-            Place place = position.getPlace();
+            PlaceApi place = position.getPlace();
             if(place==null) continue;
             placeList.add(place);
             mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(), place.getLon())));

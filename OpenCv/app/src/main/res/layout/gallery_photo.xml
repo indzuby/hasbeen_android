@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
-                android:src="@drawable/full_photo_sample"
+                android:src="@drawable/photo_sample"
                 android:id="@+id/full_size_photo"/>
             <RelativeLayout
                 android:layout_width="match_parent"

@@ -1,19 +1,14 @@
-package example.test.hasBeen.newsfeed;
+package example.test.hasBeen.photo;
 
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
-import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.HttpEntity;
@@ -27,21 +22,21 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import example.test.hasBeen.model.api.DayApi;
 import example.test.hasBeen.model.api.NewsFeedApi;
 import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.model.api.PlaceApi;
 
 /**
- * Created by zuby on 2015-01-27.
+ * Created by zuby on 2015-01-29.
  */
-public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<NewsFeedApi>> {
+public class NearByPhotoAsyncTask extends AsyncTask<Object,Void,List<PhotoApi>> {
     Handler mHandler;
-    final static String URL = "https://gist.githubusercontent.com/indzuby/c9e87b33ca65eac93065/raw/33d576b53438eca307f9d4d6a354d3528d40a7c3/NewsFeed";
+    final static String URL = "https://gist.githubusercontent.com/indzuby/01dd9766562e90d0af7e/raw/4f4cec4ec910b1a5f5006904a71a3cb25309ccdd/photoNearBy";
     @Override
-    protected List<NewsFeedApi> doInBackground(Object... params) {
+    protected List<PhotoApi> doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         Uri uri;
@@ -57,12 +52,12 @@ public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<NewsFeedApi>> 
                 //Read the server response and attempt to parse it as JSON
                 Reader reader = new InputStreamReader(content);
 
+
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
                     @Override
                     public boolean shouldSkipField(FieldAttributes f) {
-                        if(f.getDeclaredClass() == PhotoApi.class){
-                            if(f.getName().equals("day") || f.getName().equals("place"))
+                        if(f.getName().equals("day") || f.getName().equals("place") ){
                                 return true;
                         }
                         return false;
@@ -73,10 +68,10 @@ public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<NewsFeedApi>> 
                         return false;
                     }
                 }).create();
-                Type listType = new TypeToken<List<NewsFeedApi>>(){}.getType();
-                List<NewsFeedApi> posts = gson.fromJson(reader, listType);
+                Type listType = new TypeToken<List<PhotoApi>>(){}.getType();
+                List<PhotoApi> photos = gson.fromJson(reader, listType);
                 content.close();
-                return posts;
+                return photos;
             }
 
         }catch (Exception e) {
@@ -86,11 +81,11 @@ public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<NewsFeedApi>> 
     }
 
     @Override
-    protected void onPostExecute(List<NewsFeedApi> newsFeeds) {
+    protected void onPostExecute(List<PhotoApi>  photos) {
 
         Message msg = mHandler.obtainMessage();
-        if(newsFeeds!=null) {
-            msg.obj = newsFeeds;
+        if(photos !=null) {
+            msg.obj = photos;
             msg.what = 0;
         }else {
             msg.what = -1;
@@ -98,7 +93,7 @@ public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<NewsFeedApi>> 
         mHandler.sendMessage(msg);
     }
 
-    public NewsFeedAsyncTask(Handler handler) {
+    public NearByPhotoAsyncTask(Handler handler) {
         mHandler = handler;
     }
 }

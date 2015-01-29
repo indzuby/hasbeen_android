@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Day 2-Beautiful Swiss"
-            android:id="@+id/dayTitle"
+            android:id="@+id/title"
             android:textStyle="bold"
             android:textColor="@color/light_black"
             android:textSize="13sp"
@@ -39,8 +39,8 @@
             android:layout_marginTop="4dp"
             android:includeFontPadding="false"
             android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus id accumsan dui. Vivamus laoreet cursus pulvinar. Morbi eu ullamcorper neque, non faucibus"
-            android:id="@+id/dayDescription"
-            android:layout_below="@+id/dayTitle"
+            android:id="@+id/description"
+            android:layout_below="@+id/title"
             android:textColor="@color/light_black"
             android:layout_marginBottom="8dp"
             android:textSize="14sp"/>
@@ -51,7 +51,7 @@
             android:textColor="@color/light_gray"
             android:id="@+id/socialAction"
             android:text="8 Likes 3 Comments 2 Shared"
-            android:layout_below="@+id/dayDescription"
+            android:layout_below="@+id/description"
             android:textSize="13sp"
             />
     </RelativeLayout>
