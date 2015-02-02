@@ -1,5 +1,6 @@
 package example.test.hasBeen;
 
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -7,6 +8,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import example.test.hasBeen.gallery.GalleryActivity;
 import example.test.hasBeen.gallery.GalleryFragment;
 import example.test.hasBeen.newsfeed.NewsFeedFragment;
+import example.test.hasBeen.profile.ProfileFragment;
+import example.test.hasBeen.search.SearchFragment;
 
 /**
  * Created by zuby on 2015-01-20.
@@ -27,7 +30,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
                 return mNewsFeed;
             case 1:
                 if (mSearch == null)
-                    mSearch = new GalleryActivity();
+                    mSearch = new SearchFragment();
                 return mSearch;
             case 2:
                 if (mGallery == null)
@@ -39,7 +42,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
                 return mAlarm;
             case 4:
                 if (mProfile == null)
-                    mProfile = new GalleryActivity();
+                    mProfile = new ProfileFragment();
                 return mProfile;
         }
         return null;

@@ -40,4 +40,35 @@ public class User {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    PhotoApi coverPhoto;
+    int dayCount;
+    int photoCount;
+    int loveCount;
+    int followerCount;
+    int followingCount;
+
+    public PhotoApi getCoverPhoto() {
+        return coverPhoto;
+    }
+
+    public int getDayCount() {
+        return dayCount;
+    }
+
+    public int getPhotoCount() {
+        return photoCount;
+    }
+
+    public int getLoveCount() {
+        return loveCount;
+    }
+
+    public int getFollowerCount() {
+        return followerCount;
+    }
+
+    public int getFollowingCount() {
+        return followingCount;
+    }
 }

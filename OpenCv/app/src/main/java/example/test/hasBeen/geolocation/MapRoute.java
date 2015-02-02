@@ -1,6 +1,7 @@
 package example.test.hasBeen.geolocation;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -9,6 +10,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 
@@ -16,10 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import example.test.hasBeen.database.DatabaseHelper;
+import example.test.hasBeen.model.api.PhotoApi;
 import example.test.hasBeen.model.api.PlaceApi;
 import example.test.hasBeen.model.api.PositionApi;
 import example.test.hasBeen.model.database.Place;
 import example.test.hasBeen.model.database.Position;
+import example.test.hasBeen.model.pin.PhotoPin;
+import example.test.hasBeen.photo.PhotoView;
 
 /**
  * Created by zuby on 2015-01-23.
@@ -27,11 +32,12 @@ import example.test.hasBeen.model.database.Position;
 public class MapRoute {
     GoogleMap mMap;
     DatabaseHelper database;
+    Context mContext;
     private ClusterManager<MyItem> mClusterManager;
     public MapRoute(GoogleMap mMap,Context context) {
         this.mMap = mMap;
         database = new DatabaseHelper(context);
-        mClusterManager = new ClusterManager<MyItem>(context,mMap);
+        mContext = context;
     }
     public void createRouteDay(Long dayId){
         mMap.clear();
@@ -79,6 +85,52 @@ public class MapRoute {
             LatLng to = new LatLng(placeList.get(i).getLat(),placeList.get(i).getLon());
             displayRoute(from,to);
         }
+
+    }
+    public void addMarkerCluster(List<LatLng> latLngs){
+        mMap.clear();
+        mClusterManager = new ClusterManager<MyItem>(mContext,mMap);
+
+        mMap.setOnCameraChangeListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+        for(LatLng location : latLngs) {
+            Log.i("cluter location", location.latitude + "," + location.longitude);
+            mClusterManager.addItem(new MyItem(location.latitude, location.longitude));
+        }
+    }
+    public void addMarkerClusterPhoto(List<PhotoApi> photos) {
+        mMap.clear();
+        ClusterManager<PhotoPin> clusterManager = new ClusterManager<PhotoPin>(mContext,mMap);
+        clusterManager.setRenderer(new PhotoMarker(mContext,mMap,clusterManager));
+        mMap.setOnCameraChangeListener(clusterManager) ;
+        mMap.setOnMarkerClickListener(clusterManager);
+        clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<PhotoPin>() {
+            boolean flag = false;
+            @Override
+            public boolean onClusterItemClick(PhotoPin photoPin) {
+                if(!flag) {
+                    flag = true;
+                    Intent intent = new Intent(mContext, PhotoView.class);
+                    mContext.startActivity(intent);
+                    flag = false;
+                }
+                return true;
+            }
+        });
+        clusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<PhotoPin>() {
+            @Override
+            public boolean onClusterClick(Cluster<PhotoPin> photoPinCluster) {
+                Log.i("Cluster","click");
+                LatLng location = photoPinCluster.getItems().iterator().next().getPosition();
+//                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, mMap.getCameraPosition().zoom+1));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, mMap.getCameraPosition().zoom+1),500,null);
+                return true;
+            }
+        });
+        for(PhotoApi photo : photos) {
+            clusterManager.addItem(new PhotoPin(photo));
+        }
+        clusterManager.cluster();
 
     }
 

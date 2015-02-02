@@ -18,8 +18,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 import example.test.hasBeen.R;
@@ -131,7 +129,7 @@ public class PhotoView extends ActionBarActivity{
             TextView date = (TextView) nearByItem.findViewById(R.id.date);
             ImageView nearPhoto = (ImageView) nearByItem.findViewById(R.id.photo);
             TextView description = (TextView) nearByItem.findViewById(R.id.description);
-            TextView likeCount = (TextView) nearByItem.findViewById(R.id.likeCount);
+            TextView likeCount = (TextView) nearByItem.findViewById(R.id.loveCount);
             TextView commentCount = (TextView) nearByItem.findViewById(R.id.commentCount);
             TextView shareCount = (TextView) nearByItem.findViewById(R.id.shareCount);
 

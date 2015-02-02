@@ -1,4 +1,4 @@
-package example.test.hasBeen.day;
+package example.test.hasBeen.profile;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -9,6 +9,7 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -20,19 +21,21 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Type;
+import java.util.List;
 
 import example.test.hasBeen.model.api.DayApi;
 import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.model.api.User;
 
 /**
- * Created by zuby on 2015-01-27.
+ * Created by zuby on 2015-01-29.
  */
-public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
+public class ProfileAsyncTask extends AsyncTask<Object,Void,User> {
     Handler mHandler;
-    final static String URL = "https://gist.githubusercontent.com/indzuby/a22f8ae73de9c3e3339c/raw/38c230fe9fe0a4b563cd40df6455dd28a7e0c77c/DayView";
-
+    final static String URL = "https://gist.githubusercontent.com/indzuby/de7426b596733baa9ed1/raw/205b50195800f1669786b65fee82986a36b061f0/Profile";
     @Override
-    protected DayApi doInBackground(Object... params) {
+    protected User doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         Uri uri;
@@ -53,12 +56,10 @@ public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
                 Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
                     @Override
                     public boolean shouldSkipField(FieldAttributes f) {
-                        if(f.getDeclaredClass() == PhotoApi.class){
-                            if(f.getName().equals("day") || f.getName().equals("place"))
+                        if(f.getDeclaringClass() == PhotoApi.class)
+                        if(f.getName().equals("day") || f.getName().equals("place") ){
                                 return true;
                         }
-                        if(f.getName().equals("coverPhoto"))
-                            return true;
                         return false;
                     }
 
@@ -67,9 +68,9 @@ public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
                         return false;
                     }
                 }).create();
-                DayApi day = gson.fromJson(reader, DayApi.class);
+                User user = gson.fromJson(reader, User.class);
                 content.close();
-                return day;
+                return user;
             }
 
         }catch (Exception e) {
@@ -79,11 +80,11 @@ public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
     }
 
     @Override
-    protected void onPostExecute(DayApi day) {
+    protected void onPostExecute(User  user) {
 
         Message msg = mHandler.obtainMessage();
-        if(day !=null) {
-            msg.obj = day;
+        if(user !=null) {
+            msg.obj = user;
             msg.what = 0;
         }else {
             msg.what = -1;
@@ -91,7 +92,7 @@ public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
         mHandler.sendMessage(msg);
     }
 
-    public DayAsyncTask(Handler handler) {
+    public ProfileAsyncTask(Handler handler) {
         mHandler = handler;
     }
 }

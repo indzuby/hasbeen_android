@@ -57,6 +57,8 @@ public class PhotoAsyncTask extends AsyncTask<Object,Void,PhotoApi> {
                             if(f.getDeclaringClass() == DayApi.class || f.getDeclaringClass() == PlaceApi.class)
                                 return true;
                         }
+                        if(f.getName().equals("coverPhoto"))
+                            return true;
                         return false;
                     }
 

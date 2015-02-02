@@ -34,7 +34,7 @@ import example.test.hasBeen.model.api.PlaceApi;
  */
 public class NearByPhotoAsyncTask extends AsyncTask<Object,Void,List<PhotoApi>> {
     Handler mHandler;
-    final static String URL = "https://gist.githubusercontent.com/indzuby/01dd9766562e90d0af7e/raw/4f4cec4ec910b1a5f5006904a71a3cb25309ccdd/photoNearBy";
+    final static String URL = "https://gist.githubusercontent.com/indzuby/01dd9766562e90d0af7e/raw/d4aca1859f83a9599dbe15541624b1499aae8ea2/photoNearBy";
     @Override
     protected List<PhotoApi> doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
@@ -60,6 +60,8 @@ public class NearByPhotoAsyncTask extends AsyncTask<Object,Void,List<PhotoApi>> 
                         if(f.getName().equals("day") || f.getName().equals("place") ){
                                 return true;
                         }
+                        if(f.getName().equals("coverPhoto"))
+                            return true;
                         return false;
                     }
 

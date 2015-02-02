@@ -1,4 +1,4 @@
-package example.test.hasBeen.day;
+package example.test.hasBeen.search;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -9,6 +9,7 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -20,19 +21,20 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Type;
+import java.util.List;
 
-import example.test.hasBeen.model.api.DayApi;
+import example.test.hasBeen.model.api.NewsFeedApi;
 import example.test.hasBeen.model.api.PhotoApi;
 
 /**
  * Created by zuby on 2015-01-27.
  */
-public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
+public class SearchDayAsyncTask extends AsyncTask<Object,Void,List<NewsFeedApi>> {
     Handler mHandler;
-    final static String URL = "https://gist.githubusercontent.com/indzuby/a22f8ae73de9c3e3339c/raw/38c230fe9fe0a4b563cd40df6455dd28a7e0c77c/DayView";
-
+    final static String URL = "https://gist.githubusercontent.com/indzuby/c9e87b33ca65eac93065/raw/33d576b53438eca307f9d4d6a354d3528d40a7c3/NewsFeed";
     @Override
-    protected DayApi doInBackground(Object... params) {
+    protected List<NewsFeedApi> doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         Uri uri;
@@ -47,7 +49,6 @@ public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
 
                 //Read the server response and attempt to parse it as JSON
                 Reader reader = new InputStreamReader(content);
-
 
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
@@ -67,9 +68,10 @@ public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
                         return false;
                     }
                 }).create();
-                DayApi day = gson.fromJson(reader, DayApi.class);
+                Type listType = new TypeToken<List<NewsFeedApi>>(){}.getType();
+                List<NewsFeedApi> posts = gson.fromJson(reader, listType);
                 content.close();
-                return day;
+                return posts;
             }
 
         }catch (Exception e) {
@@ -79,11 +81,11 @@ public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
     }
 
     @Override
-    protected void onPostExecute(DayApi day) {
+    protected void onPostExecute(List<NewsFeedApi> newsFeeds) {
 
         Message msg = mHandler.obtainMessage();
-        if(day !=null) {
-            msg.obj = day;
+        if(newsFeeds!=null) {
+            msg.obj = newsFeeds;
             msg.what = 0;
         }else {
             msg.what = -1;
@@ -91,7 +93,7 @@ public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
         mHandler.sendMessage(msg);
     }
 
-    public DayAsyncTask(Handler handler) {
+    public SearchDayAsyncTask(Handler handler) {
         mHandler = handler;
     }
 }

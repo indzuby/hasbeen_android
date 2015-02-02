@@ -65,6 +65,8 @@ public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<NewsFeedApi>> 
                             if(f.getName().equals("day") || f.getName().equals("place"))
                                 return true;
                         }
+                        if(f.getName().equals("coverPhoto"))
+                            return true;
                         return false;
                     }
 
