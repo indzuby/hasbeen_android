@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import example.test.hasBeen.R;
+import example.test.hasBeen.model.api.Comment;
 import example.test.hasBeen.model.api.PhotoApi;
 import example.test.hasBeen.model.api.PositionApi;
 import example.test.hasBeen.model.database.Day;
@@ -84,6 +85,10 @@ public class DayAdapter extends BaseAdapter {
                 hListView.setAdapter(new PhotoAdapter(photos));
             }
         }
+
+
+
+
         return view;
     }
 

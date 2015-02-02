@@ -1,5 +1,6 @@
 package example.test.hasBeen.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,6 +17,7 @@ import com.bumptech.glide.Glide;
 
 import example.test.hasBeen.R;
 import example.test.hasBeen.model.api.User;
+import example.test.hasBeen.utils.CircleTransform;
 import example.test.hasBeen.utils.Util;
 
 /**
@@ -101,14 +103,21 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         ImageView profileImage = (ImageView) mView.findViewById(R.id.profileImage);
         TextView profileName = (TextView) mView.findViewById(R.id.profileName);
         TextView followStatus = (TextView) mView.findViewById(R.id.followStatus);
-        ImageView followImage = (ImageView) mView.findViewById(R.id.follwImage);
+        ImageView setting = (ImageView) mView.findViewById(R.id.setting);
         TextView dayCount = (TextView) mView.findViewById(R.id.dayCount);
         TextView photoCount = (TextView) mView.findViewById(R.id.photoCount);
         TextView loveCount = (TextView) mView.findViewById(R.id.loveCount);
         Glide.with(getActivity()).load(mUser.getCoverPhoto().getLargeUrl()).into(coverImage);
-        Glide.with(getActivity()).load(mUser.getImageUrl()).into(profileImage);
-        profileName.setText(Util.parseName(mUser,0));
+        Glide.with(getActivity()).load(mUser.getImageUrl()).transform(new CircleTransform(getActivity())).into(profileImage);
+        profileName.setText(Util.parseName(mUser, 0));
         followStatus.setText(mUser.getFollowerCount()+" Follower · "+ mUser.getFollowingCount() +" Following");
+        followStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),FollowView.class);
+                startActivity(intent);
+            }
+        });
         dayCount.setText(mUser.getDayCount()+"");
         photoCount.setText(mUser.getPhotoCount()+"");
         loveCount.setText(mUser.getLoveCount()+"");

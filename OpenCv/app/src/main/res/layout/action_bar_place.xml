@@ -30,11 +30,11 @@
         android:layout_alignParentRight="true"
 
         android:layout_height="wrap_content">
-        <ImageButton
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:id="@+id/full_photo_more_vert"
+            android:id="@+id/moreVert"
             android:src="@drawable/ic_more_vert"
             android:layout_alignParentRight="true"
             />

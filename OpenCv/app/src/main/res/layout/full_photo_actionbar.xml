@@ -20,7 +20,7 @@
         android:textColor="#FFFFFF"
         android:includeFontPadding="false"
         android:text="BeatienBerg, Swiss"
-        android:id="@+id/name"
+        android:id="@+id/profileName"
         android:layout_toRightOf="@+id/photoBack"
         android:layout_toEndOf="@+id/photoBack"
         android:layout_marginLeft="32dp"/>
@@ -32,14 +32,14 @@
         android:textColor="#FFFFFF"
         android:text="1 of 12 photos"
         android:id="@+id/photoCount"
-        android:layout_below="@+id/name"
-        android:layout_alignLeft="@+id/name"
+        android:layout_below="@+id/profileName"
+        android:layout_alignLeft="@+id/profileName"
         />
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"
-        android:id="@+id/full_photo_more_vert"
+        android:id="@+id/moreVert"
         android:src="@drawable/ic_more_vert"
         android:layout_alignParentRight="true"
         />

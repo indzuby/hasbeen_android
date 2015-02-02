@@ -39,7 +39,7 @@ import example.test.hasBeen.model.api.PhotoApi;
  */
 public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<NewsFeedApi>> {
     Handler mHandler;
-    final static String URL = "https://gist.githubusercontent.com/indzuby/c9e87b33ca65eac93065/raw/33d576b53438eca307f9d4d6a354d3528d40a7c3/NewsFeed";
+    final static String URL = "https://gist.githubusercontent.com/indzuby/c9e87b33ca65eac93065/raw/4000d9c125b1e56c60f77523dc806e4a9cdb303d/NewsFeed";
     @Override
     protected List<NewsFeedApi> doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();

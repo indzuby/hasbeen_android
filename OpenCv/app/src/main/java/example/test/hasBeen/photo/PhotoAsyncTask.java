@@ -30,7 +30,7 @@ import example.test.hasBeen.model.api.PlaceApi;
  */
 public class PhotoAsyncTask extends AsyncTask<Object,Void,PhotoApi> {
     Handler mHandler;
-    final static String URL = "https://gist.githubusercontent.com/indzuby/ca980f3c37f79d0156be/raw/d203064eeda49286375968192d9c9d93e8e424c5/PhotoView";
+    final static String URL = "https://gist.githubusercontent.com/indzuby/ca980f3c37f79d0156be/raw/548b25ee536bb5ec5f1941a0cb05bdb9ba845ed1/PhotoView";
     @Override
     protected PhotoApi doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();

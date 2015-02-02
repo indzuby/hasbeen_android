@@ -1,6 +1,7 @@
 package example.test.hasBeen.model.api;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import example.test.hasBeen.model.database.Place;
 
@@ -21,8 +22,18 @@ public class NewsFeedApi {
     int shareCount;
     int itineraryIndex;
     PlaceApi mainPlace;
-    PhotoApi mainPhoto;
-    ArrayList<Comment> commnetList;
+    List<PhotoApi> photoList;
+    User following;
+    String newsFeedType;
+    List<Comment> commnetList;
+
+    public User getFollowing() {
+        return following;
+    }
+
+    public String getNewsFeedType() {
+        return newsFeedType;
+    }
 
     public int getId() {
         return id;
@@ -76,11 +87,12 @@ public class NewsFeedApi {
         return mainPlace;
     }
 
-    public PhotoApi getMainPhoto() {
-        return mainPhoto;
+
+    public List<PhotoApi> getPhotoList() {
+        return photoList;
     }
 
-    public ArrayList<Comment> getCommnetList() {
+    public List<Comment> getCommnetList() {
         return commnetList;
     }
 }

@@ -82,7 +82,7 @@ public class GalleryPlaceAdapter extends BaseAdapter{
                 if(view.findViewById(R.id.placeIcon)==null)
                 view = inflater.inflate(R.layout.gallery_place_item, null);
             }
-            TextView placeName = (TextView) view.findViewById(R.id.name);
+            TextView placeName = (TextView) view.findViewById(R.id.profileName);
             TextView placeCategory = (TextView) view.findViewById(R.id.placeIcon);
             final ImageView placeIcon = (ImageView) view.findViewById(R.id.place_icon);
             placeName.setText(category.getPlaceName());

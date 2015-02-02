@@ -1,5 +1,6 @@
 package example.test.hasBeen.photo;
 
+import android.app.ProgressDialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,7 +22,9 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import example.test.hasBeen.R;
+import example.test.hasBeen.model.api.Comment;
 import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.utils.CircleTransform;
 import example.test.hasBeen.utils.HasBeenDate;
 import example.test.hasBeen.utils.Util;
 
@@ -34,6 +37,7 @@ public class PhotoView extends ActionBarActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        showProgress();
         init();
     }
     Handler handler = new Handler(Looper.getMainLooper()) {
@@ -46,6 +50,7 @@ public class PhotoView extends ActionBarActivity{
                     Log.i("Photo",mPhoto.getPlaceName());
                     initView();
                     initComment();
+                    dialog.dismiss();
                     break;
                 case -1:
                     break;
@@ -61,13 +66,13 @@ public class PhotoView extends ActionBarActivity{
 
         TextView description = (TextView) findViewById(R.id.description);
         TextView socialAction = (TextView) findViewById(R.id.socialAction);
-        Glide.with(this).load(mPhoto.getUser().getImageUrl()).centerCrop().into(profileImage);
+        Glide.with(this).load(mPhoto.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).centerCrop().into(profileImage);
         Log.i(TAG, mPhoto.getPlaceName());
         name.setText(Util.parseName(mPhoto.getUser(), 0));
         placeName.setText(mPhoto.getPlaceName());
         date.setText(HasBeenDate.convertDate(mPhoto.getTakenTime()));
         description.setText(mPhoto.getDescription());
-        socialAction.setText(mPhoto.getLoveCount() + " Likes " + mPhoto.getCommentCount() + " Commnents " + mPhoto.getShareCount() + " Shared");
+        socialAction.setText(mPhoto.getLoveCount() + " Likes · " + mPhoto.getCommentCount() + " Commnents · " + mPhoto.getShareCount() + " Shared");
         ImageView imageView = (ImageView) findViewById(R.id.photo);
         Glide.with(this).load(mPhoto.getMediumUrl()).into(imageView);
     }
@@ -77,16 +82,21 @@ public class PhotoView extends ActionBarActivity{
 
 
 
-        if(mPhoto.getCommetList().size()>3) {
+        if(mPhoto.getCommentList().size()>3) {
             View moreComment = LayoutInflater.from(this).inflate(R.layout.more_comments,null);
             commentBox.addView(moreComment);
         }
-        for(int i = 0 ; i <mPhoto.getCommetList().size() && i<3;i++){
+        for(int i = 0 ; i <mPhoto.getCommentList().size() && i<3;i++){
+            Comment comment = mPhoto.getCommentList().get(i);
             View commentView = LayoutInflater.from(this).inflate(R.layout.comment,null);
             TextView contents = (TextView) commentView.findViewById(R.id.contents);
             TextView commentTime = (TextView) commentView.findViewById(R.id.commentTime);
-            contents.setText(mPhoto.getCommetList().get(i).getContents());
-            commentTime.setText(HasBeenDate.getGapTime(mPhoto.getCommetList().get(i).getCreatedTime()));
+            contents.setText(comment.getContents());
+            commentTime.setText(HasBeenDate.getGapTime(comment.getCreatedTime()));
+            ImageView profileImage = (ImageView) commentView.findViewById(R.id.profileImage);
+            TextView profileName = (TextView) commentView.findViewById(R.id.profileName);
+            Glide.with(this).load(comment.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(profileImage);
+            profileName.setText(Util.parseName(comment.getUser(),0));
             commentBox.addView(commentView);
         }
     }
@@ -171,4 +181,13 @@ public class PhotoView extends ActionBarActivity{
 
     }
 
+    ProgressDialog dialog;
+
+    protected void showProgress() {
+        dialog = new ProgressDialog(this);
+        dialog.setCancelable(true);
+        dialog.setMessage("Wait a minutes...");
+        dialog.setProgress(100);
+        dialog.show();
+    }
 }

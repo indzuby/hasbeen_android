@@ -7,6 +7,11 @@ public class Comment {
     int id;
     Long createdTime;
     String contents;
+    User user;
+
+    public User getUser() {
+        return user;
+    }
 
     public int getId() {
         return id;

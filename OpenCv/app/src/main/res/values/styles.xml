@@ -42,7 +42,6 @@
         <item name="android:actionBarStyle">@style/ShareActionBar</item>
         <item name="android:actionButtonStyle">@style/ShareMenuButton</item>
         <item name="android:windowContentOverlay">@null</item>
-
         <item name="actionBarStyle"> @style/ShareActionBar</item>
         <item name="actionButtonStyle">@style/ShareMenuButton</item>
 

@@ -1,4 +1,4 @@
-package example.test.hasBeen.day;
+package example.test.hasBeen.profile;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -9,6 +9,7 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -20,19 +21,19 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Type;
+import java.util.List;
 
-import example.test.hasBeen.model.api.DayApi;
-import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.model.api.Follower;
 
 /**
- * Created by zuby on 2015-01-27.
+ * Created by 주현 on 2015-02-02.
  */
-public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
+public class FollowerAsyncTask extends AsyncTask<Object,Void,List<Follower>> {
     Handler mHandler;
-    final static String URL = "https://gist.githubusercontent.com/indzuby/a22f8ae73de9c3e3339c/raw/7f07e297c50961151fe4b8a4839a65d7d176fa91/DayView";
-
+    final static String URL = "https://gist.githubusercontent.com/indzuby/43da0aae3a9e9875d670/raw/16c0c339eea735923c7d8a495403a5e543936757/FollowerList";
     @Override
-    protected DayApi doInBackground(Object... params) {
+    protected List<Follower> doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         Uri uri;
@@ -53,10 +54,6 @@ public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
                 Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
                     @Override
                     public boolean shouldSkipField(FieldAttributes f) {
-                        if(f.getDeclaredClass() == PhotoApi.class){
-                            if(f.getName().equals("day") || f.getName().equals("place"))
-                                return true;
-                        }
                         if(f.getName().equals("coverPhoto"))
                             return true;
                         return false;
@@ -67,9 +64,10 @@ public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
                         return false;
                     }
                 }).create();
-                DayApi day = gson.fromJson(reader, DayApi.class);
+                Type listType = new TypeToken<List<Follower>>(){}.getType();
+                List<Follower> Followers = gson.fromJson(reader, listType);
                 content.close();
-                return day;
+                return Followers;
             }
 
         }catch (Exception e) {
@@ -79,11 +77,11 @@ public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
     }
 
     @Override
-    protected void onPostExecute(DayApi day) {
+    protected void onPostExecute(List<Follower> Followers) {
 
         Message msg = mHandler.obtainMessage();
-        if(day !=null) {
-            msg.obj = day;
+        if(Followers !=null) {
+            msg.obj = Followers;
             msg.what = 0;
         }else {
             msg.what = -1;
@@ -91,7 +89,7 @@ public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
         mHandler.sendMessage(msg);
     }
 
-    public DayAsyncTask(Handler handler) {
+    public FollowerAsyncTask(Handler handler) {
         mHandler = handler;
     }
 }

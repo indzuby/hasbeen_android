@@ -1,5 +1,6 @@
 package example.test.hasBeen.day;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -13,9 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,7 +32,9 @@ import java.util.List;
 import example.test.hasBeen.R;
 import example.test.hasBeen.comment.CommentView;
 import example.test.hasBeen.geolocation.MapRoute;
+import example.test.hasBeen.model.api.Comment;
 import example.test.hasBeen.model.api.DayApi;
+import example.test.hasBeen.utils.CircleTransform;
 import example.test.hasBeen.utils.HasBeenDate;
 import example.test.hasBeen.utils.Util;
 
@@ -51,6 +54,7 @@ public class DayView extends ActionBarActivity{
     DayAdapter mDayAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        showProgress();
         super.onCreate(savedInstanceState);
         init();
     }
@@ -66,6 +70,7 @@ public class DayView extends ActionBarActivity{
                     initHeaderView();
                     initBodyView();
                     initFoorteView();
+                    dialog.dismiss();
                     break;
                 case -1:
                     Log.i(TAG,"NULL");
@@ -84,14 +89,14 @@ public class DayView extends ActionBarActivity{
         TextView description = (TextView) findViewById(R.id.description);
         TextView socialAction = (TextView) findViewById(R.id.socialAction);
         TextView totalPhoto = (TextView) findViewById(R.id.totalPhoto);
-        Glide.with(this).load(mDay.getUser().getImageUrl()).centerCrop().into(profileImage);
+        Glide.with(this).load(mDay.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(profileImage);
         Log.i(TAG, mDay.getMainPlace().getName());
         name.setText(Util.parseName(mDay.getUser(), 0));
         placeName.setText(Util.convertPlaceName(mDay.getPositionList()));
         date.setText(HasBeenDate.convertDate(mDay.getDate()));
         dayTitle.setText(mDay.getTitle());
         description.setText(mDay.getDescription());
-        socialAction.setText(mDay.getLoveCount()+" Likes " + mDay.getCommentCount()+" Commnents "+mDay.getShareCount()+" Shared");
+        socialAction.setText(mDay.getLoveCount()+" Likes · " + mDay.getCommentCount()+" Commnents · "+mDay.getShareCount()+" Shared");
         totalPhoto.setText("Total " + mDay.getPhotoCount() + " photos");
         Log.i(TAG, mDay.getPositionList().size() + "");
         new Thread(new Runnable() {
@@ -132,10 +137,29 @@ public class DayView extends ActionBarActivity{
 
             }
         });
-        EditText enterComment = (EditText) findViewById(R.id.enterComment);
-        enterComment.setFocusable(false);
-        enterComment.setEnabled(false);
-        enterComment.setFocusableInTouchMode(false);
+
+        LinearLayout commentBox = (LinearLayout) findViewById(R.id.commetBox);
+        TextView moreComments = (TextView) findViewById(R.id.moreComments);
+        List<Comment> comments = mDay.getCommentList();
+        for(int i = 0 ;i<3 && i<comments.size();i++) {
+            Comment comment = comments.get(i);
+            View commentView = getLayoutInflater().inflate(R.layout.comment,null);
+            TextView contents = (TextView) commentView.findViewById(R.id.contents);
+            TextView commentTime = (TextView) commentView.findViewById(R.id.commentTime);
+            contents.setText(comment.getContents());
+            commentTime.setText(HasBeenDate.getGapTime(comment.getCreatedTime()));
+            ImageView profileImage = (ImageView) commentView.findViewById(R.id.profileImage);
+            TextView profileName = (TextView) commentView.findViewById(R.id.profileName);
+            Glide.with(this).load(comment.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(profileImage);
+            profileName.setText(Util.parseName(comment.getUser(),0));
+            commentBox.addView(commentView);
+
+        }
+        if(comments.size()>3)
+            moreComments.setText(comments.size()-3+" comments more");
+        else
+            moreComments.setVisibility(View.GONE);
+
     }
     protected void init(){
         setContentView(R.layout.day);
@@ -202,5 +226,15 @@ public class DayView extends ActionBarActivity{
         actionBar.setCustomView(mCustomActionBar);
         actionBar.setDisplayShowCustomEnabled(true);
 
+    }
+
+    ProgressDialog dialog;
+
+    protected void showProgress() {
+        dialog = new ProgressDialog(this);
+        dialog.setCancelable(true);
+        dialog.setMessage("Wait a minutes...");
+        dialog.setProgress(100);
+        dialog.show();
     }
 }

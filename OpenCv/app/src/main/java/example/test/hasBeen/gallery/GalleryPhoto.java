@@ -41,6 +41,7 @@ public class GalleryPhoto extends ActionBarActivity {
     TextView mPlaceNameView;
     TextView mPhotosCountView;
     InputMethodManager mImm;
+    ImageView mProfileImage;
     boolean edit = false;
     protected void init(){
         setContentView(R.layout.gallery_photo);
@@ -51,10 +52,12 @@ public class GalleryPhoto extends ActionBarActivity {
         mPhotoNth = getIntent().getIntExtra("photoNth",0);
         mDateView = (TextView) findViewById(R.id.date);
         mImageView = (ImageView) findViewById(R.id.full_size_photo);
+        mProfileImage = (ImageView) findViewById(R.id.profileImage);
         mDescriptionView = (EditText) findViewById(R.id.description);
         mEditButton = (ImageButton) findViewById(R.id.edit_button);
         mImm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         mImm.hideSoftInputFromWindow(mDescriptionView.getWindowToken(),0);
+//        Glide.with(this).load(getResources().getDrawable(R.drawable.profile_sample)).transform(new CircleTransform(this)).into(mProfileImage);
         initActionBar();
     }
     protected void initActionBar(){
@@ -72,7 +75,7 @@ public class GalleryPhoto extends ActionBarActivity {
         LayoutInflater mInflater = LayoutInflater.from(this);
         View mCustomActionBar = mInflater.inflate(R.layout.full_photo_actionbar,null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.photoBack);
-        mPlaceNameView = (TextView) mCustomActionBar.findViewById(R.id.name);
+        mPlaceNameView = (TextView) mCustomActionBar.findViewById(R.id.profileName);
         mPhotosCountView = (TextView) mCustomActionBar.findViewById(R.id.photoCount);
         String str = mPhoto.getPlaceName();
         if(str.length()>20)

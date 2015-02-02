@@ -79,12 +79,15 @@
                 />
         </RelativeLayout>
 
-        <include
-            layout="@layout/newsfeed_image_layout_1"
-            android:id="@+id/imageBox">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:id="@+id/imageBox"
+            android:layout_height="@dimen/newsfeed_image_height">
+            <!--<include-->
+                <!--layout="@layout/newsfeed_image_layout_1">-->
 
-        </include>
-
+            <!--</include>-->
+        </FrameLayout>
         <RelativeLayout
             android:background="@color/theme_white"
             android:layout_width="match_parent"

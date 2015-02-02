@@ -47,6 +47,11 @@ public class User {
     int loveCount;
     int followerCount;
     int followingCount;
+    int tripCount;
+
+    public int getTripCount() {
+        return tripCount;
+    }
 
     public PhotoApi getCoverPhoto() {
         return coverPhoto;

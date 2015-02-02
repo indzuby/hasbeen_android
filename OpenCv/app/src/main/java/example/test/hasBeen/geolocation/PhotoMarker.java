@@ -53,6 +53,8 @@ public class PhotoMarker extends DefaultClusterRenderer<PhotoPin> {
     protected void onBeforeClusterRendered(final Cluster<PhotoPin> cluster, final MarkerOptions markerOptions) {
 
         final PhotoPin photo = cluster.getItems().iterator().next();
+
+//        Glide.with(mContext).load(photo.getPhoto().getSmallUrl()).into(mClusterImageView);
         mClusterImageView.setImageBitmap(photo.getImage());
         mClisterCount.setVisibility(View.VISIBLE);
         mClisterCount.setText(cluster.getSize()+"");
@@ -63,6 +65,7 @@ public class PhotoMarker extends DefaultClusterRenderer<PhotoPin> {
 
     @Override
     protected void onBeforeClusterItemRendered(PhotoPin photo, final MarkerOptions markerOptions) {
+//        Glide.with(mContext).load(photo.getPhoto().getSmallUrl()).into(mClusterImageView);
         mClusterImageView.setImageBitmap(photo.getImage());
         mClisterCount.setVisibility(View.GONE);
         Bitmap icon = mClusterIconGenerator.makeIcon();

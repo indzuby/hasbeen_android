@@ -128,7 +128,7 @@ public class PhotoApi {
         return place;
     }
 
-    public List<Comment> getCommetList() {
+    public List<Comment> getCommentList() {
         return commentList;
     }
 
