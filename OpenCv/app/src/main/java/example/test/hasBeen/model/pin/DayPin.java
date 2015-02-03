@@ -1,13 +1,13 @@
 package example.test.hasBeen.model.pin;
 
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
-
-import java.io.InputStream;
-import java.net.URL;
 
 import example.test.hasBeen.model.api.DayApi;
 import example.test.hasBeen.utils.Util;
@@ -24,22 +24,20 @@ public class DayPin implements ClusterItem{
         return image;
     }
 
-    public DayPin(DayApi day) {
+    public DayPin(DayApi day,Context context) {
         mDay = day;
         mPosition = new LatLng(mDay.getMainPlace().getLat(),mDay.getMainPlace().getLon());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-                    URL url = new URL(mDay.getPhotoList().get(0).getSmallUrl());
-                    InputStream in = url.openStream();
-                    image = Util.getBitmapClippedCircle(BitmapFactory.decodeStream(in));
-                }catch (Exception e){
-                    e.printStackTrace();
+        if(mDay.getMainPhoto()!=null) {
+            image = mDay.getMainPhoto();
+        }else {
+            Glide.with(context).load(mDay.getPhotoList().get(0).getSmallUrl()).asBitmap().into(new SimpleTarget<Bitmap>(Util.convertDpToPixel(32, context), Util.convertDpToPixel(32, context)) {
+                @Override
+                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                    image = Util.getBitmapClippedCircle(resource);
+                    mDay.setMainPhoto(image);
                 }
-            }
-        }).start();
+            });
+        }
     }
 
     public DayApi getDay() {

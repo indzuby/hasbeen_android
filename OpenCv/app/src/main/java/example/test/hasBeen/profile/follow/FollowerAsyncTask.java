@@ -1,4 +1,4 @@
-package example.test.hasBeen.profile;
+package example.test.hasBeen.profile.follow;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -29,9 +29,9 @@ import example.test.hasBeen.model.api.Follower;
 /**
  * Created by 주현 on 2015-02-02.
  */
-public class FollowingAsyncTask extends AsyncTask<Object,Void,List<Follower>> {
+public class FollowerAsyncTask extends AsyncTask<Object,Void,List<Follower>> {
     Handler mHandler;
-    final static String URL = "https://gist.githubusercontent.com/indzuby/e0892db0c7155a62fc22/raw/86990d9574684a129edd71e8e1eafd1b80c5d635/FollowingList";
+    final static String URL = "https://gist.githubusercontent.com/indzuby/43da0aae3a9e9875d670/raw/16c0c339eea735923c7d8a495403a5e543936757/FollowerList";
     @Override
     protected List<Follower> doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
@@ -89,7 +89,7 @@ public class FollowingAsyncTask extends AsyncTask<Object,Void,List<Follower>> {
         mHandler.sendMessage(msg);
     }
 
-    public FollowingAsyncTask(Handler handler) {
+    public FollowerAsyncTask(Handler handler) {
         mHandler = handler;
     }
 }

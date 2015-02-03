@@ -122,7 +122,7 @@ public class MapRoute {
         });
         for(DayApi day : days) {
 //            Log.i("cluter location", location.latitude + "," + location.longitude);
-            clusterManager.addItem(new DayPin(day));
+            clusterManager.addItem(new DayPin(day,mContext));
         }
         clusterManager.cluster();
     }
@@ -156,7 +156,7 @@ public class MapRoute {
             }
         });
         for(PhotoApi photo : photos) {
-            clusterManager.addItem(new PhotoPin(photo));
+            clusterManager.addItem(new PhotoPin(photo,mContext));
         }
         clusterManager.cluster();
 

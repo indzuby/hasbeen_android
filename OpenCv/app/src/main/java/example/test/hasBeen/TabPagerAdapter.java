@@ -1,6 +1,5 @@
 package example.test.hasBeen;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -41,9 +40,8 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
                     mAlarm = new GalleryActivity();
                 return mAlarm;
             case 4:
-                if (mProfile == null)
-                    mProfile = new ProfileFragment();
-                return mProfile;
+                return new ProfileFragment();
+
         }
         return null;
 

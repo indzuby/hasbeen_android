@@ -1,5 +1,7 @@
 package example.test.hasBeen.model.api;
 
+import android.graphics.Bitmap;
+
 import java.util.List;
 
 /**
@@ -167,5 +169,13 @@ public class DayApi {
     public List<PhotoApi> getPhotoList() {
         return photoList;
     }
+    Bitmap mainPhoto;
 
+    public Bitmap getMainPhoto() {
+        return mainPhoto;
+    }
+
+    public void setMainPhoto(Bitmap mainPhoto) {
+        this.mainPhoto = mainPhoto;
+    }
 }

@@ -1,4 +1,4 @@
-package example.test.hasBeen.profile;
+package example.test.hasBeen.profile.follow;
 
 
 import android.support.v4.app.Fragment;

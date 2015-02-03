@@ -1,4 +1,4 @@
-package example.test.hasBeen.profile;
+package example.test.hasBeen.profile.map;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -24,16 +24,17 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import example.test.hasBeen.model.api.Follower;
+import example.test.hasBeen.model.api.DayApi;
+import example.test.hasBeen.model.api.PhotoApi;
 
 /**
- * Created by 주현 on 2015-02-02.
+ * Created by zuby on 2015-01-27.
  */
-public class FollowerAsyncTask extends AsyncTask<Object,Void,List<Follower>> {
+public class ProfileDayAsyncTask extends AsyncTask<Object,Void,List<DayApi>> {
     Handler mHandler;
-    final static String URL = "https://gist.githubusercontent.com/indzuby/43da0aae3a9e9875d670/raw/16c0c339eea735923c7d8a495403a5e543936757/FollowerList";
+    final static String URL = "https://gist.githubusercontent.com/indzuby/c9e87b33ca65eac93065/raw/4000d9c125b1e56c60f77523dc806e4a9cdb303d/NewsFeed";
     @Override
-    protected List<Follower> doInBackground(Object... params) {
+    protected List<DayApi> doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         Uri uri;
@@ -49,11 +50,14 @@ public class FollowerAsyncTask extends AsyncTask<Object,Void,List<Follower>> {
                 //Read the server response and attempt to parse it as JSON
                 Reader reader = new InputStreamReader(content);
 
-
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
                     @Override
                     public boolean shouldSkipField(FieldAttributes f) {
+                        if(f.getDeclaredClass() == PhotoApi.class){
+                            if(f.getName().equals("day") || f.getName().equals("place"))
+                                return true;
+                        }
                         if(f.getName().equals("coverPhoto"))
                             return true;
                         return false;
@@ -64,10 +68,10 @@ public class FollowerAsyncTask extends AsyncTask<Object,Void,List<Follower>> {
                         return false;
                     }
                 }).create();
-                Type listType = new TypeToken<List<Follower>>(){}.getType();
-                List<Follower> Followers = gson.fromJson(reader, listType);
+                Type listType = new TypeToken<List<DayApi>>(){}.getType();
+                List<DayApi> posts = gson.fromJson(reader, listType);
                 content.close();
-                return Followers;
+                return posts;
             }
 
         }catch (Exception e) {
@@ -77,11 +81,11 @@ public class FollowerAsyncTask extends AsyncTask<Object,Void,List<Follower>> {
     }
 
     @Override
-    protected void onPostExecute(List<Follower> Followers) {
+    protected void onPostExecute(List<DayApi> days) {
 
         Message msg = mHandler.obtainMessage();
-        if(Followers !=null) {
-            msg.obj = Followers;
+        if(days!=null) {
+            msg.obj = days;
             msg.what = 0;
         }else {
             msg.what = -1;
@@ -89,7 +93,7 @@ public class FollowerAsyncTask extends AsyncTask<Object,Void,List<Follower>> {
         mHandler.sendMessage(msg);
     }
 
-    public FollowerAsyncTask(Handler handler) {
+    public ProfileDayAsyncTask(Handler handler) {
         mHandler = handler;
     }
 }

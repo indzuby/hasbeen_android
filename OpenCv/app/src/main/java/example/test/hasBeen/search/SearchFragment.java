@@ -98,28 +98,7 @@ public class SearchFragment extends Fragment {
             switch (msg.what) {
                 case 0:
                     mDays = (List<DayApi>) msg.obj;
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        LatLng location = new LatLng(mDays.get(0).getMainPlace().getLat(),mDays.get(0).getMainPlace().getLon());
-                                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
-                                        mMapRoute.addMarkerCluster(mDays);
-                                        if(isrefresh) {
-                                            mRefresh.clearAnimation();
-                                            isrefresh = false;
-                                        }
-
-                                    }
-                                });
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }).start();
+                    dayRendering();
                     break;
                 case -1:
                     break;
@@ -135,28 +114,7 @@ public class SearchFragment extends Fragment {
             switch (msg.what) {
                 case 0:
                     mPhotos = (List<PhotoApi>) msg.obj;
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        LatLng location = new LatLng(mPhotos.get(0).getLat(),mPhotos.get(0).getLon());
-                                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
-                                        mMapRoute.addMarkerClusterPhoto(mPhotos);
-                                        if(isrefresh) {
-                                            mRefresh.clearAnimation();
-                                            isrefresh = false;
-                                        }
-
-                                    }
-                                });
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }).start();
+                    photoRendering();
                     break;
                 case -1:
                     break;
@@ -169,9 +127,9 @@ public class SearchFragment extends Fragment {
             TextView button = (TextView) v;
 
             if (nowTab!=DAY && button.equals(mDayButton)) {
-                new SearchDayAsyncTask(dayHandler).execute();
+                mapRendering(DAY);
             } else if (nowTab!=PHOTO && button.equals(mPhotoButton)) {
-                new SearchPhotoAsyncTask(photoHandler).execute();
+                mapRendering(PHOTO);
             }
             swapButtonColor();
         }
@@ -187,9 +145,89 @@ public class SearchFragment extends Fragment {
             nowTab = PHOTO;
             mDayButton.setTextColor(getResources().getColor(R.color.light_black));
             mPhotoButton.setTextColor(getResources().getColor(R.color.theme_color));
-
         }
-
     }
-
+    protected void mapRendering(int flag){
+        if(flag==DAY) {
+            if(mDays!=null)
+                dayRendering();
+            else
+                new SearchDayAsyncTask(dayHandler).execute();
+        }else {
+            if(mPhotos!=null)
+                photoRendering();
+            else
+                new SearchPhotoAsyncTask(photoHandler).execute();
+        }
+    }
+    protected void dayRendering(){
+        try {
+            LatLng location = new LatLng(mDays.get(0).getMainPlace().getLat(), mDays.get(0).getMainPlace().getLon());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
+            mMapRoute.addMarkerCluster(mDays);
+            if (isrefresh) {
+                mRefresh.clearAnimation();
+                isrefresh = false;
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    getActivity().runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            LatLng location = new LatLng(mDays.get(0).getMainPlace().getLat(),mDays.get(0).getMainPlace().getLon());
+//                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
+//                            mMapRoute.addMarkerCluster(mDays);
+//                            if(isrefresh) {
+//                                mRefresh.clearAnimation();
+//                                isrefresh = false;
+//                            }
+//
+//                        }
+//                    });
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+    }
+    protected void photoRendering (){
+        try {
+            LatLng location = new LatLng(mPhotos.get(0).getLat(), mPhotos.get(0).getLon());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
+            mMapRoute.addMarkerClusterPhoto(mPhotos);
+            if (isrefresh) {
+                mRefresh.clearAnimation();
+                isrefresh = false;
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    getActivity().runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            LatLng location = new LatLng(mPhotos.get(0).getLat(),mPhotos.get(0).getLon());
+//                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
+//                            mMapRoute.addMarkerClusterPhoto(mPhotos);
+//                            if(isrefresh) {
+//                                mRefresh.clearAnimation();
+//                                isrefresh = false;
+//                            }
+//
+//                        }
+//                    });
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+    }
 }

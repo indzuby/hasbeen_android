@@ -1,5 +1,7 @@
 package example.test.hasBeen.model.api;
 
+import android.graphics.Bitmap;
+
 import java.util.List;
 
 /**
@@ -136,5 +138,13 @@ public class PhotoApi {
     DayApi day;
     PlaceApi place;
     List<Comment> commentList;
+    Bitmap image;
 
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
+    }
 }

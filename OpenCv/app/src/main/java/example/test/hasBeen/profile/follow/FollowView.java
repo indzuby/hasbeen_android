@@ -1,4 +1,4 @@
-package example.test.hasBeen.profile;
+package example.test.hasBeen.profile.follow;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -85,21 +85,15 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        clearSelect();
-        switch (v.getId()) {
-            case R.id.follower:
-                mNowTab = FOLLOWER;
-                mFollowerButton.setTextColor(getResources().getColor(R.color.theme_color));
-                break;
-            case R.id.following:
-                mNowTab = FOLLOWING;
-                mFollowingButton.setTextColor(getResources().getColor(R.color.theme_color));
-                break;
+        if(v.equals(mFollowerButton)) {
+            mNowTab = FOLLOWER;
+            ((TextView)findViewById(R.id.follower)).setTextColor(getResources().getColor(R.color.theme_color));
+            ((TextView)findViewById(R.id.following)).setTextColor(getResources().getColor(R.color.light_gray));
+        }else if(v.equals(mFollowingButton)){
+            mNowTab = FOLLOWING;
+            ((TextView)findViewById(R.id.following)).setTextColor(getResources().getColor(R.color.theme_color));
+            ((TextView)findViewById(R.id.follower)).setTextColor(getResources().getColor(R.color.light_gray));
         }
         mViewPager.setCurrentItem(mNowTab);
-    }
-    protected void clearSelect(){
-        mFollowerButton.setTextColor(getResources().getColor(R.color.light_gray));
-        mFollowingButton.setTextColor(getResources().getColor(R.color.light_gray));
     }
 }

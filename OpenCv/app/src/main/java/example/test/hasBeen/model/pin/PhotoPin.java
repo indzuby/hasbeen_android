@@ -1,51 +1,46 @@
 package example.test.hasBeen.model.pin;
 
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
-import java.io.InputStream;
-import java.net.URL;
-
 import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.utils.Util;
 
 /**
  * Created by zuby on 2015-01-30.
  */
 public class PhotoPin  implements ClusterItem{
-    PhotoApi photo;
+    PhotoApi mPhoto;
     private LatLng mPosition;
     Bitmap image;
     public PhotoApi getPhoto() {
-        return photo;
+        return mPhoto;
     }
 
     public Bitmap getImage() {
         return image;
     }
 
-    public PhotoPin(PhotoApi phot) {
-        this.photo = phot;
+    public PhotoPin(final PhotoApi photo,Context context) {
+        mPhoto = photo;
         mPosition = new LatLng(photo.getLat(),photo.getLon());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-                    URL url = new URL(photo.getSmallUrl());
-                    InputStream in = url.openStream();
-                    image = BitmapFactory.decodeStream(in);
-                }catch (Exception e){
-                    e.printStackTrace();
+        if(mPhoto.getImage()!=null)
+            image = photo.getImage();
+        else {
+            Glide.with(context).load(mPhoto.getSmallUrl()).asBitmap().into(new SimpleTarget<Bitmap>(Util.convertDpToPixel(40, context), Util.convertDpToPixel(40, context)) {
+                @Override
+                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                    image = resource;
+                    mPhoto.setImage(image);
                 }
-            }
-        }).start();
+            });
+        }
     }
 
     @Override

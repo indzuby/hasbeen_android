@@ -1,4 +1,4 @@
-package example.test.hasBeen.profile;
+package example.test.hasBeen.profile.follow;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -21,23 +21,23 @@ import example.test.hasBeen.utils.Util;
 /**
  * Created by 주현 on 2015-02-02.
  */
-public class FollowingAdapter extends BaseAdapter {
-    List<Follower> mFollowing;
+public class FollowerAdapter extends BaseAdapter {
+    List<Follower> mFollowers;
     Context mContext;
 
-    public FollowingAdapter(List<Follower> mFollowing, Context mContext) {
-        this.mFollowing = mFollowing;
+    public FollowerAdapter(List<Follower> mFollowers, Context mContext) {
+        this.mFollowers = mFollowers;
         this.mContext = mContext;
     }
 
     @Override
     public int getCount() {
-        return mFollowing.size();
+        return mFollowers.size();
     }
 
     @Override
     public Follower getItem(int position) {
-        return mFollowing.get(position);
+        return mFollowers.get(position);
     }
 
     @Override
@@ -53,16 +53,16 @@ public class FollowingAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.follow_item,null);
         }
         Follower follower = getItem(position);
-        User fromUser = follower.getFromUser();
-        
+        User toUser = follower.getToUser();
+
         ImageView profileImage = (ImageView) view.findViewById(R.id.profileImage);
         TextView profileName = (TextView) view.findViewById(R.id.profileName);
         TextView followSatus = (TextView) view.findViewById(R.id.followStatus);
         ImageView followImage = (ImageView) view.findViewById(R.id.followImage);
 
-        Glide.with(mContext).load(fromUser.getImageUrl()).asBitmap().transform(new CircleTransform(mContext)).into(profileImage);
-        profileName.setText(Util.parseName(fromUser,0));
-        followSatus.setText(fromUser.getFollowerCount()+" follower · "+fromUser.getFollowingCount()+" following");
+        Glide.with(mContext).load(toUser.getImageUrl()).asBitmap().transform(new CircleTransform(mContext)).into(profileImage);
+        profileName.setText(Util.parseName(toUser,0));
+        followSatus.setText(toUser.getFollowerCount()+" follower · "+toUser.getFollowingCount()+" following");
         if(follower.getFollowingId()==null) {
             followImage.setImageResource(R.drawable.follow_gray);
             followImage.setOnClickListener(new View.OnClickListener() {

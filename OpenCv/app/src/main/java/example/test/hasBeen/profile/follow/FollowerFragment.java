@@ -1,4 +1,4 @@
-package example.test.hasBeen.profile;
+package example.test.hasBeen.profile.follow;
 
 import android.os.Bundle;
 import android.os.Handler;

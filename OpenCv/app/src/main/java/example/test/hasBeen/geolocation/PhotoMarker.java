@@ -23,10 +23,12 @@ import example.test.hasBeen.model.pin.PhotoPin;
  */
 public class PhotoMarker extends DefaultClusterRenderer<PhotoPin> {
 
-    TextView mClisterCount;
-    private IconGenerator mClusterIconGenerator ;
+    TextView mClusterCount;
+    private IconGenerator mClusterIconGenerator;
     Context mContext;
     private ImageView mClusterImageView;
+    int width, height;
+
     public PhotoMarker(Context context, GoogleMap map, ClusterManager<PhotoPin> clusterManager) {
         super(context, map, clusterManager);
         mContext = context;
@@ -36,7 +38,10 @@ public class PhotoMarker extends DefaultClusterRenderer<PhotoPin> {
         mClusterIconGenerator.setBackground(null);
 
         mClusterImageView = (ImageView) layout.findViewById(R.id.photo);
-        mClisterCount = (TextView) layout.findViewById(R.id.clusterCount);
+        width = mClusterImageView.getLayoutParams().width;
+        height = mClusterImageView.getLayoutParams().height;
+
+        mClusterCount = (TextView) layout.findViewById(R.id.clusterCount);
     }
 
     @Override
@@ -44,10 +49,9 @@ public class PhotoMarker extends DefaultClusterRenderer<PhotoPin> {
 
         final PhotoPin photo = cluster.getItems().iterator().next();
 
-//        Glide.with(mContext).load(photo.getPhoto().getSmallUrl()).into(mClusterImageView);
         mClusterImageView.setImageBitmap(photo.getImage());
-        mClisterCount.setVisibility(View.VISIBLE);
-        mClisterCount.setText(cluster.getSize()+"");
+        mClusterCount.setVisibility(View.VISIBLE);
+        mClusterCount.setText(cluster.getSize() + "");
         Bitmap icon = mClusterIconGenerator.makeIcon();
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
 
@@ -57,12 +61,13 @@ public class PhotoMarker extends DefaultClusterRenderer<PhotoPin> {
     protected void onBeforeClusterItemRendered(PhotoPin photo, final MarkerOptions markerOptions) {
 //        Glide.with(mContext).load(photo.getPhoto().getSmallUrl()).into(mClusterImageView);
         mClusterImageView.setImageBitmap(photo.getImage());
-        mClisterCount.setVisibility(View.GONE);
+        mClusterCount.setVisibility(View.GONE);
         Bitmap icon = mClusterIconGenerator.makeIcon();
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
     }
+
     @Override
     protected boolean shouldRenderAsCluster(Cluster<PhotoPin> cluster) {
-        return cluster.getSize() >1 ;
+        return cluster.getSize() > 1;
     }
 }
