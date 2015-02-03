@@ -24,10 +24,7 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import example.test.hasBeen.model.api.DayApi;
-import example.test.hasBeen.model.api.NewsFeedApi;
 import example.test.hasBeen.model.api.PhotoApi;
-import example.test.hasBeen.model.api.PlaceApi;
 
 /**
  * Created by zuby on 2015-01-29.

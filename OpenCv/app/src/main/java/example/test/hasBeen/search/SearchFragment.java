@@ -4,11 +4,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -22,14 +19,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import example.test.hasBeen.R;
 import example.test.hasBeen.geolocation.MapRoute;
-import example.test.hasBeen.model.api.NewsFeedApi;
+import example.test.hasBeen.model.api.DayApi;
 import example.test.hasBeen.model.api.PhotoApi;
 
 /**
@@ -38,7 +33,7 @@ import example.test.hasBeen.model.api.PhotoApi;
 public class SearchFragment extends Fragment {
     final static int DAY = 1;
     final static int PHOTO = 2;
-    List<NewsFeedApi> mDays;
+    List<DayApi> mDays;
     List<PhotoApi> mPhotos;
     View mView;
     GoogleMap mMap;
@@ -102,7 +97,7 @@ public class SearchFragment extends Fragment {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mDays = (List<NewsFeedApi>) msg.obj;
+                    mDays = (List<DayApi>) msg.obj;
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -110,13 +105,9 @@ public class SearchFragment extends Fragment {
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        List<LatLng> latLngs = new ArrayList<>();
-                                        for (NewsFeedApi day : mDays)
-                                            latLngs.add(new LatLng(day.getMainPlace().getLat(), day.getMainPlace().getLon()));
-
-                                        LatLng location = latLngs.get(0);
+                                        LatLng location = new LatLng(mDays.get(0).getMainPlace().getLat(),mDays.get(0).getMainPlace().getLon());
                                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
-                                        mMapRoute.addMarkerCluster(latLngs);
+                                        mMapRoute.addMarkerCluster(mDays);
                                         if(isrefresh) {
                                             mRefresh.clearAnimation();
                                             isrefresh = false;

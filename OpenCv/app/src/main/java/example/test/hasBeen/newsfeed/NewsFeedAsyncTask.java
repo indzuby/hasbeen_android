@@ -5,15 +5,10 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
-import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.HttpEntity;
@@ -27,21 +22,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import example.test.hasBeen.model.api.DayApi;
-import example.test.hasBeen.model.api.NewsFeedApi;
 import example.test.hasBeen.model.api.PhotoApi;
 
 /**
  * Created by zuby on 2015-01-27.
  */
-public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<NewsFeedApi>> {
+public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<DayApi>> {
     Handler mHandler;
     final static String URL = "https://gist.githubusercontent.com/indzuby/c9e87b33ca65eac93065/raw/4000d9c125b1e56c60f77523dc806e4a9cdb303d/NewsFeed";
     @Override
-    protected List<NewsFeedApi> doInBackground(Object... params) {
+    protected List<DayApi> doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         Uri uri;
@@ -75,8 +68,8 @@ public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<NewsFeedApi>> 
                         return false;
                     }
                 }).create();
-                Type listType = new TypeToken<List<NewsFeedApi>>(){}.getType();
-                List<NewsFeedApi> posts = gson.fromJson(reader, listType);
+                Type listType = new TypeToken<List<DayApi>>(){}.getType();
+                List<DayApi> posts = gson.fromJson(reader, listType);
                 content.close();
                 return posts;
             }
@@ -88,7 +81,7 @@ public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<NewsFeedApi>> 
     }
 
     @Override
-    protected void onPostExecute(List<NewsFeedApi> newsFeeds) {
+    protected void onPostExecute(List<DayApi> newsFeeds) {
 
         Message msg = mHandler.obtainMessage();
         if(newsFeeds!=null) {

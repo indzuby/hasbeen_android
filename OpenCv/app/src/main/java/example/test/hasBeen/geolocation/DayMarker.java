@@ -16,22 +16,22 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 
 import example.test.hasBeen.R;
-import example.test.hasBeen.model.pin.PhotoPin;
+import example.test.hasBeen.model.pin.DayPin;
 
 /**
  * Created by zuby on 2015-01-30.
  */
-public class PhotoMarker extends DefaultClusterRenderer<PhotoPin> {
+public class DayMarker extends DefaultClusterRenderer<DayPin> {
 
     TextView mClisterCount;
     private IconGenerator mClusterIconGenerator ;
     Context mContext;
     private ImageView mClusterImageView;
-    public PhotoMarker(Context context, GoogleMap map, ClusterManager<PhotoPin> clusterManager) {
+    public DayMarker(Context context, GoogleMap map, ClusterManager<DayPin> clusterManager) {
         super(context, map, clusterManager);
         mContext = context;
         mClusterIconGenerator = new IconGenerator(context);
-        View layout = LayoutInflater.from(context).inflate(R.layout.photo_pin, null, false);
+        View layout = LayoutInflater.from(context).inflate(R.layout.day_pin, null, false);
         mClusterIconGenerator.setContentView(layout);
         mClusterIconGenerator.setBackground(null);
 
@@ -40,9 +40,9 @@ public class PhotoMarker extends DefaultClusterRenderer<PhotoPin> {
     }
 
     @Override
-    protected void onBeforeClusterRendered(final Cluster<PhotoPin> cluster, final MarkerOptions markerOptions) {
+    protected void onBeforeClusterRendered(final Cluster<DayPin> cluster, final MarkerOptions markerOptions) {
 
-        final PhotoPin photo = cluster.getItems().iterator().next();
+        final DayPin photo = cluster.getItems().iterator().next();
 
 //        Glide.with(mContext).load(photo.getPhoto().getSmallUrl()).into(mClusterImageView);
         mClusterImageView.setImageBitmap(photo.getImage());
@@ -54,7 +54,7 @@ public class PhotoMarker extends DefaultClusterRenderer<PhotoPin> {
     }
 
     @Override
-    protected void onBeforeClusterItemRendered(PhotoPin photo, final MarkerOptions markerOptions) {
+    protected void onBeforeClusterItemRendered(DayPin photo, final MarkerOptions markerOptions) {
 //        Glide.with(mContext).load(photo.getPhoto().getSmallUrl()).into(mClusterImageView);
         mClusterImageView.setImageBitmap(photo.getImage());
         mClisterCount.setVisibility(View.GONE);
@@ -62,7 +62,7 @@ public class PhotoMarker extends DefaultClusterRenderer<PhotoPin> {
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
     }
     @Override
-    protected boolean shouldRenderAsCluster(Cluster<PhotoPin> cluster) {
+    protected boolean shouldRenderAsCluster(Cluster<DayPin> cluster) {
         return cluster.getSize() >1 ;
     }
 }

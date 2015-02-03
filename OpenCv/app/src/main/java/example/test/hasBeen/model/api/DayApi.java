@@ -2,9 +2,6 @@ package example.test.hasBeen.model.api;
 
 import java.util.List;
 
-import example.test.hasBeen.model.database.Photo;
-import example.test.hasBeen.model.database.Place;
-
 /**
  * Created by zuby on 2015-01-28.
  */
@@ -23,7 +20,9 @@ public class DayApi {
     int shareCount;
     int itineraryIndex;
     PlaceApi mainPlace;
-    PhotoApi mainPhoto;
+    User following;
+    String newsFeedType;
+    List<PhotoApi> photoList;
     List<PositionApi> positionList;
     List<Comment> commentList;
 
@@ -141,12 +140,6 @@ public class DayApi {
     }
 
 
-    public PhotoApi getMainPhoto() {
-        return mainPhoto;
-    }
-
-
-
     public List<PositionApi> getPositionList() {
         return positionList;
     }
@@ -162,4 +155,17 @@ public class DayApi {
     public void setCommentList(List<Comment> commentList) {
         this.commentList = commentList;
     }
+
+    public User getFollowing() {
+        return following;
+    }
+
+    public String getNewsFeedType() {
+        return newsFeedType;
+    }
+
+    public List<PhotoApi> getPhotoList() {
+        return photoList;
+    }
+
 }

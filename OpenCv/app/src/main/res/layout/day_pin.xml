@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:background="@color/transparent"
+              android:layout_width="wrap_content"
+
+              android:layout_height="wrap_content">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/day_pin"/>
+<ImageView
+    android:layout_width="32dp"
+    android:layout_height="32dp"
+    android:adjustViewBounds="true"
+    android:layout_margin="12dp"
+    android:scaleType="centerCrop"
+    android:id="@+id/photo"
+    android:src="@drawable/photo_sample"
+    />
+<TextView
+    android:layout_width="wrap_content"
+    android:id="@+id/clusterCount"
+    android:background="@drawable/red_oval"
+    android:layout_gravity="right"
+    android:textColor="@color/theme_white"
+    android:gravity="center"
+    android:visibility="gone"
+    android:textSize="12dp"
+    android:layout_height="wrap_content"/>
+</FrameLayout>

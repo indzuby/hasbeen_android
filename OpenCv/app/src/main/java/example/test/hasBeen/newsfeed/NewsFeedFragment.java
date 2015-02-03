@@ -26,7 +26,7 @@ import java.util.List;
 import example.test.hasBeen.R;
 import example.test.hasBeen.day.DayView;
 import example.test.hasBeen.geolocation.MapRoute;
-import example.test.hasBeen.model.api.NewsFeedApi;
+import example.test.hasBeen.model.api.DayApi;
 import example.test.hasBeen.utils.SlidingUpPanelLayout;
 
 /**
@@ -44,7 +44,7 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
     private View mSpaceView;
     private ListView mListView;
     private NewsFeedAdapter mFeedAdapter;
-    List<NewsFeedApi> mFeeds;
+    List<DayApi> mFeeds;
     FrameLayout mMapBox;
     MapRoute mapRoute ;
     boolean flag;
@@ -119,7 +119,7 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    final List<NewsFeedApi> feeds =  (List<NewsFeedApi>)msg.obj;
+                    final List<DayApi> feeds =  (List<DayApi>)msg.obj;
                     Log.i(TAG,feeds.size()+"");
                     new Thread(new Runnable() {
                         @Override
@@ -128,7 +128,7 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        for(NewsFeedApi feed : feeds) {
+                                        for(DayApi feed : feeds) {
                                             mFeeds.add(feed);
                                             mFeedAdapter.notifyDataSetChanged();
                                         }

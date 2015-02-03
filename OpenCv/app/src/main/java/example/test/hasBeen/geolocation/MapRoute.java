@@ -18,11 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import example.test.hasBeen.database.DatabaseHelper;
+import example.test.hasBeen.day.DayView;
+import example.test.hasBeen.model.api.DayApi;
 import example.test.hasBeen.model.api.PhotoApi;
 import example.test.hasBeen.model.api.PlaceApi;
 import example.test.hasBeen.model.api.PositionApi;
 import example.test.hasBeen.model.database.Place;
 import example.test.hasBeen.model.database.Position;
+import example.test.hasBeen.model.pin.DayPin;
 import example.test.hasBeen.model.pin.PhotoPin;
 import example.test.hasBeen.photo.PhotoView;
 
@@ -87,16 +90,41 @@ public class MapRoute {
         }
 
     }
-    public void addMarkerCluster(List<LatLng> latLngs){
+    public void addMarkerCluster(List<DayApi> days){
         mMap.clear();
-        mClusterManager = new ClusterManager<MyItem>(mContext,mMap);
+        ClusterManager<DayPin> clusterManager = new ClusterManager<DayPin>(mContext,mMap);
+        clusterManager.setRenderer(new DayMarker(mContext,mMap,clusterManager));
 
-        mMap.setOnCameraChangeListener(mClusterManager);
-        mMap.setOnMarkerClickListener(mClusterManager);
-        for(LatLng location : latLngs) {
-            Log.i("cluter location", location.latitude + "," + location.longitude);
-            mClusterManager.addItem(new MyItem(location.latitude, location.longitude));
+        mMap.setOnCameraChangeListener(clusterManager);
+        mMap.setOnMarkerClickListener(clusterManager);
+        clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<DayPin>() {
+            boolean flag = false;
+            @Override
+            public boolean onClusterItemClick(DayPin dayPin) {
+                if(!flag) {
+                    flag = true;
+                    Intent intent = new Intent(mContext, DayView.class);
+                    mContext.startActivity(intent);
+                    flag = false;
+                }
+                return true;
+            }
+        });
+        clusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<DayPin>() {
+            @Override
+            public boolean onClusterClick(Cluster<DayPin> dayPinCluster) {
+                Log.i("Cluster","click");
+                LatLng location = dayPinCluster.getItems().iterator().next().getPosition();
+//                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, mMap.getCameraPosition().zoom+1));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, mMap.getCameraPosition().zoom+1),500,null);
+                return true;
+            }
+        });
+        for(DayApi day : days) {
+//            Log.i("cluter location", location.latitude + "," + location.longitude);
+            clusterManager.addItem(new DayPin(day));
         }
+        clusterManager.cluster();
     }
     public void addMarkerClusterPhoto(List<PhotoApi> photos) {
         mMap.clear();

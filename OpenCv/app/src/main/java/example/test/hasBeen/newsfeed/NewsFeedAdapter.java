@@ -18,7 +18,8 @@ import java.util.List;
 import example.test.hasBeen.R;
 import example.test.hasBeen.comment.CommentView;
 import example.test.hasBeen.geolocation.MapRoute;
-import example.test.hasBeen.model.api.NewsFeedApi;
+
+import example.test.hasBeen.model.api.DayApi;
 import example.test.hasBeen.model.api.PhotoApi;
 import example.test.hasBeen.utils.CircleTransform;
 import example.test.hasBeen.utils.HasBeenDate;
@@ -30,7 +31,7 @@ import example.test.hasBeen.utils.Util;
  */
 public class NewsFeedAdapter extends BaseAdapter {
     Context mContext;
-    List<NewsFeedApi> mFeeds;
+    List<DayApi> mFeeds;
     GoogleMap mMap;
     MapRoute mMapRoute;
     boolean flag;
@@ -50,7 +51,7 @@ public class NewsFeedAdapter extends BaseAdapter {
     }
 
     @Override
-    public NewsFeedApi getItem(int position) {
+    public DayApi getItem(int position) {
         return mFeeds.get(position);
     }
 
@@ -66,7 +67,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.newsfeed_feed, null);
         }
-        NewsFeedApi feed = getItem(position);
+        DayApi feed = getItem(position);
         ImageView profileImage = (ImageView) view.findViewById(R.id.profileImage);
         TextView profileName = (TextView) view.findViewById(R.id.profileName);
         TextView placeName = (TextView) view.findViewById(R.id.placeName);
@@ -95,7 +96,7 @@ public class NewsFeedAdapter extends BaseAdapter {
         date.setText(HasBeenDate.convertDate(feed.getDate()));
         dayTitle.setText(feed.getTitle());
         dayDescription.setText(feed.getDescription());
-        socialAction.setText(feed.getLoveCount() + " Likes · " + feed.getCommnetCount() + " Commnents · " + feed.getShareCount() + " Shared");
+        socialAction.setText(feed.getLoveCount() + " Likes · " + feed.getCommentCount() + " Commnents · " + feed.getShareCount() + " Shared");
         Glide.with(mContext).load(feed.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(mContext)).into(profileImage);
 //        Glide.with(mContext).load(feed.getMainPhoto().getMediumUrl()).centerCrop().into(mainImage);
         imageBox.addView(imageLayout);
