@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:weightSum="2"
+    android:id="@+id/loadingBackground"
               android:layout_width="match_parent"
               android:layout_height="@dimen/newsfeed_image_height">
     <LinearLayout
@@ -12,8 +13,6 @@
         android:layout_width="match_parent"
         android:layout_marginBottom="4dp"
         android:scaleType="centerCrop"
-
-        android:src="@drawable/photo_sample"
         android:id="@+id/image1"
         android:adjustViewBounds="true"
         android:layout_height="match_parent" />
@@ -31,7 +30,6 @@
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:layout_height="match_parent"
-            android:src="@drawable/photo_sample"
             />
         <ImageView
             android:layout_weight="1"
@@ -41,7 +39,6 @@
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:layout_height="match_parent"
-            android:src="@drawable/photo_sample"
             />
         </LinearLayout>
 </LinearLayout>

@@ -17,6 +17,7 @@ import java.util.List;
 
 import example.test.hasBeen.R;
 import example.test.hasBeen.model.api.Comment;
+import example.test.hasBeen.utils.CacheControl;
 
 /**
  * Created by zuby on 2015-01-28.
@@ -62,7 +63,7 @@ public class CommentView extends ActionBarActivity {
         ColorDrawable colorDrawable = new ColorDrawable(getResources().getColor(R.color.theme_color));
         actionBar.setBackgroundDrawable(colorDrawable);
 
-        View mCustomActionBar = mInflater.inflate(R.layout.action_bar_place,null);
+        View mCustomActionBar = mInflater.inflate(R.layout.action_bar_place, null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         TextView titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
         titleView.setText("Comments");
@@ -75,5 +76,10 @@ public class CommentView extends ActionBarActivity {
         actionBar.setCustomView(mCustomActionBar);
         actionBar.setDisplayShowCustomEnabled(true);
 
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        CacheControl.deleteCache(this);
     }
 }

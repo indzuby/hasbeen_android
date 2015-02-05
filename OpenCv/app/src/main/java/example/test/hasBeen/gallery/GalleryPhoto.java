@@ -130,7 +130,7 @@ public class GalleryPhoto extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         init();
 
-        Glide.with(this).load(mPhoto.getPhotoPath())
+        Glide.with(this).load(mPhoto.getPhotoPath()).placeholder(R.drawable.placeholder)
                 .into(mImageView);
         mScrollView.smoothScrollTo(mScrollView.getScrollX(),mScrollView.getLayoutParams().height);
         mDateView.setText(HasBeenDate.convertDate(mPhoto.getTakenDate()));

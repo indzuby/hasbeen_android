@@ -75,9 +75,9 @@ public class GalleryFragment extends Fragment implements SlidingUpPanelLayout.Pa
             public void onMapReady(GoogleMap map) {
                 mMap = map;
                 UiSettings setting = map.getUiSettings();
-                setting.setZoomControlsEnabled(true);
-                setting.setMyLocationButtonEnabled(true);
-                map.setMyLocationEnabled(true);
+                setting.setAllGesturesEnabled(false);
+                setting.setZoomControlsEnabled(false);
+                setting.setMyLocationButtonEnabled(false);
                 mSlidingUpPanelLayout.collapsePane();
                 try {
                     mMapRoute = new MapRoute(mMap,getActivity());

@@ -23,7 +23,7 @@
                 android:layout_width="40dp"
                 android:layout_marginLeft="8dp"
                 android:layout_height="40dp"
-                android:src="@drawable/profile_sample"
+
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 android:background="@drawable/profile_oval"
@@ -32,7 +32,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Jun Lee"
                 android:textColor="@color/light_black"
                 android:textSize="12sp"
                 android:id="@+id/profileName"
@@ -57,7 +56,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/placeName"
-                android:text="Beatenberg,Swiss"
                 android:textColor="@color/light_black"
                 android:textSize="13sp"
                 android:layout_marginLeft="4dp"
@@ -71,7 +69,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/date"
-                android:text="July 2,2014"
                 android:textColor="@color/light_gray"
                 android:textSize="13sp"
                 android:layout_alignParentRight="true"
@@ -98,7 +95,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Day 2-Beautiful Swiss"
                 android:id="@+id/title"
                 android:textStyle="bold"
                 android:textColor="@color/light_black"
@@ -111,7 +107,7 @@
                 android:layout_marginTop="4dp"
                 android:includeFontPadding="false"
                 android:background="@drawable/description_selector"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus id accumsan dui. Vivamus laoreet cursus pulvinar. Morbi eu ullamcorper neque, non faucibus"
+
                 android:id="@+id/description"
                 android:layout_below="@+id/title"
                 android:textColor="@color/light_black"
@@ -123,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/light_gray"
                 android:id="@+id/socialAction"
-                android:text="8 Likes 3 Comments 2 Shared"
+
                 android:layout_below="@+id/description"
                 android:textSize="13sp"
                 />
@@ -182,19 +178,15 @@
                     android:layout_gravity="center"
                     android:layout_width="12dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/social_more_vert"/>
+                    android:src="@drawable/more_vert"/>
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <View
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@drawable/day_shadow_bottom"
-            android:alpha="0.8"
-            android:id="@+id/shadow"
-            android:layout_alignParentBottom="true"
-            />
+            android:background="@drawable/actionbar_shadow"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 </LinearLayout>

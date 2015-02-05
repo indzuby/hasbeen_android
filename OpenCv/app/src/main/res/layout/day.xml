@@ -3,7 +3,6 @@
              android:layout_width="match_parent"
              android:background="@color/list_background"
              android:layout_height="wrap_content">
-
     <ListView
         android:layout_width="match_parent"
         android:id="@+id/listPhotos"
@@ -37,9 +36,10 @@
                 android:gravity="center"
                 android:layout_height="match_parent">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:background="@color/transparent"
+                    android:layout_height="match_parent"
                     android:src="@drawable/photo_like"/>
 
             </LinearLayout>
@@ -50,9 +50,10 @@
                 android:gravity="center"
                 android:layout_height="match_parent">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:background="@color/transparent"
+                    android:layout_height="match_parent"
                     android:id="@+id/comment"
                     android:src="@drawable/photo_comment_selector"/>
 
@@ -64,9 +65,10 @@
                 android:gravity="center"
                 android:layout_height="match_parent">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:background="@color/transparent"
+                    android:layout_height="match_parent"
                     android:src="@drawable/photo_share_selector"/>
 
 
@@ -76,4 +78,8 @@
 
     <include
         layout="@layout/day_title_box" android:id="@+id/dayTitleBox"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/actionbar_shadow"
+        android:layout_height="wrap_content"/>
 </FrameLayout>

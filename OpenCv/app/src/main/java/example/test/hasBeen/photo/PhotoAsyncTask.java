@@ -24,21 +24,26 @@ import java.io.Reader;
 import example.test.hasBeen.model.api.DayApi;
 import example.test.hasBeen.model.api.PhotoApi;
 import example.test.hasBeen.model.api.PlaceApi;
+import example.test.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-29.
  */
 public class PhotoAsyncTask extends AsyncTask<Object,Void,PhotoApi> {
     Handler mHandler;
-    final static String URL = "https://gist.githubusercontent.com/indzuby/ca980f3c37f79d0156be/raw/548b25ee536bb5ec5f1941a0cb05bdb9ba845ed1/PhotoView";
+//    final static String URL = "https://gist.githubusercontent.com/indzuby/ca980f3c37f79d0156be/raw/548b25ee536bb5ec5f1941a0cb05bdb9ba845ed1/PhotoView";
+    final static String URL = Session.DOMAIN+"photos/";
     @Override
     protected PhotoApi doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         Uri uri;
         try {
-            uri = Uri.parse(URL);
+            uri = Uri.parse(URL+params[1]);
             HttpGet get = new HttpGet(uri.toString());
+            get.addHeader("User-Agent","Android");
+            get.addHeader("Content-Type","application/json");
+            get.addHeader("Authorization","Bearer " +params[0]);
             response = client.execute(get);
             StatusLine statusLine = response.getStatusLine();
             if(statusLine.getStatusCode() == 200) {

@@ -32,6 +32,7 @@ import example.test.hasBeen.model.api.PhotoApi;
 public class SearchPhotoAsyncTask extends AsyncTask<Object,Void,List<PhotoApi>> {
     Handler mHandler;
     final static String URL = "https://gist.githubusercontent.com/indzuby/01dd9766562e90d0af7e/raw/d4aca1859f83a9599dbe15541624b1499aae8ea2/photoNearBy";
+//    final static String URL = Session.DOMAIN+"map?type=photos";
     @Override
     protected List<PhotoApi> doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
@@ -40,6 +41,9 @@ public class SearchPhotoAsyncTask extends AsyncTask<Object,Void,List<PhotoApi>> 
         try {
             uri = Uri.parse(URL);
             HttpGet get = new HttpGet(uri.toString());
+            get.addHeader("User-Agent","Android");
+            get.addHeader("Content-Type","application/json");
+            get.addHeader("Authorization","Bearer " +params[0]);
             response = client.execute(get);
             StatusLine statusLine = response.getStatusLine();
             if(statusLine.getStatusCode() == 200) {

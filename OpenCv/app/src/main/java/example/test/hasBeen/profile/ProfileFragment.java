@@ -58,6 +58,7 @@ public class ProfileFragment extends Fragment {
     List<PhotoApi> mLikePhotos;
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.profile, container, false);
@@ -175,11 +176,12 @@ public class ProfileFragment extends Fragment {
         dayButton.setOnClickListener(new LikeBarOnClickListner());
         photoButton.setOnClickListener(new LikeBarOnClickListner());
         mView.findViewById(R.id.likeDayButton).setBackgroundColor(getResources().getColor(R.color.theme_color));
-        ((ImageView) mView.findViewById(R.id.likeDayIcon)).setImageResource(R.drawable.like_day_pressed);
+        ((ImageView) mView.findViewById(R.id.likeDayIcon)).setImageResource(R.drawable.like_day);
         ((TextView) mView.findViewById(R.id.likeDayText)).setTextColor(getResources().getColor(R.color.theme_white));
+        mView.findViewById(R.id.likeBar).setBackground(getResources().getDrawable(R.drawable.filter));
 
         mView.findViewById(R.id.likePhotoButton).setBackgroundColor(getResources().getColor(R.color.theme_white));
-        ((ImageView) mView.findViewById(R.id.likePhotoIcon)).setImageResource(R.drawable.like_photo);
+        ((ImageView) mView.findViewById(R.id.likePhotoIcon)).setImageResource(R.drawable.like_photo2);
         ((TextView) mView.findViewById(R.id.likePhotoText)).setTextColor(getResources().getColor(R.color.light_gray));
     }
 
@@ -189,23 +191,26 @@ public class ProfileFragment extends Fragment {
             switch (v.getId()) {
                 case R.id.likeDayButton:
                     mView.findViewById(R.id.likeDayButton).setBackgroundColor(getResources().getColor(R.color.theme_color));
-                    ((ImageView) mView.findViewById(R.id.likeDayIcon)).setImageResource(R.drawable.like_day_pressed);
+                    ((ImageView) mView.findViewById(R.id.likeDayIcon)).setImageResource(R.drawable.like_day);
                     ((TextView) mView.findViewById(R.id.likeDayText)).setTextColor(getResources().getColor(R.color.theme_white));
 
                     mView.findViewById(R.id.likePhotoButton).setBackgroundColor(getResources().getColor(R.color.theme_white));
-                    ((ImageView) mView.findViewById(R.id.likePhotoIcon)).setImageResource(R.drawable.like_photo);
+                    ((ImageView) mView.findViewById(R.id.likePhotoIcon)).setImageResource(R.drawable.like_photo2);
                     ((TextView) mView.findViewById(R.id.likePhotoText)).setTextColor(getResources().getColor(R.color.light_gray));
+                    mView.findViewById(R.id.likeBar).setBackground(getResources().getDrawable(R.drawable.filter));
                     subTab = DAY;
                     mapRendering(LOVE);
                     break;
                 case R.id.likePhotoButton:
-                    mView.findViewById(R.id.likePhotoButton).setBackgroundColor(getResources().getColor(R.color.theme_color));
-                    ((ImageView) mView.findViewById(R.id.likePhotoIcon)).setImageResource(R.drawable.like_day_pressed);
-                    ((TextView) mView.findViewById(R.id.likePhotoText)).setTextColor(getResources().getColor(R.color.theme_white));
 
                     mView.findViewById(R.id.likeDayButton).setBackgroundColor(getResources().getColor(R.color.theme_white));
-                    ((ImageView) mView.findViewById(R.id.likeDayIcon)).setImageResource(R.drawable.like_photo);
+                    ((ImageView) mView.findViewById(R.id.likeDayIcon)).setImageResource(R.drawable.like_day2);
                     ((TextView) mView.findViewById(R.id.likeDayText)).setTextColor(getResources().getColor(R.color.light_gray));
+                    mView.findViewById(R.id.likeBar).setBackground(getResources().getDrawable(R.drawable.filter2));
+
+                    mView.findViewById(R.id.likePhotoButton).setBackgroundColor(getResources().getColor(R.color.theme_color));
+                    ((ImageView) mView.findViewById(R.id.likePhotoIcon)).setImageResource(R.drawable.like_photo);
+                    ((TextView) mView.findViewById(R.id.likePhotoText)).setTextColor(getResources().getColor(R.color.theme_white));
 
                     subTab = PHOTO;
                     mapRendering(LOVE);
@@ -266,7 +271,7 @@ public class ProfileFragment extends Fragment {
         TextView dayCount = (TextView) mView.findViewById(R.id.dayCount);
         TextView photoCount = (TextView) mView.findViewById(R.id.photoCount);
         TextView loveCount = (TextView) mView.findViewById(R.id.loveCount);
-        Glide.with(getActivity()).load(mUser.getCoverPhoto().getLargeUrl()).into(coverImage);
+        Glide.with(getActivity()).load(mUser.getCoverPhoto().getLargeUrl()).placeholder(R.drawable.placeholder).into(coverImage);
         Glide.with(getActivity()).load(mUser.getImageUrl()).transform(new CircleTransform(getActivity())).into(profileImage);
         profileName.setText(Util.parseName(mUser, 0));
         followStatus.setText(mUser.getFollowerCount() + " Follower · " + mUser.getFollowingCount() + " Following");

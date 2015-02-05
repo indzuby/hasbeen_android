@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:weightSum="2"
+    android:id="@+id/loadingBackground"
               android:layout_width="match_parent"
               android:layout_height="@dimen/newsfeed_image_height">
     <LinearLayout
@@ -15,7 +16,6 @@
             android:layout_weight="1"
             android:id="@+id/image1"
             android:scaleType="centerCrop"
-            android:src="@drawable/photo_sample"
             android:adjustViewBounds="true"
             android:layout_marginBottom="4dp"
             android:layout_height="0dp" />
@@ -24,7 +24,6 @@
             android:layout_weight="1"
             android:id="@+id/image2"
             android:scaleType="centerCrop"
-            android:src="@drawable/photo_sample"
             android:adjustViewBounds="true"
             android:layout_height="0dp" />
         </LinearLayout>
@@ -42,7 +41,6 @@
             android:layout_marginBottom="4dp"
             android:id="@+id/image3"
             android:scaleType="centerCrop"
-            android:src="@drawable/photo_sample"
             android:adjustViewBounds="true"
             android:layout_height="0dp" />
 
@@ -52,7 +50,6 @@
             android:layout_weight="1"
             android:layout_marginBottom="4dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/photo_sample"
             android:adjustViewBounds="true"
             android:layout_height="0dp" />
         <ImageView
@@ -60,7 +57,6 @@
             android:id="@+id/image5"
             android:layout_weight="1"
             android:scaleType="centerCrop"
-            android:src="@drawable/photo_sample"
             android:adjustViewBounds="true"
             android:layout_height="0dp" />
 

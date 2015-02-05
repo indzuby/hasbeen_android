@@ -23,13 +23,15 @@ import java.io.Reader;
 
 import example.test.hasBeen.model.api.DayApi;
 import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-27.
  */
 public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
     Handler mHandler;
-    final static String URL = "https://gist.githubusercontent.com/indzuby/a22f8ae73de9c3e3339c/raw/7f07e297c50961151fe4b8a4839a65d7d176fa91/DayView";
+//    final static String URL = "https://gist.githubusercontent.com/indzuby/a22f8ae73de9c3e3339c/raw/7f07e297c50961151fe4b8a4839a65d7d176fa91/DayView";
+    final static String URL = Session.DOMAIN+"days/";
 
     @Override
     protected DayApi doInBackground(Object... params) {
@@ -37,8 +39,11 @@ public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
         HttpResponse response;
         Uri uri;
         try {
-            uri = Uri.parse(URL);
+            uri = Uri.parse(URL+params[1]);
             HttpGet get = new HttpGet(uri.toString());
+            get.addHeader("User-Agent","Android");
+            get.addHeader("Content-Type","application/json");
+            get.addHeader("Authorization","Bearer " +params[0]);
             response = client.execute(get);
             StatusLine statusLine = response.getStatusLine();
             if(statusLine.getStatusCode() == 200) {

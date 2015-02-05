@@ -1,6 +1,7 @@
 package example.test.hasBeen.photo;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,6 +27,7 @@ import example.test.hasBeen.model.api.Comment;
 import example.test.hasBeen.model.api.PhotoApi;
 import example.test.hasBeen.utils.CircleTransform;
 import example.test.hasBeen.utils.HasBeenDate;
+import example.test.hasBeen.utils.Session;
 import example.test.hasBeen.utils.Util;
 
 /**
@@ -34,10 +36,14 @@ import example.test.hasBeen.utils.Util;
 public class PhotoView extends ActionBarActivity{
     final static String TAG = "Photo view";
     PhotoApi mPhoto;
+    Long mPhotoId;
+    String mAccessToken;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         showProgress();
+        mPhotoId = getIntent().getLongExtra("photoId",0);
+        mAccessToken = Session.getString(this,"accessToken",null);
         init();
     }
     Handler handler = new Handler(Looper.getMainLooper()) {
@@ -66,7 +72,7 @@ public class PhotoView extends ActionBarActivity{
 
         TextView description = (TextView) findViewById(R.id.description);
         TextView socialAction = (TextView) findViewById(R.id.socialAction);
-        Glide.with(this).load(mPhoto.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).centerCrop().into(profileImage);
+        Glide.with(this).load(mPhoto.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).centerCrop().placeholder(R.drawable.placeholder).into(profileImage);
         Log.i(TAG, mPhoto.getPlaceName());
         name.setText(Util.parseName(mPhoto.getUser(), 0));
         placeName.setText(mPhoto.getPlaceName());
@@ -74,7 +80,7 @@ public class PhotoView extends ActionBarActivity{
         description.setText(mPhoto.getDescription());
         socialAction.setText(mPhoto.getLoveCount() + " Likes · " + mPhoto.getCommentCount() + " Commnents · " + mPhoto.getShareCount() + " Shared");
         ImageView imageView = (ImageView) findViewById(R.id.photo);
-        Glide.with(this).load(mPhoto.getMediumUrl()).into(imageView);
+        Glide.with(this).load(mPhoto.getMediumUrl()).placeholder(R.drawable.placeholder).into(imageView);
     }
     protected void initComment(){
 
@@ -102,13 +108,13 @@ public class PhotoView extends ActionBarActivity{
     }
     protected void init(){
         setContentView(R.layout.photo);
-        new PhotoAsyncTask(handler).execute();
+        new PhotoAsyncTask(handler).execute(mAccessToken,mPhotoId);
         initActionBar();
         EditText enterComment = (EditText) findViewById(R.id.enterComment);
         enterComment.setFocusable(false);
         enterComment.setEnabled(false);
         enterComment.setFocusableInTouchMode(false);
-        new NearByPhotoAsyncTask(nearByHandler).execute();
+        new NearByPhotoAsyncTask(nearByHandler).execute(mAccessToken,mPhotoId);
     }
     List<PhotoApi> mNearByPhotos ;
     Handler nearByHandler = new Handler(Looper.getMainLooper()) {
@@ -132,7 +138,7 @@ public class PhotoView extends ActionBarActivity{
         LinearLayout nearBy2 = (LinearLayout) nearBy.findViewById(R.id.nearBy2);
 
         for(int i = 0 ; i<mNearByPhotos.size();i++) {
-            PhotoApi photo = mNearByPhotos.get(i);
+            final PhotoApi photo = mNearByPhotos.get(i);
             View nearByItem = LayoutInflater.from(this).inflate(R.layout.near_by_item,null);
             ImageView image = (ImageView) nearByItem.findViewById(R.id.profileImage);
             TextView name = (TextView) nearByItem.findViewById(R.id.profileName);
@@ -143,19 +149,35 @@ public class PhotoView extends ActionBarActivity{
             TextView commentCount = (TextView) nearByItem.findViewById(R.id.commentCount);
             TextView shareCount = (TextView) nearByItem.findViewById(R.id.shareCount);
 
-            Glide.with(this).load(photo.getUser().getImageUrl()).into(image);
+            Glide.with(this).load(photo.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(image);
             name.setText(Util.parseName(photo.getUser(),0));
-//            date.setText(HasBeenDate.convertDate(photo.getTakenTime()));
+
             Glide.with(this).load(photo.getSmallUrl()).into(nearPhoto);
             description.setText(photo.getPlaceName());
             likeCount.setText(photo.getLoveCount()+"");
             commentCount.setText(photo.getCommentCount()+"");
             shareCount.setText(photo.getShareCount()+"");
+            date.setText(HasBeenDate.convertDate(photo.getTakenTime()));
 
             if(i%2==0)
                 nearBy1.addView(nearByItem);
             else
                 nearBy2.addView(nearByItem);
+            nearByItem.setOnClickListener(new View.OnClickListener() {
+                boolean flag = false;
+                @Override
+                public void onClick(View v) {
+                    if(!flag) {
+                        flag = true;
+                        Intent intent = new Intent(getBaseContext(), PhotoView.class);
+                        intent.putExtra("photoId",photo.getId());
+                        startActivity(intent);
+                        finish();
+                        flag = false;
+                    }
+
+                }
+            });
         }
     }
     protected void initActionBar(){
@@ -189,5 +211,11 @@ public class PhotoView extends ActionBarActivity{
         dialog.setMessage("Wait a minutes...");
         dialog.setProgress(100);
         dialog.show();
+    }
+    @Override
+    public void onDestroy() {
+//        RecycleUtils.recursiveRecycle(getWindow().getDecorView());
+        System.gc();
+        super.onDestroy();
     }
 }

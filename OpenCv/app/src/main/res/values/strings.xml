@@ -17,7 +17,8 @@
     <string name="no_friends_selected">&lt;No friends selected&gt;</string>
     <string name="no_place_selected">&lt;No place selected&gt;</string>
     <string name="pick_seattle_place">Pick a Seattle Place</string>
-    <string name="app_id">357466047759411</string>
+    <string name="app_id">1495063747374536\</string>
     <string name="exception">Exception: %1$s</string>
     <string name="share_done">done</string>
+    <string name="domain">http://192.168.0.5:8080/</string>
 </resources>

@@ -24,7 +24,6 @@
         android:orientation="vertical"
         android:id="@+id/nearBy2"
         android:background="@color/day_background"
-        android:layout_marginLeft="8dp"
         android:layout_marginBottom="8dp"
         android:layout_height="wrap_content">
 

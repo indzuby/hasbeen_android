@@ -18,11 +18,9 @@ import java.util.List;
 import example.test.hasBeen.R;
 import example.test.hasBeen.comment.CommentView;
 import example.test.hasBeen.geolocation.MapRoute;
-
 import example.test.hasBeen.model.api.DayApi;
 import example.test.hasBeen.model.api.PhotoApi;
 import example.test.hasBeen.utils.CircleTransform;
-import example.test.hasBeen.utils.HasBeenDate;
 import example.test.hasBeen.utils.SlidingUpPanelLayout;
 import example.test.hasBeen.utils.Util;
 
@@ -93,7 +91,7 @@ public class NewsFeedAdapter extends BaseAdapter {
 
         profileName.setText(Util.parseName(feed.getUser(), 0)); // coutry code -> name format
         placeName.setText(feed.getMainPlace().getCity() + ", " + feed.getMainPlace().getCountry());
-        date.setText(HasBeenDate.convertDate(feed.getDate()));
+//        date.setText(HasBeenDate.convertDate(feed.getDate()));
         dayTitle.setText(feed.getTitle());
         dayDescription.setText(feed.getDescription());
         socialAction.setText(feed.getLoveCount() + " Likes · " + feed.getCommentCount() + " Commnents · " + feed.getShareCount() + " Shared");
@@ -129,7 +127,7 @@ public class NewsFeedAdapter extends BaseAdapter {
         view = inflater.inflate(layout[index % k], null);
         for (int i = 0; i < length[index % k] && i < photoList.size(); i++) {
             ImageView imageView = (ImageView) view.findViewById(image[i]);
-            Glide.with(mContext).load(photoList.get(i).getMediumUrl()).centerCrop().into(imageView);
+            Glide.with(mContext).load(photoList.get(i).getMediumUrl()).centerCrop().placeholder(R.drawable.placeholder).into(imageView);
         }
         return view;
 

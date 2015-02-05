@@ -11,7 +11,6 @@
         android:layout_width="40dp"
         android:layout_marginLeft="8dp"
         android:layout_height="40dp"
-        android:src="@drawable/profile_sample"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:background="@drawable/profile_oval"

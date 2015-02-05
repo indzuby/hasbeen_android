@@ -27,6 +27,7 @@ import example.test.hasBeen.R;
 import example.test.hasBeen.day.DayView;
 import example.test.hasBeen.geolocation.MapRoute;
 import example.test.hasBeen.model.api.DayApi;
+import example.test.hasBeen.utils.Session;
 import example.test.hasBeen.utils.SlidingUpPanelLayout;
 
 /**
@@ -36,7 +37,7 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
     final String TAG = "NewsFeed";
     View mView;
     GoogleMap mMap;
-
+    String mAccessToekn;
     private MapFragment mMapFragment;
     SlidingUpPanelLayout mSlidingUpPanelLayout;
     private View mTransparentHeaderView;
@@ -77,8 +78,10 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(!flag) {
+                    Log.i(TAG,mFeeds.get(position).getId()+"");
                     flag = true;
                     Intent intent = new Intent(getActivity(),DayView.class);
+                    intent.putExtra("dayId",mFeeds.get(position).getId());
                     startActivity(intent);
                     flag = false;
                 }
@@ -98,9 +101,9 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
                 mFeedAdapter.mSlidPanel = mSlidingUpPanelLayout;
                 mSlidingUpPanelLayout.collapsePane();
                 UiSettings setting = map.getUiSettings();
-                setting.setZoomControlsEnabled(true);
-                setting.setMyLocationButtonEnabled(true);
-                map.setMyLocationEnabled(true);
+                setting.setAllGesturesEnabled(false);
+                setting.setZoomControlsEnabled(false);
+                setting.setMyLocationButtonEnabled(false);
             }
         });
         collapseMap();
@@ -109,7 +112,8 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.newsfeed, container, false);
-        new NewsFeedAsyncTask(handler).execute();
+        mAccessToekn = Session.getString(getActivity(),"accessToken",null);
+        new NewsFeedAsyncTask(handler).execute(mAccessToekn);
         init();
         return mView;
     }
@@ -132,8 +136,10 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
                                             mFeeds.add(feed);
                                             mFeedAdapter.notifyDataSetChanged();
                                         }
-                                        Log.i("mapRoute",mFeeds.get(0).getMainPlace().getLat()+"");
-                                        mapRoute.addMarker(mFeeds.get(0).getMainPlace().getLat(),mFeeds.get(0).getMainPlace().getLon());
+                                        if(feeds.size()>0) {
+                                            Log.i("mapRoute", mFeeds.get(0).getMainPlace().getLat() + "");
+                                            mapRoute.addMarker(mFeeds.get(0).getMainPlace().getLat(), mFeeds.get(0).getMainPlace().getLon());
+                                        }
                                     }
                                 });
                             } catch (Exception e) {

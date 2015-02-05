@@ -26,6 +26,7 @@ import example.test.hasBeen.R;
 import example.test.hasBeen.geolocation.MapRoute;
 import example.test.hasBeen.model.api.DayApi;
 import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-30.
@@ -43,12 +44,13 @@ public class SearchFragment extends Fragment {
     ImageView mRefresh;
     MapRoute mMapRoute;
     int nowTab = DAY;
-
+    String mAccessToken;
     boolean isrefresh = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.search, container, false);
-        new SearchDayAsyncTask(dayHandler).execute();
+        mAccessToken = Session.getString(getActivity(),"accessToken",null);
+        new SearchDayAsyncTask(dayHandler).execute(mAccessToken);
         init();
         return mView;
     }
@@ -80,12 +82,13 @@ public class SearchFragment extends Fragment {
             public void onClick(View v) {
                 if(!isrefresh) {
                     Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
+                    mRefresh.setImageResource(R.drawable.loading);
                     isrefresh = true;
                     mRefresh.startAnimation(rotate);
                     if(nowTab == DAY)
-                        new SearchDayAsyncTask(dayHandler).execute();
+                        new SearchDayAsyncTask(dayHandler).execute(mAccessToken);
                     else
-                        new SearchPhotoAsyncTask(photoHandler).execute();
+                        new SearchPhotoAsyncTask(photoHandler).execute(mAccessToken);
                 }
             }
         });
@@ -152,12 +155,12 @@ public class SearchFragment extends Fragment {
             if(mDays!=null)
                 dayRendering();
             else
-                new SearchDayAsyncTask(dayHandler).execute();
+                new SearchDayAsyncTask(dayHandler).execute(mAccessToken);
         }else {
             if(mPhotos!=null)
                 photoRendering();
             else
-                new SearchPhotoAsyncTask(photoHandler).execute();
+                new SearchPhotoAsyncTask(photoHandler).execute(mAccessToken);
         }
     }
     protected void dayRendering(){
@@ -167,33 +170,12 @@ public class SearchFragment extends Fragment {
             mMapRoute.addMarkerCluster(mDays);
             if (isrefresh) {
                 mRefresh.clearAnimation();
+                mRefresh.setImageResource(R.drawable.refresh);
                 isrefresh = false;
             }
         }catch (Exception e) {
             e.printStackTrace();
         }
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    getActivity().runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            LatLng location = new LatLng(mDays.get(0).getMainPlace().getLat(),mDays.get(0).getMainPlace().getLon());
-//                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
-//                            mMapRoute.addMarkerCluster(mDays);
-//                            if(isrefresh) {
-//                                mRefresh.clearAnimation();
-//                                isrefresh = false;
-//                            }
-//
-//                        }
-//                    });
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
     }
     protected void photoRendering (){
         try {
@@ -202,32 +184,11 @@ public class SearchFragment extends Fragment {
             mMapRoute.addMarkerClusterPhoto(mPhotos);
             if (isrefresh) {
                 mRefresh.clearAnimation();
+                mRefresh.setImageResource(R.drawable.refresh);
                 isrefresh = false;
             }
         }catch (Exception e) {
             e.printStackTrace();
         }
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    getActivity().runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            LatLng location = new LatLng(mPhotos.get(0).getLat(),mPhotos.get(0).getLon());
-//                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
-//                            mMapRoute.addMarkerClusterPhoto(mPhotos);
-//                            if(isrefresh) {
-//                                mRefresh.clearAnimation();
-//                                isrefresh = false;
-//                            }
-//
-//                        }
-//                    });
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
     }
 }

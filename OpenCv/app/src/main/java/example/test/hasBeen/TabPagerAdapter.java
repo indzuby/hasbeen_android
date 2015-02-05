@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import example.test.hasBeen.gallery.GalleryActivity;
+import example.test.hasBeen.alarm.AlarmFragment;
 import example.test.hasBeen.gallery.GalleryFragment;
 import example.test.hasBeen.newsfeed.NewsFeedFragment;
 import example.test.hasBeen.profile.ProfileFragment;
@@ -37,10 +37,12 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
                 return mGallery;
             case 3:
                 if (mAlarm == null)
-                    mAlarm = new GalleryActivity();
+                    mAlarm = new AlarmFragment();
                 return mAlarm;
             case 4:
-                return new ProfileFragment();
+                if (mProfile == null)
+                    mProfile = new ProfileFragment();
+                return mProfile;
 
         }
         return null;

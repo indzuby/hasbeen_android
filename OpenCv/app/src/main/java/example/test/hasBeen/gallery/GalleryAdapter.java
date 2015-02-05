@@ -75,8 +75,7 @@ public class GalleryAdapter extends BaseAdapter {
             }
         });
         Glide.with(mContext).load(photo.getPhotoPath())
-                .centerCrop()
-                .crossFade().placeholder(R.drawable.loading)
+                .centerCrop().placeholder(R.drawable.placeholder)
                 .into(imageView);
         return imageView;
     }

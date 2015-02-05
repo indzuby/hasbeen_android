@@ -2,12 +2,6 @@ package example.test.hasBeen.model.api;
 
 import android.graphics.Bitmap;
 
-import com.google.gson.annotations.Expose;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
-import example.test.hasBeen.model.database.Photo;
-
 /**
  * Created by zuby on 2015-01-09.
  */
@@ -118,5 +112,14 @@ public class PlaceApi {
     public PhotoApi getMainPhoto() {
         return mainPhoto;
     }
+    Bitmap image;
+
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
+     }
 
 }

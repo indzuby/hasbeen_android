@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:weightSum="2"
+    android:id="@+id/loadingBackground"
               android:layout_width="match_parent"
               android:layout_height="@dimen/newsfeed_image_height">
         <ImageView
             android:layout_weight="1"
-            android:src="@drawable/photo_sample"
             android:layout_width="0dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
@@ -21,6 +21,5 @@
             android:id="@+id/image2"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/photo_sample"
             />
 </LinearLayout>

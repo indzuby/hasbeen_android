@@ -1,182 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+        <ScrollView
+            android:layout_width="match_parent"
 
-    <ScrollView
-        android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        android:layout_height="wrap_content">
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:orientation="vertical"
-                      android:layout_width="match_parent"
-                      android:background="@color/list_background"
-
-                      android:layout_height="wrap_content">
-
-           <include layout="@layout/day_title_box" android:id="@+id/dayTitleBox"/>
-
-            <ImageView
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/photo"
-                android:src="@drawable/photo_sample"
-                android:adjustViewBounds="true"
-                android:scaleType="fitStart"/>
+                android:background="@color/list_background"
 
-            <RelativeLayout
-                android:background="@color/theme_white"
-                android:layout_width="match_parent"
-                android:padding="16dp"
-                android:id="@+id/descriptionBox"
-                android:layout_height="wrap_content">
+                android:orientation="vertical">
 
+                <include
+                    android:id="@+id/dayTitleBox"
+                    layout="@layout/day_title_box" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/photo"
+                    android:layout_width="match_parent"
+
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:includeFontPadding="false"
-                    android:background="@drawable/description_selector"
-                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus id accumsan dui. Vivamus laoreet cursus pulvinar. Morbi eu ullamcorper neque, non faucibus"
-                    android:id="@+id/description"
-                    android:textColor="@color/light_black"
-                    android:layout_marginBottom="8dp"
-                    android:textSize="14sp"/>
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitStart"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/descriptionBox"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/light_gray"
-                    android:id="@+id/socialAction"
-                    android:text="8 Likes 3 Comments 2 Shared"
-                    android:layout_below="@+id/description"
-                    android:textSize="13sp"
-                    />
-            </RelativeLayout>
+                    android:background="@color/theme_white"
+                    android:padding="16dp">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:alpha="0.10"
-                android:background="#000000"
-                />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:weightSum="3">
-
-                <LinearLayout
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:gravity="center"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/photo_like"
-                        />
 
                     <TextView
+                        android:id="@+id/description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/light_gray"
-                        android:layout_marginLeft="4dp"
-                        android:text="Like"/>
-                </LinearLayout>
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="4dp"
+                        android:background="@drawable/description_selector"
+                        android:includeFontPadding="false"
 
-                <LinearLayout
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:gravity="center"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/photo_comment_selector"
-                        />
+                        android:textColor="@color/light_black"
+                        android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/socialAction"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/description"
                         android:textColor="@color/light_gray"
-                        android:layout_marginLeft="4dp"
-                        android:text="Comment"/>
-                </LinearLayout>
+                        android:textSize="13sp" />
+                </RelativeLayout>
 
-                <LinearLayout
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:gravity="center"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/photo_share_selector"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/light_gray"
-                        android:layout_marginLeft="4dp"
-                        android:text="Share"/>
-                </LinearLayout>
-
-            </LinearLayout>
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="#000000"
-                android:alpha="0.1"
-                />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:id="@+id/commentBox"
-                android:layout_height="wrap_content">
-
-                <!--<include layout="@layout/more_comments"/>-->
-
-                <!--<include layout="@layout/comment"/>-->
-
-                <!--<include layout="@layout/comment"/>-->
-
-                <!--<include layout="@layout/comment"/>-->
-            </LinearLayout>
-
-                <include layout="@layout/comment_footer"/>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2px"
-                    android:background="#000000"
+                    android:alpha="0.10"
+                    android:background="#000000" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:weightSum="3">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/photo_like" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:text="Like"
+                            android:textColor="@color/light_gray" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/photo_comment_selector" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:text="Comment"
+                            android:textColor="@color/light_gray" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/photo_share_selector" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:text="Share"
+                            android:textColor="@color/light_gray" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
                     android:alpha="0.1"
-                    />
+                    android:background="#000000" />
+
+                <LinearLayout
+                    android:id="@+id/commentBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!--<include layout="@layout/more_comments"/>-->
+
+                    <!--<include layout="@layout/comment"/>-->
+
+                    <!--<include layout="@layout/comment"/>-->
+
+                    <!--<include layout="@layout/comment"/>-->
+                </LinearLayout>
+
+                <include layout="@layout/comment_footer" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:alpha="0.1"
+                    android:background="#000000" />
 
                 <TextView
                     android:layout_width="match_parent"
+                    android:layout_height="48dp"
                     android:gravity="center"
                     android:text="Photo near by"
                     android:textColor="@color/light_gray"
-                    android:textSize="12sp"
-                    android:layout_height="48dp"/>
+                    android:textSize="12sp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2px"
-                    android:background="#000000"
                     android:alpha="0.1"
-                    />
-                <include layout="@layout/near_by" android:id="@+id/nearBy"/>
-        </LinearLayout>
-    </ScrollView>
+                    android:background="#000000" />
 
-</RelativeLayout>
+                <include
+                    android:id="@+id/nearBy"
+                    layout="@layout/near_by" />
+            </LinearLayout>
+        </ScrollView>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/actionbar_shadow" />
+</FrameLayout>

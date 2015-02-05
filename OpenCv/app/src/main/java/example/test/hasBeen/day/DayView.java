@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,8 +33,10 @@ import example.test.hasBeen.comment.CommentView;
 import example.test.hasBeen.geolocation.MapRoute;
 import example.test.hasBeen.model.api.Comment;
 import example.test.hasBeen.model.api.DayApi;
+import example.test.hasBeen.model.api.PositionApi;
 import example.test.hasBeen.utils.CircleTransform;
 import example.test.hasBeen.utils.HasBeenDate;
+import example.test.hasBeen.utils.Session;
 import example.test.hasBeen.utils.Util;
 
 /**
@@ -52,10 +53,14 @@ public class DayView extends ActionBarActivity{
     DayApi mDay;
     MapRoute mMapRoute = null;
     DayAdapter mDayAdapter;
+    Long mDayId;
+    String mAccessToken;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         showProgress();
         super.onCreate(savedInstanceState);
+        mDayId = getIntent().getLongExtra("dayId",0);
+        mAccessToken = Session.getString(this,"accessToken",null);
         init();
     }
     Handler handler = new Handler(Looper.getMainLooper()){
@@ -64,7 +69,14 @@ public class DayView extends ActionBarActivity{
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mDay = (DayApi)msg.obj;
+                    DayApi day = (DayApi)msg.obj;
+                    List<PositionApi> positions = new ArrayList<>();
+                    for(PositionApi position : day.getPositionList()) {
+                        if(position.getType().equals("PLACE"))
+                            positions.add(position);
+                    }
+                    mDay = day;
+                    mDay.setPositionList(positions);
                     Log.i(TAG,mDay.getId()+"");
                     titleView.setText(mDay.getTitle());
                     initHeaderView();
@@ -123,7 +135,7 @@ public class DayView extends ActionBarActivity{
         mListView.setAdapter(mDayAdapter);
     }
     protected  void initFoorteView(){
-        ImageView commentButton = (ImageView) findViewById(R.id.comment);
+        ImageButton commentButton = (ImageButton) findViewById(R.id.comment);
         commentButton.setOnClickListener(new View.OnClickListener() {
             boolean flag = false;
             @Override
@@ -164,7 +176,7 @@ public class DayView extends ActionBarActivity{
     protected void init(){
         setContentView(R.layout.day);
         initActionBar();
-        new DayAsyncTask(handler).execute();
+        new DayAsyncTask(handler).execute(mAccessToken, mDayId);
         mHeaderView =  LayoutInflater.from(this).inflate(R.layout.day_header, null, false);
         mFooterView =  LayoutInflater.from(this).inflate(R.layout.day_footer, null, false);
         mListView = (ListView) findViewById(R.id.listPhotos);
@@ -181,11 +193,6 @@ public class DayView extends ActionBarActivity{
 
             }
         });
-        List<String> testData = new ArrayList<>(10);
-        for(int i =1 ; i<=10;i++)
-            testData.add("item "+i);
-        mListView.setAdapter(new ArrayAdapter<String>(this,R.layout.simple_list_item,testData));
-
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
 
@@ -196,10 +203,9 @@ public class DayView extends ActionBarActivity{
                 mMap = map;
                 mMapRoute = new MapRoute(mMap,getBaseContext());
                 UiSettings setting = map.getUiSettings();
-                setting.setScrollGesturesEnabled(false);
-                setting.setZoomControlsEnabled(true);
+                setting.setAllGesturesEnabled(false);
+                setting.setZoomControlsEnabled(false);
                 setting.setMyLocationButtonEnabled(false);
-                map.setMyLocationEnabled(false);
             }
         });
 
@@ -236,5 +242,22 @@ public class DayView extends ActionBarActivity{
         dialog.setMessage("Wait a minutes...");
         dialog.setProgress(100);
         dialog.show();
+    }
+    @Override
+    public void onDestroy() {
+        if(mDayAdapter!=null)
+            mDayAdapter.recycle();
+
+
+//        RecycleUtils.recursiveRecycle(getWindow().getDecorView());
+        System.gc();
+        super.onDestroy();
+//        unbindDrawables(findViewById(R.id.listPhotos));
+    }
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+
+        System.gc();
     }
 }

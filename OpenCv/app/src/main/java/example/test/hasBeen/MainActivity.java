@@ -15,7 +15,8 @@ import example.test.hasBeen.database.CreateDataBase;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener{
-
+    ActionBar.Tab newsfeed,search,gallery,alarm,profile;
+    int tabIcon[] = {R.drawable.newsfeed_pressed,R.drawable.search_pressed,R.drawable.gallery_pressed,R.drawable.alarm_pressed,R.drawable.profile_pressed};
     static {
 
         if (!OpenCVLoader.initDebug()) {
@@ -48,25 +49,25 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        ActionBar.Tab newsfeed = actionBar
+        newsfeed = actionBar
                 .newTab()
-                .setIcon(R.drawable.ic_newsfeed)
+                .setIcon(R.drawable.newsfeed)
                 .setTabListener(this);
-        ActionBar.Tab search = actionBar
+        search = actionBar
                 .newTab()
-                .setIcon(R.drawable.ic_search)
+                .setIcon(R.drawable.search)
                 .setTabListener(this);
-        ActionBar.Tab gallery = actionBar
+        gallery = actionBar
                 .newTab()
-                .setIcon(R.drawable.ic_gallery)
+                .setIcon(R.drawable.gallery)
                 .setTabListener(this);
-        ActionBar.Tab alarm = actionBar
+        alarm = actionBar
                 .newTab()
-                .setIcon(R.drawable.ic_alarm)
+                .setIcon(R.drawable.alarm)
                 .setTabListener(this);
-        ActionBar.Tab profile = actionBar
+        profile = actionBar
                 .newTab()
-                .setIcon(R.drawable.ic_profile)
+                .setIcon(R.drawable.profile)
 
                 .setTabListener(this);
         actionBar.addTab(newsfeed);
@@ -101,7 +102,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             e.printStackTrace();
         }
     }
+    protected void clearTabSelect(){
+        newsfeed.setIcon(R.drawable.newsfeed);
+        search.setIcon(R.drawable.search);
+        gallery.setIcon(R.drawable.gallery);
+        alarm.setIcon(R.drawable.alarm);
+        profile.setIcon(R.drawable.profile);
 
+    }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -110,6 +118,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         mViewPager.setCurrentItem(tab.getPosition());
+        clearTabSelect();
+        tab.setIcon(tabIcon[tab.getPosition()]);
     }
 
     @Override
@@ -144,5 +154,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         dialog.setMessage("Writting on database");
         dialog.setProgress(100);
         dialog.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        System.gc();
+        Log.i("Destory","yes");
+        System.exit(0);
+        super.onDestroy();
     }
 }

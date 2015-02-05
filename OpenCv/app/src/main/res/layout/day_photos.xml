@@ -24,7 +24,7 @@
             android:layout_height="32dp"
             android:layout_gravity="center|bottom"
             android:background="@drawable/gallery_icon_oval"
-            android:src="@drawable/ic_mountain"
+
             android:id="@+id/placeIcon"/>
         <ImageView
             android:layout_width="4dp"

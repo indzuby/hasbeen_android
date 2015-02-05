@@ -2,7 +2,6 @@ package example.test.hasBeen.day;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +11,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 import example.test.hasBeen.R;
-import example.test.hasBeen.model.api.Comment;
 import example.test.hasBeen.model.api.PhotoApi;
 import example.test.hasBeen.model.api.PositionApi;
-import example.test.hasBeen.model.database.Day;
-import example.test.hasBeen.model.database.Photo;
-import example.test.hasBeen.model.database.Position;
 import example.test.hasBeen.photo.PhotoView;
 import example.test.hasBeen.utils.HasBeenDate;
+import example.test.hasBeen.utils.RecycleUtils;
 import it.sephiroth.android.library.widget.HListView;
 
 /**
@@ -32,10 +29,16 @@ import it.sephiroth.android.library.widget.HListView;
 public class DayAdapter extends BaseAdapter {
     Context mContext;
     List<PositionApi> mPositionList;
+    List<PhotoAdapter> recycleAdapter = new ArrayList<>();
     public DayAdapter(Context mContext, List mPositionList)
     {
         this.mContext = mContext;
         this.mPositionList = mPositionList;
+    }
+    public void recycle(){
+        for(PhotoAdapter adapter : recycleAdapter)
+            adapter.recycle();
+
     }
 
     @Override
@@ -77,6 +80,7 @@ public class DayAdapter extends BaseAdapter {
             View transparentHeaderView = LayoutInflater.from(mContext).inflate(R.layout.day_hlist_header, null, false);
             hListView.addHeaderView(transparentHeaderView);
             PhotoAdapter photoAdapter = new PhotoAdapter(position.getPhotoList());
+            recycleAdapter.add(photoAdapter);
             hListView.setAdapter(photoAdapter);
         }else {
             if(position.getType().equals("WALK")) {
@@ -94,7 +98,12 @@ public class DayAdapter extends BaseAdapter {
 
     class PhotoAdapter extends BaseAdapter {
         List<PhotoApi> mPhotoList;
-
+        private List<WeakReference<View>> mRecycleList = new ArrayList<WeakReference<View>>();
+        public void recycle() {
+            for (WeakReference<View> ref : mRecycleList) {
+                RecycleUtils.recursiveRecycle(ref.get());
+            }
+        }
         public PhotoAdapter(List<PhotoApi> mPhotoList) {
             this.mPhotoList = mPhotoList;
         }
@@ -117,7 +126,7 @@ public class DayAdapter extends BaseAdapter {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = convertView;
-            PhotoApi photo = getItem(position);
+            final PhotoApi photo = getItem(position);
             if (view == null) {
                 LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.day_photo, null);
@@ -131,13 +140,13 @@ public class DayAdapter extends BaseAdapter {
                     if(!flag) {
                         flag = true;
                         Intent intent = new Intent(mContext, PhotoView.class);
+                        intent.putExtra("photoId",photo.getId());
                         mContext.startActivity(intent);
                         flag = false;
                     }
                 }
             });
-
-
+            mRecycleList.add(new WeakReference<View>(imageView));
             return view;
         }
     }
