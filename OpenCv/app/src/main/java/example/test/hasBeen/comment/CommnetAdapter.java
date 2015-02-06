@@ -5,12 +5,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
 import example.test.hasBeen.R;
-import example.test.hasBeen.model.api.*;
 import example.test.hasBeen.model.api.Comment;
+import example.test.hasBeen.profile.ProfileClickListner;
+import example.test.hasBeen.utils.CircleTransform;
+import example.test.hasBeen.utils.HasBeenDate;
+import example.test.hasBeen.utils.Util;
 
 /**
  * Created by zuby on 2015-01-28.
@@ -47,6 +54,17 @@ public class CommnetAdapter extends BaseAdapter{
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.comment, null);
         }
+        ImageView profileImage = (ImageView) view.findViewById(R.id.profileImage);
+        TextView profileName = (TextView) view.findViewById(R.id.profileName);
+        TextView contents = (TextView) view.findViewById(R.id.contents);
+        TextView commentTime = (TextView) view.findViewById(R.id.commentTime);
+
+        Glide.with(mContext).load(comment.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(mContext)).into(profileImage);
+        profileName.setText(Util.parseName(comment.getUser(),0));
+        contents.setText(comment.getContents());
+        commentTime.setText(HasBeenDate.getGapTime(comment.getCreatedTime()));
+        profileImage.setOnClickListener(new ProfileClickListner(mContext,comment.getUser().getId()));
+        profileName.setOnClickListener(new ProfileClickListner(mContext, comment.getUser().getId()));
         return view;
     }
 }

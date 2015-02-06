@@ -4,18 +4,15 @@ package example.test.hasBeen.model.api;
  * Created by zuby on 2015-01-26.
  */
 public class User {
-    int id;
+    Long id;
     String firstName;
     String lastName;
     String imageUrl;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -75,5 +72,10 @@ public class User {
 
     public int getFollowingCount() {
         return followingCount;
+    }
+    Follow follow;
+
+    public Follow getFollow() {
+        return follow;
     }
 }

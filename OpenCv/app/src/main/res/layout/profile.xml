@@ -60,7 +60,7 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:src="@drawable/setting"
-                android:id="@+id/setting"/>
+                android:id="@+id/setting_follow"/>
         </RelativeLayout>
     </FrameLayout>
 

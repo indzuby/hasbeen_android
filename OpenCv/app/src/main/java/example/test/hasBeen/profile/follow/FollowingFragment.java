@@ -14,16 +14,19 @@ import android.widget.TextView;
 import java.util.List;
 
 import example.test.hasBeen.R;
-import example.test.hasBeen.model.api.Follower;
+import example.test.hasBeen.model.api.Follow;
+import example.test.hasBeen.utils.Session;
 
 /**
  * Created by 주현 on 2015-02-02.
  */
 public class FollowingFragment extends Fragment {
     View mView;
-    List<Follower> mFollowing;
+    List<Follow> mFollowing;
     ListView mList;
     TextView mCount;
+    Long mUserId;
+    String mAccessToken;
     Handler followingHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -48,7 +51,9 @@ public class FollowingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.follower, container, false);
-        new FollowingAsyncTask(followingHandler).execute();
+        mUserId = getArguments().getLong("userId");
+        mAccessToken = Session.getString(getActivity(), "accessToken", null);
+        new FollowingAsyncTask(followingHandler).execute(mAccessToken,mUserId);
         init();
         return mView;
     }

@@ -33,7 +33,8 @@ public class DayPin implements ClusterItem{
             Glide.with(context).load(mDay.getPhotoList().get(0).getSmallUrl()).asBitmap().into(new SimpleTarget<Bitmap>(Util.convertDpToPixel(32, context), Util.convertDpToPixel(32, context)) {
                 @Override
                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                    image = Util.getBitmapClippedCircle(resource);
+//                    image = Util.getBitmapClippedCircle(resource) ;
+                    image = resource;
                     mDay.setMainPhoto(image);
                 }
             });

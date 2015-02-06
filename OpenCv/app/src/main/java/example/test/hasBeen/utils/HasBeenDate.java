@@ -67,12 +67,20 @@ public class HasBeenDate {
         LocalDateTime currentTime = new LocalDateTime();
         LocalDateTime commentTime = new LocalDateTime(time);
         Log.i("TIME",new Date().getTime()+"");
-
-        if(Days.daysBetween(commentTime.toLocalDate(),currentTime.toLocalDate()).getDays()<1) {
-            if(commentTime.getHourOfDay()-currentTime.getHourOfDay()<1) {
-                return commentTime.getMinuteOfHour() - currentTime.getMinuteOfHour() +" minutes ago";
+        Long gap = new Date().getTime() - time;
+        int dayGap = Days.daysBetween(commentTime.toLocalDate(),currentTime.toLocalDate()).getDays();
+        if(dayGap<7) {
+            if(dayGap<=1) {
+                gap = gap/1000;
+                long hour = gap/3600;
+                if(hour>=1)
+                    return hour+" hours ago";
+                else
+                    return  gap/60+" minutes ago";
             }else
-                return commentTime.getHourOfDay()-currentTime.getHourOfDay()+" hours ago";
+                return commentTime.toString("E, a h:mm");
+        }else if(dayGap<28){
+            return (dayGap/7) + " weeks ago";
         }else
             return commentTime.toString("MMMM dd, yyyy");
     }

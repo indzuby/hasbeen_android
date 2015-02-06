@@ -23,7 +23,6 @@
                 android:layout_height="32dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
-                android:background="@drawable/profile_oval"
                 android:id="@+id/profileImage"/>
 
             <TextView

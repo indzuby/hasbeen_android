@@ -27,6 +27,11 @@ public class DayApi {
     List<PhotoApi> photoList;
     List<PositionApi> positionList;
     List<Comment> commentList;
+    Long updatedTime ;
+
+    public Long getUpdatedTime() {
+        return updatedTime;
+    }
 
     public Long getId() {
         return id;

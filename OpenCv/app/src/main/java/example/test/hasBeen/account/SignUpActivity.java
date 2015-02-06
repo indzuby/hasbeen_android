@@ -28,7 +28,7 @@ public class SignUpActivity extends Activity {
             public void onClick(View v) {
                 if (!flag) {
                     flag = true;
-                    Intent intent = new Intent(getBaseContext(), SignInActivity.class);
+                    Intent intent = new Intent(getBaseContext(), LoginActivity.class);
                     startActivity(intent);
                     flag = false;
                 }

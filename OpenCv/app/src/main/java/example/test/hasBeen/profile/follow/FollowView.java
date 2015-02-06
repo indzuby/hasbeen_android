@@ -24,8 +24,10 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
     TextView mFollowerButton;
     TextView mFollowingButton;
     ViewPager mViewPager;
+    Long mUserId;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mUserId = getIntent().getLongExtra("userId",0);
         init();
     }
 
@@ -63,7 +65,7 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
         mFollowerButton.setOnClickListener(this);
         mFollowingButton.setOnClickListener(this);
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        FollowPagerAdapter pagerAdapter = new FollowPagerAdapter(getSupportFragmentManager());
+        FollowPagerAdapter pagerAdapter = new FollowPagerAdapter(getSupportFragmentManager(),mUserId);
         mViewPager.setAdapter(pagerAdapter);
         mViewPager.setOffscreenPageLimit(2);
 

@@ -13,14 +13,12 @@
         android:layout_height="40dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:background="@drawable/profile_oval"
         android:id="@+id/profileImage"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/profileName"
-        android:text="Jun Lee"
         android:textStyle="bold"
         android:textColor="@color/light_black"
         android:textSize="13sp"
@@ -34,7 +32,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/profileName"
-        android:text="Beautiful photo."
         android:id="@+id/contents"
         android:textColor="@color/light_black"
         android:textSize="13sp"
@@ -46,7 +43,6 @@
         android:textColor="@color/light_gray2"
         android:textSize="12sp"
         android:layout_marginTop="4dp"
-        android:text="4 hours ago"
         android:id="@+id/commentTime"
         android:layout_marginLeft="16dp"
         android:layout_below="@+id/profileName"

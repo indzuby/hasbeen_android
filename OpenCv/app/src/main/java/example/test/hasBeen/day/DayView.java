@@ -34,6 +34,7 @@ import example.test.hasBeen.geolocation.MapRoute;
 import example.test.hasBeen.model.api.Comment;
 import example.test.hasBeen.model.api.DayApi;
 import example.test.hasBeen.model.api.PositionApi;
+import example.test.hasBeen.profile.ProfileClickListner;
 import example.test.hasBeen.utils.CircleTransform;
 import example.test.hasBeen.utils.HasBeenDate;
 import example.test.hasBeen.utils.Session;
@@ -93,7 +94,7 @@ public class DayView extends ActionBarActivity{
     protected void initHeaderView(){
         View titleBox = findViewById(R.id.dayTitleBox);
         ImageView profileImage = (ImageView) titleBox.findViewById(R.id.profileImage);
-        TextView name = (TextView) titleBox.findViewById(R.id.profileName);
+        TextView profileName = (TextView) titleBox.findViewById(R.id.profileName);
         TextView placeName = (TextView) titleBox.findViewById(R.id.placeName);
         TextView date = (TextView) titleBox.findViewById(R.id.date);
 
@@ -103,7 +104,7 @@ public class DayView extends ActionBarActivity{
         TextView totalPhoto = (TextView) findViewById(R.id.totalPhoto);
         Glide.with(this).load(mDay.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(profileImage);
         Log.i(TAG, mDay.getMainPlace().getName());
-        name.setText(Util.parseName(mDay.getUser(), 0));
+        profileName.setText(Util.parseName(mDay.getUser(), 0));
         placeName.setText(Util.convertPlaceName(mDay.getPositionList()));
         date.setText(HasBeenDate.convertDate(mDay.getDate()));
         dayTitle.setText(mDay.getTitle());
@@ -111,6 +112,8 @@ public class DayView extends ActionBarActivity{
         socialAction.setText(mDay.getLoveCount()+" Likes · " + mDay.getCommentCount()+" Commnents · "+mDay.getShareCount()+" Shared");
         totalPhoto.setText("Total " + mDay.getPhotoCount() + " photos");
         Log.i(TAG, mDay.getPositionList().size() + "");
+        profileImage.setOnClickListener(new ProfileClickListner(this, mDay.getUser().getId()));
+        profileName.setOnClickListener(new ProfileClickListner(this, mDay.getUser().getId()));
         new Thread(new Runnable() {
             boolean flag=true;
             @Override
@@ -143,6 +146,8 @@ public class DayView extends ActionBarActivity{
                 if(!flag) {
                     flag = true;
                     Intent intent = new Intent(getBaseContext(), CommentView.class);
+                    intent.putExtra("type","days");
+                    intent.putExtra("id",mDay.getId());
                     startActivity(intent);
                     flag = false;
                 }
@@ -163,6 +168,8 @@ public class DayView extends ActionBarActivity{
             ImageView profileImage = (ImageView) commentView.findViewById(R.id.profileImage);
             TextView profileName = (TextView) commentView.findViewById(R.id.profileName);
             Glide.with(this).load(comment.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(profileImage);
+            profileImage.setOnClickListener(new ProfileClickListner(this,comment.getUser().getId()));
+            profileName.setOnClickListener(new ProfileClickListner(this, comment.getUser().getId()));
             profileName.setText(Util.parseName(comment.getUser(),0));
             commentBox.addView(commentView);
 

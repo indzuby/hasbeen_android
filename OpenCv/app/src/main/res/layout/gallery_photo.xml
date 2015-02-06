@@ -40,7 +40,6 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:adjustViewBounds="true"
-                    android:background="@drawable/profile_oval"
                     android:id="@+id/profileImage"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -69,7 +68,7 @@
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:background="@drawable/share_effect"
-                android:src="@drawable/ic_edit"
+                android:src="@drawable/edit"
                 android:id="@+id/edit_button"
                 android:layout_marginRight="8dp"
                 android:layout_alignBottom="@+id/profileName"

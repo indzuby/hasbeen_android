@@ -23,8 +23,10 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import example.test.hasBeen.R;
+import example.test.hasBeen.comment.EnterCommentListner;
 import example.test.hasBeen.model.api.Comment;
 import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.profile.ProfileClickListner;
 import example.test.hasBeen.utils.CircleTransform;
 import example.test.hasBeen.utils.HasBeenDate;
 import example.test.hasBeen.utils.Session;
@@ -66,21 +68,23 @@ public class PhotoView extends ActionBarActivity{
     protected void initView(){
         View titleBox = findViewById(R.id.dayTitleBox);
         ImageView profileImage = (ImageView) titleBox.findViewById(R.id.profileImage);
-        TextView name = (TextView) titleBox.findViewById(R.id.profileName);
+        TextView profileName = (TextView) titleBox.findViewById(R.id.profileName);
         TextView placeName = (TextView) titleBox.findViewById(R.id.placeName);
         TextView date = (TextView) titleBox.findViewById(R.id.date);
 
         TextView description = (TextView) findViewById(R.id.description);
         TextView socialAction = (TextView) findViewById(R.id.socialAction);
-        Glide.with(this).load(mPhoto.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).centerCrop().placeholder(R.drawable.placeholder).into(profileImage);
+        Glide.with(this).load(mPhoto.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).placeholder(R.drawable.placeholder).into(profileImage);
         Log.i(TAG, mPhoto.getPlaceName());
-        name.setText(Util.parseName(mPhoto.getUser(), 0));
+        profileName.setText(Util.parseName(mPhoto.getUser(), 0));
         placeName.setText(mPhoto.getPlaceName());
         date.setText(HasBeenDate.convertDate(mPhoto.getTakenTime()));
         description.setText(mPhoto.getDescription());
         socialAction.setText(mPhoto.getLoveCount() + " Likes · " + mPhoto.getCommentCount() + " Commnents · " + mPhoto.getShareCount() + " Shared");
         ImageView imageView = (ImageView) findViewById(R.id.photo);
         Glide.with(this).load(mPhoto.getMediumUrl()).placeholder(R.drawable.placeholder).into(imageView);
+        profileImage.setOnClickListener(new ProfileClickListner(this,mPhoto.getUser().getId()));
+        profileName.setOnClickListener(new ProfileClickListner(this, mPhoto.getUser().getId()));
     }
     protected void initComment(){
 
@@ -102,9 +106,14 @@ public class PhotoView extends ActionBarActivity{
             ImageView profileImage = (ImageView) commentView.findViewById(R.id.profileImage);
             TextView profileName = (TextView) commentView.findViewById(R.id.profileName);
             Glide.with(this).load(comment.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(profileImage);
+            profileImage.setOnClickListener(new ProfileClickListner(this,comment.getUser().getId()));
+            profileName.setOnClickListener(new ProfileClickListner(this, comment.getUser().getId()));
             profileName.setText(Util.parseName(comment.getUser(),0));
             commentBox.addView(commentView);
         }
+
+        LinearLayout commentButton = (LinearLayout) findViewById(R.id.commentButton);
+        commentButton.setOnClickListener(new EnterCommentListner(this,"photos",mPhoto.getId()));
     }
     protected void init(){
         setContentView(R.layout.photo);
@@ -156,7 +165,7 @@ public class PhotoView extends ActionBarActivity{
             description.setText(photo.getPlaceName());
             likeCount.setText(photo.getLoveCount()+"");
             commentCount.setText(photo.getCommentCount()+"");
-            shareCount.setText(photo.getShareCount()+"");
+            shareCount.setText(photo.getShareCount() + "");
             date.setText(HasBeenDate.convertDate(photo.getTakenTime()));
 
             if(i%2==0)

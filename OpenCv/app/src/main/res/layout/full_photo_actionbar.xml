@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@null"
 
-        android:src="@drawable/ic_back"
+        android:src="@drawable/back"
         android:id="@+id/photoBack"/>
     <TextView
         android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:id="@+id/moreVert"
-        android:src="@drawable/ic_more_vert"
+        android:src="@drawable/more_vert_white"
         android:layout_alignParentRight="true"
         />
 </RelativeLayout>

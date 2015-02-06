@@ -24,23 +24,28 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import example.test.hasBeen.model.api.DayApi;
+import example.test.hasBeen.model.api.Loved;
 import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-27.
  */
-public class LikeDayAsyncTask extends AsyncTask<Object,Void,List<DayApi>> {
+public class LikeDayAsyncTask extends AsyncTask<Object,Void,List<Loved>> {
     Handler mHandler;
-    final static String URL = "https://gist.githubusercontent.com/indzuby/c9e87b33ca65eac93065/raw/4000d9c125b1e56c60f77523dc806e4a9cdb303d/NewsFeed";
+//    final static String URL = "https://gist.githubusercontent.com/indzuby/c9e87b33ca65eac93065/raw/4000d9c125b1e56c60f77523dc806e4a9cdb303d/NewsFeed";
+    final static String URL = Session.DOMAIN+"users/";
     @Override
-    protected List<DayApi> doInBackground(Object... params) {
+    protected List<Loved> doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         Uri uri;
         try {
-            uri = Uri.parse(URL);
+            uri = Uri.parse(URL+params[1]+"/lovedDays");
             HttpGet get = new HttpGet(uri.toString());
+            get.addHeader("User-Agent","Android");
+            get.addHeader("Content-Type","application/json");
+            get.addHeader("Authorization","Bearer " +params[0]);
             response = client.execute(get);
             StatusLine statusLine = response.getStatusLine();
             if(statusLine.getStatusCode() == 200) {
@@ -68,8 +73,8 @@ public class LikeDayAsyncTask extends AsyncTask<Object,Void,List<DayApi>> {
                         return false;
                     }
                 }).create();
-                Type listType = new TypeToken<List<DayApi>>(){}.getType();
-                List<DayApi> posts = gson.fromJson(reader, listType);
+                Type listType = new TypeToken<List<Loved>>(){}.getType();
+                List<Loved> posts = gson.fromJson(reader, listType);
                 content.close();
                 return posts;
             }
@@ -81,7 +86,7 @@ public class LikeDayAsyncTask extends AsyncTask<Object,Void,List<DayApi>> {
     }
 
     @Override
-    protected void onPostExecute(List<DayApi> days) {
+    protected void onPostExecute(List<Loved> days) {
 
         Message msg = mHandler.obtainMessage();
         if(days!=null) {

@@ -42,6 +42,9 @@ public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<DayApi>> {
         Uri uri;
         try {
             uri = Uri.parse(URL);
+            if(params.length>1) {
+                uri = Uri.parse(URL+"?lastUpdateTime="+params[1]);
+            }
             HttpGet get = new HttpGet(uri.toString());
             get.addHeader("User-Agent","Android");
             get.addHeader("Content-Type","application/json");

@@ -20,6 +20,7 @@ import example.test.hasBeen.comment.CommentView;
 import example.test.hasBeen.geolocation.MapRoute;
 import example.test.hasBeen.model.api.DayApi;
 import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.profile.ProfileClickListner;
 import example.test.hasBeen.utils.CircleTransform;
 import example.test.hasBeen.utils.SlidingUpPanelLayout;
 import example.test.hasBeen.utils.Util;
@@ -65,7 +66,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.newsfeed_feed, null);
         }
-        DayApi feed = getItem(position);
+        final DayApi feed = getItem(position);
         ImageView profileImage = (ImageView) view.findViewById(R.id.profileImage);
         TextView profileName = (TextView) view.findViewById(R.id.profileName);
         TextView placeName = (TextView) view.findViewById(R.id.placeName);
@@ -88,7 +89,6 @@ public class NewsFeedAdapter extends BaseAdapter {
 
 //        ImageView mainImage = (ImageView) imageLayout.findViewById(R.id.mainImage);
 
-
         profileName.setText(Util.parseName(feed.getUser(), 0)); // coutry code -> name format
         placeName.setText(feed.getMainPlace().getCity() + ", " + feed.getMainPlace().getCountry());
 //        date.setText(HasBeenDate.convertDate(feed.getDate()));
@@ -108,12 +108,16 @@ public class NewsFeedAdapter extends BaseAdapter {
                 if (!flag) {
                     flag = true;
                     Intent intent = new Intent(mContext, CommentView.class);
+                    intent.putExtra("type","days");
+                    intent.putExtra("id",feed.getId());
                     mContext.startActivity(intent);
                     flag = false;
                 }
 
             }
         });
+        profileImage.setOnClickListener(new ProfileClickListner(mContext,feed.getUser().getId()));
+        profileName.setOnClickListener(new ProfileClickListner(mContext,feed.getUser().getId()));
         return view;
     }
 
@@ -130,6 +134,5 @@ public class NewsFeedAdapter extends BaseAdapter {
             Glide.with(mContext).load(photoList.get(i).getMediumUrl()).centerCrop().placeholder(R.drawable.placeholder).into(imageView);
         }
         return view;
-
     }
 }

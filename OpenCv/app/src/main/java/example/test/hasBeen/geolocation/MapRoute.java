@@ -2,7 +2,6 @@ package example.test.hasBeen.geolocation;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -54,8 +53,8 @@ public class MapRoute {
                 Long placeId = position.getPlaceId();
                 Place place = database.selectPlace(placeId);
                 placeList.add(place);
-                Bitmap icon =PlaceMarker.getMarker(mContext, place.getCategoryIconPrefix() + "88" + place.getCategoryIconSuffix()).makeIcon();
-                mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(icon))
+//                Bitmap icon =PlaceMarker.getMarker(mContext, place.getCategoryIconPrefix() + "88" + place.getCategoryIconSuffix()).makeIcon();
+                mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
                         .position(new LatLng(place.getLat(), place.getLon())));
             }
             LatLng location = new LatLng(placeList.get(0).getLat(),placeList.get(0).getLon());
@@ -79,8 +78,8 @@ public class MapRoute {
             PlaceApi place = position.getPlace();
             if(place==null) continue;
             placeList.add(place);
-            Bitmap icon =PlaceMarker.getMarker(mContext, place.getCategoryIconPrefix() + "88" + place.getCategoryIconSuffix()).makeIcon();
-            mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(icon))
+//            Bitmap icon =PlaceMarker.getMarker(mContext, place.getCategoryIconPrefix() + "88" + place.getCategoryIconSuffix()).makeIcon();
+            mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
                     .position(new LatLng(place.getLat(), place.getLon())));
         }
         LatLng location = new LatLng(placeList.get(0).getLat(),placeList.get(0).getLon());
@@ -106,6 +105,8 @@ public class MapRoute {
                 if(!flag) {
                     flag = true;
                     Intent intent = new Intent(mContext, DayView.class);
+                    intent.putExtra("dayId",dayPin.getDay().getId());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);
                     flag = false;
                 }
@@ -141,6 +142,8 @@ public class MapRoute {
                 if(!flag) {
                     flag = true;
                     Intent intent = new Intent(mContext, PhotoView.class);
+                    intent.putExtra("photoId",photoPin.getPhoto().getId());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);
                     flag = false;
                 }
@@ -169,7 +172,7 @@ public class MapRoute {
     }
     public void addMarker(float lat, float lon) {
         LatLng location = new LatLng(lat,lon);
-        mMap.addMarker(new MarkerOptions()
+        mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
                 .position(location));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
     }

@@ -22,11 +22,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import example.test.hasBeen.R;
 import example.test.hasBeen.geolocation.MapRoute;
 import example.test.hasBeen.model.api.DayApi;
+import example.test.hasBeen.model.api.Loved;
 import example.test.hasBeen.model.api.PhotoApi;
 import example.test.hasBeen.model.api.User;
 import example.test.hasBeen.profile.follow.FollowView;
@@ -35,6 +37,7 @@ import example.test.hasBeen.profile.map.LikePhotoAsyncTask;
 import example.test.hasBeen.profile.map.ProfileDayAsyncTask;
 import example.test.hasBeen.profile.map.ProfilePhotoAsyncTask;
 import example.test.hasBeen.utils.CircleTransform;
+import example.test.hasBeen.utils.Session;
 import example.test.hasBeen.utils.Util;
 
 /**
@@ -57,17 +60,22 @@ public class ProfileFragment extends Fragment {
     List<DayApi> mLikeDays;
     List<PhotoApi> mLikePhotos;
 
+    String mAccessToken;
 
+    List<Loved> mLovedPhotos;
+    List<Loved> mLovedDays;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.profile, container, false);
-        new ProfileAsyncTask(handler).execute();
-        mapRendering(DAY);
-        init();
+        mAccessToken = Session.getString(getActivity(), "accessToken", null);
+        initAll();
         return mView;
     }
-
+    public void initAll(){
+        new ProfileAsyncTask(handler).execute(mAccessToken);
+        init();
+    }
     Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -76,6 +84,7 @@ public class ProfileFragment extends Fragment {
                 case 0:
                     mUser = (User) msg.obj;
                     initProfile();
+                    mapRendering(DAY);
                     break;
                 case -1:
                     break;
@@ -120,7 +129,11 @@ public class ProfileFragment extends Fragment {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mLikeDays = (List<DayApi>) msg.obj;
+                    mLovedDays = (List<Loved>) msg.obj;
+                    mLikeDays = new ArrayList<>();
+                    for(Loved love : mLovedDays)
+                        mLikeDays.add(love.getDay());
+
                     dayRendering(mLikeDays);
                     break;
                 case -1:
@@ -136,7 +149,11 @@ public class ProfileFragment extends Fragment {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mLikePhotos = (List<PhotoApi>) msg.obj;
+                    mLovedPhotos = (List<Loved>) msg.obj;
+                    mLikePhotos = new ArrayList<>();
+                    for(Loved love : mLovedPhotos)
+                        mLikePhotos.add(love.getPhoto());
+
                     photoRendering(mLikePhotos);
                     break;
                 case -1:
@@ -267,18 +284,20 @@ public class ProfileFragment extends Fragment {
         ImageView profileImage = (ImageView) mView.findViewById(R.id.profileImage);
         TextView profileName = (TextView) mView.findViewById(R.id.profileName);
         TextView followStatus = (TextView) mView.findViewById(R.id.followStatus);
-        ImageView setting = (ImageView) mView.findViewById(R.id.setting);
+        ImageView setting = (ImageView) mView.findViewById(R.id.setting_follow);
         TextView dayCount = (TextView) mView.findViewById(R.id.dayCount);
         TextView photoCount = (TextView) mView.findViewById(R.id.photoCount);
         TextView loveCount = (TextView) mView.findViewById(R.id.loveCount);
-        Glide.with(getActivity()).load(mUser.getCoverPhoto().getLargeUrl()).placeholder(R.drawable.placeholder).into(coverImage);
-        Glide.with(getActivity()).load(mUser.getImageUrl()).transform(new CircleTransform(getActivity())).into(profileImage);
+        if(mUser.getCoverPhoto()!=null) Glide.with(getActivity()).load(mUser.getCoverPhoto().getLargeUrl()).placeholder(R.drawable.coverholder).into(coverImage);
+        else Glide.with(getActivity()).load(R.drawable.coverholder).into(coverImage);
+        Glide.with(getActivity()).load(mUser.getImageUrl()+"?type=large").transform(new CircleTransform(getActivity())).into(profileImage);
         profileName.setText(Util.parseName(mUser, 0));
         followStatus.setText(mUser.getFollowerCount() + " Follower · " + mUser.getFollowingCount() + " Following");
         followStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FollowView.class);
+                intent.putExtra("userId",mUser.getId());
                 startActivity(intent);
             }
         });
@@ -292,27 +311,27 @@ public class ProfileFragment extends Fragment {
             if (mDays != null)
                 dayRendering(mDays);
             else
-                new ProfileDayAsyncTask(dayHandler).execute();
+                new ProfileDayAsyncTask(dayHandler).execute(mAccessToken,mUser.getId());
 
         } else if (flag == PHOTO) {
             if (mPhotos != null)
                 photoRendering(mPhotos);
             else
-                new ProfilePhotoAsyncTask(photoHandler).execute();
+                new ProfilePhotoAsyncTask(photoHandler).execute(mAccessToken,mUser.getId());
 
         } else if (flag == LOVE) {
             if (subTab == DAY) {
                 if (mLikeDays != null)
                     dayRendering(mLikeDays);
                 else
-                    new LikeDayAsyncTask(likeDayHandler).execute();
+                    new LikeDayAsyncTask(likeDayHandler).execute(mAccessToken,mUser.getId());
 
 
             } else {
                 if (mLikePhotos != null)
                     photoRendering(mLikePhotos);
                 else
-                    new LikePhotoAsyncTask(likePhotoHandler).execute();
+                    new LikePhotoAsyncTask(likePhotoHandler).execute(mAccessToken,mUser.getId());
             }
         }
     }
@@ -321,56 +340,19 @@ public class ProfileFragment extends Fragment {
         try {
             LatLng location = new LatLng(days.get(0).getMainPlace().getLat(), days.get(0).getMainPlace().getLon());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
-            mMapRoute.addMarkerCluster(mDays);
+            mMapRoute.addMarkerCluster(days);
         }catch (Exception e) {
             e.printStackTrace();
         }
-//
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    getActivity().runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            LatLng location = new LatLng(days.get(0).getMainPlace().getLat(), days.get(0).getMainPlace().getLon());
-//                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
-//                            mMapRoute.addMarkerCluster(mDays);
-//
-//                        }
-//                    });
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
     }
 
     protected void photoRendering(final List<PhotoApi> photos) {
         try {
             LatLng location = new LatLng(photos.get(0).getLat(), photos.get(0).getLon());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
-            mMapRoute.addMarkerClusterPhoto(mPhotos);
+            mMapRoute.addMarkerClusterPhoto(photos);
         }catch (Exception e) {
             e.printStackTrace();
         }
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    getActivity().runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            LatLng location = new LatLng(photos.get(0).getLat(), photos.get(0).getLon());
-//                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
-//                            mMapRoute.addMarkerClusterPhoto(mPhotos);
-//
-//                        }
-//                    });
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
     }
 }

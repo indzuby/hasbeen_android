@@ -24,22 +24,27 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import example.test.hasBeen.model.api.Follower;
+import example.test.hasBeen.model.api.Follow;
+import example.test.hasBeen.utils.Session;
 
 /**
  * Created by 주현 on 2015-02-02.
  */
-public class FollowingAsyncTask extends AsyncTask<Object,Void,List<Follower>> {
+public class FollowingAsyncTask extends AsyncTask<Object,Void,List<Follow>> {
     Handler mHandler;
-    final static String URL = "https://gist.githubusercontent.com/indzuby/e0892db0c7155a62fc22/raw/86990d9574684a129edd71e8e1eafd1b80c5d635/FollowingList";
+//    final static String URL = "https://gist.githubusercontent.com/indzuby/e0892db0c7155a62fc22/raw/86990d9574684a129edd71e8e1eafd1b80c5d635/FollowingList";
+    final static String URL = Session.DOMAIN+"users/";
     @Override
-    protected List<Follower> doInBackground(Object... params) {
+    protected List<Follow> doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         Uri uri;
         try {
-            uri = Uri.parse(URL);
+            uri = Uri.parse(URL+params[1]+"/following");
             HttpGet get = new HttpGet(uri.toString());
+            get.addHeader("User-Agent","Android");
+            get.addHeader("Content-Type","application/json");
+            get.addHeader("Authorization","Bearer " +params[0]);
             response = client.execute(get);
             StatusLine statusLine = response.getStatusLine();
             if(statusLine.getStatusCode() == 200) {
@@ -64,8 +69,8 @@ public class FollowingAsyncTask extends AsyncTask<Object,Void,List<Follower>> {
                         return false;
                     }
                 }).create();
-                Type listType = new TypeToken<List<Follower>>(){}.getType();
-                List<Follower> Followers = gson.fromJson(reader, listType);
+                Type listType = new TypeToken<List<Follow>>(){}.getType();
+                List<Follow> Followers = gson.fromJson(reader, listType);
                 content.close();
                 return Followers;
             }
@@ -77,7 +82,7 @@ public class FollowingAsyncTask extends AsyncTask<Object,Void,List<Follower>> {
     }
 
     @Override
-    protected void onPostExecute(List<Follower> Followers) {
+    protected void onPostExecute(List<Follow> Followers) {
 
         Message msg = mHandler.obtainMessage();
         if(Followers !=null) {

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -49,6 +50,7 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
     FrameLayout mMapBox;
     MapRoute mapRoute ;
     boolean flag;
+    Long lastUpdateTime;
     void init() {
 
         mListView = (ListView) mView.findViewById(R.id.list);
@@ -77,13 +79,27 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(!flag) {
-                    Log.i(TAG,mFeeds.get(position).getId()+"");
+                if (!flag) {
+                    Log.i(TAG, mFeeds.get(position).getId() + "");
                     flag = true;
-                    Intent intent = new Intent(getActivity(),DayView.class);
-                    intent.putExtra("dayId",mFeeds.get(position).getId());
+                    Intent intent = new Intent(getActivity(), DayView.class);
+                    intent.putExtra("dayId", mFeeds.get(position).getId());
                     startActivity(intent);
                     flag = false;
+                }
+            }
+        });
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                Log.i("List item",firstVisibleItem+visibleItemCount+" "+totalItemCount);
+                if(firstVisibleItem+visibleItemCount >= totalItemCount) {
+                    new NewsFeedAsyncTask(handler).execute(mAccessToekn,lastUpdateTime);
                 }
             }
         });
@@ -135,6 +151,7 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
                                         for(DayApi feed : feeds) {
                                             mFeeds.add(feed);
                                             mFeedAdapter.notifyDataSetChanged();
+                                            lastUpdateTime = feed.getUpdatedTime();
                                         }
                                         if(feeds.size()>0) {
                                             Log.i("mapRoute", mFeeds.get(0).getMainPlace().getLat() + "");

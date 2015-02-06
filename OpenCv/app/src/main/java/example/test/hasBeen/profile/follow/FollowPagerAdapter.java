@@ -1,6 +1,7 @@
 package example.test.hasBeen.profile.follow;
 
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -11,20 +12,25 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class FollowPagerAdapter extends FragmentPagerAdapter {
     Fragment mFollower= null, mFollowing = null;
-
-    public FollowPagerAdapter(FragmentManager fm) {
+    Long mUserId;
+    public FollowPagerAdapter(FragmentManager fm,Long userId) {
         super(fm);
+        mUserId = userId;
     }
 
     public Fragment getItem(int index) {
+        Bundle bundle = new Bundle();
+        bundle.putLong("userId",mUserId);
         switch (index) {
             case 0: // index에 따라서 다른 fragment 돌려준다.
                 if (mFollower== null)
-                    mFollower= new FollowerFragment();
+                    mFollower = new FollowerFragment();
+                mFollower.setArguments(bundle);
                 return mFollower;
             case 1:
                 if (mFollowing == null)
                     mFollowing = new FollowingFragment();
+                mFollowing.setArguments(bundle);
                 return mFollowing;
         }
         return null;

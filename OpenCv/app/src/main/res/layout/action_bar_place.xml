@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:background="@null"
 
-        android:src="@drawable/ic_back"
+        android:src="@drawable/back"
         android:id="@+id/actionBarBack"/>
     <TextView
         android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
             android:layout_height="match_parent"
             android:background="@null"
             android:id="@+id/moreVert"
-            android:src="@drawable/ic_more_vert"
+            android:src="@drawable/more_vert_white"
             android:layout_alignParentRight="true"
             />
         </LinearLayout>

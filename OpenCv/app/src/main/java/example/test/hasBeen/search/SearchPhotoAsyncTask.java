@@ -25,14 +25,15 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-29.
  */
 public class SearchPhotoAsyncTask extends AsyncTask<Object,Void,List<PhotoApi>> {
     Handler mHandler;
-    final static String URL = "https://gist.githubusercontent.com/indzuby/01dd9766562e90d0af7e/raw/d4aca1859f83a9599dbe15541624b1499aae8ea2/photoNearBy";
-//    final static String URL = Session.DOMAIN+"map?type=photos";
+//    final static String URL = "https://gist.githubusercontent.com/indzuby/01dd9766562e90d0af7e/raw/d4aca1859f83a9599dbe15541624b1499aae8ea2/photoNearBy";
+    final static String URL = Session.DOMAIN+"hasBeen/photos";
     @Override
     protected List<PhotoApi> doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();

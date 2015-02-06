@@ -26,14 +26,15 @@ import java.util.List;
 
 import example.test.hasBeen.model.api.DayApi;
 import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-27.
  */
 public class SearchDayAsyncTask extends AsyncTask<Object,Void,List<DayApi>> {
     Handler mHandler;
-    final static String URL = "https://gist.githubusercontent.com/indzuby/c9e87b33ca65eac93065/raw/4000d9c125b1e56c60f77523dc806e4a9cdb303d/NewsFeed";
-//    final static String URL = Session.DOMAIN+"map?type=days";
+//    final static String URL = "https://gist.githubusercontent.com/indzuby/c9e87b33ca65eac93065/raw/4000d9c125b1e56c60f77523dc806e4a9cdb303d/NewsFeed";
+    final static String URL = Session.DOMAIN+"hasBeen/days";
     @Override
     protected List<DayApi> doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
