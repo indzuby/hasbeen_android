@@ -21,7 +21,8 @@
                 <ImageView
                     android:id="@+id/photo"
                     android:layout_width="match_parent"
-
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:scaleType="fitStart"/>
@@ -103,18 +104,18 @@
                 </LinearLayout>
 
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:alpha="0.1"
-                    android:background="#000000" />
 
                 <LinearLayout
                     android:id="@+id/commentBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2px"
+                        android:background="#000000"
+                        android:alpha="0.1"
+                        />
                     <!--<include layout="@layout/more_comments"/>-->
 
                     <!--<include layout="@layout/comment"/>-->
@@ -126,25 +127,16 @@
 
                 <include layout="@layout/comment_footer" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:alpha="0.1"
-                    android:background="#000000" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:gravity="center"
+                    android:background="@color/day_background"
                     android:text="Photo near by"
                     android:textColor="@color/light_gray"
                     android:textSize="12sp" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:alpha="0.1"
-                    android:background="#000000" />
 
                 <include
                     android:id="@+id/nearBy"

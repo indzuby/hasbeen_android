@@ -1,5 +1,6 @@
 package example.test.hasBeen.comment;
 
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,12 +17,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import example.test.hasBeen.R;
 import example.test.hasBeen.model.api.Comment;
+import example.test.hasBeen.profile.ProfileClickListner;
 import example.test.hasBeen.utils.CacheControl;
+import example.test.hasBeen.utils.CircleTransform;
+import example.test.hasBeen.utils.HasBeenDate;
 import example.test.hasBeen.utils.Session;
+import example.test.hasBeen.utils.Util;
 
 /**
  * Created by zuby on 2015-01-28.
@@ -117,5 +124,19 @@ public class CommentView extends ActionBarActivity {
         super.onDestroy();
         System.gc();
         CacheControl.deleteCache(this);
+    }
+    public static View makeComment(Context context,Comment comment){
+        View commentView = LayoutInflater.from(context).inflate(R.layout.comment,null);
+        TextView contents = (TextView) commentView.findViewById(R.id.contents);
+        TextView commentTime = (TextView) commentView.findViewById(R.id.commentTime);
+        contents.setText(comment.getContents());
+        commentTime.setText(HasBeenDate.getGapTime(comment.getCreatedTime()));
+        ImageView profileImage = (ImageView) commentView.findViewById(R.id.profileImage);
+        TextView profileName = (TextView) commentView.findViewById(R.id.profileName);
+        Glide.with(context).load(comment.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(context)).into(profileImage);
+        profileImage.setOnClickListener(new ProfileClickListner(context,comment.getUser().getId()));
+        profileName.setOnClickListener(new ProfileClickListner(context, comment.getUser().getId()));
+        profileName.setText(Util.parseName(comment.getUser(), 0));
+        return commentView;
     }
 }

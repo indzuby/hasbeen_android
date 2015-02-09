@@ -17,13 +17,18 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.util.Collections;
 import java.util.List;
 
 import example.test.hasBeen.R;
+import example.test.hasBeen.comment.CommentAsyncTask;
+import example.test.hasBeen.comment.CommentView;
 import example.test.hasBeen.comment.EnterCommentListner;
+import example.test.hasBeen.comment.WriteCommentAsyncTask;
 import example.test.hasBeen.loved.LoveListner;
 import example.test.hasBeen.model.api.Comment;
 import example.test.hasBeen.model.api.PhotoApi;
@@ -41,6 +46,10 @@ public class PhotoView extends ActionBarActivity{
     PhotoApi mPhoto;
     Long mPhotoId;
     String mAccessToken;
+    int mTotalCommentCount;
+    TextView mSocialAction;
+    int mViewCommentCount;
+    Long lastCommentId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +83,7 @@ public class PhotoView extends ActionBarActivity{
         TextView date = (TextView) titleBox.findViewById(R.id.date);
 
         TextView description = (TextView) findViewById(R.id.description);
-        TextView socialAction = (TextView) findViewById(R.id.socialAction);
+        mSocialAction = (TextView) findViewById(R.id.socialAction);
         Glide.with(this).load(mPhoto.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).placeholder(R.drawable.placeholder).into(profileImage);
         Log.i(TAG, mPhoto.getPlaceName());
         profileName.setText(Util.parseName(mPhoto.getUser(), 0));
@@ -82,7 +91,7 @@ public class PhotoView extends ActionBarActivity{
         date.setText(HasBeenDate.convertDate(mPhoto.getTakenTime()));
         description.setText(mPhoto.getDescription());
         findViewById(R.id.title).setVisibility(View.GONE);
-        socialAction.setText(mPhoto.getLoveCount() + " Likes · " + mPhoto.getCommentCount() + " Commnents · " + mPhoto.getShareCount() + " Shared");
+        mSocialAction.setText(mPhoto.getLoveCount() + " Likes · " + mPhoto.getCommentCount() + " Commnents · " + mPhoto.getShareCount() + " Shared");
         ImageView imageView = (ImageView) findViewById(R.id.photo);
         Glide.with(this).load(mPhoto.getMediumUrl()).placeholder(R.drawable.placeholder).into(imageView);
         profileImage.setOnClickListener(new ProfileClickListner(this,mPhoto.getUser().getId()));
@@ -95,47 +104,85 @@ public class PhotoView extends ActionBarActivity{
         else
             love.setImageResource(R.drawable.photo_like);
 
-        loveButton.setOnClickListener(new LoveListner(this,mPhoto,"photos",socialAction));
+        loveButton.setOnClickListener(new LoveListner(this,mPhoto,"photos",mSocialAction));
 
 
     }
     protected void initComment(){
 
-        LinearLayout commentBox = (LinearLayout) findViewById(R.id.commentBox);
-
-
-
-        if(mPhoto.getCommentList().size()>3) {
-            View moreComment = LayoutInflater.from(this).inflate(R.layout.more_comments,null);
+        final LinearLayout commentBox = (LinearLayout) findViewById(R.id.commentBox);
+        final View moreComment = LayoutInflater.from(this).inflate(R.layout.more_comments,null);
+        mTotalCommentCount = mPhoto.getCommentCount();
+        mViewCommentCount = mPhoto.getCommentList().size();
+        if(mTotalCommentCount>10)
             commentBox.addView(moreComment);
-        }
-        for(int i = 0 ; i <mPhoto.getCommentList().size() && i<3;i++){
+        if(mTotalCommentCount>0)
+            lastCommentId = mPhoto.getCommentList().get(0).getId();
+        moreComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new CommentAsyncTask(new Handler(Looper.getMainLooper()){
+                    @Override
+                    public void handleMessage(Message msg) {
+                        super.handleMessage(msg);
+                        if(msg.what==0) {
+                            List<Comment> commentList = (List) msg.obj;
+                            lastCommentId = commentList.get(0).getId();
+                            Collections.reverse(commentList);
+                            for(Comment comment : commentList) {
+                                commentBox.addView(CommentView.makeComment(getBaseContext(),comment),2);
+                                mSocialAction.setText(mPhoto.getLoveCount() + " Likes · " + mPhoto.getCommentCount() + " Commnents · " + mPhoto.getShareCount() + " Shared");
+                                mViewCommentCount++;
+                            }
+
+                            if(mViewCommentCount==mTotalCommentCount)
+                                moreComment.setVisibility(View.GONE);
+                        }
+                    }
+                }).execute(mAccessToken, "photos", mPhoto.getId(), lastCommentId);
+            }
+        });
+        for(int i = 0 ; i <mPhoto.getCommentList().size();i++){
             Comment comment = mPhoto.getCommentList().get(i);
-            View commentView = LayoutInflater.from(this).inflate(R.layout.comment,null);
-            TextView contents = (TextView) commentView.findViewById(R.id.contents);
-            TextView commentTime = (TextView) commentView.findViewById(R.id.commentTime);
-            contents.setText(comment.getContents());
-            commentTime.setText(HasBeenDate.getGapTime(comment.getCreatedTime()));
-            ImageView profileImage = (ImageView) commentView.findViewById(R.id.profileImage);
-            TextView profileName = (TextView) commentView.findViewById(R.id.profileName);
-            Glide.with(this).load(comment.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(profileImage);
-            profileImage.setOnClickListener(new ProfileClickListner(this,comment.getUser().getId()));
-            profileName.setOnClickListener(new ProfileClickListner(this, comment.getUser().getId()));
-            profileName.setText(Util.parseName(comment.getUser(),0));
-            commentBox.addView(commentView);
+            commentBox.addView(CommentView.makeComment(this,comment));
         }
 
         LinearLayout commentButton = (LinearLayout) findViewById(R.id.commentButton);
         commentButton.setOnClickListener(new EnterCommentListner(this,"photos",mPhoto.getId()));
+        final EditText mEnterComment = (EditText) findViewById(R.id.enterComment);
+        ImageView send = (ImageView) findViewById(R.id.send);
+        send.setOnClickListener(new View.OnClickListener() {
+            boolean flag = false;
+            @Override
+            public void onClick(View v) {
+                if(!flag) {
+                    flag = true;
+                    String contents = mEnterComment.getText().toString();
+                    mEnterComment.setText("");
+                    Toast.makeText(getBaseContext(), "Complete written", Toast.LENGTH_LONG).show();
+                    new WriteCommentAsyncTask(new Handler(Looper.getMainLooper()) {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            super.handleMessage(msg);
+                            flag = false;
+                            if(msg.what==0) {
+                                Comment comment = (Comment) msg.obj;
+                                commentBox.addView(CommentView.makeComment(getBaseContext(),comment));
+                                mTotalCommentCount++;
+                                mPhoto.setCommentCount(mTotalCommentCount);
+                                mSocialAction.setText(mPhoto.getLoveCount() + " Likes · " + mPhoto.getCommentCount() + " Commnents · " + mPhoto.getShareCount() + " Shared");
+                                mViewCommentCount++;
+                            }
+                        }
+                    }).execute(mAccessToken, "photos", mPhoto.getId(), contents);
+                }
+            }
+        });;
     }
     protected void init(){
         setContentView(R.layout.photo);
         new PhotoAsyncTask(handler).execute(mAccessToken,mPhotoId);
         initActionBar();
-        EditText enterComment = (EditText) findViewById(R.id.enterComment);
-        enterComment.setFocusable(false);
-        enterComment.setEnabled(false);
-        enterComment.setFocusableInTouchMode(false);
         new NearByPhotoAsyncTask(nearByHandler).execute(mAccessToken,mPhotoId);
     }
     List<PhotoApi> mNearByPhotos ;
@@ -174,7 +221,7 @@ public class PhotoView extends ActionBarActivity{
             Glide.with(this).load(photo.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(image);
             name.setText(Util.parseName(photo.getUser(),0));
 
-            Glide.with(this).load(photo.getSmallUrl()).into(nearPhoto);
+            Glide.with(this).load(photo.getMediumUrl()).into(nearPhoto);
             description.setText(photo.getPlaceName());
             likeCount.setText(photo.getLoveCount()+"");
             commentCount.setText(photo.getCommentCount()+"");

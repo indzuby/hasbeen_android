@@ -27,6 +27,7 @@ public class EnterCommentListner implements View.OnClickListener{
             Intent intent = new Intent(mContext, CommentView.class);
             intent.putExtra("type",type);
             intent.putExtra("id",id);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mContext.startActivity(intent);
             flag = false;
         }

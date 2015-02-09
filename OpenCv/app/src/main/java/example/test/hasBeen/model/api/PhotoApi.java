@@ -160,4 +160,8 @@ public class PhotoApi {
     public void setImage(Bitmap image) {
         this.image = image;
     }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
 }

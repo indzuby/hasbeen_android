@@ -1,7 +1,6 @@
 package example.test.hasBeen.day;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +31,7 @@ import java.util.List;
 
 import example.test.hasBeen.R;
 import example.test.hasBeen.comment.CommentView;
+import example.test.hasBeen.comment.EnterCommentListner;
 import example.test.hasBeen.geolocation.MapRoute;
 import example.test.hasBeen.loved.LoveListner;
 import example.test.hasBeen.model.api.Comment;
@@ -145,22 +146,7 @@ public class DayView extends ActionBarActivity{
     }
     protected  void initFoorteView(){
         LinearLayout commentButton = (LinearLayout)findViewById(R.id.commentButton);
-        commentButton.setOnClickListener(new View.OnClickListener() {
-            boolean flag = false;
-
-            @Override
-            public void onClick(View v) {
-                if (!flag) {
-                    flag = true;
-                    Intent intent = new Intent(getBaseContext(), CommentView.class);
-                    intent.putExtra("type","days");
-                    intent.putExtra("id",mDay.getId());
-                    startActivity(intent);
-                    flag = false;
-                }
-
-            }
-        });
+        commentButton.setOnClickListener(new EnterCommentListner(getBaseContext(),"days",mDay.getId()));
         LinearLayout loveButton = (LinearLayout) findViewById(R.id.loveButton);
         ImageView love = (ImageView) loveButton.findViewById(R.id.love);
         if(mDay.getLove()!=null)
@@ -175,24 +161,17 @@ public class DayView extends ActionBarActivity{
         List<Comment> comments = mDay.getCommentList();
         for(int i = 0 ;i<3 && i<comments.size();i++) {
             Comment comment = comments.get(i);
-            View commentView = getLayoutInflater().inflate(R.layout.comment,null);
-            TextView contents = (TextView) commentView.findViewById(R.id.contents);
-            TextView commentTime = (TextView) commentView.findViewById(R.id.commentTime);
-            contents.setText(comment.getContents());
-            commentTime.setText(HasBeenDate.getGapTime(comment.getCreatedTime()));
-            ImageView profileImage = (ImageView) commentView.findViewById(R.id.profileImage);
-            TextView profileName = (TextView) commentView.findViewById(R.id.profileName);
-            Glide.with(this).load(comment.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(profileImage);
-            profileImage.setOnClickListener(new ProfileClickListner(this,comment.getUser().getId()));
-            profileName.setOnClickListener(new ProfileClickListner(this, comment.getUser().getId()));
-            profileName.setText(Util.parseName(comment.getUser(),0));
-            commentBox.addView(commentView);
-
+            commentBox.addView(CommentView.makeComment(this, comment));
         }
-        if(comments.size()>3)
-            moreComments.setText(comments.size()-3+" comments more");
-        else
+        if(mDay.getCommentCount()>3)
+            moreComments.setText(mDay.getCommentCount()-3+" comments more");
+        else {
             moreComments.setVisibility(View.GONE);
+        }
+        EditText enterComment = (EditText) findViewById(R.id.enterComment);
+        enterComment.setFocusableInTouchMode(false);
+        enterComment.setFocusable(false);
+        enterComment.setOnClickListener(new EnterCommentListner(getBaseContext(),"days",mDay.getId()));
 
     }
     protected void init(){

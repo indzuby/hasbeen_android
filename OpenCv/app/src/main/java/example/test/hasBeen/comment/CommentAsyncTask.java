@@ -39,7 +39,11 @@ public class CommentAsyncTask extends AsyncTask<Object,Void,List<Comment>> {
         HttpResponse response;
         Uri uri;
         try {
-            uri = Uri.parse(URL+params[1]+"/"+params[2]+"/comments");
+            String url = URL+params[1]+"/"+params[2]+"/comments";
+            if(params.length>=4) {
+                url+="?lastCommentId="+params[3];
+            }
+            uri = Uri.parse(url);
             HttpGet get = new HttpGet(uri.toString());
             get.addHeader("User-Agent","Android");
             get.addHeader("Content-Type","application/json");

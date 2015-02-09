@@ -75,8 +75,11 @@ public class HasBeenDate {
                 long hour = gap/3600;
                 if(hour>=1)
                     return hour+" hours ago";
-                else
-                    return  gap/60+" minutes ago";
+                else {
+                    if(gap/60 ==0)
+                        return "Just Now";
+                    return gap / 60 + " minutes ago";
+                }
             }else
                 return commentTime.toString("E, a h:mm");
         }else if(dayGap<28){

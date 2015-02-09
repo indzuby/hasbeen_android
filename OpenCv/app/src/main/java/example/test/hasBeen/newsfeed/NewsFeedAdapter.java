@@ -1,7 +1,6 @@
 package example.test.hasBeen.newsfeed;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +17,7 @@ import com.google.android.gms.maps.GoogleMap;
 import java.util.List;
 
 import example.test.hasBeen.R;
-import example.test.hasBeen.comment.CommentView;
+import example.test.hasBeen.comment.EnterCommentListner;
 import example.test.hasBeen.geolocation.MapRoute;
 import example.test.hasBeen.loved.LoveListner;
 import example.test.hasBeen.model.api.DayApi;
@@ -107,22 +106,7 @@ public class NewsFeedAdapter extends BaseAdapter {
         imageBox.addView(imageLayout);
 
         LinearLayout commentButton = (LinearLayout) view.findViewById(R.id.commentButton);
-        commentButton.setOnClickListener(new View.OnClickListener() {
-            boolean flag = false;
-
-            @Override
-            public void onClick(View v) {
-                if (!flag) {
-                    flag = true;
-                    Intent intent = new Intent(mContext, CommentView.class);
-                    intent.putExtra("type","days");
-                    intent.putExtra("id",feed.getId());
-                    mContext.startActivity(intent);
-                    flag = false;
-                }
-
-            }
-        });
+        commentButton.setOnClickListener(new EnterCommentListner(mContext,"days",feed.getId()));
         profileImage.setOnClickListener(new ProfileClickListner(mContext,feed.getUser().getId()));
         profileName.setOnClickListener(new ProfileClickListner(mContext,feed.getUser().getId()));
         LinearLayout loveButton = (LinearLayout) view.findViewById(R.id.loveButton);

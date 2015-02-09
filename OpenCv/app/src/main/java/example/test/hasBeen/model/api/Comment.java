@@ -4,7 +4,7 @@ package example.test.hasBeen.model.api;
  * Created by zuby on 2015-01-26.
  */
 public class Comment {
-    int id;
+    Long id;
     Long createdTime;
     String contents;
     User user;
@@ -13,7 +13,7 @@ public class Comment {
         return user;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 

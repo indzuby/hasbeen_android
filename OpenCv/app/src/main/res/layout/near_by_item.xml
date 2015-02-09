@@ -24,17 +24,19 @@
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 android:id="@+id/profileImage"/>
-
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_centerInParent="true"
+                android:layout_toRightOf="@+id/profileImage"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/date"
                 android:textColor="@color/line_color"
+                android:id="@+id/date"
                 android:textSize="10sp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="4dp"
-                android:layout_alignTop="@+id/profileImage"
-                android:layout_toRightOf="@+id/profileImage"
                 />
 
             <TextView
@@ -45,8 +47,7 @@
                 android:id="@+id/profileName"
                 android:layout_marginLeft="8dp"
                 android:layout_below="@+id/date"
-                android:layout_toRightOf="@+id/profileImage"
-                />
+                /></LinearLayout>
 
         </RelativeLayout>
 
