@@ -12,7 +12,7 @@
             android:scaleType="centerCrop"
             android:id="@+id/image1"
             android:layout_height="match_parent"
-            android:layout_marginRight="4dp"/>
+            android:layout_marginRight="@dimen/imagelayout_margin"/>
 
         <ImageView
             android:layout_weight="1"

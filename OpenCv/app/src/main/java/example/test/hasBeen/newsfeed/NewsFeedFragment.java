@@ -1,5 +1,6 @@
 package example.test.hasBeen.newsfeed;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -89,20 +89,24 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
                 }
             }
         });
-        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            boolean loading = false;
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                Log.i("List item",firstVisibleItem+visibleItemCount+" "+totalItemCount);
+//                if(firstVisibleItem+visibleItemCount >= totalItemCount && !loading) {
+//                    loading = true;
+//                    showProgress();
+//                    new NewsFeedAsyncTask(handler).execute(mAccessToekn,lastUpdateTime,loading);
+//                }
+//            }
+//        });
 
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                Log.i("List item",firstVisibleItem+visibleItemCount+" "+totalItemCount);
-                if(firstVisibleItem+visibleItemCount >= totalItemCount) {
-                    new NewsFeedAsyncTask(handler).execute(mAccessToekn,lastUpdateTime);
-                }
-            }
-        });
         SupportMapFragment mapFragment = ((SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map));
 
@@ -140,7 +144,7 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
             switch (msg.what) {
                 case 0:
                     final List<DayApi> feeds =  (List<DayApi>)msg.obj;
-                    Log.i(TAG,feeds.size()+"");
+                    Log.i(TAG, feeds.size() + "");
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -164,6 +168,10 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
                             }
                         }
                     }).start();
+                    if(dialog!=null) {
+                        dialog.dismiss();
+                        dialog = null;
+                    }
                     break;
                 case -1:
                     break;
@@ -204,4 +212,13 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
 
     }
 
+    ProgressDialog dialog;
+
+    protected void showProgress() {
+        dialog = new ProgressDialog(getActivity());
+        dialog.setCancelable(true);
+        dialog.setMessage("Writting on database");
+        dialog.setProgress(100);
+        dialog.show();
+    }
 }

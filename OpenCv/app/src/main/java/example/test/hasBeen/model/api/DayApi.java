@@ -29,6 +29,10 @@ public class DayApi {
     List<Comment> commentList;
     Long updatedTime ;
 
+    public void setLove(Loved love) {
+        this.love = love;
+    }
+
     public Long getUpdatedTime() {
         return updatedTime;
     }
@@ -182,5 +186,10 @@ public class DayApi {
 
     public void setMainPhoto(Bitmap mainPhoto) {
         this.mainPhoto = mainPhoto;
+    }
+    Loved love;
+
+    public Loved getLove() {
+        return love;
     }
 }

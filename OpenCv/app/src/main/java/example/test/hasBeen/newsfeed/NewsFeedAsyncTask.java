@@ -25,6 +25,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import example.test.hasBeen.model.api.DayApi;
+import example.test.hasBeen.model.api.Loved;
 import example.test.hasBeen.model.api.PhotoApi;
 import example.test.hasBeen.utils.Session;
 
@@ -35,6 +36,7 @@ public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<DayApi>> {
     Handler mHandler;
 //    final static String URL = "https://gist.githubusercontent.com/indzuby/c9e87b33ca65eac93065/raw/4000d9c125b1e56c60f77523dc806e4a9cdb303d/NewsFeed";
     final static String URL = Session.DOMAIN+"newsFeed";
+    boolean loading;
     @Override
     protected List<DayApi> doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
@@ -45,6 +47,8 @@ public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<DayApi>> {
             if(params.length>1) {
                 uri = Uri.parse(URL+"?lastUpdateTime="+params[1]);
             }
+            if(params.length>2)
+                loading = (boolean) params[2];
             HttpGet get = new HttpGet(uri.toString());
             get.addHeader("User-Agent","Android");
             get.addHeader("Content-Type","application/json");
@@ -64,6 +68,10 @@ public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<DayApi>> {
                     public boolean shouldSkipField(FieldAttributes f) {
                         if(f.getDeclaredClass() == PhotoApi.class){
                             if(f.getName().equals("day") || f.getName().equals("place"))
+                                return true;
+                        }
+                        else if(f.getDeclaredClass() == Loved.class) {
+                            if(f.getName().equals("day") || f.getName().equals("photo"))
                                 return true;
                         }
                         if(f.getName().equals("coverPhoto"))
@@ -95,6 +103,7 @@ public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<DayApi>> {
         if(newsFeeds!=null) {
             msg.obj = newsFeeds;
             msg.what = 0;
+            loading = false;
         }else {
             msg.what = -1;
         }

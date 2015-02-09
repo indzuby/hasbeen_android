@@ -17,6 +17,15 @@ public class PhotoApi {
     float lat;
     float lon;
     Long takenTime;
+    Loved love;
+
+    public Loved getLove() {
+        return love;
+    }
+
+    public void setLove(Loved love) {
+        this.love = love;
+    }
 
     public PhotoApi() {
     }
@@ -116,6 +125,10 @@ public class PhotoApi {
 
     public int getLoveCount() {
         return loveCount;
+    }
+
+    public void setLoveCount(int loveCount) {
+        this.loveCount = loveCount;
     }
 
     public int getShareCount() {

@@ -2,12 +2,14 @@ package example.test.hasBeen.newsfeed;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -18,10 +20,12 @@ import java.util.List;
 import example.test.hasBeen.R;
 import example.test.hasBeen.comment.CommentView;
 import example.test.hasBeen.geolocation.MapRoute;
+import example.test.hasBeen.loved.LoveListner;
 import example.test.hasBeen.model.api.DayApi;
 import example.test.hasBeen.model.api.PhotoApi;
 import example.test.hasBeen.profile.ProfileClickListner;
 import example.test.hasBeen.utils.CircleTransform;
+import example.test.hasBeen.utils.HasBeenDate;
 import example.test.hasBeen.utils.SlidingUpPanelLayout;
 import example.test.hasBeen.utils.Util;
 
@@ -35,6 +39,7 @@ public class NewsFeedAdapter extends BaseAdapter {
     MapRoute mMapRoute;
     boolean flag;
     SlidingUpPanelLayout mSlidPanel;
+    Typeface medium,regular;
     int layout[] = {R.layout.newsfeed_image_layout_6, R.layout.newsfeed_image_layout_4, R.layout.newsfeed_image_layout_5, R.layout.newsfeed_image_layout_3, R.layout.newsfeed_image_layout_1, R.layout.newsfeed_image_layout_2};
     int length[] = {1, 2, 2, 3, 3, 5};
     int image[] = {R.id.image1, R.id.image2, R.id.image3, R.id.image4, R.id.image5};
@@ -42,6 +47,8 @@ public class NewsFeedAdapter extends BaseAdapter {
     public NewsFeedAdapter(Context mContext, List feeds) {
         this.mContext = mContext;
         mFeeds = feeds;
+        medium = Typeface.createFromAsset(mContext.getAssets(),"fonts/Roboto-Medium.ttf");
+        regular = Typeface.createFromAsset(mContext.getAssets(),"fonts/Roboto-Regular.ttf");
     }
 
     @Override
@@ -99,7 +106,7 @@ public class NewsFeedAdapter extends BaseAdapter {
 //        Glide.with(mContext).load(feed.getMainPhoto().getMediumUrl()).centerCrop().into(mainImage);
         imageBox.addView(imageLayout);
 
-        ImageView commentButton = (ImageView) view.findViewById(R.id.comment);
+        LinearLayout commentButton = (LinearLayout) view.findViewById(R.id.commentButton);
         commentButton.setOnClickListener(new View.OnClickListener() {
             boolean flag = false;
 
@@ -118,6 +125,21 @@ public class NewsFeedAdapter extends BaseAdapter {
         });
         profileImage.setOnClickListener(new ProfileClickListner(mContext,feed.getUser().getId()));
         profileName.setOnClickListener(new ProfileClickListner(mContext,feed.getUser().getId()));
+        LinearLayout loveButton = (LinearLayout) view.findViewById(R.id.loveButton);
+        ImageView love = (ImageView) loveButton.findViewById(R.id.love);
+        if(feed.getLove()!=null)
+            love.setImageResource(R.drawable.photo_like_pressed);
+        else
+            love.setImageResource(R.drawable.photo_like);
+
+        loveButton.setOnClickListener(new LoveListner(mContext,feed,"days",socialAction));
+        date.setText(HasBeenDate.convertDate(feed.getCreatedTime()));
+        placeName.setTypeface(medium);
+        dayTitle.setTypeface(medium);
+        profileName.setTypeface(regular);
+        dayDescription.setTypeface(regular);
+        ImageView moreVert = (ImageView) view.findViewById(R.id.moreVert);
+        moreVert.setVisibility(View.VISIBLE);
         return view;
     }
 

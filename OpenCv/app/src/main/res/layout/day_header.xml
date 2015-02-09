@@ -15,45 +15,8 @@
               android:id="@+id/map"
               android:layout_width="match_parent"
               android:layout_height="160dp"/>
-    <RelativeLayout
-        android:background="@color/theme_white"
-        android:layout_width="match_parent"
-        android:padding="16dp"
-        android:id="@+id/descriptionBox"
-        android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Day 2-Beautiful Swiss"
-            android:id="@+id/title"
-            android:textStyle="bold"
-            android:textColor="@color/light_black"
-            android:textSize="13sp"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:includeFontPadding="false"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus id accumsan dui. Vivamus laoreet cursus pulvinar. Morbi eu ullamcorper neque, non faucibus"
-            android:id="@+id/description"
-            android:layout_below="@+id/title"
-            android:textColor="@color/light_black"
-            android:layout_marginBottom="8dp"
-            android:textSize="14sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/light_gray"
-            android:id="@+id/socialAction"
-            android:text="8 Likes 3 Comments 2 Shared"
-            android:layout_below="@+id/description"
-            android:textSize="13sp"
-            />
-    </RelativeLayout>
+    <include layout="@layout/description_layout" />
     <View
         android:layout_width="match_parent"
         android:layout_height="2px"

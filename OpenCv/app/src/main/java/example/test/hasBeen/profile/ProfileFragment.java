@@ -290,7 +290,7 @@ public class ProfileFragment extends Fragment {
         TextView loveCount = (TextView) mView.findViewById(R.id.loveCount);
         if(mUser.getCoverPhoto()!=null) Glide.with(getActivity()).load(mUser.getCoverPhoto().getLargeUrl()).placeholder(R.drawable.coverholder).into(coverImage);
         else Glide.with(getActivity()).load(R.drawable.coverholder).into(coverImage);
-        Glide.with(getActivity()).load(mUser.getImageUrl()+"?type=large").transform(new CircleTransform(getActivity())).into(profileImage);
+        Glide.with(getActivity()).load(mUser.getImageUrl()).transform(new CircleTransform(getActivity())).into(profileImage);
         profileName.setText(Util.parseName(mUser, 0));
         followStatus.setText(mUser.getFollowerCount() + " Follower · " + mUser.getFollowingCount() + " Following");
         followStatus.setOnClickListener(new View.OnClickListener() {

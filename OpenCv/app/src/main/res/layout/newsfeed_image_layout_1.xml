@@ -27,7 +27,7 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_marginLeft="4dp"
+            android:layout_marginLeft="@dimen/imagelayout_margin"
             android:layout_height="match_parent"
             android:id="@+id/image3"
             android:scaleType="centerCrop"/>

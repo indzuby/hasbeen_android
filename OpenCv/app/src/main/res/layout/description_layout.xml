@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:background="@color/theme_white"
+    android:layout_width="match_parent"
+    android:paddingTop="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="12dp"
+    android:id="@+id/descriptionBox"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/title"
+        android:layout_marginTop="-2dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/light_black"
+        android:textSize="13sp"
+        />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_marginTop="-1dp"
+        android:visibility="gone"
+        android:id="@id/moreVert"
+        android:src="@drawable/newsfeed_more"
+        android:layout_alignParentRight="true"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:includeFontPadding="false"
+        android:fontFamily="sans-serif-regular"
+        android:background="@drawable/description_selector"
+
+        android:id="@+id/description"
+        android:layout_below="@+id/title"
+        android:textColor="@color/light_black"
+        android:layout_marginBottom="8dp"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/light_gray"
+        android:id="@+id/socialAction"
+        android:layout_below="@+id/description"
+        android:textSize="13sp"
+        />
+</RelativeLayout>

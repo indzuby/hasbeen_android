@@ -2,6 +2,7 @@ package example.test.hasBeen.day;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +32,7 @@ import java.util.List;
 import example.test.hasBeen.R;
 import example.test.hasBeen.comment.CommentView;
 import example.test.hasBeen.geolocation.MapRoute;
+import example.test.hasBeen.loved.LoveListner;
 import example.test.hasBeen.model.api.Comment;
 import example.test.hasBeen.model.api.DayApi;
 import example.test.hasBeen.model.api.PositionApi;
@@ -56,6 +58,8 @@ public class DayView extends ActionBarActivity{
     DayAdapter mDayAdapter;
     Long mDayId;
     String mAccessToken;
+    TextView mSocialAction;
+    Typeface medium,regular;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         showProgress();
@@ -100,7 +104,7 @@ public class DayView extends ActionBarActivity{
 
         TextView dayTitle = (TextView) findViewById(R.id.title);
         TextView description = (TextView) findViewById(R.id.description);
-        TextView socialAction = (TextView) findViewById(R.id.socialAction);
+        mSocialAction = (TextView) findViewById(R.id.socialAction);
         TextView totalPhoto = (TextView) findViewById(R.id.totalPhoto);
         Glide.with(this).load(mDay.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(profileImage);
         Log.i(TAG, mDay.getMainPlace().getName());
@@ -108,8 +112,10 @@ public class DayView extends ActionBarActivity{
         placeName.setText(Util.convertPlaceName(mDay.getPositionList()));
         date.setText(HasBeenDate.convertDate(mDay.getDate()));
         dayTitle.setText(mDay.getTitle());
+        dayTitle.setTypeface(medium);
         description.setText(mDay.getDescription());
-        socialAction.setText(mDay.getLoveCount()+" Likes · " + mDay.getCommentCount()+" Commnents · "+mDay.getShareCount()+" Shared");
+        description.setTypeface(regular);
+        mSocialAction.setText(mDay.getLoveCount()+" Likes · " + mDay.getCommentCount()+" Commnents · "+mDay.getShareCount()+" Shared");
         totalPhoto.setText("Total " + mDay.getPhotoCount() + " photos");
         Log.i(TAG, mDay.getPositionList().size() + "");
         profileImage.setOnClickListener(new ProfileClickListner(this, mDay.getUser().getId()));
@@ -138,12 +144,13 @@ public class DayView extends ActionBarActivity{
         mListView.setAdapter(mDayAdapter);
     }
     protected  void initFoorteView(){
-        ImageButton commentButton = (ImageButton) findViewById(R.id.comment);
+        LinearLayout commentButton = (LinearLayout)findViewById(R.id.commentButton);
         commentButton.setOnClickListener(new View.OnClickListener() {
             boolean flag = false;
+
             @Override
             public void onClick(View v) {
-                if(!flag) {
+                if (!flag) {
                     flag = true;
                     Intent intent = new Intent(getBaseContext(), CommentView.class);
                     intent.putExtra("type","days");
@@ -154,6 +161,14 @@ public class DayView extends ActionBarActivity{
 
             }
         });
+        LinearLayout loveButton = (LinearLayout) findViewById(R.id.loveButton);
+        ImageView love = (ImageView) loveButton.findViewById(R.id.love);
+        if(mDay.getLove()!=null)
+            love.setImageResource(R.drawable.photo_like_pressed);
+        else
+            love.setImageResource(R.drawable.photo_like);
+
+        loveButton.setOnClickListener(new LoveListner(this,mDay,"days",mSocialAction));
 
         LinearLayout commentBox = (LinearLayout) findViewById(R.id.commetBox);
         TextView moreComments = (TextView) findViewById(R.id.moreComments);
@@ -182,6 +197,8 @@ public class DayView extends ActionBarActivity{
     }
     protected void init(){
         setContentView(R.layout.day);
+        medium = Typeface.createFromAsset(this.getAssets(),"fonts/Roboto-Medium.ttf");
+        regular = Typeface.createFromAsset(this.getAssets(),"fonts/Roboto-Regular.ttf");
         initActionBar();
         new DayAsyncTask(handler).execute(mAccessToken, mDayId);
         mHeaderView =  LayoutInflater.from(this).inflate(R.layout.day_header, null, false);
@@ -230,6 +247,7 @@ public class DayView extends ActionBarActivity{
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
         titleView.setText("Day2-Beautiful Swiss");
+        titleView.setTypeface(medium);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

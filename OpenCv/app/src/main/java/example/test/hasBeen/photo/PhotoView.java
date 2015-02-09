@@ -24,6 +24,7 @@ import java.util.List;
 
 import example.test.hasBeen.R;
 import example.test.hasBeen.comment.EnterCommentListner;
+import example.test.hasBeen.loved.LoveListner;
 import example.test.hasBeen.model.api.Comment;
 import example.test.hasBeen.model.api.PhotoApi;
 import example.test.hasBeen.profile.ProfileClickListner;
@@ -80,11 +81,23 @@ public class PhotoView extends ActionBarActivity{
         placeName.setText(mPhoto.getPlaceName());
         date.setText(HasBeenDate.convertDate(mPhoto.getTakenTime()));
         description.setText(mPhoto.getDescription());
+        findViewById(R.id.title).setVisibility(View.GONE);
         socialAction.setText(mPhoto.getLoveCount() + " Likes · " + mPhoto.getCommentCount() + " Commnents · " + mPhoto.getShareCount() + " Shared");
         ImageView imageView = (ImageView) findViewById(R.id.photo);
         Glide.with(this).load(mPhoto.getMediumUrl()).placeholder(R.drawable.placeholder).into(imageView);
         profileImage.setOnClickListener(new ProfileClickListner(this,mPhoto.getUser().getId()));
         profileName.setOnClickListener(new ProfileClickListner(this, mPhoto.getUser().getId()));
+
+        LinearLayout loveButton = (LinearLayout) findViewById(R.id.loveButton);
+        ImageView love = (ImageView) findViewById(R.id.love);
+        if(mPhoto.getLove()!=null)
+            love.setImageResource(R.drawable.photo_like_pressed);
+        else
+            love.setImageResource(R.drawable.photo_like);
+
+        loveButton.setOnClickListener(new LoveListner(this,mPhoto,"photos",socialAction));
+
+
     }
     protected void initComment(){
 
