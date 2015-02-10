@@ -38,10 +38,10 @@ public class NewsFeedAdapter extends BaseAdapter {
     MapRoute mMapRoute;
     boolean flag;
     Typeface medium,regular;
-    int layout[] = {R.layout.newsfeed_image_layout_6, R.layout.newsfeed_image_layout_4, R.layout.newsfeed_image_layout_1, R.layout.newsfeed_image_layout_3, R.layout.newsfeed_image_layout_2};
-    int length[] = {1, 2, 3, 3, 5};
+    int layout[] = {R.layout.newsfeed_image_layout_6, R.layout.newsfeed_image_layout_4, R.layout.newsfeed_image_layout_1, R.layout.newsfeed_image_layout_3,R.layout.newsfeed_image_layout_5, R.layout.newsfeed_image_layout_2};
+    int length[] = {1, 2, 3, 3, 4, 5};
     int image[] = {R.id.image1, R.id.image2, R.id.image3, R.id.image4, R.id.image5};
-    int height[]= {R.dimen.newsfeed_image_height_normal,R.dimen.newsfeed_image_height_normal,R.dimen.newsfeed_image_height_normal,R.dimen.newsfeed_image_height_large,R.dimen.newsfeed_image_height_large};
+    int height[]= {R.dimen.newsfeed_image_height_normal,R.dimen.newsfeed_image_height_normal,R.dimen.newsfeed_image_height_normal,R.dimen.newsfeed_image_height_large,R.dimen.newsfeed_image_height_large,R.dimen.newsfeed_image_height_large};
     public NewsFeedAdapter(Context mContext, List feeds) {
         this.mContext = mContext;
         mFeeds = feeds;
@@ -143,7 +143,8 @@ public class NewsFeedAdapter extends BaseAdapter {
         if (photoList.size() <= 1) k = 1;
         else if (photoList.size() <= 2) k = 2;
         else if(photoList.size()<=3) k = 4;
-        else if (photoList.size() <= 4) k = 5;
+        else if(photoList.size()<=4) k = 5;
+        else if (photoList.size() <= 5) k = 6;
         view = inflater.inflate(layout[index % k], null);
         for (int i = 0; i < length[index % k] && i < photoList.size(); i++) {
             ImageView imageView = (ImageView) view.findViewById(image[i]);
