@@ -46,7 +46,7 @@ public class FollowerFragment extends Fragment {
 
         FollowerAdapter followerAdapter = new FollowerAdapter(mFollowers, getActivity());
         mList.setAdapter(followerAdapter);
-
+        followerAdapter.mCount = mCount;
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

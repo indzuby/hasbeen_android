@@ -2,9 +2,6 @@ package example.test.hasBeen.model.api;
 
 import java.util.List;
 
-import example.test.hasBeen.model.database.Photo;
-import example.test.hasBeen.model.database.Place;
-
 /**
  * Created by zuby on 2015-01-28.
  */
@@ -12,8 +9,8 @@ public class PositionApi {
     Long id;
     Long dayId;
     String type;
-    Long startDate;
-    Long endDate;
+    Long startTime;
+    Long endTime;
     String categoryIconPrefix;
     String categoryIconSuffix;
 
@@ -37,12 +34,12 @@ public class PositionApi {
     }
 
 
-    public Long getStartDate() {
-        return startDate;
+    public Long getStartTime() {
+        return startTime;
     }
 
-    public Long getEndDate() {
-        return endDate;
+    public Long getEndTime() {
+        return endTime;
     }
 
 

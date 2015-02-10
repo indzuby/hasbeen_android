@@ -27,6 +27,7 @@ public class FollowingFragment extends Fragment {
     TextView mCount;
     Long mUserId;
     String mAccessToken;
+    String mType;
     Handler followingHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -46,7 +47,8 @@ public class FollowingFragment extends Fragment {
 
         FollowingAdapter followingAdapter = new FollowingAdapter(mFollowing, getActivity());
         mList.setAdapter(followingAdapter);
-
+        followingAdapter.mCount = mCount;
+        followingAdapter.mType = mType;
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class FollowingFragment extends Fragment {
         mUserId = getArguments().getLong("userId");
         mAccessToken = Session.getString(getActivity(), "accessToken", null);
         new FollowingAsyncTask(followingHandler).execute(mAccessToken,mUserId);
+        mType = getArguments().getString("type");
         init();
         return mView;
     }

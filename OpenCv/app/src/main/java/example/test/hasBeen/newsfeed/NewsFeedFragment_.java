@@ -17,6 +17,9 @@ import android.widget.ListView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +34,7 @@ import example.test.hasBeen.utils.SlidingUpPanelLayout;
 /**
  * Created by zuby on 2015-01-23.
  */
-public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.PanelSlideListener {
+public class NewsFeedFragment_ extends Fragment implements SlidingUpPanelLayout.PanelSlideListener {
     final String TAG = "NewsFeed";
     View mView;
     GoogleMap mMap;
@@ -52,6 +55,22 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
 
         mListView = (ListView) mView.findViewById(R.id.list);
         mListView.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
+
+        mSlidingUpPanelLayout = (SlidingUpPanelLayout) mView.findViewById(R.id.slidingLayout);
+        mSlidingUpPanelLayout.setEnableDragViewTouchEvents(true);
+        mMapBox = (FrameLayout) mView.findViewById(R.id.mapBox);
+        int mapHeight = getResources().getDimensionPixelSize(R.dimen.map_height) + 128;
+        mSlidingUpPanelLayout.setPanelHeight(mapHeight); // you can use different height here
+        mSlidingUpPanelLayout.setScrollableView(mListView, mapHeight);
+
+        mSlidingUpPanelLayout.setPanelSlideListener(this);
+
+        // transparent view at the top of ListView
+        mTransparentView = mView.findViewById(R.id.transparentView);
+
+        // init header view for ListView
+        mTransparentHeaderView = LayoutInflater.from(getActivity()).inflate(R.layout.transparent_header_view, null, false);
+        mSpaceView = mTransparentHeaderView.findViewById(R.id.space);
 
         mFeeds = new ArrayList<>();
         mFeedAdapter = new NewsFeedAdapter(getActivity(), mFeeds);
@@ -88,25 +107,26 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
 //            }
 //        });
 
-//        SupportMapFragment mapFragment = ((SupportMapFragment) getChildFragmentManager()
-//                .findFragmentById(R.id.map));
-//
-//
-//        mapFragment.getMapAsync(new OnMapReadyCallback() {
-//            @Override
-//            public void onMapReady(GoogleMap map) {
-//                mMap = map;
-//                mapRoute = new MapRoute(map,getActivity());
-//                mFeedAdapter.mMap = map;
-//                mFeedAdapter.mMapRoute = mapRoute;
-//                mSlidingUpPanelLayout.collapsePane();
-//                UiSettings setting = map.getUiSettings();
-//                setting.setAllGesturesEnabled(false);
-//                setting.setZoomControlsEnabled(false);
-//                setting.setMyLocationButtonEnabled(false);
-//            }
-//        });
-//        collapseMap();
+        SupportMapFragment mapFragment = ((SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.map));
+
+
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap map) {
+                mMap = map;
+                mapRoute = new MapRoute(map,getActivity());
+                mFeedAdapter.mMap = map;
+                mFeedAdapter.mMapRoute = mapRoute;
+//                mFeedAdapter.mSlidPanel = mSlidingUpPanelLayout;
+                mSlidingUpPanelLayout.collapsePane();
+                UiSettings setting = map.getUiSettings();
+                setting.setAllGesturesEnabled(false);
+                setting.setZoomControlsEnabled(false);
+                setting.setMyLocationButtonEnabled(false);
+            }
+        });
+        collapseMap();
     }
 
     @Override
@@ -137,10 +157,10 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
                                             mFeedAdapter.notifyDataSetChanged();
                                             lastUpdateTime = feed.getUpdatedTime();
                                         }
-//                                        if(feeds.size()>0) {
-//                                            Log.i("mapRoute", mFeeds.get(0).getMainPlace().getLat() + "");
-//                                            mapRoute.addMarker(mFeeds.get(0).getMainPlace().getLat(), mFeeds.get(0).getMainPlace().getLon());
-//                                        }
+                                        if(feeds.size()>0) {
+                                            Log.i("mapRoute", mFeeds.get(0).getMainPlace().getLat() + "");
+                                            mapRoute.addMarker(mFeeds.get(0).getMainPlace().getLat(), mFeeds.get(0).getMainPlace().getLon());
+                                        }
                                     }
                                 });
                             } catch (Exception e) {

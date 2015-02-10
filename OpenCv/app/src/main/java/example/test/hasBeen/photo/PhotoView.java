@@ -2,6 +2,7 @@ package example.test.hasBeen.photo;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -50,6 +51,8 @@ public class PhotoView extends ActionBarActivity{
     TextView mSocialAction;
     int mViewCommentCount;
     Long lastCommentId;
+    Typeface medium,regular;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +90,7 @@ public class PhotoView extends ActionBarActivity{
         Glide.with(this).load(mPhoto.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).placeholder(R.drawable.placeholder).into(profileImage);
         Log.i(TAG, mPhoto.getPlaceName());
         profileName.setText(Util.parseName(mPhoto.getUser(), 0));
-        placeName.setText(mPhoto.getPlaceName());
+        placeName.setText(Util.cropPlaceName(mPhoto.getPlaceName()));
         date.setText(HasBeenDate.convertDate(mPhoto.getTakenTime()));
         description.setText(mPhoto.getDescription());
         findViewById(R.id.title).setVisibility(View.GONE);
@@ -181,6 +184,8 @@ public class PhotoView extends ActionBarActivity{
     }
     protected void init(){
         setContentView(R.layout.photo);
+        medium = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Medium.ttf");
+        regular = Typeface.createFromAsset(this.getAssets(),"fonts/Roboto-Regular.ttf");
         new PhotoAsyncTask(handler).execute(mAccessToken,mPhotoId);
         initActionBar();
         new NearByPhotoAsyncTask(nearByHandler).execute(mAccessToken,mPhotoId);
@@ -219,15 +224,16 @@ public class PhotoView extends ActionBarActivity{
             TextView shareCount = (TextView) nearByItem.findViewById(R.id.shareCount);
 
             Glide.with(this).load(photo.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(image);
-            name.setText(Util.parseName(photo.getUser(),0));
-
+            name.setText(Util.parseName(photo.getUser(), 0));
+            name.setTypeface(medium);
             Glide.with(this).load(photo.getMediumUrl()).into(nearPhoto);
             description.setText(photo.getPlaceName());
+            description.setTypeface(medium);
             likeCount.setText(photo.getLoveCount()+"");
             commentCount.setText(photo.getCommentCount()+"");
             shareCount.setText(photo.getShareCount() + "");
             date.setText(HasBeenDate.convertDate(photo.getTakenTime()));
-
+            date.setTypeface(regular);
             if(i%2==0)
                 nearBy1.addView(nearByItem);
             else

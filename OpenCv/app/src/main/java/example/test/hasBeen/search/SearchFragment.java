@@ -1,5 +1,6 @@
 package example.test.hasBeen.search;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -46,6 +47,8 @@ public class SearchFragment extends Fragment {
     int nowTab = DAY;
     String mAccessToken;
     boolean isrefresh = false;
+    Typeface medium,regular;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.search, container, false);
@@ -58,8 +61,8 @@ public class SearchFragment extends Fragment {
     protected void init() {
         mMapFragment = ((SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map));
-
-
+        medium = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Medium.ttf");
+        regular = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Roboto-Regular.ttf");
         mMapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap map) {
@@ -67,12 +70,15 @@ public class SearchFragment extends Fragment {
                 mMapRoute = new MapRoute(map, getActivity());
                 UiSettings setting = map.getUiSettings();
                 setting.setZoomControlsEnabled(true);
-                setting.setMyLocationButtonEnabled(true);
+                setting.setAllGesturesEnabled(false);
+                setting.setMyLocationButtonEnabled(false);
                 map.setMyLocationEnabled(true);
             }
         });
         mDayButton = (TextView) mView.findViewById(R.id.dayButton);
         mPhotoButton = (TextView) mView.findViewById(R.id.photoButton);
+        mDayButton.setTypeface(medium);
+        mPhotoButton.setTypeface(medium);
         mRefresh = (ImageView) mView.findViewById(R.id.refresh);
 
         mDayButton.setOnClickListener(new ButtonClickListner());
@@ -131,10 +137,11 @@ public class SearchFragment extends Fragment {
 
             if (nowTab!=DAY && button.equals(mDayButton)) {
                 mapRendering(DAY);
+                swapButtonColor();
             } else if (nowTab!=PHOTO && button.equals(mPhotoButton)) {
                 mapRendering(PHOTO);
+                swapButtonColor();
             }
-            swapButtonColor();
         }
     }
 

@@ -68,7 +68,7 @@ public class DayAdapter extends BaseAdapter {
         TextView placeName = (TextView) view.findViewById(R.id.placeName);
         TextView placeTime = (TextView) view.findViewById(R.id.placeTime);
         ImageView placeIcon = (ImageView) view.findViewById(R.id.placeIcon);
-        placeTime.setText(HasBeenDate.convertTime(position.getStartDate(), position.getEndDate()));
+        placeTime.setText(HasBeenDate.convertTime(position.getStartTime(), position.getEndTime()));
         if(position.getPlace()!=null) {
             placeName.setText(position.getPlace().getName());
             Glide.with(mContext).load(position.getPlace().getCategoryIconPrefix() + "88" + position.getPlace().getCategoryIconSuffix()).into(placeIcon);

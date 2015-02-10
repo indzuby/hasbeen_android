@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/line_color"
                 android:id="@+id/date"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 android:layout_marginLeft="8dp"
                 />
 
@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/light_black"
-                android:textSize="12sp"
+                android:textSize="11sp"
                 android:id="@+id/profileName"
                 android:layout_marginLeft="8dp"
                 android:layout_below="@+id/date"

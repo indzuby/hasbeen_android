@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:textColor="@color/light_gray"
-        android:background="@color/list_background"
+        android:background="@color/day_background"
         android:paddingLeft="16dp"
         android:id="@+id/count"
         android:paddingTop="4dp"

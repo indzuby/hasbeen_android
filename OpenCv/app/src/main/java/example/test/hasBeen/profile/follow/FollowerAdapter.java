@@ -1,16 +1,12 @@
 package example.test.hasBeen.profile.follow;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -31,6 +27,7 @@ public class FollowerAdapter extends BaseAdapter {
     List<Follow> mFollows;
     Context mContext;
     String mAccessToken;
+    public TextView mCount;
     public FollowerAdapter(List<Follow> mFollows, Context mContext) {
         this.mFollows = mFollows;
         this.mContext = mContext;
@@ -55,12 +52,13 @@ public class FollowerAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
+
         if(view == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.follow_item,null);
         }
-        Follow Follow = getItem(position);
-        final User fromUser = Follow.getFromUser();
+        Follow follow = getItem(position);
+        final User fromUser = follow.getFromUser();
 
         ImageView profileImage = (ImageView) view.findViewById(R.id.profileImage);
         TextView profileName = (TextView) view.findViewById(R.id.profileName);
@@ -69,45 +67,15 @@ public class FollowerAdapter extends BaseAdapter {
 
         Glide.with(mContext).load(fromUser.getImageUrl()).asBitmap().transform(new CircleTransform(mContext)).into(profileImage);
         profileName.setText(Util.parseName(fromUser,0));
-        profileImage.setOnClickListener(new DoProfileClickListner(mContext, fromUser.getId()));
-        profileName.setOnClickListener(new DoProfileClickListner(mContext, fromUser.getId()));
+        profileImage.setOnClickListener(new ProfileClickListner(mContext, fromUser.getId()));
+        profileName.setOnClickListener(new ProfileClickListner(mContext, fromUser.getId()));
         followSatus.setText(fromUser.getFollowerCount()+" Follower · "+fromUser.getFollowingCount()+" following");
-        if(Follow.getFollowingId()==null) {
+        if(follow.getFollowingId()==null) {
             followImage.setImageResource(R.drawable.follow_gray);
-            followImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new DoFollowAsyncTask(new Handler(Looper.getMainLooper()){
-                        @Override
-                        public void handleMessage(Message msg) {
-                            super.handleMessage(msg);
-                            if(msg.what==0) {
-                                Toast.makeText(mContext,"Follow success",Toast.LENGTH_LONG).show();
-
-                            }
-                        }
-                    }).execute(mAccessToken,fromUser.getId());
-                }
-            });
         }else {
-            followImage.setImageResource(R.drawable.following_green);
-            followImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
+            followImage.setImageResource(R.drawable.following_selector);
         }
+        followImage.setOnClickListener(new DoFollowListner(mContext,mAccessToken,fromUser.getId(),follow));
         return view;
-    }
-    class DoProfileClickListner extends ProfileClickListner {
-        public DoProfileClickListner(Context context, Long id) {
-            super(context, id);
-        }
-
-        @Override
-        public void onClick(View v) {
-            super.onClick(v);
-        }
     }
 }

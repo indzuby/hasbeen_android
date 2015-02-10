@@ -8,6 +8,7 @@
     <dimen name="add_button_margin">16dp</dimen>
     <dimen name="map_height">160dp</dimen>
     <dimen name="social_bar">48dp</dimen>
-    <dimen name="newsfeed_image_height">239dp</dimen>
+    <dimen name="newsfeed_image_height_normal">239dp</dimen>
+    <dimen name="newsfeed_image_height_large">354dp</dimen>
     <dimen name="imagelayout_margin">3dp</dimen>
 </resources>

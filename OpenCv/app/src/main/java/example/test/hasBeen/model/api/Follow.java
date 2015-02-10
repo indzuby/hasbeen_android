@@ -4,12 +4,12 @@ package example.test.hasBeen.model.api;
  * Created by 주현 on 2015-02-02.
  */
 public class Follow {
-    Integer id;
+    Long id;
     User toUser;
     User fromUser;
-    Integer followingId;
+    Long followingId;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -17,11 +17,15 @@ public class Follow {
         return toUser;
     }
 
-    public Integer getFollowingId() {
+    public Long getFollowingId() {
         return followingId;
     }
 
     public User getFromUser() {
         return fromUser;
+    }
+
+    public void setFollowingId(Long followingId) {
+        this.followingId = followingId;
     }
 }

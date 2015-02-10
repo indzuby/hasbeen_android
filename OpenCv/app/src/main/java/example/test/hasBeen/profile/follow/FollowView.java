@@ -1,5 +1,6 @@
 package example.test.hasBeen.profile.follow;
 
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -25,14 +26,19 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
     TextView mFollowingButton;
     ViewPager mViewPager;
     Long mUserId;
+    String mType;
+    Typeface medium,regular;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mUserId = getIntent().getLongExtra("userId",0);
+        mType = getIntent().getStringExtra("type");
         init();
     }
 
     protected void init() {
         setContentView(R.layout.follow);
+        medium = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Medium.ttf");
+        regular = Typeface.createFromAsset(this.getAssets(),"fonts/Roboto-Regular.ttf");
         initActionBar();
 
     }
@@ -47,7 +53,7 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
         View mCustomActionBar = mInflater.inflate(R.layout.action_bar_place, null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         TextView titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
-        titleView.setText("Following & Following");
+        titleView.setText("Follower & Following");
         ImageView moreVert = (ImageView) mCustomActionBar.findViewById(R.id.moreVert);
         moreVert.setVisibility(View.GONE);
         back.setOnClickListener(new View.OnClickListener() {
@@ -63,11 +69,13 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
         mFollowingButton = (TextView) findViewById(R.id.following);
 
         mFollowerButton.setOnClickListener(this);
+        mFollowerButton.setTypeface(medium);
         mFollowingButton.setOnClickListener(this);
+        mFollowingButton.setTypeface(medium);
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        FollowPagerAdapter pagerAdapter = new FollowPagerAdapter(getSupportFragmentManager(),mUserId);
+        FollowPagerAdapter pagerAdapter = new FollowPagerAdapter(getSupportFragmentManager(),mUserId,mType);
         mViewPager.setAdapter(pagerAdapter);
-        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setOffscreenPageLimit(0);
 
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -91,11 +99,13 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
             mNowTab = FOLLOWER;
             ((TextView)findViewById(R.id.follower)).setTextColor(getResources().getColor(R.color.theme_color));
             ((TextView)findViewById(R.id.following)).setTextColor(getResources().getColor(R.color.light_gray));
+            mViewPager.setCurrentItem(mNowTab);
         }else if(v.equals(mFollowingButton)){
             mNowTab = FOLLOWING;
             ((TextView)findViewById(R.id.following)).setTextColor(getResources().getColor(R.color.theme_color));
             ((TextView)findViewById(R.id.follower)).setTextColor(getResources().getColor(R.color.light_gray));
+            mViewPager.setCurrentItem(mNowTab);
         }
-        mViewPager.setCurrentItem(mNowTab);
+
     }
 }

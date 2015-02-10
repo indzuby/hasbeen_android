@@ -1,6 +1,7 @@
 package example.test.hasBeen.profile;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -67,6 +68,7 @@ public class ProfileView extends ActionBarActivity {
     SupportMapFragment mMapFragment;
     MapRoute mMapRoute;
     GoogleMap mMap;
+    Typeface medium,regular;
 
     Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -189,6 +191,8 @@ public class ProfileView extends ActionBarActivity {
     protected void init(){
         setContentView(R.layout.profile);
         initActionBar();
+        medium = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Medium.ttf");
+        regular = Typeface.createFromAsset(this.getAssets(),"fonts/Roboto-Regular.ttf");
         mMapFragment = ((SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map));
 
@@ -270,6 +274,7 @@ public class ProfileView extends ActionBarActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), FollowView.class);
                 intent.putExtra("userId",mUser.getId());
+                intent.putExtra("type","other");
                 startActivity(intent);
             }
         });

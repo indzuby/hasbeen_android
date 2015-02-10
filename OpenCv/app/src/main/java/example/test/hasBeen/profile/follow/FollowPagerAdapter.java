@@ -13,18 +13,22 @@ import android.support.v4.app.FragmentPagerAdapter;
 public class FollowPagerAdapter extends FragmentPagerAdapter {
     Fragment mFollower= null, mFollowing = null;
     Long mUserId;
-    public FollowPagerAdapter(FragmentManager fm,Long userId) {
+    String mType;
+    public FollowPagerAdapter(FragmentManager fm,Long userId,String type) {
         super(fm);
         mUserId = userId;
+        mType = type;
     }
 
     public Fragment getItem(int index) {
         Bundle bundle = new Bundle();
         bundle.putLong("userId",mUserId);
+        bundle.putString("type",mType);
         switch (index) {
             case 0: // index에 따라서 다른 fragment 돌려준다.
                 if (mFollower== null)
                     mFollower = new FollowerFragment();
+
                 mFollower.setArguments(bundle);
                 return mFollower;
             case 1:

@@ -298,6 +298,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FollowView.class);
                 intent.putExtra("userId",mUser.getId());
+                intent.putExtra("type","my");
                 startActivity(intent);
             }
         });

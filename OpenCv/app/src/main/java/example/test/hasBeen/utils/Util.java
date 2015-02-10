@@ -64,6 +64,12 @@ public class Util {
             place = place.substring(0,35)+" ...";
         return place;
     }
+    public static String cropPlaceName(String name) {
+        String placeName = name;
+        if(placeName.length()>30)
+            placeName = placeName.substring(0,30 )+" ...";
+        return placeName;
+    }
     public static Bitmap getBitmapClippedCircle(Bitmap bitmap) {
 
         final int width = bitmap.getWidth();
@@ -82,4 +88,19 @@ public class Util {
         canvas.drawBitmap(bitmap, 0, 0, null);
         return outputBitmap;
     }
+    public static String getNewsFeedReason(String type){
+        if(type.equals("PHOTO_COMMENT")) {
+            return " Commented on photo";
+        }else if(type.equals("PHOTO_LOVE")){
+            return " liked on photo";
+        }else if(type.equals("DAY_POST")) {
+            return " Posted on day trip";
+        }else if(type.equals("DAY_COMMENT")) {
+            return " Commented on day trip";
+        }else if(type.equals("DAY_LOVE")) {
+            return " liked on day trip";
+        }
+        return "";
+    }
+
 }
