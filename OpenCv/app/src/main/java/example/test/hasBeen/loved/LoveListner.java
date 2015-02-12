@@ -1,6 +1,7 @@
 package example.test.hasBeen.loved;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -10,9 +11,9 @@ import android.widget.TextView;
 
 import example.test.hasBeen.R;
 import example.test.hasBeen.day.LoveAsyncTask;
-import example.test.hasBeen.model.api.DayApi;
 import example.test.hasBeen.model.api.Loved;
-import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.model.database.Day;
+import example.test.hasBeen.model.database.Photo;
 import example.test.hasBeen.utils.Session;
 
 /**
@@ -21,23 +22,24 @@ import example.test.hasBeen.utils.Session;
 public class LoveListner implements View.OnClickListener{
     Context mContext;
     boolean isLoved;
-    DayApi mDay;
+    Day mDay;
     Loved mLove;
-    PhotoApi mPhoto;
+    Photo mPhoto;
     String mAccessToken;
     String mType;
     Long mid;
     TextView mSocialAction;
+    Typeface medium,regular;
     public LoveListner(Context mContext, Object data,String type,TextView socialAction) {
         this.mContext = mContext;
         mAccessToken = Session.getString(mContext,"accessToken",null);
         mType = type;
         if(type.equals("days")) {
-            mDay = (DayApi) data;
+            mDay = (Day) data;
             mLove = mDay.getLove();
             mid = mDay.getId();
         }else {
-            mPhoto = (PhotoApi) data;
+            mPhoto = (Photo) data;
             mLove = mPhoto.getLove();
             mid = mPhoto.getId();
         }
@@ -46,15 +48,16 @@ public class LoveListner implements View.OnClickListener{
         else
             isLoved = false;
         mSocialAction = socialAction;
+        medium = Typeface.createFromAsset(mContext.getAssets(),"fonts/Roboto-Medium.ttf");
+        regular = Typeface.createFromAsset(mContext.getAssets(),"fonts/Roboto-Regular.ttf");
     }
 
     @Override
     public void onClick(View v) {
         final ImageView loveButton;
-        if(v.getClass().equals(ImageView.class)) {
-             loveButton = (ImageView) v;
-        }else
-            loveButton = (ImageView) v.findViewById(R.id.love);
+        loveButton = (ImageView) v.findViewById(R.id.love);
+        final TextView loveText;
+        loveText = (TextView) v.findViewById(R.id.loveText);
         if(isLoved) {
             new LoveAsyncTask(new Handler(Looper.getMainLooper()){
                 @Override
@@ -75,6 +78,9 @@ public class LoveListner implements View.OnClickListener{
                         }
                         mLove = love;
                         isLoved = false;
+                        loveText.setTextColor(mContext.getResources().getColor(R.color.light_black));
+                        loveText.setTypeface(medium);
+
                     }
 
                 }
@@ -97,6 +103,8 @@ public class LoveListner implements View.OnClickListener{
                         }
                         isLoved = true;
                         mLove = null;
+                        loveText.setTextColor(mContext.getResources().getColor(R.color.light_gray));
+                        loveText.setTypeface(regular);
                     }
                 }
             }).execute(mAccessToken,mLove.getId());

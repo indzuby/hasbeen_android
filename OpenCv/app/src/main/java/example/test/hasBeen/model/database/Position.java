@@ -5,8 +5,6 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.List;
 
-import example.test.hasBeen.gallery.GalleryAdapter;
-
 /**
  * Created by zuby on 2015-01-12.
  */
@@ -18,10 +16,10 @@ public class Position {
     Long dayId;
     @DatabaseField
     String type;
-    @DatabaseField(columnName = "start_date")
-    Long startDate;
-    @DatabaseField(columnName = "end_date")
-    Long endDate;
+    @DatabaseField(columnName = "start_time")
+    Long startTime;
+    @DatabaseField(columnName = "end_time")
+    Long endTime;
     @DatabaseField(columnName = "place_id")
     Long placeId;
     @DatabaseField(columnName = "category_icon_prefix")
@@ -67,20 +65,20 @@ public class Position {
         this.type = type;
     }
 
-    public Long getStartDate() {
-        return startDate;
+    public Long getStartTime() {
+        return startTime;
     }
 
-    public void setStartDate(Long startDate) {
-        this.startDate = startDate;
+    public void setStartTime(Long startTime) {
+        this.startTime = startTime;
     }
 
-    public Long getEndDate() {
-        return endDate;
+    public Long getEndTime() {
+        return endTime;
     }
 
-    public void setEndDate(Long endDate) {
-        this.endDate = endDate;
+    public void setEndTime(Long endTime) {
+        this.endTime = endTime;
     }
 
     public Long getPlaceId() {
@@ -106,31 +104,43 @@ public class Position {
     public void setCategoryIconSuffix(String categoryIconSuffix) {
         this.categoryIconSuffix = categoryIconSuffix;
     }
-    List<Photo> photos;
 
-    public List<Photo> getPhotos() {
-        return photos;
-    }
-
-    public void setPhotos(List<Photo> photos) {
-        this.photos = photos;
-    }
     Place place;
 
     public Place getPlace() {
         return place;
     }
 
+    Photo mainPhoto;
+
+    List<Photo> photoList;
+
+    public Photo getMainPhoto() {
+        return mainPhoto;
+    }
+
+    public List<Photo> getPhotoList() {
+        return photoList;
+    }
+
     public void setPlace(Place place) {
         this.place = place;
     }
-    GalleryAdapter galleryAdapter;
 
-    public GalleryAdapter getGalleryAdapter() {
-        return galleryAdapter;
+    public void setMainPhoto(Photo mainPhoto) {
+        this.mainPhoto = mainPhoto;
     }
 
-    public void setGalleryAdapter(GalleryAdapter galleryAdapter) {
-        this.galleryAdapter = galleryAdapter;
+    public void setPhotoList(List<Photo> photoList) {
+        this.photoList = photoList;
+    }
+    Boolean[] isCheckedPhoto;
+
+    public Boolean[] getIsCheckedPhoto() {
+        return isCheckedPhoto;
+    }
+
+    public void setIsCheckedPhoto(Boolean[] isCheckedPhoto) {
+        this.isCheckedPhoto = isCheckedPhoto;
     }
 }

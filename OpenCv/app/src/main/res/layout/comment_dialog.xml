@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:background="@drawable/white_bg"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/removeComment"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:background="@drawable/long_pressed_selector"
+            android:text="Remove this comments"
+            android:textColor="@color/light_black"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:alpha="0.1"
+            android:background="@color/light_black" />
+
+        <TextView
+            android:id="@+id/editComment"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/long_pressed_selector"
+            android:paddingLeft="16dp"
+            android:text="Edit this comments"
+            android:textColor="@color/light_black"
+            android:textSize="16sp" />
+    </LinearLayout>
+</RelativeLayout>

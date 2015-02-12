@@ -11,8 +11,8 @@ import android.util.DisplayMetrics;
 import java.net.URL;
 import java.util.List;
 
-import example.test.hasBeen.model.api.PositionApi;
 import example.test.hasBeen.model.api.User;
+import example.test.hasBeen.model.database.Position;
 
 /**
  * Created by zuby on 2015-01-16.
@@ -57,7 +57,7 @@ public class Util {
         }
         return null;
     }
-    public static String convertPlaceName(List<PositionApi> positions) {
+    public static String convertPlaceName(List<Position> positions) {
         if(positions.size()<=0) return "";
         String place = positions.get(0).getPlace().getName()+" - "+positions.get(positions.size()-1).getPlace().getName();
         if(place.length()>35)

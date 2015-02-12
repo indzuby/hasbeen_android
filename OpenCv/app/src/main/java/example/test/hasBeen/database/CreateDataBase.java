@@ -62,7 +62,7 @@ public class CreateDataBase {
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     proj,
                     MediaStore.Images.Media.DATE_TAKEN + ">?",
-                    new String[]{"" + lastPhoto.getTakenDate()},
+                    new String[]{"" + lastPhoto.getTakenTime()},
                     MediaStore.MediaColumns.DATE_ADDED);
         else
             cursor = MediaStore.Images.Media.query(resolver,
@@ -102,7 +102,7 @@ public class CreateDataBase {
                     photo.setPlaceName("");
                     photo.setLat(lat);
                     photo.setLon(lon);
-                    photo.setTakenDate(dataTaken);
+                    photo.setTakenTime(dataTaken);
                     photo.setDayId(new Long(0));
                     photo.setPhotoId(new Long(photoID));
                     photo.setPhotoPath(photoPath);
@@ -137,7 +137,7 @@ public class CreateDataBase {
                     day.setTitle("");
                     day.setDescription("");
                     day.setPhotoCount(1);
-                    day.setDate(photo.getTakenDate());
+                    day.setDate(photo.getTakenTime());
                     day.setCountry("");
                     day.setCity("");
                     Long dayId = database.insertDay(day);
@@ -215,7 +215,7 @@ public class CreateDataBase {
                                                     updatedPhoto.setPlaceId(bestPhoto.getPlaceId());
                                                     updatedPhoto.setPositionId(bestPhoto.getPositionId());
                                                     database.updatePhoto(updatedPhoto);
-                                                    database.updatePositionEndTime(updatedPhoto.getPositionId(), updatedPhoto.getTakenDate());
+                                                    database.updatePositionEndTime(updatedPhoto.getPositionId(), updatedPhoto.getTakenTime());
                                                 } else {
                                                     insertNewPosition(updatedPhoto);
                                                 }
@@ -287,8 +287,8 @@ public class CreateDataBase {
             placeId = database.insertPlace(place);
         }
         position.setDayId(photo.getDayId());
-        position.setStartDate(photo.getTakenDate());
-        position.setEndDate(photo.getTakenDate());
+        position.setStartTime(photo.getTakenTime());
+        position.setEndTime(photo.getTakenTime());
         position.setMainPhotoId(photo.getId());
         position.setType("Place");
         position.setPlaceId(placeId);
@@ -326,13 +326,13 @@ public class CreateDataBase {
                 database.updateDayMainPhotoId(bestPhoto.getDayId(), bestPhoto.getId());
             if (database.hasMainPhotoIdInPosition(bestPhoto.getPositionId()))
                 database.updatePositionMainPhotoId(bestPhoto.getPositionId(), bestPhoto.getId());
-            database.updatePositionEndTime(bestPhoto.getPositionId(), photos.get(photos.size() - 1).getTakenDate());
+            database.updatePositionEndTime(bestPhoto.getPositionId(), photos.get(photos.size() - 1).getTakenTime());
         }
 
     }
 
     protected boolean isSimilary(Photo beforePhoto, Photo photo) {
-        if (HasBeenDate.isTimeRangeInFive(beforePhoto.getTakenDate(), photo.getTakenDate()))
+        if (HasBeenDate.isTimeRangeInFive(beforePhoto.getTakenTime(), photo.getTakenTime()))
             return true;
 
         double hist = HasBeenOpenCv.compareHistogram(getThumbnail(beforePhoto.getPhotoId()), getThumbnail(photo.getPhotoId()));

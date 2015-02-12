@@ -65,6 +65,7 @@ public class CommnetAdapter extends BaseAdapter{
         commentTime.setText(HasBeenDate.getGapTime(comment.getCreatedTime()));
         profileImage.setOnClickListener(new ProfileClickListner(mContext,comment.getUser().getId()));
         profileName.setOnClickListener(new ProfileClickListner(mContext, comment.getUser().getId()));
+        view.setBackground(mContext.getResources().getDrawable(R.drawable.long_pressed_selector));
         return view;
     }
 }

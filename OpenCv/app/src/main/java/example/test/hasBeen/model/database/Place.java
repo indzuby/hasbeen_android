@@ -147,13 +147,19 @@ public class Place {
 
     public Place() {
     }
-    Bitmap bitmap;
+    Photo mainPhoto;
 
-    public Bitmap getBitmap() {
-        return bitmap;
+    public Photo getMainPhoto() {
+        return mainPhoto;
+    }
+    Bitmap image;
+
+    public Bitmap getImage() {
+        return image;
     }
 
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
+    public void setImage(Bitmap image) {
+        this.image = image;
     }
+
 }

@@ -1,5 +1,7 @@
 package example.test.hasBeen.model.api;
 
+import example.test.hasBeen.model.database.Photo;
+
 /**
  * Created by zuby on 2015-01-26.
  */
@@ -38,7 +40,7 @@ public class User {
         this.imageUrl = imageUrl;
     }
 
-    PhotoApi coverPhoto;
+    Photo coverPhoto;
     int dayCount;
     int photoCount;
     int loveCount;
@@ -50,7 +52,7 @@ public class User {
         return tripCount;
     }
 
-    public PhotoApi getCoverPhoto() {
+    public Photo getCoverPhoto() {
         return coverPhoto;
     }
 

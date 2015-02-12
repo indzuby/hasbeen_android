@@ -37,7 +37,7 @@
                 android:background="@color/list_background">
 
                 <ListView
-                    android:id="@+id/galleryL1ListView"
+                    android:id="@+id/listView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="#00000000"
@@ -48,43 +48,9 @@
                     android:orientation="vertical"
                     android:layout_height="wrap_content">
 
-                    <RelativeLayout
-                        android:id="@+id/day_top_box"
-                        android:layout_width="match_parent"
-                        android:layout_height="72dp"
-                        android:alpha="0.9"
-                        android:background="@color/day_background"
-                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/galleryL1dayTopTextDate"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="16dp"
-                            android:paddingTop="16dp"
-                            android:text="2015년 1월 1일"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@color/theme_color"
-                            android:textSize="16sp" />
+                    <include layout="@layout/gallery_title_box" />
 
-                        <TextView
-                            android:id="@+id/galleryL1dayTopTextArea"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/galleryL1dayTopTextDate"
-                            android:paddingLeft="16dp"
-                            android:text="Area1 - Araea7"
-                            android:textColor="@color/light_black"
-                            android:textSize="13sp" />
-
-
-                    </RelativeLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:background="@drawable/actionbar_shadow" />
                 </LinearLayout>
 
 

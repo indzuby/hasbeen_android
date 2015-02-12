@@ -63,7 +63,7 @@ public class GalleryPlaceAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
         boolean type = getType(position);
-        final Category category = getItem(position);
+        Category category = getItem(position);
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if(view==null) {
             if(type)
@@ -84,49 +84,32 @@ public class GalleryPlaceAdapter extends BaseAdapter{
             }
             TextView placeName = (TextView) view.findViewById(R.id.profileName);
             TextView placeCategory = (TextView) view.findViewById(R.id.placeIcon);
-            final ImageView placeIcon = (ImageView) view.findViewById(R.id.place_icon);
+            ImageView placeIcon = (ImageView) view.findViewById(R.id.place_icon);
             placeName.setText(category.getPlaceName());
             placeCategory.setText(category.getCategryName());
-//            if(category.getBitmap()==null) {
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            URL url = new URL(category.getCategoryIconPrefix() + "88" + category.getCategoryIconSuffix());
-//                            final Bitmap bm = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-//                            ((Activity) mContext).runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    category.setBitmap(bm);
-//                                    placeIcon.setImageBitmap(bm);
-//                                    placeIcon.setScaleType(ImageView.ScaleType.FIT_XY);
-//                                }
-//                            });
-//
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }).start();
-//            }else {
-//                placeIcon.setImageBitmap(category.getBitmap());
-//                placeIcon.setScaleType(ImageView.ScaleType.FIT_XY);
-//            }
+
             Glide.with(mContext).load(category.getCategoryIconPrefix() + "88" + category.getCategoryIconSuffix()).into(placeIcon);
             RelativeLayout placeBox = (RelativeLayout) view.findViewById(R.id.place_box);
-            placeBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    updatePlace(category);
-                    Session.putBoolean(mContext, "placeChange", true);
-                    Log.i("index", mIndex + "");
-                    ((Activity) mContext).setResult(RESULT);
-                    ((Activity)mContext).finish();
-                }
-            });
+            placeBox.setOnClickListener(new PlaceBoxListner(category));
 
         }
         return view;
+    }
+    class PlaceBoxListner implements View.OnClickListener {
+        Category category;
+        PlaceBoxListner(Category category) {
+            this.category = category;
+        }
+
+        @Override
+        public void onClick(View v) {
+            updatePlace(category);
+            Session.putBoolean(mContext, "placeChange", true);
+            Log.i("index", mIndex + "");
+            ((Activity) mContext).setResult(RESULT);
+            ((Activity)mContext).finish();
+
+        }
     }
     void updatePlace(Category category){
         try {

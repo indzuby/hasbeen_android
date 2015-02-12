@@ -29,7 +29,7 @@ public class GalleryUpload extends ActionBarActivity{
         mDayId = getIntent().getLongExtra("id",0);
         mTextDate = (TextView) findViewById(R.id.date);
         mTextDate.setText(getIntent().getStringExtra("date"));
-        mTextArea = (TextView) findViewById(R.id.area);
+        mTextArea = (TextView) findViewById(R.id.placeName);
 
         mTextArea.setText(getIntent().getStringExtra("area"));
 

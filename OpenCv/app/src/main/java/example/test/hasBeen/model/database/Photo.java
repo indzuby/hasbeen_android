@@ -1,11 +1,15 @@
 package example.test.hasBeen.model.database;
 
-import com.google.gson.annotations.SerializedName;
-import com.j256.ormlite.field.DataType;
+import android.graphics.Bitmap;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import java.util.Date;
+import java.util.List;
+
+import example.test.hasBeen.model.api.Comment;
+import example.test.hasBeen.model.api.Loved;
+import example.test.hasBeen.model.api.User;
 
 /**
  * Created by zuby on 2015-01-09.
@@ -52,8 +56,8 @@ public class Photo {
     float lat;
     @DatabaseField
     float lon;
-    @DatabaseField(columnName = "taken_date")
-    Long takenDate;
+    @DatabaseField(columnName = "taken_time")
+    Long takenTime;
     @DatabaseField(columnName = "day_id")
     Long dayId;
     @DatabaseField(columnName = "position_id")
@@ -222,21 +226,93 @@ public class Photo {
         this.lon = lon;
     }
 
-    public Long getTakenDate() {
-        return takenDate;
+    public Long getTakenTime() {
+        return takenTime;
     }
 
-    public void setTakenDate(Long takenDate) {
-        this.takenDate = takenDate;
+    public void setTakenTime(Long takenTime) {
+        this.takenTime = takenTime;
     }
-//    public HasBeenPhoto clone(HasBeenPhoto photo){
-//        HasBeenPhoto copyPhoto = new HasBeenPhoto();
-//        copyPhoto.setId(photo.getId());
-//        copyPhoto.setCategoryIconSuffix(photo.getCategoryIconSuffix());
-//        copyPhoto.setCategoryIconPrefix(photo.getCategoryIconPrefix());
-//        copyPhoto.setCity(photo.getCity());
-//        copyPhoto.setCategryName(photo.getCategryName());
-//
-//    }
 
+    int width;
+    int height;
+    boolean isPortrait;
+    User user;
+    int commentCount;
+    int loveCount;
+
+    public User getUser() {
+        return user;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public int getLoveCount() {
+        return loveCount;
+    }
+
+    public void setLoveCount(int loveCount) {
+        this.loveCount = loveCount;
+    }
+
+    public int getShareCount() {
+        return shareCount;
+    }
+
+    public Day getDay() {
+        return day;
+    }
+
+    public Place getPlace() {
+        return place;
+    }
+
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
+
+    int shareCount;
+    Day day;
+    Place place;
+    List<Comment> commentList;
+    Bitmap image;
+
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
+    Loved love;
+
+    public Loved getLove() {
+        return love;
+    }
+
+    String smallUrl;
+    String mediumUrl;
+    String largeUrl;
+
+    public String getSmallUrl() {
+        return smallUrl;
+    }
+
+    public String getMediumUrl() {
+        return mediumUrl;
+    }
+
+    public String getLargeUrl() {
+        return largeUrl;
+    }
+
+    public void setLove(Loved love) {
+        this.love = love;
+    }
 }

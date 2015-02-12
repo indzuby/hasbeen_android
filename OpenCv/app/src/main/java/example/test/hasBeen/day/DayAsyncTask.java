@@ -21,20 +21,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import example.test.hasBeen.model.api.DayApi;
-import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.model.database.Day;
+import example.test.hasBeen.model.database.Photo;
 import example.test.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-27.
  */
-public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
+public class DayAsyncTask extends AsyncTask<Object,Void,Day> {
     Handler mHandler;
 //    final static String URL = "https://gist.githubusercontent.com/indzuby/a22f8ae73de9c3e3339c/raw/7f07e297c50961151fe4b8a4839a65d7d176fa91/DayView";
     final static String URL = Session.DOMAIN+"days/";
 
     @Override
-    protected DayApi doInBackground(Object... params) {
+    protected Day doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         Uri uri;
@@ -58,7 +58,7 @@ public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
                 Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
                     @Override
                     public boolean shouldSkipField(FieldAttributes f) {
-                        if(f.getDeclaredClass() == PhotoApi.class){
+                        if(f.getDeclaredClass() == Photo.class){
                             if(f.getName().equals("day") || f.getName().equals("place"))
                                 return true;
                         }
@@ -72,7 +72,7 @@ public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
                         return false;
                     }
                 }).create();
-                DayApi day = gson.fromJson(reader, DayApi.class);
+                Day day = gson.fromJson(reader, Day.class);
                 content.close();
                 return day;
             }
@@ -84,7 +84,7 @@ public class DayAsyncTask extends AsyncTask<Object,Void,DayApi> {
     }
 
     @Override
-    protected void onPostExecute(DayApi day) {
+    protected void onPostExecute(Day day) {
 
         Message msg = mHandler.obtainMessage();
         if(day !=null) {

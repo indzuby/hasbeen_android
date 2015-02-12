@@ -20,8 +20,8 @@ import example.test.hasBeen.R;
 import example.test.hasBeen.comment.EnterCommentListner;
 import example.test.hasBeen.geolocation.MapRoute;
 import example.test.hasBeen.loved.LoveListner;
-import example.test.hasBeen.model.api.DayApi;
-import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.model.database.Day;
+import example.test.hasBeen.model.database.Photo;
 import example.test.hasBeen.profile.ProfileClickListner;
 import example.test.hasBeen.utils.CircleTransform;
 import example.test.hasBeen.utils.HasBeenDate;
@@ -33,7 +33,7 @@ import example.test.hasBeen.utils.Util;
 public class NewsFeedAdapter extends BaseAdapter {
     final static String MAP_URL = "http://maps.googleapis.com/maps/api/staticmap?size=480x240&scale=2&zoom=9&markers=icon:http://image.hasbeen.co/common/marker.png%7C";
     Context mContext;
-    List<DayApi> mFeeds;
+    List<Day> mFeeds;
     GoogleMap mMap;
     MapRoute mMapRoute;
     boolean flag;
@@ -55,7 +55,7 @@ public class NewsFeedAdapter extends BaseAdapter {
     }
 
     @Override
-    public DayApi getItem(int position) {
+    public Day getItem(int position) {
         return mFeeds.get(position);
     }
 
@@ -71,7 +71,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.newsfeed_feed, null);
         }
-        final DayApi feed = getItem(position);
+        final Day feed = getItem(position);
 
         TextView newsfeedName = (TextView) view.findViewById(R.id.newsfeedName);
         TextView newsfeedReason = (TextView) view.findViewById(R.id.newsfeedReason);
@@ -112,16 +112,22 @@ public class NewsFeedAdapter extends BaseAdapter {
         imageBox.addView(imageLayout);
 
         LinearLayout commentButton = (LinearLayout) view.findViewById(R.id.commentButton);
-        commentButton.setOnClickListener(new EnterCommentListner(mContext,"days",feed.getId()));
+        commentButton.setOnClickListener(new EnterCommentListner(mContext,"days",feed.getId(),feed.getCommentCount()));
         profileImage.setOnClickListener(new ProfileClickListner(mContext,feed.getUser().getId()));
         profileName.setOnClickListener(new ProfileClickListner(mContext,feed.getUser().getId()));
         LinearLayout loveButton = (LinearLayout) view.findViewById(R.id.loveButton);
         ImageView love = (ImageView) loveButton.findViewById(R.id.love);
-        if(feed.getLove()!=null)
+        TextView loveText = (TextView) loveButton.findViewById(R.id.loveText);
+        if(feed.getLove()!=null) {
             love.setImageResource(R.drawable.photo_like_pressed);
-        else
+            loveText.setTextColor(mContext.getResources().getColor(R.color.light_black));
+            loveText.setTypeface(medium);
+        }
+        else {
             love.setImageResource(R.drawable.photo_like);
-
+            loveText.setTextColor(mContext.getResources().getColor(R.color.light_gray));
+            loveText.setTypeface(regular);
+        }
         loveButton.setOnClickListener(new LoveListner(mContext,feed,"days",socialAction));
         date.setText(HasBeenDate.convertDate(feed.getCreatedTime()));
         placeName.setTypeface(medium);
@@ -133,10 +139,11 @@ public class NewsFeedAdapter extends BaseAdapter {
 
         ImageView mapThumbnail = (ImageView) view.findViewById(R.id.mapThumbnail);
         Glide.with(mContext).load(MAP_URL+feed.getMainPlace().getLat()+","+feed.getMainPlace().getLon()).into(mapThumbnail);
+        view.setBackground(mContext.getResources().getDrawable(R.drawable.long_pressed_selector));
         return view;
     }
 
-    protected View getImageLayout(int index, List<PhotoApi> photoList,FrameLayout imageBox) {
+    protected View getImageLayout(int index, List<Photo> photoList,FrameLayout imageBox) {
         View view;
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
         int k = 5;

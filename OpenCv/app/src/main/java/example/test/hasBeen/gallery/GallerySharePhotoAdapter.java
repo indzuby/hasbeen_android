@@ -20,11 +20,11 @@ import example.test.hasBeen.utils.Util;
  * Created by zuby on 2015-01-21.
  */
 public class GallerySharePhotoAdapter extends GalleryAdapter {
-    public boolean[] mChecked;
     int mCheckedCount;
-    public ImageButton[] mCheckedButton;
+    ImageButton[] mCheckedButton;
     boolean mCheckedAll = true;
     ToggleButton mCheckedAllButton = null;
+    Boolean[] isChecked;
     @Override
     public int getCount() {
         return super.getCount();
@@ -41,26 +41,27 @@ public class GallerySharePhotoAdapter extends GalleryAdapter {
     }
 
     public void setChecked() {
-        if(mCheckedAll) {
+        if (mCheckedAll) {
             mCheckedAll = false;
-            mCheckedCount = 0 ;
-            for(int i = 0 ; i<getCount();i++) {
-                mChecked[i] = false;
-                mCheckedButton[i].setVisibility(View.INVISIBLE);
+            mCheckedCount = 0;
+            for (int i = 0; i < getCount(); i++) {
+                isChecked[i] = false;
+                mCheckedButton[i].setVisibility(View.GONE);
             }
-        }else {
+        } else {
             mCheckedAll = true;
-            mCheckedCount = getCount() ;
-            for(int i = 0 ; i<getCount();i++) {
-                mChecked[i] = true;
+            mCheckedCount = getCount();
+            for (int i = 0; i < getCount(); i++) {
+                isChecked[i] = true;
                 mCheckedButton[i].setVisibility(View.VISIBLE);
             }
         }
 
     }
+
     @Override
-    public View getView(final int position, View view, ViewGroup parent) {
-        final Photo photo = getItem(position);
+    public View getView(int position, View view, ViewGroup parent) {
+        Photo photo = getItem(position);
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.gallery_share_view, null);
@@ -69,47 +70,56 @@ public class GallerySharePhotoAdapter extends GalleryAdapter {
         ImageView imageView = (ImageView) view.findViewById(R.id.view_gallery);
         int width = mContext.getResources().getDisplayMetrics().widthPixels;
 
-        int px = Util.pxFromDp(mContext, 2);
+        int px = Util.pxFromDp(mContext, 1);
         imageView.setPadding(px, px, px, px);
-        imageView.getLayoutParams().height = width * 4 / 15 - 12;
-        imageView.getLayoutParams().width = width * 4 / 15 - 12;
-        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        imageView.getLayoutParams().height = width * 4 / 15 - px * 2;
+        imageView.getLayoutParams().width = width * 4 / 15 - px * 2;
 
-        final ImageButton check = (ImageButton) view.findViewById(R.id.checked);
-        mCheckedButton[position] = check;
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mChecked[position]) {
-                    check.setVisibility(View.INVISIBLE);
-                    mCheckedCount-- ;
-                    if(mCheckedCount==0) {
-                        if(mCheckedAllButton!=null)
-                            mCheckedAllButton.setChecked(true);
-                    }
-                }
-                else {
-                    check.setVisibility(View.VISIBLE);
-                    mCheckedCount++ ;
-                    if(mCheckedAllButton!=null)
-                        mCheckedAllButton.setChecked(false);
-                }
-                mChecked[position] = !mChecked[position];
-            }
-        });
+        ImageButton check = (ImageButton) view.findViewById(R.id.checked);
+        if(mCheckedButton[position]==null)
+            mCheckedButton[position] = check;
+        imageView.setOnClickListener(new PhotoListener(position));
         Glide.with(mContext).load(photo.getPhotoPath())
                 .centerCrop()
-                .crossFade().placeholder(R.drawable.loading)
+                .crossFade().placeholder(R.drawable.placeholder)
                 .into(imageView);
         return view;
     }
 
-    public GallerySharePhotoAdapter(Context context, List imagePath) {
+    public GallerySharePhotoAdapter(Context context, List imagePath, Boolean[] isChecked) {
         super(context, imagePath);
-        mChecked = new boolean[imagePath.size()];
         mCheckedButton = new ImageButton[imagePath.size()];
-        for(int i = 0; i < mChecked.length;i++)
-            mChecked[i]= true;
         mCheckedCount = imagePath.size();
+        this.isChecked = isChecked;
+    }
+    class PhotoListener implements View.OnClickListener {
+        int position;
+
+        public PhotoListener(int position) {
+            this.position = position;
+        }
+        @Override
+        public void onClick(View v) {
+            ImageButton btn = mCheckedButton[position];
+            if (isChecked[position]) {
+                btn.setVisibility(View.GONE);
+                mCheckedCount--;
+                if (mCheckedCount == 0) {
+                    if (mCheckedAllButton != null) {
+                        mCheckedAllButton.setChecked(false);
+                        mCheckedAll = false;
+                    }
+                }
+                isChecked[position] = false;
+            } else {
+                btn.setVisibility(View.VISIBLE);
+                mCheckedCount++;
+                if (mCheckedAllButton != null) {
+                    mCheckedAllButton.setChecked(true);
+                    mCheckedAll = true;
+                }
+                isChecked[position] = true;
+            }
+        }
     }
 }

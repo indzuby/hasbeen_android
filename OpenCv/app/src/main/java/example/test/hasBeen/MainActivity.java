@@ -43,8 +43,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         showProgress();
+        setContentView(R.layout.activity_main);
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
@@ -77,7 +77,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         actionBar.addTab(profile);
         mPagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.setOffscreenPageLimit(5);
+        mViewPager.setOffscreenPageLimit(4);
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -87,7 +87,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         new Thread(new Runnable() {
             @Override
             public void run() {
-
                 initDatabase();
                 dialog.dismiss();
             }

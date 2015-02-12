@@ -3,6 +3,7 @@
     android:id="@+id/slidingLayout"
     android:orientation="vertical"
     android:layout_width="match_parent"
+    android:background="@color/day_background"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -28,6 +29,7 @@
         android:layout_height="24dp"
         android:textColor="@color/light_gray"
         android:paddingLeft="16dp"
+        android:background="@color/day_background"
         android:paddingTop="4dp"
         android:id="@+id/totalPhoto"
         android:paddingBottom="4dp"

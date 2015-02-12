@@ -3,22 +3,16 @@
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="@color/theme_white"
               android:weightSum="5">
     <LinearLayout
         android:layout_width="0dp"
+        android:background="@color/transparent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_marginTop="-2dp"
+        android:padding="8dp"
         android:id="@+id/searchView">
-        <View
-            android:layout_width="4dp"
-            android:layout_height="14dp"
-            android:layout_marginBottom="-4dp"
-            android:layout_gravity="center"
-            android:alpha="0.08"
-            android:background="#000000"/>
+
         <ImageView
             android:layout_width="32dp"
             android:layout_height="32dp"
@@ -26,13 +20,7 @@
             android:background="@drawable/gallery_icon_oval"
 
             android:id="@+id/placeIcon"/>
-        <ImageView
-            android:layout_width="4dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:alpha="0.08"
-            android:src="#000000"
-            />
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="0dp"
@@ -52,11 +40,10 @@
             android:layout_height="wrap_content"
             android:id="@+id/placeTime"
             android:textColor="@color/light_gray"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:text="10:22AM - 11:34Am"/>
         <it.sephiroth.android.library.widget.HListView
             android:id="@+id/hListView"
-            android:background="@color/theme_white"
             android:layout_width="match_parent"
             android:layout_marginBottom="16dp"
             android:layout_marginTop="11dp"

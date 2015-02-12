@@ -22,9 +22,9 @@ public class HasBeenDate {
     }
     public static boolean isBeforeThatDate(Photo lastPhoto , Photo currentPhoto){
         if(lastPhoto==null) return false;
-//        Log.i("photo time",lastPhoto.getTakenDate().getTime()+"");
-//        Log.i("photo time",currentPhoto.getTakenDate().getTime()+"");
-        if(currentPhoto.getTakenDate()- lastPhoto.getTakenDate() > 1000) return false;
+//        Log.i("photo time",lastPhoto.getTakenTime().getTime()+"");
+//        Log.i("photo time",currentPhoto.getTakenTime().getTime()+"");
+        if(currentPhoto.getTakenTime()- lastPhoto.getTakenTime() > 1000) return false;
         return true;
     }
 
@@ -32,8 +32,8 @@ public class HasBeenDate {
         return new Date(taken_date);
     }
     public static int calculateDateRange(Photo from, Photo to) {
-        LocalDateTime start = new LocalDateTime(from.getTakenDate());
-        LocalDateTime end = new LocalDateTime(to.getTakenDate());
+        LocalDateTime start = new LocalDateTime(from.getTakenTime());
+        LocalDateTime end = new LocalDateTime(to.getTakenTime());
         return Days.daysBetween(start.toLocalDate(), end.toLocalDate()).getDays();
     }
 
@@ -61,7 +61,7 @@ public class HasBeenDate {
     }
     public static boolean isTimeRangeInFive(Long a, Long b){
 
-        return Math.abs(a - b) < 3000;
+        return Math.abs(a - b) < 1000;
     }
     public static String getGapTime(Long time) {
         LocalDateTime currentTime = new LocalDateTime();

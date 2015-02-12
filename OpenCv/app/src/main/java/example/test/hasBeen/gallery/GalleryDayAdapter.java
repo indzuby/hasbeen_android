@@ -54,24 +54,21 @@ public class GalleryDayAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, final ViewGroup parent){
+    public View getView(int position, View convertView, final ViewGroup parent){
         View view = convertView;
-        final Day day = getItem(position);
+        Day day = getItem(position);
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.gallery_level_1_item, null);
         }
 
-        final TextView timeView = (TextView) view.findViewById(R.id.galleryL1TextDate);
-        final TextView areaView = (TextView) view.findViewById(R.id.galleryL1TextArea);
+        TextView timeView = (TextView) view.findViewById(R.id.date);
+        TextView areaView = (TextView) view.findViewById(R.id.placeName);
         ListView dayList = (ListView) view.findViewById(R.id.galleryL1DayView);
         try {
             List<Position> mPositionList;
-            if(day.getPositions()==null) {
-                mPositionList= database.selectPositionByDayId(day.getId());
-                day.setPositions(mPositionList);
-            }else
-                mPositionList = day.getPositions();
+            mPositionList= database.selectPositionByDayId(day.getId());
+
             String str;
             if (mPositionList.size() > 1)
                 str = database.selectPlaceNameByPlaceId(mPositionList.get(0).getPlaceId())
@@ -85,53 +82,51 @@ public class GalleryDayAdapter extends BaseAdapter {
             int width = mContext.getResources().getDisplayMetrics().widthPixels;
             int photoCnt = database.selectPhotoByDayid(day.getId());
 
-            GalleryPositionAdapter positionAdapter;
-            if(day.getPositionAdapter()==null) {
-                positionAdapter = new GalleryPositionAdapter(mContext, mPositionList);
-                day.setPositionAdapter(positionAdapter);
-            }else
-                positionAdapter = day.getPositionAdapter();
+            GalleryPositionAdapter positionAdapter = new GalleryPositionAdapter(mContext, mPositionList);
             ViewGroup.LayoutParams params = dayList.getLayoutParams();
             dayList.setAdapter(positionAdapter);
-            params.height = mPositionList.size() * Util.pxFromDp(mContext, 72) + (photoCnt) * (width * 4 / 15);
+            params.height = mPositionList.size() * (Util.pxFromDp(mContext, 48) + Util.pxFromDp(mContext, 10)) + (photoCnt) * (width * 4 / 15 - Util.pxFromDp(mContext, 2)) + (photoCnt-mPositionList.size())*Util.pxFromDp(mContext, 2);
             if (position == getCount() - 1) {
-                params.height = mContext.getResources().getDisplayMetrics().heightPixels - Util.pxFromDp(mContext, 96);
+                params.height = mContext.getResources().getDisplayMetrics().heightPixels - Util.pxFromDp(mContext, 128);
             }
+
+            timeView.setText(HasBeenDate.convertDate(day.getDate()));
+            mGalleryList.get(position).setArea(areaView.getText().toString());
+
+            RelativeLayout dayBox = (RelativeLayout) view.findViewById(R.id.day_top_box);
+            dayBox.setOnClickListener(new DayBoxListner(mPositionList,day));
         }catch (Exception e) {
             e.printStackTrace();
         }
-
-        timeView.setText(HasBeenDate.convertDate(day.getDate()));
-        mGalleryList.get(position).setArea(areaView.getText().toString());
-
-        RelativeLayout dayBox = (RelativeLayout) view.findViewById(R.id.day_top_box);
-        dayBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mMapRoute.createRouteDay(day.getId());
-//                mListview.setSelection(position);
-                parentSliding.collapsePane();
-//                mListview.smoothScrollToPositionFromTop(position,0,350);
-//                mListview.setSelection(position);
-                List<Position> mPositionList;
-                mPositionList = day.getPositions();
-                String str;
-                try {
-                    if (mPositionList.size() > 1)
-                        str = database.selectPlaceNameByPlaceId(mPositionList.get(0).getPlaceId())
-                                + " - "
-                                + database.selectPlaceNameByPlaceId(mPositionList.get(mPositionList.size() - 1).getPlaceId());
-                    else
-                        str = database.selectPlaceNameByPlaceId(mPositionList.get(0).getPlaceId());
-                    if(str.length()>35)
-                        str = str.substring(0,35)+"...";
-                    parentDate.setText(HasBeenDate.convertDate(day.getDate()));
-                    parentPlace.setText(str);
-                }catch (Exception e){
-                    e.printStackTrace();;
-                }
-            }
-        });
         return view;
+    }
+    class DayBoxListner implements View.OnClickListener {
+        List<Position> mPositionList;
+        Day mDay;
+        DayBoxListner(List<Position> mPositionList,Day day) {
+            this.mPositionList = mPositionList;
+            mDay = day;
+        }
+
+        @Override
+        public void onClick(View v) {
+            mMapRoute.createRouteDay(mDay.getId());
+            parentSliding.collapsePane();
+            String str;
+            try {
+                if (mPositionList.size() > 1)
+                    str = database.selectPlaceNameByPlaceId(mPositionList.get(0).getPlaceId())
+                            + " - "
+                            + database.selectPlaceNameByPlaceId(mPositionList.get(mPositionList.size() - 1).getPlaceId());
+                else
+                    str = database.selectPlaceNameByPlaceId(mPositionList.get(0).getPlaceId());
+                if(str.length()>35)
+                    str = str.substring(0,35)+"...";
+                parentDate.setText(HasBeenDate.convertDate(mDay.getDate()));
+                parentPlace.setText(str);
+            }catch (Exception e){
+                e.printStackTrace();;
+            }
+        }
     }
 }

@@ -140,6 +140,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         day.setMainPhotoId(photoId);
         updateDay(day);
     }
+
+    public void updateDayMainPlaceId(Long dayId,Long placeId) throws SQLException {
+        Day day = selectDay(dayId);
+        day.setMainPlaceId(placeId);
+        updateDay(day);
+    }
     public void updatePositionMainPhotoId(Long positionId,Long photoId) throws SQLException {
         Position position = selectPosition(positionId);
         position.setMainPhotoId(photoId);
@@ -147,7 +153,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
     public void updatePositionEndTime(Long positionId, Long endTime) throws SQLException {
         Position position = selectPosition(positionId);
-        position.setEndDate(endTime);
+        position.setEndTime(endTime);
         updatePosition(position);
     }
     public Long getPlaceIdByVenueId(String venueId) throws SQLException{
@@ -197,7 +203,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
     public List<Day> selectBeforeFiveDay() throws SQLException {
         Dao<Day,Long> dayDao = getDayDao();
-        Date date = new LocalDateTime(getLastPhoto().getTakenDate()).minusDays(5).toDate();
+        Date date = new LocalDateTime(getLastPhoto().getTakenTime()).minusDays(5).toDate();
         return dayDao.queryBuilder().orderBy("id",false).where().ge("date", date.getTime()).query();
     }
     public List<Position> selectPositionByDayId(Long dayId) throws SQLException{

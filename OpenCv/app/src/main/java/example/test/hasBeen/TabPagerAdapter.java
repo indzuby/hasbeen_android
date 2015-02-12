@@ -17,7 +17,8 @@ import example.test.hasBeen.search.SearchFragment;
 public class TabPagerAdapter extends FragmentPagerAdapter {
     Fragment mNewsFeed = null, mSearch = null, mGallery = null, mAlarm = null, mProfile = null;
 
-    public TabPagerAdapter(FragmentManager fm) {
+    public TabPagerAdapter(FragmentManager fm)
+    {
         super(fm);
     }
 

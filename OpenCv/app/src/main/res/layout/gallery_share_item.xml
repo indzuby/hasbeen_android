@@ -3,65 +3,55 @@
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="@color/list_background"
               android:weightSum="5">
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_marginTop="-2dp"
+        android:paddingTop="8dp"
         android:id="@+id/searchView">
-        <View
-            android:layout_width="2dp"
-            android:layout_height="20dp"
-            android:layout_marginBottom="-4dp"
-            android:layout_gravity="center"
-            android:background="@color/theme_color"/>
         <ToggleButton
             android:layout_width="32dp"
-            android:layout_height="32dp"
             android:textOn=""
             android:textOff=""
+            android:layout_height="32dp"
             android:layout_gravity="center|bottom"
+            android:checked="true"
             android:background="@drawable/share_check_all_effect"
-            android:id="@+id/galleryShareCheckedAll"/>
-            <View
-                android:layout_width="2dp"
-                android:layout_marginTop="-7dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/galleryShareLine"
-                android:layout_gravity="center"
-                android:background="@color/theme_color"
-                />
+            android:id="@+id/checkedAll"/>
      </LinearLayout>
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="4"
-        android:paddingTop="16dp"
         android:orientation="vertical">
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/area"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:text="Area 1, Norway"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/galleryShareTextTime"
-            android:textColor="@color/light_black"
-            android:textSize="10sp"
-            android:text="10:22AM - 11:34Am"/>
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:layout_height="48dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/placeName"
+                android:textColor="@color/light_black"
+                android:textSize="13sp"
+                android:text="Area 1, Norway"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/placeTime"
+                android:textColor="@color/light_gray"
+                android:textSize="12sp"
+                android:text="10:22AM - 11:34Am"/>
+        </LinearLayout>
 
         <GridView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/galleryShareGridView"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
+            android:id="@+id/gridView"
+            android:layout_marginBottom="10dp"
             android:scrollbars="none"
             android:numColumns="3"
             android:choiceMode="multipleChoiceModal"
@@ -69,6 +59,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:id="@+id/bottomLine"
             android:alpha="0.15"
             android:background="#000000"
             />

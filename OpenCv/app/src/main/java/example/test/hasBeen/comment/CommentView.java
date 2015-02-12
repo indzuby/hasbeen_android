@@ -8,8 +8,10 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -19,6 +21,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import example.test.hasBeen.R;
@@ -41,35 +45,105 @@ public class CommentView extends ActionBarActivity {
     String mType;
     Long mId;
     String mAccessToken;
+    Long mLastCommentId;
+    int mCommentCount;
+    boolean hasMoreComment = false;
+    View mMoreComment;
+    CommentDialog mCommentDialog;
+    Long mMyid;
+    Handler removeHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(msg.what==0) {
+                mCommentDialog.dismiss();
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mType = getIntent().getStringExtra("type");
         mId = getIntent().getLongExtra("id", 0);
         mAccessToken = Session.getString(this, "accessToken", null);
+        mMyid = Session.getLong(this, "myUserid", 0);
+        mCommentCount = getIntent().getIntExtra("commentCount",0);
         new CommentAsyncTask(handler).execute(mAccessToken,mType,mId);
         setContentView(R.layout.comments);
+        init();
     }
     Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if(msg.what==0) {
-                mCommentList = (List) msg.obj;
-                init();
+                List<Comment> comments = (List) msg.obj;
+                Collections.reverse(comments);
+                for(Comment comment : comments) {
+                    mCommentList.add(0,comment);
+                    mLastCommentId = comment.getId();
+                }
+                mCommentAdapter.notifyDataSetChanged();
+                initMoreComment();
             }
         }
     };
+    protected void initMoreComment(){
+        if(mCommentList.size()<mCommentCount && !hasMoreComment) {
+            hasMoreComment = true;
+            mMoreComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new CommentAsyncTask(handler).execute(mAccessToken,mType,mId,mLastCommentId);
+                }
+            });
+            mListView.addHeaderView(mMoreComment);
+
+        }else if(mCommentList.size() == mCommentCount) {
+            mListView.removeHeaderView(mMoreComment);
+        }
+    }
     protected void init(){
         initActionBar();
         mListView = (ListView) findViewById(R.id.commetList);
+
+        mCommentList = new ArrayList<>();
         mCommentAdapter = new CommnetAdapter(this,mCommentList);
+        mMoreComment = LayoutInflater.from(getBaseContext()).inflate(R.layout.more_comments, null);
         View enterView= LayoutInflater.from(this).inflate(R.layout.comment_footer, null, false);
         mListView.addFooterView(enterView);
         mListView.setAdapter(mCommentAdapter);
         mListView.setSelection(mListView.getCount());
         mEnterComment = (EditText) enterView.findViewById(R.id.enterComment);
         mEnterComment.requestFocus();
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                registerForContextMenu(view);
+                Log.v("long clicked", "pos: " + position);
+                final int index;
+                if(hasMoreComment)
+                    index = position-1;
+                else 
+                    index = position;
+                if(mCommentList.get(index).getUser().getId() == mMyid) {
+                    final Long commentid = mCommentList.get(index).getId();
+                    View.OnClickListener del = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            new EditCommentAsyncTask(removeHandler).execute(mAccessToken, commentid, "delete");
+                            mCommentList.remove(index);
+                            mCommentCount--;
+                            mCommentAdapter.notifyDataSetChanged();
+                            Toast.makeText(getBaseContext(), "Complete remove", Toast.LENGTH_LONG).show();
+                        }
+                    };
+                    mCommentDialog = new CommentDialog(CommentView.this, del);
+                    mCommentDialog.show();
+                }
+                return true;
+            }
+        });
         ImageView send = (ImageView) enterView.findViewById(R.id.send);
         send.setOnClickListener(new View.OnClickListener() {
             boolean flag = false;

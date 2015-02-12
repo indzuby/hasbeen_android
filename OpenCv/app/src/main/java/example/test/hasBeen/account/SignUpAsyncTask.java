@@ -7,7 +7,6 @@ import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
@@ -15,8 +14,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
-
-import java.io.InputStream;
 
 import example.test.hasBeen.utils.Session;
 
@@ -44,10 +41,10 @@ public class SignUpAsyncTask extends AsyncTask<String, Void, String> {
                 uri = Uri.parse(DOMAIN + SIGNUPSOCIAL);
 
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(uri.toString());
-            httppost.addHeader("User-Agent","Android");
-            httppost.addHeader("Content-Type","application/json");
-            httppost.addHeader("Authorization","Basic "+ Base64.encodeToString(AUTHORIZATION.getBytes(),Base64.NO_WRAP));
+            HttpPost post = new HttpPost(uri.toString());
+            post.addHeader("User-Agent", "Android");
+            post.addHeader("Content-Type", "application/json");
+            post.addHeader("Authorization", "Basic " + Base64.encodeToString(AUTHORIZATION.getBytes(), Base64.NO_WRAP));
             // Add your data
             JSONObject param = new JSONObject();
             if(params[0].equals(EMAIL)) {
@@ -59,19 +56,19 @@ public class SignUpAsyncTask extends AsyncTask<String, Void, String> {
                 param.put("socialType", "FACEBOOK");
                 param.put("token", params[1]);
             }
-            httppost.setEntity(new StringEntity(param.toString()));
+            post.setEntity(new StringEntity(param.toString()));
             // Execute HTTP Post Request
 
             Log.i("Request", param.toString());
-            response = httpclient.execute(httppost);
+            response = httpclient.execute(post);
             StatusLine statusLine = response.getStatusLine();
 
             if (statusLine.getStatusCode() == 201) {
                 Log.i("Sign up","Success");
-                HttpEntity entity = response.getEntity();
-                InputStream content = entity.getContent();
-
-                return params[1];
+                return "success";
+            }else if(statusLine.getStatusCode() == 301) {
+                Log.i("Sign up","exist account");
+                return "exist";
             }
 
 

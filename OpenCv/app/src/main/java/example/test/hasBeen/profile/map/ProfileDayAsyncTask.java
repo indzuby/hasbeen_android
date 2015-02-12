@@ -24,19 +24,19 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import example.test.hasBeen.model.api.DayApi;
-import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.model.database.Day;
+import example.test.hasBeen.model.database.Photo;
 import example.test.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-27.
  */
-public class ProfileDayAsyncTask extends AsyncTask<Object,Void,List<DayApi>> {
+public class ProfileDayAsyncTask extends AsyncTask<Object,Void,List<Day>> {
     Handler mHandler;
 //    final static String URL = "https://gist.githubusercontent.com/indzuby/c9e87b33ca65eac93065/raw/4000d9c125b1e56c60f77523dc806e4a9cdb303d/NewsFeed";
     final static String URL = Session.DOMAIN+"users/";
     @Override
-    protected List<DayApi> doInBackground(Object... params) {
+    protected List<Day> doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         Uri uri;
@@ -59,7 +59,7 @@ public class ProfileDayAsyncTask extends AsyncTask<Object,Void,List<DayApi>> {
                 Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
                     @Override
                     public boolean shouldSkipField(FieldAttributes f) {
-                        if(f.getDeclaredClass() == PhotoApi.class){
+                        if(f.getDeclaredClass() == Photo.class){
                             if(f.getName().equals("day") || f.getName().equals("place"))
                                 return true;
                         }
@@ -73,8 +73,8 @@ public class ProfileDayAsyncTask extends AsyncTask<Object,Void,List<DayApi>> {
                         return false;
                     }
                 }).create();
-                Type listType = new TypeToken<List<DayApi>>(){}.getType();
-                List<DayApi> posts = gson.fromJson(reader, listType);
+                Type listType = new TypeToken<List<Day>>(){}.getType();
+                List<Day> posts = gson.fromJson(reader, listType);
                 content.close();
                 return posts;
             }
@@ -86,7 +86,7 @@ public class ProfileDayAsyncTask extends AsyncTask<Object,Void,List<DayApi>> {
     }
 
     @Override
-    protected void onPostExecute(List<DayApi> days) {
+    protected void onPostExecute(List<Day> days) {
 
         Message msg = mHandler.obtainMessage();
         if(days!=null) {

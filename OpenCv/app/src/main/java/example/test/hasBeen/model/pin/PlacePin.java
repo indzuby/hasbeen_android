@@ -9,18 +9,18 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
-import example.test.hasBeen.model.api.PlaceApi;
+import example.test.hasBeen.model.database.Place;
 import example.test.hasBeen.utils.Util;
 
 /**
  * Created by zuby on 2015-01-30.
  */
 public class PlacePin implements ClusterItem{
-    PlaceApi mPlace;
+    Place mPlace;
     private LatLng mPosition;
     Bitmap image;
 
-    public PlaceApi getmPlace() {
+    public Place getmPlace() {
         return mPlace;
     }
 
@@ -28,7 +28,7 @@ public class PlacePin implements ClusterItem{
         return image;
     }
 
-    public PlacePin(final PlaceApi place, Context context) {
+    public PlacePin(final Place place, Context context) {
         mPlace = place;
         mPosition = new LatLng(place.getLat(),place.getLon());
         if(mPlace.getImage()!=null)

@@ -2,63 +2,43 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/list_background"
+    android:background="@color/theme_white"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/day_top_box"
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:alpha="0.8"
-        android:background="@color/day_background"
-        android:orientation="vertical">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignParentTop="true"
-            android:alpha="0.08"
-            android:background="#000000" />
-
-        <TextView
-            android:id="@+id/galleryL1TextDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingTop="16dp"
-            android:text="2015년 1월 1일"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/theme_color"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/galleryL1TextArea"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/galleryL1TextDate"
-            android:paddingLeft="16dp"
-            android:text="Area1 - Araea7"
-            android:textColor="@color/light_black"
-            android:textSize="13sp" />
-    </RelativeLayout>
+    <include layout="@layout/gallery_title_box" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/day_top_box">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:weightSum="5"
+            android:layout_height="match_parent">
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+
+                android:layout_height="match_parent">
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:alpha="0.08"
+                    android:background="#000000"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
         <ListView
             android:id="@+id/galleryL1DayView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/transparent"
             android:layout_below="@+id/day_top_box"
             android:divider="#00000000"
             android:scrollbars="none" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/actionbar_shadow" />
     </FrameLayout>
     <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->

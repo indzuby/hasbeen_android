@@ -17,6 +17,8 @@ import android.widget.ListView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,7 @@ import java.util.List;
 import example.test.hasBeen.R;
 import example.test.hasBeen.day.DayView;
 import example.test.hasBeen.geolocation.MapRoute;
-import example.test.hasBeen.model.api.DayApi;
+import example.test.hasBeen.model.database.Day;
 import example.test.hasBeen.utils.Session;
 import example.test.hasBeen.utils.SlidingUpPanelLayout;
 
@@ -41,35 +43,45 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
     private View mTransparentHeaderView;
     private View mTransparentView;
     private View mSpaceView;
-    private ListView mListView;
+//    private ListView mListView;
     private NewsFeedAdapter mFeedAdapter;
-    List<DayApi> mFeeds;
+    List<Day> mFeeds;
     FrameLayout mMapBox;
     MapRoute mapRoute ;
     boolean flag;
     Long lastUpdateTime;
+    private PullToRefreshListView mListView;
     void init() {
 
-        mListView = (ListView) mView.findViewById(R.id.list);
+        mListView = (PullToRefreshListView) mView.findViewById(R.id.list);
         mListView.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
 
         mFeeds = new ArrayList<>();
         mFeedAdapter = new NewsFeedAdapter(getActivity(), mFeeds);
 //        mListView.addHeaderView(mTransparentHeaderView);
-        mListView.setAdapter(mFeedAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (!flag) {
-                    Log.i(TAG, mFeeds.get(position).getId() + "");
+                    int index = position-1;
+                    Log.i(TAG, mFeeds.get(index).getId() + "");
                     flag = true;
                     Intent intent = new Intent(getActivity(), DayView.class);
-                    intent.putExtra("dayId", mFeeds.get(position).getId());
+                    intent.putExtra("dayId", mFeeds.get(index).getId());
                     startActivity(intent);
                     flag = false;
                 }
             }
         });
+        mListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
+            @Override
+            public void onLastItemVisible() {
+                showProgress();
+                new NewsFeedAsyncTask(handler).execute(mAccessToekn,lastUpdateTime);
+            }
+        });
+        ListView actualListView = mListView.getRefreshableView();
+        actualListView.setAdapter(mFeedAdapter);
 //        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
 //            boolean loading = false;
 //            @Override
@@ -123,7 +135,7 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    final List<DayApi> feeds =  (List<DayApi>)msg.obj;
+                    final List<Day> feeds =  (List<Day>)msg.obj;
                     Log.i(TAG, feeds.size() + "");
                     new Thread(new Runnable() {
                         @Override
@@ -132,7 +144,7 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        for(DayApi feed : feeds) {
+                                        for(Day feed : feeds) {
                                             mFeeds.add(feed);
                                             mFeedAdapter.notifyDataSetChanged();
                                             lastUpdateTime = feed.getUpdatedTime();
@@ -197,7 +209,7 @@ public class NewsFeedFragment extends Fragment implements SlidingUpPanelLayout.P
     protected void showProgress() {
         dialog = new ProgressDialog(getActivity());
         dialog.setCancelable(true);
-        dialog.setMessage("Writting on database");
+        dialog.setMessage("Loading the NewsFeeds");
         dialog.setProgress(100);
         dialog.show();
     }

@@ -9,17 +9,17 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
-import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.model.database.Photo;
 import example.test.hasBeen.utils.Util;
 
 /**
  * Created by zuby on 2015-01-30.
  */
 public class PhotoPin  implements ClusterItem{
-    PhotoApi mPhoto;
+    Photo mPhoto;
     private LatLng mPosition;
     Bitmap image;
-    public PhotoApi getPhoto() {
+    public Photo getPhoto() {
         return mPhoto;
     }
 
@@ -27,7 +27,7 @@ public class PhotoPin  implements ClusterItem{
         return image;
     }
 
-    public PhotoPin(final PhotoApi photo,Context context) {
+    public PhotoPin(final Photo photo,Context context) {
         mPhoto = photo;
         mPosition = new LatLng(photo.getLat(),photo.getLon());
         if(mPhoto.getImage()!=null)

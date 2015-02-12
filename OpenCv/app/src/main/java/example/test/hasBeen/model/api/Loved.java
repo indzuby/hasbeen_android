@@ -1,23 +1,26 @@
 package example.test.hasBeen.model.api;
 
+import example.test.hasBeen.model.database.Day;
+import example.test.hasBeen.model.database.Photo;
+
 /**
  * Created by 주현 on 2015-02-06.
  */
 public class Loved {
     Long id;
-    PhotoApi photo;
-    DayApi day;
+    Photo photo;
+    Day day;
     String type;
 
     public Long getId() {
         return id;
     }
 
-    public PhotoApi getPhoto() {
+    public Photo getPhoto() {
         return photo;
     }
 
-    public DayApi getDay() {
+    public Day getDay() {
         return day;
     }
 

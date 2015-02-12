@@ -1,12 +1,14 @@
 package example.test.hasBeen.model.database;
 
+import android.graphics.Bitmap;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.List;
 
-import example.test.hasBeen.gallery.GalleryPositionAdapter;
 import example.test.hasBeen.model.api.Comment;
+import example.test.hasBeen.model.api.Loved;
 import example.test.hasBeen.model.api.User;
 
 /**
@@ -30,6 +32,20 @@ public class Day {
     String city;
     @DatabaseField(columnName = "main_photo_id")
     Long mainPhotoId;
+    @DatabaseField(columnName = "main_place_id")
+    Long mainPlaceId;
+
+    public Long getMainPlaceId() {
+        return mainPlaceId;
+    }
+
+    public void setMainPlaceId(Long mainPlaceId) {
+        this.mainPlaceId = mainPlaceId;
+    }
+
+    public void setMainPhoto(Photo mainPhoto) {
+        this.mainPhoto = mainPhoto;
+    }
 
     String area;
 
@@ -105,27 +121,7 @@ public class Day {
         this.mainPhotoId = mainPhotoId;
     }
 
-
-
     public Day() {
-    }
-    List<Position> positions;
-
-    public List<Position> getPositions() {
-        return positions;
-    }
-
-    public void setPositions(List<Position> positions) {
-        this.positions = positions;
-    }
-    GalleryPositionAdapter positionAdapter;
-
-    public GalleryPositionAdapter getPositionAdapter() {
-        return positionAdapter;
-    }
-
-    public void setPositionAdapter(GalleryPositionAdapter positionAdapter) {
-        this.positionAdapter = positionAdapter;
     }
     User user;
     Long createdTime;
@@ -134,8 +130,12 @@ public class Day {
     int shareCount;
     int itineraryIndex;
     Place mainPlace;
-    Photo mainPhoto;
+    User following;
+    String newsFeedType;
+    List<Photo> photoList;
     List<Position> positionList;
+    List<Comment> commentList;
+    Long updatedTime ;
 
     public User getUser() {
         return user;
@@ -193,12 +193,28 @@ public class Day {
         this.mainPlace = mainPlace;
     }
 
-    public Photo getMainPhoto() {
-        return mainPhoto;
+    public User getFollowing() {
+        return following;
     }
 
-    public void setMainPhoto(Photo mainPhoto) {
-        this.mainPhoto = mainPhoto;
+    public void setFollowing(User following) {
+        this.following = following;
+    }
+
+    public String getNewsFeedType() {
+        return newsFeedType;
+    }
+
+    public void setNewsFeedType(String newsFeedType) {
+        this.newsFeedType = newsFeedType;
+    }
+
+    public List<Photo> getPhotoList() {
+        return photoList;
+    }
+
+    public void setPhotoList(List<Photo> photoList) {
+        this.photoList = photoList;
     }
 
     public List<Position> getPositionList() {
@@ -207,6 +223,55 @@ public class Day {
 
     public void setPositionList(List<Position> positionList) {
         this.positionList = positionList;
+    }
+
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
+    }
+
+    public Long getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public void setUpdatedTime(Long updatedTime) {
+        this.updatedTime = updatedTime;
+    }
+    Photo mainPhoto;
+
+    public Photo getMainPhoto() {
+        return mainPhoto;
+    }
+    Bitmap image;
+
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
+    }
+
+    Loved love;
+
+    public Loved getLove() {
+        return love;
+    }
+
+    public void setLove(Loved love) {
+        this.love = love;
+    }
+   Boolean[] isCheckedPosition;
+
+    public Boolean[] getIsCheckedPosition() {
+        return isCheckedPosition;
+    }
+
+    public void setIsCheckedPosition(Boolean[] isCheckedPosition) {
+        this.isCheckedPosition = isCheckedPosition;
     }
 
 }

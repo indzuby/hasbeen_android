@@ -122,6 +122,7 @@
     <orderEntry type="library" exported="" name="recyclerview-v7-21.0.0" level="project" />
     <orderEntry type="library" exported="" name="bolts-android-1.1.4" level="project" />
     <orderEntry type="module" module-name="opencv" exported="" />
+    <orderEntry type="module" module-name="pullToRefresh" exported="" />
   </component>
 </module>
 

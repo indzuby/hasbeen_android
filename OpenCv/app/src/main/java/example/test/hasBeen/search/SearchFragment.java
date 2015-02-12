@@ -25,8 +25,8 @@ import java.util.List;
 
 import example.test.hasBeen.R;
 import example.test.hasBeen.geolocation.MapRoute;
-import example.test.hasBeen.model.api.DayApi;
-import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.model.database.Day;
+import example.test.hasBeen.model.database.Photo;
 import example.test.hasBeen.utils.Session;
 
 /**
@@ -35,8 +35,8 @@ import example.test.hasBeen.utils.Session;
 public class SearchFragment extends Fragment {
     final static int DAY = 1;
     final static int PHOTO = 2;
-    List<DayApi> mDays;
-    List<PhotoApi> mPhotos;
+    List<Day> mDays;
+    List<Photo> mPhotos;
     View mView;
     GoogleMap mMap;
     SupportMapFragment mMapFragment;
@@ -70,9 +70,10 @@ public class SearchFragment extends Fragment {
                 mMapRoute = new MapRoute(map, getActivity());
                 UiSettings setting = map.getUiSettings();
                 setting.setZoomControlsEnabled(true);
-                setting.setAllGesturesEnabled(false);
+                setting.setRotateGesturesEnabled(false);
+                setting.setAllGesturesEnabled(true);
                 setting.setMyLocationButtonEnabled(false);
-                map.setMyLocationEnabled(true);
+                map.setMyLocationEnabled(false);
             }
         });
         mDayButton = (TextView) mView.findViewById(R.id.dayButton);
@@ -106,7 +107,7 @@ public class SearchFragment extends Fragment {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mDays = (List<DayApi>) msg.obj;
+                    mDays = (List<Day>) msg.obj;
                     dayRendering();
                     break;
                 case -1:
@@ -122,7 +123,7 @@ public class SearchFragment extends Fragment {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mPhotos = (List<PhotoApi>) msg.obj;
+                    mPhotos = (List<Photo>) msg.obj;
                     photoRendering();
                     break;
                 case -1:

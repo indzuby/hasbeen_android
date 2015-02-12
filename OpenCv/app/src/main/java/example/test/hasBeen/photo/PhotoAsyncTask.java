@@ -21,20 +21,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import example.test.hasBeen.model.api.DayApi;
-import example.test.hasBeen.model.api.PhotoApi;
-import example.test.hasBeen.model.api.PlaceApi;
+import example.test.hasBeen.model.database.Day;
+import example.test.hasBeen.model.database.Photo;
+import example.test.hasBeen.model.database.Place;
 import example.test.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-29.
  */
-public class PhotoAsyncTask extends AsyncTask<Object,Void,PhotoApi> {
+public class PhotoAsyncTask extends AsyncTask<Object,Void,Photo> {
     Handler mHandler;
 //    final static String URL = "https://gist.githubusercontent.com/indzuby/ca980f3c37f79d0156be/raw/548b25ee536bb5ec5f1941a0cb05bdb9ba845ed1/PhotoView";
     final static String URL = Session.DOMAIN+"photos/";
     @Override
-    protected PhotoApi doInBackground(Object... params) {
+    protected Photo doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         Uri uri;
@@ -59,7 +59,7 @@ public class PhotoAsyncTask extends AsyncTask<Object,Void,PhotoApi> {
                     @Override
                     public boolean shouldSkipField(FieldAttributes f) {
                         if(f.getName().equals("mainPhoto") ){
-                            if(f.getDeclaringClass() == DayApi.class || f.getDeclaringClass() == PlaceApi.class)
+                            if(f.getDeclaringClass() == Day.class || f.getDeclaringClass() == Place.class)
                                 return true;
                         }
                         if(f.getName().equals("coverPhoto"))
@@ -72,7 +72,7 @@ public class PhotoAsyncTask extends AsyncTask<Object,Void,PhotoApi> {
                         return false;
                     }
                 }).create();
-                PhotoApi day = gson.fromJson(reader, PhotoApi.class);
+                Photo day = gson.fromJson(reader, Photo.class);
                 content.close();
                 return day;
             }
@@ -84,7 +84,7 @@ public class PhotoAsyncTask extends AsyncTask<Object,Void,PhotoApi> {
     }
 
     @Override
-    protected void onPostExecute(PhotoApi day) {
+    protected void onPostExecute(Photo day) {
 
         Message msg = mHandler.obtainMessage();
         if(day !=null) {

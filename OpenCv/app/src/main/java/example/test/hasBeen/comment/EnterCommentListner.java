@@ -12,11 +12,12 @@ public class EnterCommentListner implements View.OnClickListener{
     String type;
     Long id;
     boolean flag = false;
-
-    public EnterCommentListner(Context mContext, String type, Long id) {
+    int mCount;
+    public EnterCommentListner(Context mContext, String type, Long id,int count) {
         this.mContext = mContext;
         this.type = type;
         this.id = id;
+        this.mCount = count;
     }
 
     @Override
@@ -27,6 +28,7 @@ public class EnterCommentListner implements View.OnClickListener{
             Intent intent = new Intent(mContext, CommentView.class);
             intent.putExtra("type",type);
             intent.putExtra("id",id);
+            intent.putExtra("commentCount",mCount);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mContext.startActivity(intent);
             flag = false;

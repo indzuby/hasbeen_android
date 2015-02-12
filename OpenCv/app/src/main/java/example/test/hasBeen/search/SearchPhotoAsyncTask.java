@@ -24,18 +24,18 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.model.database.Photo;
 import example.test.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-29.
  */
-public class SearchPhotoAsyncTask extends AsyncTask<Object,Void,List<PhotoApi>> {
+public class SearchPhotoAsyncTask extends AsyncTask<Object,Void,List<Photo>> {
     Handler mHandler;
 //    final static String URL = "https://gist.githubusercontent.com/indzuby/01dd9766562e90d0af7e/raw/d4aca1859f83a9599dbe15541624b1499aae8ea2/photoNearBy";
     final static String URL = Session.DOMAIN+"hasBeen/photos";
     @Override
-    protected List<PhotoApi> doInBackground(Object... params) {
+    protected List<Photo> doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         Uri uri;
@@ -72,8 +72,8 @@ public class SearchPhotoAsyncTask extends AsyncTask<Object,Void,List<PhotoApi>> 
                         return false;
                     }
                 }).create();
-                Type listType = new TypeToken<List<PhotoApi>>(){}.getType();
-                List<PhotoApi> photos = gson.fromJson(reader, listType);
+                Type listType = new TypeToken<List<Photo>>(){}.getType();
+                List<Photo> photos = gson.fromJson(reader, listType);
                 content.close();
                 return photos;
             }
@@ -85,7 +85,7 @@ public class SearchPhotoAsyncTask extends AsyncTask<Object,Void,List<PhotoApi>> 
     }
 
     @Override
-    protected void onPostExecute(List<PhotoApi>  photos) {
+    protected void onPostExecute(List<Photo>  photos) {
 
         Message msg = mHandler.obtainMessage();
         if(photos !=null) {

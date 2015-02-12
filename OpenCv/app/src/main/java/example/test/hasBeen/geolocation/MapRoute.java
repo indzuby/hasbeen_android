@@ -20,10 +20,8 @@ import java.util.List;
 import example.test.hasBeen.R;
 import example.test.hasBeen.database.DatabaseHelper;
 import example.test.hasBeen.day.DayView;
-import example.test.hasBeen.model.api.DayApi;
-import example.test.hasBeen.model.api.PhotoApi;
-import example.test.hasBeen.model.api.PlaceApi;
-import example.test.hasBeen.model.api.PositionApi;
+import example.test.hasBeen.model.database.Day;
+import example.test.hasBeen.model.database.Photo;
 import example.test.hasBeen.model.database.Place;
 import example.test.hasBeen.model.database.Position;
 import example.test.hasBeen.model.pin.DayPin;
@@ -69,13 +67,13 @@ public class MapRoute {
             e.printStackTrace();
         }
     }
-    public void createRouteDay(List<PositionApi> positions) {
+    public void createRouteDay(List<Position> positions) {
         mMap.clear();
         mMap.setOnCameraChangeListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
-        List<PlaceApi> placeList = new ArrayList<>();
-        for(PositionApi position : positions) {
-            PlaceApi place = position.getPlace();
+        List<Place> placeList = new ArrayList<>();
+        for(Position position : positions) {
+            Place place = position.getPlace();
             if(place==null) continue;
             placeList.add(place);
 //            Bitmap icon =PlaceMarker.getMarker(mContext, place.getCategoryIconPrefix() + "88" + place.getCategoryIconSuffix()).makeIcon();
@@ -91,11 +89,10 @@ public class MapRoute {
         }
 
     }
-    public void addMarkerCluster(List<DayApi> days){
+    public void addMarkerCluster(List<Day> days){
         mMap.clear();
         ClusterManager<DayPin> clusterManager = new ClusterManager<DayPin>(mContext,mMap);
         clusterManager.setRenderer(new DayMarker(mContext,mMap,clusterManager));
-
         mMap.setOnCameraChangeListener(clusterManager);
         mMap.setOnMarkerClickListener(clusterManager);
         clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<DayPin>() {
@@ -123,13 +120,13 @@ public class MapRoute {
                 return true;
             }
         });
-        for(DayApi day : days) {
+        for(Day day : days) {
 //            Log.i("cluter location", location.latitude + "," + location.longitude);
             clusterManager.addItem(new DayPin(day,mContext));
         }
         clusterManager.cluster();
     }
-    public void addMarkerClusterPhoto(List<PhotoApi> photos) {
+    public void addMarkerClusterPhoto(List<Photo> photos) {
         mMap.clear();
         ClusterManager<PhotoPin> clusterManager = new ClusterManager<PhotoPin>(mContext,mMap);
         clusterManager.setRenderer(new PhotoMarker(mContext,mMap,clusterManager));
@@ -160,7 +157,7 @@ public class MapRoute {
                 return true;
             }
         });
-        for(PhotoApi photo : photos) {
+        for(Photo photo : photos) {
             clusterManager.addItem(new PhotoPin(photo,mContext));
         }
         clusterManager.cluster();

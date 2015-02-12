@@ -20,6 +20,11 @@ public class Session {
         editor.putBoolean(key,value);
         editor.commit();
     }
+    public static void putLong(Context context,String key , long value){
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putLong(key,value);
+        editor.commit();
+    }
     public static void remove(Context context, String key){
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.remove(key);
@@ -32,5 +37,9 @@ public class Session {
     public static boolean getBoolean(Context context, String key, boolean defValue) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         return pref.getBoolean(key,defValue);
+    }
+    public static long getLong(Context context, String key, long defValue) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        return pref.getLong(key,defValue);
     }
 }

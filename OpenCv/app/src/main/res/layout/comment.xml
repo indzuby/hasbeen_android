@@ -2,8 +2,6 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/theme_white"
-    android:layout_below="@+id/full_size_photo"
     android:padding="8dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -30,9 +28,10 @@
         android:layout_toRightOf="@+id/profileImage"
         />
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/contents"
+        android:layout_marginRight="8dp"
         android:text="name"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="2dp"
@@ -48,7 +47,7 @@
         android:textSize="12sp"
         android:text="time"
         android:id="@+id/commentTime"
-        android:layout_alignTop="@+id/profileName"
+        android:layout_alignBottom="@+id/profileName"
         android:layout_toRightOf="@+id/profileName"
         />
 

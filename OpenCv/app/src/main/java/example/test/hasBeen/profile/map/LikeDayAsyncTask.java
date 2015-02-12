@@ -25,7 +25,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import example.test.hasBeen.model.api.Loved;
-import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.model.database.Photo;
 import example.test.hasBeen.utils.Session;
 
 /**
@@ -59,7 +59,7 @@ public class LikeDayAsyncTask extends AsyncTask<Object,Void,List<Loved>> {
                 Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
                     @Override
                     public boolean shouldSkipField(FieldAttributes f) {
-                        if(f.getDeclaredClass() == PhotoApi.class){
+                        if(f.getDeclaredClass() == Photo.class){
                             if(f.getName().equals("day") || f.getName().equals("place"))
                                 return true;
                         }

@@ -27,10 +27,10 @@ import java.util.List;
 
 import example.test.hasBeen.R;
 import example.test.hasBeen.geolocation.MapRoute;
-import example.test.hasBeen.model.api.DayApi;
 import example.test.hasBeen.model.api.Loved;
-import example.test.hasBeen.model.api.PhotoApi;
 import example.test.hasBeen.model.api.User;
+import example.test.hasBeen.model.database.Day;
+import example.test.hasBeen.model.database.Photo;
 import example.test.hasBeen.profile.follow.FollowView;
 import example.test.hasBeen.profile.map.LikeDayAsyncTask;
 import example.test.hasBeen.profile.map.LikePhotoAsyncTask;
@@ -55,10 +55,10 @@ public class ProfileFragment extends Fragment {
     SupportMapFragment mMapFragment;
     MapRoute mMapRoute;
 
-    List<DayApi> mDays;
-    List<PhotoApi> mPhotos;
-    List<DayApi> mLikeDays;
-    List<PhotoApi> mLikePhotos;
+    List<Day> mDays;
+    List<Photo> mPhotos;
+    List<Day> mLikeDays;
+    List<Photo> mLikePhotos;
 
     String mAccessToken;
 
@@ -83,6 +83,7 @@ public class ProfileFragment extends Fragment {
             switch (msg.what) {
                 case 0:
                     mUser = (User) msg.obj;
+                    Session.putLong(getActivity(),"myUserid",mUser.getId());
                     initProfile();
                     mapRendering(DAY);
                     break;
@@ -98,7 +99,7 @@ public class ProfileFragment extends Fragment {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mDays = (List<DayApi>) msg.obj;
+                    mDays = (List<Day>) msg.obj;
                     dayRendering(mDays);
                     break;
                 case -1:
@@ -114,7 +115,7 @@ public class ProfileFragment extends Fragment {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mPhotos = (List<PhotoApi>) msg.obj;
+                    mPhotos = (List<Photo>) msg.obj;
                     photoRendering(mPhotos);
                     break;
                 case -1:
@@ -180,11 +181,23 @@ public class ProfileFragment extends Fragment {
                 mMap = map;
                 mMapRoute = new MapRoute(map, getActivity());
                 UiSettings setting = map.getUiSettings();
-                setting.setZoomControlsEnabled(false);
-                setting.setMyLocationButtonEnabled(true);
+                setting.setZoomControlsEnabled(true);
+                setting.setRotateGesturesEnabled(false);
+                setting.setMyLocationButtonEnabled(false);
+                View zoomControls = mMapFragment.getView().findViewById(0x1);
+                if (zoomControls != null && zoomControls.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
+                    // ZoomControl is inside of RelativeLayout
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) zoomControls.getLayoutParams();
+
+                    // Align it to - parent top|left
+                    params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    int margin = Util.convertDpToPixel(16,getActivity());
+                    params.setMargins(0,margin,margin,0);
+                    // Update margins, set to 10dp
+                }
             }
         });
-
     }
 
     protected void initLikeBar() {
@@ -277,6 +290,7 @@ public class ProfileFragment extends Fragment {
         ((TextView) mView.findViewById(R.id.photoCount)).setTextColor(getResources().getColor(R.color.light_gray));
         mView.findViewById(R.id.daySelectBar).setVisibility(View.GONE);
         ((TextView) mView.findViewById(R.id.dayCount)).setTextColor(getResources().getColor(R.color.light_gray));
+        mMap.clear();
     }
 
     protected void initProfile() {
@@ -337,7 +351,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    protected void dayRendering(final List<DayApi> days) {
+    protected void dayRendering(final List<Day> days) {
         try {
             LatLng location = new LatLng(days.get(0).getMainPlace().getLat(), days.get(0).getMainPlace().getLon());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
@@ -347,7 +361,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    protected void photoRendering(final List<PhotoApi> photos) {
+    protected void photoRendering(final List<Photo> photos) {
         try {
             LatLng location = new LatLng(photos.get(0).getLat(), photos.get(0).getLon());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));

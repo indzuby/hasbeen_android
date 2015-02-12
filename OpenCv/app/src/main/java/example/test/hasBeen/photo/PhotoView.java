@@ -32,7 +32,7 @@ import example.test.hasBeen.comment.EnterCommentListner;
 import example.test.hasBeen.comment.WriteCommentAsyncTask;
 import example.test.hasBeen.loved.LoveListner;
 import example.test.hasBeen.model.api.Comment;
-import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.model.database.Photo;
 import example.test.hasBeen.profile.ProfileClickListner;
 import example.test.hasBeen.utils.CircleTransform;
 import example.test.hasBeen.utils.HasBeenDate;
@@ -42,33 +42,34 @@ import example.test.hasBeen.utils.Util;
 /**
  * Created by zuby on 2015-01-29.
  */
-public class PhotoView extends ActionBarActivity{
+public class PhotoView extends ActionBarActivity {
     final static String TAG = "Photo view";
-    PhotoApi mPhoto;
+    Photo mPhoto;
     Long mPhotoId;
     String mAccessToken;
     int mTotalCommentCount;
     TextView mSocialAction;
     int mViewCommentCount;
     Long lastCommentId;
-    Typeface medium,regular;
+    Typeface medium, regular;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         showProgress();
-        mPhotoId = getIntent().getLongExtra("photoId",0);
-        mAccessToken = Session.getString(this,"accessToken",null);
+        mPhotoId = getIntent().getLongExtra("photoId", 0);
+        mAccessToken = Session.getString(this, "accessToken", null);
         init();
     }
+
     Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mPhoto = (PhotoApi) msg.obj;
-                    Log.i("Photo",mPhoto.getPlaceName());
+                    mPhoto = (Photo) msg.obj;
+                    Log.i("Photo", mPhoto.getPlaceName());
                     initView();
                     initComment();
                     dialog.dismiss();
@@ -78,7 +79,8 @@ public class PhotoView extends ActionBarActivity{
             }
         }
     };
-    protected void initView(){
+
+    protected void initView() {
         View titleBox = findViewById(R.id.dayTitleBox);
         ImageView profileImage = (ImageView) titleBox.findViewById(R.id.profileImage);
         TextView profileName = (TextView) titleBox.findViewById(R.id.profileName);
@@ -97,68 +99,75 @@ public class PhotoView extends ActionBarActivity{
         mSocialAction.setText(mPhoto.getLoveCount() + " Likes · " + mPhoto.getCommentCount() + " Commnents · " + mPhoto.getShareCount() + " Shared");
         ImageView imageView = (ImageView) findViewById(R.id.photo);
         Glide.with(this).load(mPhoto.getMediumUrl()).placeholder(R.drawable.placeholder).into(imageView);
-        profileImage.setOnClickListener(new ProfileClickListner(this,mPhoto.getUser().getId()));
+        profileImage.setOnClickListener(new ProfileClickListner(this, mPhoto.getUser().getId()));
         profileName.setOnClickListener(new ProfileClickListner(this, mPhoto.getUser().getId()));
 
         LinearLayout loveButton = (LinearLayout) findViewById(R.id.loveButton);
         ImageView love = (ImageView) findViewById(R.id.love);
-        if(mPhoto.getLove()!=null)
+        TextView loveText = (TextView) loveButton.findViewById(R.id.loveText);
+        if (mPhoto.getLove() != null) {
             love.setImageResource(R.drawable.photo_like_pressed);
-        else
+            loveText.setTextColor(this.getResources().getColor(R.color.light_black));
+            loveText.setTypeface(medium);
+        } else {
             love.setImageResource(R.drawable.photo_like);
-
-        loveButton.setOnClickListener(new LoveListner(this,mPhoto,"photos",mSocialAction));
+            loveText.setTextColor(this.getResources().getColor(R.color.light_gray));
+            loveText.setTypeface(regular);
+        }
+        loveButton.setOnClickListener(new LoveListner(this, mPhoto, "photos", mSocialAction));
 
 
     }
-    protected void initComment(){
+
+    protected void initComment() {
 
         final LinearLayout commentBox = (LinearLayout) findViewById(R.id.commentBox);
-        final View moreComment = LayoutInflater.from(this).inflate(R.layout.more_comments,null);
+        final View moreComment = LayoutInflater.from(this).inflate(R.layout.more_comments, null);
         mTotalCommentCount = mPhoto.getCommentCount();
         mViewCommentCount = mPhoto.getCommentList().size();
-        if(mTotalCommentCount>10)
+        if (mTotalCommentCount > 10)
             commentBox.addView(moreComment);
-        if(mTotalCommentCount>0)
+        if (mTotalCommentCount > 0)
             lastCommentId = mPhoto.getCommentList().get(0).getId();
         moreComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new CommentAsyncTask(new Handler(Looper.getMainLooper()){
+                new CommentAsyncTask(new Handler(Looper.getMainLooper()) {
                     @Override
                     public void handleMessage(Message msg) {
                         super.handleMessage(msg);
-                        if(msg.what==0) {
+                        if (msg.what == 0) {
                             List<Comment> commentList = (List) msg.obj;
                             lastCommentId = commentList.get(0).getId();
                             Collections.reverse(commentList);
-                            for(Comment comment : commentList) {
-                                commentBox.addView(CommentView.makeComment(getBaseContext(),comment),2);
+                            for (Comment comment : commentList) {
+                                commentBox.addView(CommentView.makeComment(getBaseContext(), comment), 2);
                                 mSocialAction.setText(mPhoto.getLoveCount() + " Likes · " + mPhoto.getCommentCount() + " Commnents · " + mPhoto.getShareCount() + " Shared");
                                 mViewCommentCount++;
                             }
 
-                            if(mViewCommentCount==mTotalCommentCount)
+                            if (mViewCommentCount == mTotalCommentCount)
                                 moreComment.setVisibility(View.GONE);
                         }
                     }
                 }).execute(mAccessToken, "photos", mPhoto.getId(), lastCommentId);
             }
         });
-        for(int i = 0 ; i <mPhoto.getCommentList().size();i++){
+        for (int i = 0; i < mPhoto.getCommentList().size(); i++) {
             Comment comment = mPhoto.getCommentList().get(i);
-            commentBox.addView(CommentView.makeComment(this,comment));
+            commentBox.addView(CommentView.makeComment(this, comment));
         }
 
         LinearLayout commentButton = (LinearLayout) findViewById(R.id.commentButton);
-        commentButton.setOnClickListener(new EnterCommentListner(this,"photos",mPhoto.getId()));
+        commentButton.setOnClickListener(new EnterCommentListner(this, "photos", mPhoto.getId(),mPhoto.getCommentCount()));
         final EditText mEnterComment = (EditText) findViewById(R.id.enterComment);
         ImageView send = (ImageView) findViewById(R.id.send);
         send.setOnClickListener(new View.OnClickListener() {
             boolean flag = false;
+
             @Override
             public void onClick(View v) {
-                if(!flag) {
+                if (!flag) {
                     flag = true;
                     String contents = mEnterComment.getText().toString();
                     mEnterComment.setText("");
@@ -168,9 +177,9 @@ public class PhotoView extends ActionBarActivity{
                         public void handleMessage(Message msg) {
                             super.handleMessage(msg);
                             flag = false;
-                            if(msg.what==0) {
+                            if (msg.what == 0) {
                                 Comment comment = (Comment) msg.obj;
-                                commentBox.addView(CommentView.makeComment(getBaseContext(),comment));
+                                commentBox.addView(CommentView.makeComment(getBaseContext(), comment));
                                 mTotalCommentCount++;
                                 mPhoto.setCommentCount(mTotalCommentCount);
                                 mSocialAction.setText(mPhoto.getLoveCount() + " Likes · " + mPhoto.getCommentCount() + " Commnents · " + mPhoto.getShareCount() + " Shared");
@@ -180,40 +189,44 @@ public class PhotoView extends ActionBarActivity{
                     }).execute(mAccessToken, "photos", mPhoto.getId(), contents);
                 }
             }
-        });;
+        });
+        ;
     }
-    protected void init(){
+
+    protected void init() {
         setContentView(R.layout.photo);
         medium = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Medium.ttf");
-        regular = Typeface.createFromAsset(this.getAssets(),"fonts/Roboto-Regular.ttf");
-        new PhotoAsyncTask(handler).execute(mAccessToken,mPhotoId);
+        regular = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Regular.ttf");
+        new PhotoAsyncTask(handler).execute(mAccessToken, mPhotoId);
         initActionBar();
-        new NearByPhotoAsyncTask(nearByHandler).execute(mAccessToken,mPhotoId);
+        new NearByPhotoAsyncTask(nearByHandler).execute(mAccessToken, mPhotoId);
     }
-    List<PhotoApi> mNearByPhotos ;
+
+    List<Photo> mNearByPhotos;
     Handler nearByHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mNearByPhotos = (List<PhotoApi>) msg.obj;
+                    mNearByPhotos = (List<Photo>) msg.obj;
                     initNearBy();
                     break;
-                case -1 :
+                case -1:
                     break;
             }
         }
     };
-    protected void initNearBy(){
+
+    protected void initNearBy() {
         View nearBy = findViewById(R.id.nearBy);
 
         LinearLayout nearBy1 = (LinearLayout) nearBy.findViewById(R.id.nearBy1);
         LinearLayout nearBy2 = (LinearLayout) nearBy.findViewById(R.id.nearBy2);
 
-        for(int i = 0 ; i<mNearByPhotos.size();i++) {
-            final PhotoApi photo = mNearByPhotos.get(i);
-            View nearByItem = LayoutInflater.from(this).inflate(R.layout.near_by_item,null);
+        for (int i = 0; i < mNearByPhotos.size(); i++) {
+            final Photo photo = mNearByPhotos.get(i);
+            View nearByItem = LayoutInflater.from(this).inflate(R.layout.near_by_item, null);
             ImageView image = (ImageView) nearByItem.findViewById(R.id.profileImage);
             TextView name = (TextView) nearByItem.findViewById(R.id.profileName);
             TextView date = (TextView) nearByItem.findViewById(R.id.date);
@@ -229,23 +242,24 @@ public class PhotoView extends ActionBarActivity{
             Glide.with(this).load(photo.getMediumUrl()).into(nearPhoto);
             description.setText(photo.getPlaceName());
             description.setTypeface(medium);
-            likeCount.setText(photo.getLoveCount()+"");
-            commentCount.setText(photo.getCommentCount()+"");
+            likeCount.setText(photo.getLoveCount() + "");
+            commentCount.setText(photo.getCommentCount() + "");
             shareCount.setText(photo.getShareCount() + "");
             date.setText(HasBeenDate.convertDate(photo.getTakenTime()));
             date.setTypeface(regular);
-            if(i%2==0)
+            if (i % 2 == 0)
                 nearBy1.addView(nearByItem);
             else
                 nearBy2.addView(nearByItem);
             nearByItem.setOnClickListener(new View.OnClickListener() {
                 boolean flag = false;
+
                 @Override
                 public void onClick(View v) {
-                    if(!flag) {
+                    if (!flag) {
                         flag = true;
                         Intent intent = new Intent(getBaseContext(), PhotoView.class);
-                        intent.putExtra("photoId",photo.getId());
+                        intent.putExtra("photoId", photo.getId());
                         startActivity(intent);
                         finish();
                         flag = false;
@@ -255,7 +269,8 @@ public class PhotoView extends ActionBarActivity{
             });
         }
     }
-    protected void initActionBar(){
+
+    protected void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(false);
@@ -263,7 +278,7 @@ public class PhotoView extends ActionBarActivity{
         ColorDrawable colorDrawable = new ColorDrawable(getResources().getColor(R.color.theme_color));
         actionBar.setBackgroundDrawable(colorDrawable);
 
-        View mCustomActionBar = mInflater.inflate(R.layout.action_bar_place,null);
+        View mCustomActionBar = mInflater.inflate(R.layout.action_bar_place, null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         TextView titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
         titleView.setText("Photo");
@@ -287,6 +302,7 @@ public class PhotoView extends ActionBarActivity{
         dialog.setProgress(100);
         dialog.show();
     }
+
     @Override
     public void onDestroy() {
 //        RecycleUtils.recursiveRecycle(getWindow().getDecorView());

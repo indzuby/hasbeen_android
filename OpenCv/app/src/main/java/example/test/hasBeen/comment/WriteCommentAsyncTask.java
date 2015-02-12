@@ -25,7 +25,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 import example.test.hasBeen.model.api.Comment;
-import example.test.hasBeen.model.api.PhotoApi;
+import example.test.hasBeen.model.database.Photo;
 import example.test.hasBeen.utils.Session;
 
 /**
@@ -61,7 +61,7 @@ public class WriteCommentAsyncTask extends AsyncTask<Object,Void,Comment> {
                 Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
                     @Override
                     public boolean shouldSkipField(FieldAttributes f) {
-                        if(f.getDeclaredClass() == PhotoApi.class){
+                        if(f.getDeclaredClass() == Photo.class){
                             if(f.getName().equals("day") || f.getName().equals("place"))
                                 return true;
                         }

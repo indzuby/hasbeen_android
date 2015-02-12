@@ -49,9 +49,9 @@ public class GalleryFragment extends Fragment implements SlidingUpPanelLayout.Pa
     boolean mMapVisible=true;
     SlidingUpPanelLayout mSlidingUpPanelLayout;
     protected void init() throws Exception {
-        mListView = (ListView) mView.findViewById(R.id.galleryL1ListView);
-        mTextDate = (TextView) mView.findViewById(R.id.galleryL1dayTopTextDate);
-        mAreaView = (TextView) mView.findViewById(R.id.galleryL1dayTopTextArea);
+        mListView = (ListView) mView.findViewById(R.id.listView);
+        mTextDate = (TextView) mView.findViewById(R.id.date);
+        mAreaView = (TextView) mView.findViewById(R.id.placeName);
 
         database = new DatabaseHelper(getActivity());
         mGalleryBox = (RelativeLayout) mView.findViewById(R.id.gallery_box);

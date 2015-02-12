@@ -22,8 +22,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 import example.test.hasBeen.model.api.Follow;
-import example.test.hasBeen.model.api.PhotoApi;
 import example.test.hasBeen.model.api.User;
+import example.test.hasBeen.model.database.Photo;
 import example.test.hasBeen.utils.Session;
 
 /**
@@ -62,7 +62,7 @@ public class ProfileAsyncTask extends AsyncTask<Object, Void, User> {
                 Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
                     @Override
                     public boolean shouldSkipField(FieldAttributes f) {
-                        if (f.getDeclaringClass() == PhotoApi.class)
+                        if (f.getDeclaringClass() == Photo.class)
                             if (f.getName().equals("day") || f.getName().equals("place"))
                                 return true;
 

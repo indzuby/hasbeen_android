@@ -11,10 +11,14 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
+import java.util.Arrays;
 import java.util.List;
 
 import example.test.hasBeen.R;
 import example.test.hasBeen.database.DatabaseHelper;
+import example.test.hasBeen.model.database.Day;
 import example.test.hasBeen.model.database.Position;
 
 /**
@@ -23,6 +27,8 @@ import example.test.hasBeen.model.database.Position;
 public class GalleryShare extends ActionBarActivity{
     Long mDayId;
     List<Position> mPositions;
+    Day mDay;
+    Boolean[] isCheckedPosition;
     DatabaseHelper database ;
     TextView mTextDate;
     TextView mTextArea;
@@ -35,13 +41,17 @@ public class GalleryShare extends ActionBarActivity{
         mDayId = getIntent().getLongExtra("id",0);
         mTextDate = (TextView) findViewById(R.id.date);
         mTextDate.setText(getIntent().getStringExtra("date"));
-        mTextArea = (TextView) findViewById(R.id.area);
+        mTextArea = (TextView) findViewById(R.id.placeName);
         mTextArea.setText(getIntent().getStringExtra("area"));
         database = new DatabaseHelper(this);
-        mListView = (ListView) findViewById(R.id.galleryShareDayView);
+        mListView = (ListView) findViewById(R.id.listView);
         try {
-            mPositions = database.selectPositionByDayId(mDayId);
-            mShareAdpater = new GalleryShareAdapter(this,mPositions);
+            mDay = database.selectDay(mDayId);
+            mDay.setPositionList(database.selectPositionByDayId(mDayId));
+            isCheckedPosition = new Boolean[mDay.getPositionList().size()];
+            mDay.setIsCheckedPosition(isCheckedPosition);
+            Arrays.fill(isCheckedPosition,true);
+            mShareAdpater = new GalleryShareAdapter(this, mDay.getPositionList(), mDay.getIsCheckedPosition());
             mListView.setAdapter(mShareAdpater);
         }catch (Exception e) {
             e.printStackTrace();
@@ -67,7 +77,32 @@ public class GalleryShare extends ActionBarActivity{
             public void onClick(View v) {
                 if(!flag) {
                     flag = true;
+                    for(int i = 0 ; i<isCheckedPosition.length;i++) {
+                        Boolean isPositionCheck = isCheckedPosition[i];
+                        if(isPositionCheck) {
+                            Position position = mDay.getPositionList().get(i);
+                            Long placeId = position.getPlaceId();
+                            try {
+                                mDay.setMainPlace(database.selectPlace(placeId));
+                                database.updateDayMainPlaceId(mDayId, placeId);
+                                for(int j = 0 ;j<position.getIsCheckedPhoto().length;j++) {
+                                    Boolean isPhotoCheck = position.getIsCheckedPhoto()[j];
+                                    if(isPhotoCheck) {
+                                        Long photoId = position.getPhotoList().get(i).getPhotoId();
+                                        mDay.setMainPhoto(database.selectPhoto(photoId));
+                                        database.updateDayMainPhotoId(mDayId,photoId);
+                                        break;
+                                    }
+                                }
+                            }catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        }
+                    }
+
                     Intent intent = new Intent(getBaseContext(), GalleryUpload.class);
+                    String json = convertObjectToJson();
                     intent.putExtras(getIntent().getExtras());
                     startActivity(intent);
                     flag = false;
@@ -78,4 +113,13 @@ public class GalleryShare extends ActionBarActivity{
         actionBar.setDisplayShowCustomEnabled(true);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.gc();
+    }
+    protected String convertObjectToJson(){
+        Gson gson = new Gson();
+        return gson.toJson(mDay);
+    }
 }

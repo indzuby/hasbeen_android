@@ -5,7 +5,7 @@
     <color name="light_black">#5A5A5A</color>
     <color name="theme_white">#FFFFFF</color>
     <color name="list_background">#fafafa</color>
-    <color name="list_background_pressed">#dcdcd0</color>
+    <color name="list_background_pressed">#dcdcdc</color>
     <color name="day_background">#f4f6f9</color>
     <color name="transparent">#00ffffff</color>
     <color name="light_gray">#969696</color>

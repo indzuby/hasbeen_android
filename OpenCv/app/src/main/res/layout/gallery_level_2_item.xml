@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@color/list_background"
-              android:weightSum="5">
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="5">
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_marginTop="-2dp"
+        android:background="@color/transparent"
+        android:padding="8dp"
         android:id="@+id/searchView">
-        <View
-            android:layout_width="2dp"
-            android:layout_height="14dp"
-            android:layout_marginBottom="-4dp"
-            android:layout_gravity="center"
-            android:background="@color/theme_color"/>
         <ImageView
             android:layout_width="32dp"
             android:layout_height="32dp"
@@ -25,42 +19,38 @@
             android:background="@drawable/gallery_icon_oval"
 
             android:id="@+id/placeIcon"/>
-            <View
-                android:layout_width="2dp"
-                android:layout_marginTop="-7dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/galleryL2Line"
-                android:layout_gravity="center"
-                android:background="@color/theme_color"
-                />
-     </LinearLayout>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="0dp"
+        android:background="@color/transparent"
         android:layout_height="wrap_content"
         android:layout_weight="4"
-        android:paddingTop="8dp"
         android:orientation="vertical">
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/placeName"
-            android:textColor="@color/light_black"
-            android:textSize="13sp"
-            android:text="Area 1, Norway"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/placeTime"
-            android:textColor="@color/light_gray"
-            android:textSize="10sp"
-            android:text="10:22AM - 11:34Am"/>
-
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:layout_height="48dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/placeName"
+                android:textColor="@color/light_black"
+                android:textSize="13sp"
+                android:text="Area 1, Norway"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/placeTime"
+                android:textColor="@color/light_gray"
+                android:textSize="11sp"
+                android:text="10:22AM - 11:34Am"/>
+        </LinearLayout>
         <GridView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/galleryL2GridView"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="11dp"
+            android:layout_marginBottom="10dp"
             android:scrollbars="none"
             android:numColumns="3"
             android:choiceMode="multipleChoiceModal"
