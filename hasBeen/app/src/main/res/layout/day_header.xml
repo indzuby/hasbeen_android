@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/slidingLayout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/day_background"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#ffffff"/>
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+              android:name="com.google.android.gms.maps.MapFragment"
+              android:id="@+id/map"
+              android:layout_width="match_parent"
+              android:layout_height="160dp"/>
+
+    <include layout="@layout/description_layout" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="#000000"
+        android:alpha="0.1"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:textColor="@color/light_gray"
+        android:paddingLeft="16dp"
+        android:background="@color/day_background"
+        android:paddingTop="4dp"
+        android:id="@+id/totalPhoto"
+        android:paddingBottom="4dp"
+        android:textSize="12sp"
+        android:text="Total 85 photos"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="#000000"
+        android:alpha="0.1"
+        />
+</LinearLayout>

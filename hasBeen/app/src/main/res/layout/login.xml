@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:src="@drawable/login_bg"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+
+        android:paddingRight="16dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="224dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/logo" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                style="@style/Signup.TextView"
+                android:hint="Email"
+                android:id="@+id/email"
+                android:inputType="textEmailAddress" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:background="@color/theme_white"/>
+
+            <EditText
+                style="@style/Signup.TextView"
+                android:hint="Password"
+                android:id="@+id/password"
+                android:inputType="textPassword" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:background="@color/theme_white"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="24dp"
+            android:id="@+id/emailLoginBtn"
+            android:background="@drawable/radius_layout_2"
+            android:gravity="center"
+            android:text="Sign in with Email"
+            android:textColor="@color/theme_white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+
+            android:layout_height="48dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/or"
+                android:alpha="0.5"
+                android:background="@color/theme_white" />
+
+            <TextView
+                android:id="@+id/or"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_margin="16dp"
+                android:alpha="0.5"
+                android:text="OR"
+                android:textColor="@color/theme_white" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/or"
+                android:alpha="0.5"
+                android:background="@color/theme_white" />
+        </RelativeLayout>
+
+        <com.facebook.widget.LoginButton xmlns:fb="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/facebookLogin"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            fb:login_text="Sign in with Facebook"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="14sp"
+                    android:textColor="@color/theme_white"
+                    android:text="Don't have an account? " />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:id="@+id/goSignUp"
+                    android:text="Sign up."
+                    android:textColor="@color/theme_color" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

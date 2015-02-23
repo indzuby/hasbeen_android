@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<TextView
+    android:layout_width="match_parent"
+    android:padding="16dp"
+    android:textSize="14sp"
+    android:textColor="@color/light_gray"
+    android:textStyle="bold"
+    android:lineSpacingExtra="4sp"
+    android:background="@color/transparent"
+    android:gravity="center"
+    android:text="뉴스피드에 표시할 게시물이 없습니다.\n여행기를 둘러보거나 친구들을 팔로우하세요."
+    android:layout_height="72dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/white_bg"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_height="56dp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/searchbar"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchText"
+            android:textStyle="bold"
+            android:textColor="@color/theme_color"
+            android:text="여행기 둘러보기"
+            android:textSize="14sp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/theme_white"
+            />
+        </LinearLayout>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/shadow_top"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@color/theme_white"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/theme_color"
+            android:lineSpacingExtra="4sp"
+            android:text="당신의 페이스북 친구 183명이 \nhasBeen을 이용중입니다."
+            android:layout_height="72dp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:alpha="0.2"
+            android:background="#000000" />
+        <include layout="@layout/follow_item" />
+        <include layout="@layout/follow_item" />
+        <include layout="@layout/follow_item" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:alpha="0.2"
+            android:background="#000000" />
+        <TextView
+            android:layout_width="match_parent"
+            android:text="183명의 친구들 모두 보기"
+            android:textSize="14sp"
+            android:textColor="@color/light_gray"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_height="48dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/actionbar_shadow"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

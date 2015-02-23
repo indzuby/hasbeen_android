@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:background="@android:color/transparent"
+              android:paddingTop="12dp"
+              android:paddingRight="16dp"
+              android:layout_height="72dp">
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+
+        android:src="@drawable/back"
+        android:id="@+id/photoBack"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF"
+        android:includeFontPadding="false"
+        android:text="BeatienBerg, Swiss"
+        android:id="@+id/profileName"
+        android:layout_toRightOf="@+id/photoBack"
+        android:layout_toEndOf="@+id/photoBack"
+        android:layout_marginLeft="32dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:includeFontPadding="false"
+        android:textColor="#FFFFFF"
+        android:text="1 of 12 photos"
+        android:id="@+id/photoCount"
+        android:layout_below="@+id/profileName"
+        android:layout_alignLeft="@+id/profileName"
+        />
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:id="@+id/moreVert"
+        android:src="@drawable/more_vert_white"
+        android:layout_alignParentRight="true"
+        />
+</RelativeLayout>
