@@ -25,6 +25,7 @@ import co.hasBeen.model.database.Position;
  * Created by zuby on 2015-01-20.
  */
 public class GalleryShare extends ActionBarActivity{
+    final static int REQUEST_EXIT = 2001;
     Long mDayId;
     List<Position> mPositions;
     Day mDay;
@@ -84,14 +85,14 @@ public class GalleryShare extends ActionBarActivity{
                             Long placeId = position.getPlaceId();
                             try {
                                 mDay.setMainPlace(database.selectPlace(placeId));
-                                mDay.setMainPlace(position.getPlace());
+                                mDay.setMainPlaceId(placeId);
                                 database.updateDayMainPlaceId(mDayId, placeId);
                                 for(int j = 0 ;j<position.getIsCheckedPhoto().length;j++) {
                                     Boolean isPhotoCheck = position.getIsCheckedPhoto()[j];
                                     if(isPhotoCheck) {
-                                        Long photoId = position.getPhotoList().get(i).getPhotoId();
-                                        mDay.setMainPhoto(database.selectPhoto(photoId));
-                                        mDay.setMainPhoto(position.getPhotoList().get(i));
+                                        Long photoId = position.getPhotoList().get(j).getId();
+                                        mDay.setMainPhoto(position.getPhotoList().get(j));
+                                        mDay.setMainPhotoId(photoId);
                                         database.updateDayMainPhotoId(mDayId,photoId);
                                         break;
                                     }
@@ -107,7 +108,7 @@ public class GalleryShare extends ActionBarActivity{
                     String json = convertObjectToJson();
                     intent.putExtra("data",json);
                     intent.putExtras(getIntent().getExtras());
-                    startActivity(intent);
+                    startActivityForResult(intent,REQUEST_EXIT);
                     flag = false;
                 }
             }
@@ -115,7 +116,15 @@ public class GalleryShare extends ActionBarActivity{
         actionBar.setCustomView(mCustomActionBar);
         actionBar.setDisplayShowCustomEnabled(true);
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        if (requestCode == REQUEST_EXIT) {
+            if (resultCode == RESULT_OK) {
+                finish();
+            }
+        }
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

@@ -273,7 +273,7 @@ public class Day {
     public void setIsCheckedPosition(Boolean[] isCheckedPosition) {
         this.isCheckedPosition = isCheckedPosition;
     }
-    Long tripId;
+    Long tripId=0L;
 
     public Long getTripId() {
         return tripId;

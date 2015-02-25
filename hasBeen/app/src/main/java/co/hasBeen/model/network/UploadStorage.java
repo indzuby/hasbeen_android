@@ -2,7 +2,6 @@ package co.hasBeen.model.network;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
@@ -26,9 +25,6 @@ import org.joda.time.LocalDate;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -36,6 +32,7 @@ import java.security.InvalidKeyException;
 
 import co.hasBeen.model.database.Day;
 import co.hasBeen.model.database.Photo;
+import co.hasBeen.utils.Util;
 
 /**
  * Created by 주현 on 2015-02-13.
@@ -78,40 +75,39 @@ public class UploadStorage {
     public void makePhotoStorageUrl(Photo photo, Long userId) throws  Exception{
         mPhoto = photo;
         ExifInterface exif = new ExifInterface(photo.getPhotoPath());
-        String orientation = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+        int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
 
         new ImageUploadTask(new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 if(msg.what==0) {
-                    mPhoto.setSmallUrl((String)msg.obj);
+//                    mPhoto.setSmallUrl((String)msg.obj);
                     mPhotoCnt++;
                 }
             }
-        }).execute("small",photo,userId,photo.getPhotoId(),orientation);
-        String url = getMiniThumbnail(photo.getPhotoId());
+        }).execute("small",photo,userId,orientation);
         new ImageUploadTask(new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 if(msg.what==0) {
-                    mPhoto.setMediumUrl((String) msg.obj);
+//                    mPhoto.setMediumUrl((String) msg.obj);
                     mPhotoCnt++;
                 }
             }
-        }).execute("medium", photo, userId, url,orientation);
+        }).execute("medium", photo, userId,orientation);
 
         new ImageUploadTask(new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 if(msg.what==0) {
-                    mPhoto.setLargeUrl((String) msg.obj);
+//                    mPhoto.setLargeUrl((String) msg.obj);
                     mPhotoCnt++;
                 }
             }
-        }).execute("large", photo, userId, photo.getPhotoPath(),orientation);
+        }).execute("large", photo, userId, orientation);
     }
     private void initStorageAccount() throws URISyntaxException, InvalidKeyException {
         storageAccount = CloudStorageAccount.parse(storageConnectionString);
@@ -125,27 +121,22 @@ public class UploadStorage {
         return MediaStore.Images.Thumbnails.getThumbnail(resolver, id, MediaStore.Images.Thumbnails.MICRO_KIND, null);
     }
 
-    protected String getMiniThumbnail(long id) {
-        Cursor cursor = MediaStore.Images.Thumbnails.queryMiniThumbnail(
-                resolver, id,
-                MediaStore.Images.Thumbnails.MINI_KIND,
-                null);
-        if( cursor != null && cursor.getCount() > 0 ) {
-            cursor.moveToFirst();//**EDIT**
-            String uri = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA));
-            return uri;
-        }
-        return null;
+    protected Bitmap getMiniThumbnail(long id) {
+        return MediaStore.Images.Thumbnails.getThumbnail(resolver, id, MediaStore.Images.Thumbnails.MINI_KIND, null);
     }
 
+    protected Bitmap getLargeThumbnail(String path) {
+        return BitmapFactory.decodeFile(path);
+    }
     public class ImageUploadTask extends AsyncTask<Object, Void, String> {
         Handler mHandler;
         int len;
+        String mType;
+        Photo mPhoto;
         public ImageUploadTask(Handler mHandler) {
             this.mHandler = mHandler;
         }
         protected InputStream staticMap(float lat, float lon) throws Exception{
-
             HttpClient client = new DefaultHttpClient();
             URL url = new URL(MAP_URL + lat + "," + lon);
             HttpGet request = new HttpGet(url.toString());
@@ -159,31 +150,13 @@ public class UploadStorage {
             len = bitmapdata.length;
             return bs;
         }
-        protected InputStream photoFile(String photoPath,String orientation) throws  Exception{
-            ExifInterface exif = new ExifInterface(photoPath);
-
-            exif.setAttribute(ExifInterface.TAG_ORIENTATION,orientation);
-            exif.saveAttributes();
-            File photoFile = new File(photoPath);
-
-            len = (int) photoFile.length();
-            return new FileInputStream(photoFile);
-        }
-        protected InputStream photoSmallFile(Long photoid,String orientation) throws Exception{
-            Bitmap bitmap = getMicroThumbnail(photoid);
+        protected InputStream photoStream(Bitmap bitmap, int orientation) throws  Exception{
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
             byte[] bitmapdata = bos.toByteArray();
-            File tempfile = File.createTempFile(photoid+"_small","jpg");
-            FileOutputStream fos = new FileOutputStream(tempfile);
-            fos.write(bitmapdata);
-            ExifInterface exif = new ExifInterface(tempfile.getAbsolutePath());
-            exif.setAttribute(ExifInterface.TAG_ORIENTATION,orientation);
-            exif.saveAttributes();
-            FileInputStream inputStream = new FileInputStream(tempfile);
-            len = (int) tempfile.length();
-            tempfile.delete();
-            return inputStream;
+            len = bitmapdata.length;
+            ByteArrayInputStream bs = new ByteArrayInputStream(bitmapdata);
+            return bs;
         }
         @Override
         protected String doInBackground(Object... params) {
@@ -193,20 +166,29 @@ public class UploadStorage {
                 Long userId = (Long) params[2];
                 InputStream inputStream;
                 LocalDate date = new LocalDate(photo.getTakenTime());
+                mType = type;
+                mPhoto = photo;
                 String dir = userId + "/" + date.toString("YYYYMMdd");
                 if(type.equals("map")) {
                     inputStream = staticMap(photo.getLat(), photo.getLon());
                     dir += "/staticMap.jpg";
-                }else if(!type.equals("small")){
-                    String photoPath = (String) params[3];
-                    String orientation = (String) params[4];
-                    inputStream = photoFile(photoPath,orientation);
-                    dir += "/"+photo.getTakenTime()+"_"+type+".jpg";
                 }else {
-                    Long id = (Long) params[3];
-                    String orientation = (String) params[4];
+                    Long id = photo.getPhotoId();
+                    int orientation = (int) params[3];
+                    Bitmap bitmap = null;
+                    if(type.equals("small"))
+                        bitmap = getMicroThumbnail(id);
+                    else if(type.equals("medium"))
+                        bitmap = getMiniThumbnail(id);
+                    else if(type.equals("large"))
+                        bitmap = getLargeThumbnail(photo.getPhotoPath());
                     dir += "/"+photo.getTakenTime()+"_"+type+".jpg";
-                    inputStream = photoSmallFile(id,orientation);
+                    bitmap = Util.rotateBitmap(bitmap,orientation);
+                    if(type.equals("large")) {
+                        photo.setWidth(bitmap.getWidth());
+                        photo.setHeight(bitmap.getHeight());
+                    }
+                    inputStream = photoStream(bitmap, orientation);
                 }
                 return makeUrlToBlob(dir,inputStream);
             } catch (Exception e) {
@@ -230,6 +212,13 @@ public class UploadStorage {
             if(s!=null) {
                 msg.what = 0;
                 msg.obj = s;
+                if(mType.equals("large"))
+                    mPhoto.setLargeUrl(s);
+                else if(mType.equals("medium"))
+                    mPhoto.setMediumUrl(s);
+                else if(mType.equals("small"))
+                    mPhoto.setSmallUrl(s);
+
                 mHandler.sendMessage(msg);
             }else {
                 msg.what=-1;

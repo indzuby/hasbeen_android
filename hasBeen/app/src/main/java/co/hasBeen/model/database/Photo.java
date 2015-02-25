@@ -71,6 +71,26 @@ public class Photo {
     @DatabaseField(columnName = "clearest_id")
     Long clearestId;
 
+
+    int width;
+    int height;
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
     public Long getClearestId() {
         return clearestId;
     }
@@ -234,9 +254,6 @@ public class Photo {
         this.takenTime = takenTime;
     }
 
-    int width;
-    int height;
-    boolean isPortrait;
     User user;
     int commentCount;
     int loveCount;

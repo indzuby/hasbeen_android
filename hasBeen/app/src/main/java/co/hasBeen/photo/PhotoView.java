@@ -98,7 +98,7 @@ public class PhotoView extends ActionBarActivity {
         findViewById(R.id.title).setVisibility(View.GONE);
         mSocialAction.setText(mPhoto.getLoveCount() + " Likes · " + mPhoto.getCommentCount() + " Commnents · " + mPhoto.getShareCount() + " Shared");
         ImageView imageView = (ImageView) findViewById(R.id.photo);
-        Glide.with(this).load(mPhoto.getMediumUrl()).placeholder(R.drawable.placeholder1).into(imageView);
+        Glide.with(this).load(mPhoto.getLargeUrl()).placeholder(R.drawable.placeholder1).into(imageView);
         profileImage.setOnClickListener(new ProfileClickListner(this, mPhoto.getUser().getId()));
         profileName.setOnClickListener(new ProfileClickListner(this, mPhoto.getUser().getId()));
 

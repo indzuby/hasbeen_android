@@ -54,7 +54,7 @@ public class CreateDataBase {
                 MediaStore.Images.Media.DATE_TAKEN,
                 MediaStore.Images.Media.MIME_TYPE,
                 MediaStore.Images.Media.LATITUDE,
-                MediaStore.Images.Media.LONGITUDE
+                MediaStore.Images.Media.LONGITUDE,
         };
         final int[] idx = new int[proj.length];
         if (lastPhoto != null)
@@ -106,7 +106,6 @@ public class CreateDataBase {
                     photo.setDayId(new Long(0));
                     photo.setPhotoId(new Long(photoID));
                     photo.setPhotoPath(photoPath);
-
                     mPhotoList.add(photo);
 //                    Log.i("Photo Date", photo.getTakenDate().toString());
                 }

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -21,6 +22,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +67,7 @@ public class ProfileFragment extends Fragment {
 
     List<Loved> mLovedPhotos;
     List<Loved> mLovedDays;
+    PullToRefreshScrollView mRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,6 +89,13 @@ public class ProfileFragment extends Fragment {
                     mUser = (User) msg.obj;
                     Session.putLong(getActivity(),"myUserid",mUser.getId());
                     initProfile();
+                    if(mRefreshLayout!=null && mRefreshLayout.isRefreshing()){
+                        mRefreshLayout.onRefreshComplete();
+                        mDays = null;
+                        mPhotos = null;
+                        mLikeDays = null;
+                        mLikePhotos = null;
+                    }
                     mapRendering(DAY);
                     break;
                 case -1:
@@ -101,6 +112,8 @@ public class ProfileFragment extends Fragment {
                 case 0:
                     mDays = (List<Day>) msg.obj;
                     dayRendering(mDays);
+                    if(mRefreshLayout!=null && mRefreshLayout.isRefreshing())
+                        mRefreshLayout.onRefreshComplete();
                     break;
                 case -1:
                     break;
@@ -196,6 +209,13 @@ public class ProfileFragment extends Fragment {
                     params.setMargins(0,margin,margin,0);
                     // Update margins, set to 10dp
                 }
+            }
+        });
+        mRefreshLayout = (PullToRefreshScrollView) mView.findViewById(R.id.pullToRefreshLayout);
+        mRefreshLayout.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ScrollView>() {
+            @Override
+            public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
+                new ProfileAsyncTask(handler).execute(mAccessToken);
             }
         });
     }

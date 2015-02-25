@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -24,6 +25,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +72,6 @@ public class ProfileView extends ActionBarActivity {
     MapRoute mMapRoute;
     GoogleMap mMap;
     Typeface medium,regular;
-
     Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -308,11 +310,10 @@ public class ProfileView extends ActionBarActivity {
                                 followImage.setImageResource(R.drawable.following);;
                                 followImage.setOnClickListener(null);
                             }else {
-
+                                new ProfileAsyncTask(handler).execute(mAccessToken,mUserId);
                             }
                         }
                     }).execute(mAccessToken,mUser.getId());
-
                 }
             });
         }

@@ -2,6 +2,7 @@ package co.hasBeen.gallery;
 
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +28,7 @@ import java.util.Map;
 
 import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.day.DayView;
 import co.hasBeen.model.database.Day;
 import co.hasBeen.model.database.Photo;
 import co.hasBeen.model.database.Place;
@@ -105,14 +107,19 @@ public class GalleryUpload extends ActionBarActivity {
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if((mTitle.getText().toString().length()<2 || mTitle.getText().toString().length()>30) &&
+                        (mDescription.getText().toString().length()<2 || mDescription.getText().toString().length()>255)) {
+                    Toast.makeText(getBaseContext(),"Title은 2글자이상 30글자 이하여야하고,\nDescription은 2글자 이상 255글자 이하여야합니다",Toast.LENGTH_LONG).show();
+                    return ;
+                }
+
                 showProgress();
                 uploadStorage();
                 new Thread(new Runnable() {
-                    int total = 0 ;
                     @Override
                     public void run() {
-                        while(mStorage.mPhotoCnt != mDayUpload.getPhotoCount())  {
-                            dialog.setProgress(mStorage.mPhotoCnt);
+                        while(mStorage.mPhotoCnt != mDayUpload.getPhotoCount()*3)  {
+                            dialog.setProgress(mStorage.mPhotoCnt/3);
                         }
                         String title = mTitle.getText().toString();
                         String description = mDescription.getText().toString();
@@ -136,6 +143,11 @@ public class GalleryUpload extends ActionBarActivity {
             if(msg.what==0) {
                 Toast.makeText(getBaseContext(),"Upload complete.",Toast.LENGTH_LONG).show();
                 dialog.dismiss();
+                Intent intent = new Intent(getBaseContext(), DayView.class);
+                intent.putExtra("dayId", (Long)msg.obj);
+                startActivity(intent);
+                setResult(RESULT_OK);
+                finish();
             }
         }
     };
@@ -147,6 +159,7 @@ public class GalleryUpload extends ActionBarActivity {
             try {
                 position.setPlace(database.selectPlace(position.getPlaceId()));
                 Place place = position.getPlace();
+                place.setIdFromMobile(place.getId());
                 placeList.put(position.getPlaceId(), place);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -218,5 +231,6 @@ public class GalleryUpload extends ActionBarActivity {
         dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         dialog.setMax(mDayUpload.getPhotoCount());
         dialog.show();
+        dialog.setProgress(1);
     }
 }
