@@ -1,10 +1,8 @@
-package co.hasBeen.profile.follow;
+package co.hasBeen.social;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,10 +10,11 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import co.hasBeen.model.api.User;
-import co.hasBeen.profile.ProfileClickListner;
 import co.hasBeen.R;
 import co.hasBeen.model.api.Follow;
+import co.hasBeen.model.api.User;
+import co.hasBeen.profile.ProfileClickListner;
+import co.hasBeen.profile.follow.DoFollowListner;
 import co.hasBeen.utils.CircleTransform;
 import co.hasBeen.utils.Session;
 import co.hasBeen.utils.Util;
@@ -23,40 +22,25 @@ import co.hasBeen.utils.Util;
 /**
  * Created by 주현 on 2015-02-02.
  */
-public class FollowingAdapter extends BaseAdapter {
+public class FbFriendsItem {
     List<Follow> mFollowing;
     Context mContext;
     String mAccessToken;
-    public TextView mCount;
-    public String mType;
-    public FollowingAdapter(List<Follow> mFollowing, Context mContext) {
+
+    public FbFriendsItem(List<Follow> mFollowing, Context mContext) {
         this.mFollowing = mFollowing;
         this.mContext = mContext;
         mAccessToken = Session.getString(mContext, "accessToken", null);
     }
 
-    @Override
-    public int getCount() {
-        return mFollowing.size();
-    }
-
-    @Override
     public Follow getItem(int position) {
         return mFollowing.get(position);
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View view = convertView;
-        if(view == null) {
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.follow_item,null);
-        }
+    public View getView(int position) {
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.follow_item, null);
         Follow follow = getItem(position);
         User toUser = follow.getToUser();
 
@@ -70,15 +54,12 @@ public class FollowingAdapter extends BaseAdapter {
         profileImage.setOnClickListener(new ProfileClickListner(mContext, toUser.getId()));
         profileName.setOnClickListener(new ProfileClickListner(mContext, toUser.getId()));
         followSatus.setText(toUser.getFollowerCount() + " follower · " + toUser.getFollowingCount() + " following");
-        if(follow.getFollowingId()==null) {
+        if (follow.getFollowingId() == null) {
             followImage.setImageResource(R.drawable.follow_gray);
-        }else {
+        } else {
             followImage.setImageResource(R.drawable.following_selector);
         }
-        if(mType.equals("other"))
-        followImage.setOnClickListener(new DoFollowListner(mContext,mAccessToken,toUser.getId(),follow));
-        if(mType.equals("my"))
-            followImage.setOnClickListener(new DoFollowListner(mContext,mAccessToken,toUser.getId(),follow,mCount,mFollowing,this));
+        followImage.setOnClickListener(new DoFollowListner(mContext, mAccessToken, toUser.getId(), follow));
         return view;
     }
 

@@ -24,6 +24,7 @@ import co.hasBeen.utils.Util;
  */
 public class GalleryShareAdapter extends GalleryPositionAdapter {
     Boolean[] isCheckedPosition;
+    int[] mCheckedCount;
     public GalleryShareAdapter(Context context, List positions, Boolean[] isCheckedPosition) {
         super(context, positions);
         this.isCheckedPosition = isCheckedPosition;
@@ -77,9 +78,19 @@ public class GalleryShareAdapter extends GalleryPositionAdapter {
             int k = (int)Math.ceil(photos.size()/3.0);
             params.height = k * (width * 4 / 15) + (k-1)* Util.pxFromDp(mContext, 2);
             ToggleButton checkedButton = (ToggleButton) view.findViewById(R.id.checkedAll);
+
             checkedButton.setOnClickListener(new CheckedListner(galleryAdapter,index));
             checkedButton.setOnCheckedChangeListener(new CheckedListner(galleryAdapter,index));
             galleryAdapter.mCheckedAllButton = checkedButton;
+            if(isCheckedPosition[index]) {
+                checkedButton.setChecked(true);
+                galleryAdapter.mCheckedAll = true;
+            }
+            else {
+                checkedButton.setChecked(false);
+                galleryAdapter.mCheckedAll = false;
+            }
+
         }catch (Exception e) {
             e.printStackTrace();
         }

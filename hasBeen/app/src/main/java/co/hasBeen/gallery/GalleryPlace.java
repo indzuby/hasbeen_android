@@ -1,7 +1,5 @@
 package co.hasBeen.gallery;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,24 +15,21 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
 import co.hasBeen.geolocation.GeoFourSquare;
+import co.hasBeen.geolocation.MapRoute;
 import co.hasBeen.model.database.Category;
 import co.hasBeen.model.database.Place;
-import co.hasBeen.R;
 import co.hasBeen.model.database.Position;
 
 /**
@@ -73,35 +68,19 @@ public class GalleryPlace extends ActionBarActivity implements OnMapReadyCallbac
         else
             mPlaceName.setText(mPlace.getName());
         mPlaceCategory.setText(mPlace.getCategoryName());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    URL url = new URL(mPlace.getCategoryIconPrefix() + "88" + mPlace.getCategoryIconSuffix());
-                    final Bitmap bm = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mPlaceIcon.setImageBitmap(bm);
-                            mPlaceIcon.setScaleType(ImageView.ScaleType.FIT_XY);
-                        }
-                    });
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        Glide.with(this).load(mPlace.getCategoryIconPrefix() + "88" + mPlace.getCategoryIconSuffix()).into(mPlaceIcon);
+
     }
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
+        MapRoute mapRoute = new MapRoute(map,getBaseContext());
         UiSettings setting = map.getUiSettings();
-        map.addMarker(new MarkerOptions()
-                    .position(new LatLng(mLat, mLon)));
         setting.setZoomControlsEnabled(true);
-        setting.setMyLocationButtonEnabled(true);
-        map.setMyLocationEnabled(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLat, mLon), 16));
+        setting.setMyLocationButtonEnabled(false);
+        map.setMyLocationEnabled(false);
+        setting.setRotateGesturesEnabled(false);
+        mapRoute.addMarker(mLat,mLon);
     }
 
     protected void init() throws Exception{
@@ -137,11 +116,9 @@ public class GalleryPlace extends ActionBarActivity implements OnMapReadyCallbac
                                 @Override
                                 public void run() {
                                     List<Category> categories = (List) msg.obj;
-                                    Iterator iterator = categories.iterator();
-                                    while(iterator.hasNext()) {
-                                        mCategories.add((Category) iterator.next());
-                                        mPlaceAdapter.notifyDataSetChanged();
-                                    }
+                                    for(Category category : categories)
+                                        mCategories.add(category);
+                                    mPlaceAdapter.notifyDataSetChanged();
                                 }
                             });
                             break;

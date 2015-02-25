@@ -108,6 +108,11 @@ public class Util {
         return placeHolder[index%5];
     }
 
-
+    public static String getFbCountFirst(int count,int countryCode) {
+        return "당신의 페이스북 친구"+ count+"명이 \nhasBeen을 이용중입니다.";
+    }
+    public static String getFbCountSecond(int count,int countryCode) {
+        return count+"명의 친구들 모두 보기";
+    }
 
 }

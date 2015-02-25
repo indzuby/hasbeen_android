@@ -51,24 +51,23 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         mViewPager = (ViewPager) findViewById(R.id.pager);
         newsfeed = actionBar
                 .newTab()
-                .setIcon(R.drawable.newsfeed)
+                .setIcon(R.drawable.newsfeed_selector)
                 .setTabListener(this);
         search = actionBar
                 .newTab()
-                .setIcon(R.drawable.search)
+                .setIcon(R.drawable.search_selector)
                 .setTabListener(this);
         gallery = actionBar
                 .newTab()
-                .setIcon(R.drawable.gallery)
+                .setIcon(R.drawable.gallery_selector)
                 .setTabListener(this);
         alarm = actionBar
                 .newTab()
-                .setIcon(R.drawable.alarm)
+                .setIcon(R.drawable.alarm_selector)
                 .setTabListener(this);
         profile = actionBar
                 .newTab()
-                .setIcon(R.drawable.profile)
-
+                .setIcon(R.drawable.profile_selector)
                 .setTabListener(this);
         actionBar.addTab(newsfeed);
         actionBar.addTab(search);
@@ -101,12 +100,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             e.printStackTrace();
         }
     }
-    protected void clearTabSelect(){
-        newsfeed.setIcon(R.drawable.newsfeed);
-        search.setIcon(R.drawable.search);
-        gallery.setIcon(R.drawable.gallery);
-        alarm.setIcon(R.drawable.alarm);
-        profile.setIcon(R.drawable.profile);
+    public void changeTab(int position) {
+        mViewPager.setCurrentItem(position,true);
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -115,9 +110,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        mViewPager.setCurrentItem(tab.getPosition());
-        clearTabSelect();
-        tab.setIcon(tabIcon[tab.getPosition()]);
+        changeTab(tab.getPosition());
     }
 
     @Override

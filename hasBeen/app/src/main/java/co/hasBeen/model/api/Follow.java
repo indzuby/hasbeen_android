@@ -1,9 +1,12 @@
 package co.hasBeen.model.api;
 
+import java.io.Serializable;
+
 /**
  * Created by 주현 on 2015-02-02.
  */
-public class Follow {
+public class Follow implements Serializable{
+    private static final long serialVersionUID = 1L;
     Long id;
     User toUser;
     User fromUser;
@@ -28,4 +31,5 @@ public class Follow {
     public void setFollowingId(Long followingId) {
         this.followingId = followingId;
     }
+
 }

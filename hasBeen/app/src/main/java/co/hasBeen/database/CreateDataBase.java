@@ -290,7 +290,7 @@ public class CreateDataBase {
         position.setStartTime(photo.getTakenTime());
         position.setEndTime(photo.getTakenTime());
         position.setMainPhotoId(photo.getId());
-        position.setType("Place");
+        position.setType("PLACE");
         position.setPlaceId(placeId);
         position.setCategoryIconPrefix(photo.getCategoryIconPrefix());
         position.setCategoryIconSuffix(photo.getCategoryIconSuffix());

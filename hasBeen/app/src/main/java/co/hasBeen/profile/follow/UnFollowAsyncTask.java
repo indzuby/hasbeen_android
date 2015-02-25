@@ -18,7 +18,7 @@ import co.hasBeen.utils.Session;
  */
 public class UnFollowAsyncTask extends AsyncTask<Object,Void,Boolean> {
     Handler mHandler;
-    final static String daysURL = Session.DOMAIN+"follows/";
+    final static String URL = Session.DOMAIN+"follows/";
 
     @Override
     protected Boolean doInBackground(Object... params) {
@@ -26,7 +26,7 @@ public class UnFollowAsyncTask extends AsyncTask<Object,Void,Boolean> {
         HttpResponse response;
         Uri uri;
         try {
-            uri = Uri.parse(daysURL + params[1]);
+            uri = Uri.parse(URL + params[1]);
             HttpDelete del = new HttpDelete(uri.toString());
             del.addHeader("User-Agent","Android");
             del.addHeader("Content-Type","application/json");

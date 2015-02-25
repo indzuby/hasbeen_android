@@ -67,7 +67,7 @@ public class GallerySharePhotoAdapter extends GalleryAdapter {
             view = inflater.inflate(R.layout.gallery_share_view, null);
 
         }
-        ImageView imageView = (ImageView) view.findViewById(R.id.view_gallery);
+        ImageView imageView = (ImageView) view.findViewById(R.id.photo);
         int width = mContext.getResources().getDisplayMetrics().widthPixels;
 
         int px = Util.pxFromDp(mContext, 1);
@@ -78,6 +78,8 @@ public class GallerySharePhotoAdapter extends GalleryAdapter {
         ImageButton check = (ImageButton) view.findViewById(R.id.checked);
         if(mCheckedButton[position]==null)
             mCheckedButton[position] = check;
+        if(!isChecked[position])
+            check.setVisibility(View.INVISIBLE);
         imageView.setOnClickListener(new PhotoListener(position));
         Glide.with(mContext).load(photo.getPhotoPath())
                 .centerCrop()
@@ -89,8 +91,10 @@ public class GallerySharePhotoAdapter extends GalleryAdapter {
     public GallerySharePhotoAdapter(Context context, List imagePath, Boolean[] isChecked) {
         super(context, imagePath);
         mCheckedButton = new ImageButton[imagePath.size()];
-        mCheckedCount = imagePath.size();
+        mCheckedCount = 0;
         this.isChecked = isChecked;
+        for(int i = 0; i <isChecked.length;i++)
+            if(isChecked[i]) mCheckedCount ++;
     }
     class PhotoListener implements View.OnClickListener {
         int position;

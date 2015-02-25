@@ -13,9 +13,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
-
-import java.net.URLEncoder;
 
 import co.hasBeen.utils.Session;
 
@@ -51,15 +50,16 @@ public class SignUpAsyncTask extends AsyncTask<String, Void, String> {
             JSONObject param = new JSONObject();
             if(params[0].equals(EMAIL)) {
                 param.put("email", params[1]);
-                param.put("firstName", URLEncoder.encode(params[2], "UTF-8"));
-                param.put("lastName",URLEncoder.encode(params[3], "UTF-8"));
+                param.put("firstName", params[2]);
+                param.put("lastName",params[3]);
                 param.put("password", params[4]);
             }else {
                 param.put("socialType", "FACEBOOK");
                 param.put("token", params[1]);
             }
-            post.setEntity(new StringEntity(param.toString()));
+            post.setEntity(new StringEntity(param.toString(), HTTP.UTF_8));
             // Execute HTTP Post Request
+
 
             Log.i("Request", param.toString());
             response = httpclient.execute(post);

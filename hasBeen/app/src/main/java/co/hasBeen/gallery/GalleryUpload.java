@@ -4,14 +4,19 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -20,15 +25,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
 import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Place;
-import co.hasBeen.utils.JsonConverter;
-import co.hasBeen.utils.Session;
-import co.hasBeen.R;
 import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.database.Place;
 import co.hasBeen.model.database.Position;
 import co.hasBeen.model.network.UploadStorage;
+import co.hasBeen.utils.JsonConverter;
+import co.hasBeen.utils.Session;
+import co.hasBeen.utils.Util;
 
 /**
  * Created by zuby on 2015-01-29.
@@ -45,6 +51,7 @@ public class GalleryUpload extends ActionBarActivity {
     ContentResolver resolver;
     EditText mTitle;
     EditText mDescription;
+    String mAccessToekn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +62,7 @@ public class GalleryUpload extends ActionBarActivity {
 
     protected void init() {
         setContentView(R.layout.gallery_upload);
+        mAccessToekn = Session.getString(this,"accessToken",null);
         initActionBar();
         mStorage = new UploadStorage(this);
         mData = getIntent().getStringExtra("data");
@@ -97,31 +105,40 @@ public class GalleryUpload extends ActionBarActivity {
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                showProgress();
-//                uploadStorage();
-//                new Thread(new Runnable() {
-//                    int total = 0 ;
-//                    @Override
-//                    public void run() {
-//                        while(mStorage.mPhotoCnt != mDayUpload.getPhotoCount())  {
-//                            dialog.setProgress(mStorage.mPhotoCnt);
-//                        }
-//                        String title = mTitle.getText().toString();
-//                        String description = mDescription.getText().toString();
-//                        if(title.length()==0)
-//                            title = Util.convertPlaceName(mDayUpload.getPositionList());
-//                        mDayUpload.setTitle(title);
-//                        mDayUpload.setDescription(description);
-//                        Log.i("done", "pressed");
-//                        dialog.dismiss();
-//                    }
-//                }).start();
+                showProgress();
+                uploadStorage();
+                new Thread(new Runnable() {
+                    int total = 0 ;
+                    @Override
+                    public void run() {
+                        while(mStorage.mPhotoCnt != mDayUpload.getPhotoCount())  {
+                            dialog.setProgress(mStorage.mPhotoCnt);
+                        }
+                        String title = mTitle.getText().toString();
+                        String description = mDescription.getText().toString();
+                        if(title.length()==0)
+                            title = Util.convertPlaceName(mDayUpload.getPositionList());
+                        mDayUpload.setTitle(title);
+                        mDayUpload.setDescription(description);
+                        Log.i("done", "pressed");
+                        new UploadAsyncTask(mUploadHandler).execute(mAccessToekn, mDayUpload);
+                    }
+                }).start();
             }
         });
         actionBar.setCustomView(mCustomActionBar);
         actionBar.setDisplayShowCustomEnabled(true);
     }
-
+    Handler mUploadHandler = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(msg.what==0) {
+                Toast.makeText(getBaseContext(),"Upload complete.",Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        }
+    };
     protected List<Place> makePlaceList(Day day) {
         Map<Long, Place> placeList = new HashMap<>();
         List<Position> positionList = day.getPositionList();
