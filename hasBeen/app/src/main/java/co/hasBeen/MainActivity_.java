@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -14,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.maps.android.ui.IconGenerator;
+
 import org.opencv.android.OpenCVLoader;
 
 import co.hasBeen.alarm.AlarmCountAsyncTask;
@@ -21,10 +24,9 @@ import co.hasBeen.database.CreateDataBase;
 import co.hasBeen.utils.Session;
 
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener{
-    View newsfeed,search,gallery,alarm,profile;
+public class MainActivity_ extends ActionBarActivity implements ActionBar.TabListener{
+    ActionBar.Tab newsfeed,search,gallery,alarm,profile;
     int tabIcon[] = {R.drawable.newsfeed_pressed,R.drawable.search_pressed,R.drawable.gallery_pressed,R.drawable.alarm_pressed,R.drawable.profile_pressed};
-    TextView mCount;
     static {
 
         if (!OpenCVLoader.initDebug()) {
@@ -38,38 +40,57 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private String TAG = "MainActivity";
     TabPagerAdapter mPagerAdapter;
     ViewPager mViewPager;
+    static {
+        if (!OpenCVLoader.initDebug()) {
+            // Handle initialization error
+        } else {
+            System.loadLibrary("opencv_java");
+            System.loadLibrary("opencv_info");
+            //System.loadLibrary("opencv_core");
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         showProgress();
         setContentView(R.layout.activity_main);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(false);
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        View view = LayoutInflater.from(getBaseContext()).inflate(R.layout.action_bar_tab, null, false);
-        newsfeed = view.findViewById(R.id.newsfeed);
-        search = view.findViewById(R.id.search);
-        gallery = view.findViewById(R.id.gallery);
-        alarm = view.findViewById(R.id.alarm);
-        mCount = (TextView)alarm.findViewById(R.id.count);
-        profile = view.findViewById(R.id.profile);
-        newsfeed.setOnClickListener(this);
-        search.setOnClickListener(this);
-        gallery.setOnClickListener(this);
-        alarm.setOnClickListener(this);
-        profile.setOnClickListener(this);
-        actionBar.setCustomView(view);
-        actionBar.setDisplayShowCustomEnabled(true);
-        changeIcon(0);
+        newsfeed = actionBar
+                .newTab()
+                .setIcon(R.drawable.newsfeed_selector)
+                .setTabListener(this);
+        search = actionBar
+                .newTab()
+                .setIcon(R.drawable.search_selector)
+                .setTabListener(this);
+        gallery = actionBar
+                .newTab()
+                .setIcon(R.drawable.gallery_selector)
+                .setTabListener(this);
+        alarm = actionBar
+                .newTab()
+                .setIcon(R.drawable.alarm_selector)
+                .setTabListener(this);
+        profile = actionBar
+                .newTab()
+                .setIcon(R.drawable.profile_selector)
+                .setTabListener(this);
+        actionBar.addTab(newsfeed);
+        actionBar.addTab(search);
+        actionBar.addTab(gallery);
+        actionBar.addTab(alarm);
+        actionBar.addTab(profile);
         mPagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOffscreenPageLimit(4);
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                changeIcon(position);
+                actionBar.setSelectedNavigationItem(position);
             }
         });
         new Thread(new Runnable() {
@@ -88,65 +109,15 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                     int count = (int) msg.obj;
                     if(count==0)
                         return ;
-                    mCount.setText(count + "");
-                    mCount.setVisibility(View.VISIBLE);
+                    IconGenerator icon = new IconGenerator(getBaseContext());
+                    View layout = LayoutInflater.from(getBaseContext()).inflate(R.layout.alarm_icon, null, false);
+                    icon.setContentView(layout);
+                    icon.setBackground(null);
+                    ((TextView)layout.findViewById(R.id.count)).setText(count+"");
                 }
             }
         }).execute(accessToken);
     }
-    public void readAlarm() {
-        mCount.setVisibility(View.GONE);
-    }
-    void clearSelect(){
-        newsfeed.setSelected(false);
-        search.setSelected(false);
-        gallery.setSelected(false);
-        alarm.setSelected(false);
-        profile.setSelected(false);
-    }
-    @Override
-    public void onClick(View v) {
-        clearSelect();
-        v.setSelected(true);
-        switch (v.getId()) {
-            case R.id.newsfeed :
-                changeTab(0);
-                break;
-            case R.id.search :
-                changeTab(1);
-                break;
-            case R.id.gallery :
-                changeTab(2);
-                break;
-            case R.id.alarm :
-                changeTab(3);
-                break;
-            case R.id.profile :
-                changeTab(4);
-                break;
-        }
-    }
-    protected void changeIcon(int index){
-        clearSelect();
-        switch (index) {
-            case 0:
-                newsfeed.setSelected(true);
-                break;
-            case 1:
-                search.setSelected(true);
-                break;
-            case 2:
-                gallery.setSelected(true);
-                break;
-            case 3:
-                alarm.setSelected(true);
-                break;
-            case 4:
-                profile.setSelected(true);
-                break;
-        }
-    }
-
     protected void initDatabase(){
         try {
             CreateDataBase createDataBase = new CreateDataBase(this);
@@ -162,6 +133,21 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+        changeTab(tab.getPosition());
+    }
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
     }
 
     static final int REQUEST = 1;  // The request code

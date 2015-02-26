@@ -1,8 +1,10 @@
-package co.hasBeen.gallery;
+package co.hasBeen.day;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,29 +17,29 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
 import co.hasBeen.model.database.Category;
-import co.hasBeen.model.database.Photo;
 import co.hasBeen.model.database.Place;
 import co.hasBeen.model.database.Position;
 import co.hasBeen.utils.Session;
-import co.hasBeen.R;
 
 /**
  * Created by zuby on 2015-01-22.
  */
-public class GalleryPlaceAdapter extends BaseAdapter{
-    static final int RESULT = 2;
+public class DayPlaceAdapter extends BaseAdapter{
     List<Category> mCategories;
     Position mPosition;
     Context mContext;
     DatabaseHelper database;
     public int mIndex;
-    public GalleryPlaceAdapter(Context context ,List<Category> categories,Position position) {
+    String  mAccessToken;
+    public DayPlaceAdapter(Context context, List<Category> categories, Position position) {
         mCategories = categories;
         mContext = context;
         mPosition = position;
         database = new DatabaseHelper(mContext);
+        mAccessToken = Session.getString(mContext, "accessToken", null);
     }
 
     @Override
@@ -103,46 +105,30 @@ public class GalleryPlaceAdapter extends BaseAdapter{
 
         @Override
         public void onClick(View v) {
-            updatePlace(category);
-            Session.putBoolean(mContext, "placeChange", true);
-            Log.i("index", mIndex + "");
-            ((Activity) mContext).setResult(RESULT);
-            ((Activity)mContext).finish();
-
+            Place place = mPosition.getPlace();
+            updatePlace(place,category);
+            new DayChangePlaceAsyncTask(new Handler(Looper.getMainLooper()) {
+                @Override
+                public void handleMessage(Message msg) {
+                    super.handleMessage(msg);
+                    if(msg.what==0) {
+                        ((Activity) mContext).setResult(Activity.RESULT_OK);
+                        ((Activity)mContext).finish();
+                    }
+                }
+            }).execute(mAccessToken,mPosition.getId(),place);
         }
     }
-    void updatePlace(Category category){
-        try {
-            Long placeId;
-            if (database.hasVenueId(category.getVenueId()))
-                placeId = database.getPlaceIdByVenueId(category.getVenueId());
-            else
-                placeId = insertPlace(category);
-
-            mPosition.setPlaceId(placeId);
-            Log.i("place id ",placeId +"");
-            database.updatePosition(mPosition);
-            Log.i("place id changed",database.selectPosition(mPosition.getId()).getPlaceId()+"");
-            database.updatePhotosPlaceId(mPosition.getId(),placeId);
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    Long insertPlace(Category category) throws Exception{
-        Place place = new Place();
-        Photo photo = database.selectPhoto(mPosition.getMainPhotoId());
+    void updatePlace(Place place, Category category){
         place.setVenueId(category.getVenueId());
         place.setCategoryId(category.getCategoryId());
         place.setCategoryName(category.getCategryName());
+        place.setCategoryIconSuffix(category.getCategoryIconSuffix());
+        place.setCategoryIconPrefix(category.getCategoryIconPrefix());
         place.setCountry(category.getCountry());
         place.setCity(category.getCity());
         place.setName(category.getPlaceName());
         place.setLat(category.getLat());
         place.setLon(category.getLon());
-        place.setCategoryIconPrefix(category.getCategoryIconPrefix());
-        place.setCategoryIconSuffix(category.getCategoryIconSuffix());
-        place.setMainPhotoId(photo.getId());
-        return database.insertPlace(place);
     }
-
 }

@@ -25,18 +25,18 @@ import com.bumptech.glide.Glide;
 import java.util.Collections;
 import java.util.List;
 
-import co.hasBeen.comment.CommentAsyncTask;
-import co.hasBeen.loved.LoveListner;
-import co.hasBeen.model.api.Comment;
-import co.hasBeen.profile.ProfileClickListner;
-import co.hasBeen.utils.Session;
 import co.hasBeen.R;
+import co.hasBeen.comment.CommentAsyncTask;
 import co.hasBeen.comment.CommentView;
 import co.hasBeen.comment.EnterCommentListner;
 import co.hasBeen.comment.WriteCommentAsyncTask;
+import co.hasBeen.loved.LoveListner;
+import co.hasBeen.model.api.Comment;
 import co.hasBeen.model.database.Photo;
+import co.hasBeen.profile.ProfileClickListner;
 import co.hasBeen.utils.CircleTransform;
 import co.hasBeen.utils.HasBeenDate;
+import co.hasBeen.utils.Session;
 import co.hasBeen.utils.Util;
 
 /**
@@ -52,13 +52,14 @@ public class PhotoView extends ActionBarActivity {
     int mViewCommentCount;
     Long lastCommentId;
     Typeface medium, regular;
-
+    Long mMyid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         showProgress();
         mPhotoId = getIntent().getLongExtra("photoId", 0);
         mAccessToken = Session.getString(this, "accessToken", null);
+        mMyid = Session.getLong(this, "myUserid", 0);
         init();
     }
 
@@ -155,7 +156,14 @@ public class PhotoView extends ActionBarActivity {
         });
         for (int i = 0; i < mPhoto.getCommentList().size(); i++) {
             Comment comment = mPhoto.getCommentList().get(i);
-            commentBox.addView(CommentView.makeComment(this, comment));
+            View view = CommentView.makeComment(this, comment);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new EnterCommentListner(getBaseContext(), "photos", mPhoto.getId(),mPhoto.getCommentCount());
+                }
+            });
+            commentBox.addView(view);
         }
 
         LinearLayout commentButton = (LinearLayout) findViewById(R.id.commentButton);
@@ -192,7 +200,6 @@ public class PhotoView extends ActionBarActivity {
         });
         ;
     }
-
     protected void init() {
         setContentView(R.layout.photo);
         medium = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Medium.ttf");

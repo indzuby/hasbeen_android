@@ -1,53 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:weightSum="5">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
     <LinearLayout
-        android:layout_width="0dp"
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
         android:background="@color/transparent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:padding="8dp"
-        android:id="@+id/searchView">
+        android:orientation="horizontal"
+        android:weightSum="5">
 
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center|bottom"
-            android:background="@drawable/gallery_icon_oval"
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-            android:id="@+id/placeIcon"/>
+            <ImageView
+                android:id="@+id/placeIcon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/gallery_icon_oval" />
+        </RelativeLayout>
 
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:orientation="vertical"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:id="@+id/placeName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Area 1, Norway"
+                android:textColor="@color/light_black"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/placeTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="10:22AM - 11:34Am"
+                android:textColor="@color/light_gray"
+                android:textSize="11sp" />
+        </LinearLayout>
     </LinearLayout>
+
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="4"
-        android:paddingTop="8dp"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/placeName"
-            android:textColor="@color/light_black"
-            android:textSize="13sp"
-            android:text="Area 1, Norway"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/placeTime"
-            android:textColor="@color/light_gray"
-            android:textSize="11sp"
-            android:text="10:22AM - 11:34Am"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <View
+            android:layout_width="72dp"
+            android:layout_height="120dp"
+            android:background="@color/transparent" />
+
         <it.sephiroth.android.library.widget.HListView
             android:id="@+id/hListView"
             android:layout_width="match_parent"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="11dp"
-            android:layout_height="120dp"/>
+            android:layout_height="120dp"
+            android:layout_marginBottom="16dp" />
     </LinearLayout>
-
 </LinearLayout>

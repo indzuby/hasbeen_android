@@ -10,14 +10,18 @@
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/title"
         android:layout_marginTop="-2dp"
+        android:focusable="false"
+        android:background="@drawable/description_selector"
+        android:focusableInTouchMode="false"
+        android:text="title"
         android:fontFamily="sans-serif-medium"
         android:textColor="@color/light_black"
-        android:textSize="13sp"
+        android:textSize="14sp"
         />
     <ImageView
         android:layout_width="wrap_content"
@@ -27,14 +31,16 @@
         android:src="@drawable/newsfeed_more"
         android:layout_alignParentRight="true"
         android:layout_height="wrap_content" />
-    <TextView
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:includeFontPadding="false"
         android:fontFamily="sans-serif-regular"
         android:background="@drawable/description_selector"
-
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="decription"
         android:id="@+id/description"
         android:layout_below="@+id/title"
         android:textColor="@color/light_black"

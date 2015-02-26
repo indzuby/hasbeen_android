@@ -37,9 +37,11 @@
     <style name="hasBeenShare" parent="Theme.AppCompat.Light">
         <item name="android:actionBarStyle">@style/ShareActionBar</item>
         <item name="android:actionButtonStyle">@style/ShareMenuButton</item>
+        <item name="android:toolbarStyle">@style/ToolbarStyle</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="actionBarStyle"> @style/ShareActionBar</item>
         <item name="actionButtonStyle">@style/ShareMenuButton</item>
+        <item name="toolbarStyle">@style/ToolbarStyle</item>
 
     </style>
     <style name="ShareActionBar" parent="Widget.AppCompat.ActionBar">
@@ -50,6 +52,10 @@
         <item name="backgroundStacked">@color/theme_color</item>
         <item name="titleTextStyle">@style/ShareTitleStyle</item>
         <item name="height">48dp</item>
+    </style>
+    <style name="ToolbarStyle" parent="Widget.AppCompat.Toolbar">
+        <item name="android:contentInsetStart">0dp</item>
+        <item name="contentInsetStart">0dp</item>
     </style>
     <style name="ShareTitleStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">#FFFFFF</item>

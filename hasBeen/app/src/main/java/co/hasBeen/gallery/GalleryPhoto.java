@@ -15,7 +15,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -138,11 +137,11 @@ public class GalleryPhoto extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 mDescriptionView.setFocusable(true);
-                mDescriptionView.setEnabled(true);
                 mDescriptionView.setFocusableInTouchMode(true);
+                mDescriptionView.setEnabled(true);
                 mDescriptionView.setClickable(true);
                 mDescriptionView.setSelected(true);
-                mDescriptionView.requestFocus();
+                mDescriptionView.requestFocus(mDescriptionView.getText().toString().length()-1);
                 mEditButton.setVisibility(View.INVISIBLE);
                 mImm.showSoftInput(mDescriptionView,InputMethodManager.SHOW_FORCED);
                 initActionBarEdit();
@@ -165,7 +164,7 @@ public class GalleryPhoto extends ActionBarActivity {
 
     protected void pressedEditDone(){
         String text = mDescriptionView.getText().toString();
-        Toast.makeText(this,text,Toast.LENGTH_LONG).show();
+//        Toast.makeText(this,text,Toast.LENGTH_LONG).show();
         mPhoto.setDescription(text);
         try {
             mDatabase.updatePhoto(mPhoto);
@@ -179,6 +178,5 @@ public class GalleryPhoto extends ActionBarActivity {
         mDescriptionView.setClickable(false);
         mDescriptionView.setSelected(false);
         mEditButton.setVisibility(View.VISIBLE);
-
     }
 }

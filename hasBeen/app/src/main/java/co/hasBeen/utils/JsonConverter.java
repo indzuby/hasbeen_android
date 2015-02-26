@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder;
 
 import co.hasBeen.model.database.Day;
 import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.database.Position;
 
 /**
  * Created by 주현 on 2015-02-13.
@@ -33,5 +34,23 @@ public class JsonConverter {
         }).create();
         Day day = gson.fromJson(json, Day.class);
         return day;
+    }
+    public static Position convertJsonToPosition(String json) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                if(f.getDeclaredClass() == Photo.class){
+                        return true;
+                }
+                return false;
+            }
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                return false;
+            }
+        }).create();
+        Position position = gson.fromJson(json, Position.class);
+        return position;
     }
 }

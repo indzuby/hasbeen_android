@@ -34,6 +34,7 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
     final static String DAY_PARAM = "v";
     final static String LOCATION_PARAM = "ll";
     final static String QUERY_PARAM = "query";
+    final static String LOCALE_PARAM = "locale";
     String ll;
     Photo photo;
     int placeCount = 25;
@@ -62,7 +63,9 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
                     .appendQueryParameter(ID_PARAM, CLIENT_ID)
                     .appendQueryParameter(SECRET_PARAM, CLIENT_SECRET)
                     .appendQueryParameter(DAY_PARAM, currentDate)
-                    .appendQueryParameter(LOCATION_PARAM, ll).build();
+                    .appendQueryParameter(LOCATION_PARAM, ll)
+                    .appendQueryParameter(LOCALE_PARAM,"en")
+                    .build();
 //                Log.e("Url",uri.toString());
             HttpGet get = new HttpGet(uri.toString());
             response = client.execute(get);
@@ -113,6 +116,15 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
                         mCategory.setCategoryId(category.getString("id"));
                         mCategory.setCategoryIconPrefix(icon.getString("prefix"));
                         mCategory.setCategoryIconSuffix(icon.getString("suffix"));
+
+                        JSONObject location = item.getJSONObject("location");
+
+                        if(location.has("city"))
+                            mCategory.setCity(location.getString("city"));
+                        if(location.has("country"))
+                            mCategory.setCountry(location.getString("country"));
+                        mCategory.setLat((float)location.getDouble("lat"));
+                        mCategory.setLon((float)location.getDouble("lng"));
                         categories.add(mCategory);
                     }
                 }

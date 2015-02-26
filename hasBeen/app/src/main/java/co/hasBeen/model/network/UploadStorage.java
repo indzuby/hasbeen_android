@@ -49,6 +49,7 @@ public class UploadStorage {
     Context mContext;
     ContentResolver resolver;
     public int mPhotoCnt;
+    final int imgSize = 1080;
     public UploadStorage(Context context) {
         try {
             initStorageAccount();
@@ -121,8 +122,24 @@ public class UploadStorage {
         return MediaStore.Images.Thumbnails.getThumbnail(resolver, id, MediaStore.Images.Thumbnails.MICRO_KIND, null);
     }
 
-    protected Bitmap getMiniThumbnail(long id) {
-        return MediaStore.Images.Thumbnails.getThumbnail(resolver, id, MediaStore.Images.Thumbnails.MINI_KIND, null);
+    protected Bitmap getMediumThumbnail(String path) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path,options);
+        options.inJustDecodeBounds = false;
+        options.inSampleSize = 1;
+        if( options.outWidth > imgSize ) {
+            int ws = options.outWidth / imgSize + 1;
+            if( ws > options.inSampleSize )
+                options.inSampleSize = ws;
+        }
+        if( options.outHeight > imgSize ) {
+            int hs = options.outHeight / imgSize + 1;
+            if( hs > options.inSampleSize )
+                options.inSampleSize = hs;
+        }
+        return BitmapFactory.decodeFile(path, options);
+//        return MediaStore.Images.Thumbnails.getThumbnail(resolver, id, MediaStore.Images.Thumbnails.MINI_KIND, null);
     }
 
     protected Bitmap getLargeThumbnail(String path) {
@@ -179,7 +196,7 @@ public class UploadStorage {
                     if(type.equals("small"))
                         bitmap = getMicroThumbnail(id);
                     else if(type.equals("medium"))
-                        bitmap = getMiniThumbnail(id);
+                        bitmap = getMediumThumbnail(photo.getPhotoPath());
                     else if(type.equals("large"))
                         bitmap = getLargeThumbnail(photo.getPhotoPath());
                     dir += "/"+photo.getTakenTime()+"_"+type+".jpg";

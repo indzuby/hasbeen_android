@@ -62,7 +62,10 @@ public class Util {
     }
     public static String convertPlaceName(List<Position> positions) {
         if(positions.size()<=0) return "";
-        String place = positions.get(0).getPlace().getName()+" — "+positions.get(positions.size()-1).getPlace().getName();
+        String place= positions.get(0).getPlace().getName();
+        if(positions.size()>1){
+          place += " — " + positions.get(positions.size() - 1).getPlace().getName();
+        }
         if(place.length()>35)
             place = place.substring(0,35)+" ...";
         return place;

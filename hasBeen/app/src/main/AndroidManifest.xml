@@ -23,7 +23,7 @@
 
         <activity
             android:name="co.hasBeen.MainActivity"
-            android:label="@string/app_name" >
+            android:theme="@style/hasBeenShare">
         </activity>
         <activity android:name="co.hasBeen.gallery.GalleryPhoto" android:theme="@style/FullPhoto" android:label="@string/app_name" />
         <activity android:name="co.hasBeen.gallery.GalleryShare"  android:theme="@style/hasBeenShare" />
@@ -38,7 +38,8 @@
             </intent-filter>
         </activity>
         <activity android:name="co.hasBeen.account.SignUpActivity"  android:theme="@style/NoActionBar" android:windowSoftInputMode="adjustPan|adjustResize"/>
-        <activity android:name="co.hasBeen.day.DayView" android:theme="@style/hasBeenShare" android:label="@string/app_name" />
+        <activity android:name="co.hasBeen.day.DayView" android:theme="@style/hasBeenShare" android:label="@string/app_name" android:windowSoftInputMode="adjustResize" />
+        <activity android:name="co.hasBeen.day.DayChangePlace" android:theme="@style/hasBeenShare" android:label="@string/app_name"/>
         <activity android:name="co.hasBeen.comment.CommentView" android:theme="@style/hasBeenShare" android:label="@string/app_name" />
         <activity android:name="co.hasBeen.photo.PhotoView" android:theme="@style/hasBeenShare" android:label="@string/app_name" />
         <activity android:name="co.hasBeen.profile.follow.FollowView" android:theme="@style/hasBeenShare" android:label="@string/app_name" />

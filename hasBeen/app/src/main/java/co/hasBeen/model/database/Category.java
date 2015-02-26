@@ -13,6 +13,41 @@ public class Category {
     String categoryIconSuffix;
     String placeName;
     Bitmap bitmap;
+    String city;
+    String country;
+    float lat;
+    float lon;
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public float getLat() {
+        return lat;
+    }
+
+    public void setLat(float lat) {
+        this.lat = lat;
+    }
+
+    public float getLon() {
+        return lon;
+    }
+
+    public void setLon(float lon) {
+        this.lon = lon;
+    }
 
     public Bitmap getBitmap() {
         return bitmap;
