@@ -17,14 +17,19 @@ import android.widget.TextView;
 import org.opencv.android.OpenCVLoader;
 
 import co.hasBeen.alarm.AlarmCountAsyncTask;
+import co.hasBeen.alarm.AlarmFragment;
 import co.hasBeen.database.CreateDataBase;
+import co.hasBeen.model.api.AlarmCount;
+import co.hasBeen.profile.ProfileFragment;
 import co.hasBeen.utils.Session;
 
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener{
     View newsfeed,search,gallery,alarm,profile;
+    boolean isAlarmRead = false;
     int tabIcon[] = {R.drawable.newsfeed_pressed,R.drawable.search_pressed,R.drawable.gallery_pressed,R.drawable.alarm_pressed,R.drawable.profile_pressed};
     TextView mCount;
+    AlarmCount mAlarmCount;
     static {
 
         if (!OpenCVLoader.initDebug()) {
@@ -70,6 +75,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             @Override
             public void onPageSelected(int position) {
                 changeIcon(position);
+
+
             }
         });
         new Thread(new Runnable() {
@@ -79,16 +86,19 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 dialog.dismiss();
             }
         }).start();
+        getAlarmCount();
+    }
+    public void getAlarmCount(){
         String accessToken = Session.getString(this,"accessToken",null);
         new AlarmCountAsyncTask(new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 if(msg.what==0) {
-                    int count = (int) msg.obj;
-                    if(count==0)
+                    mAlarmCount = (AlarmCount) msg.obj;
+                    if(mAlarmCount.getTotalCount()==0)
                         return ;
-                    mCount.setText(count + "");
+                    mCount.setText(mAlarmCount.getTotalCount() + "");
                     mCount.setVisibility(View.VISIBLE);
                 }
             }
@@ -127,6 +137,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         }
     }
     protected void changeIcon(int index){
+        if(index!=3 && isAlarmRead){
+            getAlarmCount();
+            isAlarmRead = false;
+        }
         clearSelect();
         switch (index) {
             case 0:
@@ -140,9 +154,15 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 break;
             case 3:
                 alarm.setSelected(true);
+                isAlarmRead = true;
+                AlarmFragment alarm =(AlarmFragment)mPagerAdapter.getItem(3);
+                alarm.redDotRefresh(mAlarmCount);
+                readAlarm();
                 break;
             case 4:
                 profile.setSelected(true);
+                ProfileFragment profile = (ProfileFragment)mPagerAdapter.getItem(4);
+                profile.initAll();
                 break;
         }
     }

@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <com.handmark.pulltorefresh.library.PullToRefreshScrollView
-        android:id="@+id/pullToRefreshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
         <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <FrameLayout
@@ -93,6 +84,7 @@
                 <RelativeLayout
                     android:id="@+id/dayButton"
                     android:layout_width="0dp"
+                    android:background="@drawable/profile_menu_selector"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
@@ -118,18 +110,13 @@
                             android:textSize="12sp" />
                     </LinearLayout>
 
-                    <View
-                        android:id="@+id/daySelectBar"
-                        android:layout_width="match_parent"
-                        android:layout_height="4dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/theme_color" />
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/photoButton"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:background="@drawable/profile_menu_selector"
                     android:layout_weight="1">
 
                     <LinearLayout
@@ -152,19 +139,13 @@
                             android:textSize="12sp" />
                     </LinearLayout>
 
-                    <View
-                        android:id="@+id/photoSelectBar"
-                        android:layout_width="match_parent"
-                        android:layout_height="4dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/theme_color"
-                        android:visibility="gone" />
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/likeButton"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:background="@drawable/profile_menu_selector"
                     android:layout_weight="1">
 
                     <LinearLayout
@@ -186,51 +167,8 @@
                             android:text="LIKES"
                             android:textSize="12sp" />
                     </LinearLayout>
-
-                    <View
-
-                        android:id="@+id/loveSelectBar"
-                        android:layout_width="match_parent"
-                        android:layout_height="4dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/theme_color"
-                        android:visibility="gone" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="142"
-                            android:textColor="@color/theme_color" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="DAYS"
-                            android:textColor="@color/theme_color" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="4dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/theme_color" />
                 </RelativeLayout>
             </LinearLayout>
-        </LinearLayout>
-    </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 
     <FrameLayout
         android:layout_width="match_parent"

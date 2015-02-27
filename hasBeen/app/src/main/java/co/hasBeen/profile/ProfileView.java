@@ -198,13 +198,13 @@ public class ProfileView extends ActionBarActivity {
         mMapFragment = ((SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map));
 
-
         mMapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap map) {
                 mMap = map;
                 mMapRoute = new MapRoute(map, getBaseContext());
                 UiSettings setting = map.getUiSettings();
+                nowTabIndicator(R.id.dayButton);
                 setting.setZoomControlsEnabled(true);
                 setting.setRotateGesturesEnabled(false);
                 setting.setMyLocationButtonEnabled(false);
@@ -232,25 +232,18 @@ public class ProfileView extends ActionBarActivity {
     class ProfileBarOnClickListner implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            clearSelect();
+            nowTabIndicator(v.getId());
             switch (v.getId()) {
                 case R.id.dayButton:
                     nowTab = DAY;
-                    findViewById(R.id.daySelectBar).setVisibility(View.VISIBLE);
-                    ((TextView) findViewById(R.id.dayCount)).setTextColor(getResources().getColor(R.color.light_black));
                     mapRendering(DAY);
                     break;
                 case R.id.photoButton:
                     nowTab = PHOTO;
-                    findViewById(R.id.photoSelectBar).setVisibility(View.VISIBLE);
-                    ((TextView) findViewById(R.id.photoCount)).setTextColor(getResources().getColor(R.color.light_black));
                     mapRendering(PHOTO);
                     break;
                 case R.id.likeButton:
                     nowTab = LOVE;
-                    findViewById(R.id.loveSelectBar).setVisibility(View.VISIBLE);
-                    ((TextView) findViewById(R.id.loveCount)).setTextColor(getResources().getColor(R.color.light_black));
-                    findViewById(R.id.likeBar).setVisibility(View.VISIBLE);
                     subTab = DAY;
                     initLikeBar();
                     mapRendering(LOVE);
@@ -260,14 +253,25 @@ public class ProfileView extends ActionBarActivity {
             }
         }
     }
-
+    public void nowTabIndicator(int id){
+        clearSelect();
+        findViewById(id).setSelected(true);
+        if(id == R.id.dayButton)
+            ((TextView) findViewById(R.id.dayCount)).setTextColor(getResources().getColor(R.color.light_black));
+        else if(id == R.id.photoButton)
+            ((TextView) findViewById(R.id.photoCount)).setTextColor(getResources().getColor(R.color.light_black));
+        else {
+            findViewById(R.id.likeBar).setVisibility(View.VISIBLE);
+            ((TextView) findViewById(R.id.loveCount)).setTextColor(getResources().getColor(R.color.light_black));
+        }
+    }
     protected void clearSelect() {
+        findViewById(R.id.dayButton).setSelected(false);
+        findViewById(R.id.photoButton).setSelected(false);
+        findViewById(R.id.likeButton).setSelected(false);
         findViewById(R.id.likeBar).setVisibility(View.GONE);
-        findViewById(R.id.loveSelectBar).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.loveCount)).setTextColor(getResources().getColor(R.color.light_gray));
-        findViewById(R.id.photoSelectBar).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.photoCount)).setTextColor(getResources().getColor(R.color.light_gray));
-        findViewById(R.id.daySelectBar).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.dayCount)).setTextColor(getResources().getColor(R.color.light_gray));
         mMap.clear();
     }

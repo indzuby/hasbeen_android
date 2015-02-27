@@ -14,16 +14,17 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import co.hasBeen.model.api.AlarmCount;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by 주현 on 2015-02-26.
  */
-public class AlarmCountAsyncTask extends AsyncTask<Object, Void, Integer> {
-    final static String URL = Session.DOMAIN+"/alarmsCount";
+public class AlarmCountAsyncTask extends AsyncTask<Object, Void, AlarmCount> {
+    final static String URL = Session.DOMAIN+"/alarmCount";
 
     @Override
-    protected Integer doInBackground(Object... params) {
+    protected AlarmCount doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         Uri uri;
@@ -38,7 +39,9 @@ public class AlarmCountAsyncTask extends AsyncTask<Object, Void, Integer> {
             if (statusLine.getStatusCode() == 200) {
                 HttpEntity entity = response.getEntity();
                 JSONObject json = new JSONObject(EntityUtils.toString(entity));
-                Integer count = json.getInt("alarmsCount");
+                AlarmCount count = new AlarmCount();
+                count.setNewsCount(json.getInt("newsCount"));
+                count.setYouCount(json.getInt("youCount"));
                 return count;
             }
 
@@ -51,7 +54,7 @@ public class AlarmCountAsyncTask extends AsyncTask<Object, Void, Integer> {
     }
 
     @Override
-    protected void onPostExecute(Integer count) {
+    protected void onPostExecute(AlarmCount count) {
         Message msg = mHandler.obtainMessage();
         if (count != null) {
             msg.obj = count;

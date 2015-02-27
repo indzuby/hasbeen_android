@@ -5,11 +5,6 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -22,7 +17,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
 
 /**
@@ -53,26 +48,7 @@ public class DayAsyncTask extends AsyncTask<Object,Void,Day> {
                 //Read the server response and attempt to parse it as JSON
                 Reader reader = new InputStreamReader(content);
 
-
-                GsonBuilder gsonBuilder = new GsonBuilder();
-                Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
-                    @Override
-                    public boolean shouldSkipField(FieldAttributes f) {
-                        if(f.getDeclaredClass() == Photo.class){
-                            if(f.getName().equals("day") || f.getName().equals("place"))
-                                return true;
-                        }
-                        if(f.getName().equals("coverPhoto"))
-                            return true;
-                        return false;
-                    }
-
-                    @Override
-                    public boolean shouldSkipClass(Class<?> clazz) {
-                        return false;
-                    }
-                }).create();
-                Day day = gson.fromJson(reader, Day.class);
+                Day day = JsonConverter.convertJsonDay(reader);
                 content.close();
                 return day;
             }

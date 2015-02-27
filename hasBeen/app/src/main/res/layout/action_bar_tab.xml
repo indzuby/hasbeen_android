@@ -73,13 +73,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="2dp"
-                android:background="@drawable/cluster"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/badge"
                 android:gravity="center"
+                android:visibility="gone"
                 android:textColor="@color/theme_white"
-                android:textSize="12dp"
-                android:visibility="gone" />
+                android:textSize="10dp"/>
         </RelativeLayout>
 
         <RelativeLayout

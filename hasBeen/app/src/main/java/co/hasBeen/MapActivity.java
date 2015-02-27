@@ -27,6 +27,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     GoogleMap mMap;
     private ClusterManager<MyItem> mClusterManager;
     private static final String TAG = "Map Activity";
+
     GeoGoogle geo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

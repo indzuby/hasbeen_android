@@ -1,4 +1,4 @@
-package co.hasBeen.photo;
+package co.hasBeen.alarm;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -17,61 +17,67 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
 
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.api.Alarm;
 import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
 
 /**
- * Created by zuby on 2015-01-29.
+ * Created by 주현 on 2015-02-26.
  */
-public class NearByPhotoAsyncTask extends AsyncTask<Object,Void,List<Photo>> {
-    Handler mHandler;
-//    final static String URL = "https://gist.githubusercontent.com/indzuby/01dd9766562e90d0af7e/raw/d4aca1859f83a9599dbe15541624b1499aae8ea2/photoNearBy";
-    final static String URL = Session.DOMAIN+"photos/";
+public class AlarmListAsyncTask extends AsyncTask<Object, Void, List<Alarm>> {
+    final static String URL = Session.DOMAIN+"/alarmsCount";
+    final static String CATEGORY_PARAMS="category";
+    public final static String CATEGORY_YOU = "YOU";
+    public final static String CATEGORY_NEWS="NEWS";
     @Override
-    protected List<Photo> doInBackground(Object... params) {
+    protected List<Alarm> doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         Uri uri;
         try {
-            uri = Uri.parse(URL+params[1]+"/nearBy");
+            uri = Uri.parse(URL+"?"+CATEGORY_PARAMS+"="+params[1]);
             HttpGet get = new HttpGet(uri.toString());
-            get.addHeader("User-Agent","Android");
-            get.addHeader("Content-Type","application/json");
-            get.addHeader("Authorization","Bearer " +params[0]);
+            get.addHeader("User-Agent", "Android");
+            get.addHeader("Content-Type", "application/json");
+            get.addHeader("Authorization", "Bearer " + params[0]);
             response = client.execute(get);
             StatusLine statusLine = response.getStatusLine();
-            if(statusLine.getStatusCode() == 200) {
+            if (statusLine.getStatusCode() == 200) {
                 HttpEntity entity = response.getEntity();
                 InputStream content = entity.getContent();
 
                 //Read the server response and attempt to parse it as JSON
                 Reader reader = new InputStreamReader(content);
-                List<Photo> photos = JsonConverter.convertJsonPhotoList(reader);
+                List<Alarm> alarm = JsonConverter.convertJsonAlarmList(reader);
                 content.close();
-                return photos;
+
+                return alarm;
             }
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
+
         return null;
     }
 
     @Override
-    protected void onPostExecute(List<Photo>  photos) {
-
+    protected void onPostExecute(List<Alarm> alarm) {
         Message msg = mHandler.obtainMessage();
-        if(photos !=null) {
-            msg.obj = photos;
+        if (alarm != null) {
+            msg.obj = alarm;
             msg.what = 0;
-        }else {
+        } else {
             msg.what = -1;
         }
         mHandler.sendMessage(msg);
+
     }
 
-    public NearByPhotoAsyncTask(Handler handler) {
-        mHandler = handler;
+    Handler mHandler;
+
+    public AlarmListAsyncTask(Handler mHandler) {
+        this.mHandler = mHandler;
     }
 }

@@ -73,12 +73,17 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.profile, container, false);
         mAccessToken = Session.getString(getActivity(), "accessToken", null);
+        init();
         initAll();
         return mView;
     }
     public void initAll(){
+        mDays = null;
+        mPhotos = null;
+        mLikeDays = null;
+        mLikePhotos = null;
         new ProfileAsyncTask(handler).execute(mAccessToken);
-        init();
+        nowTabIndicator(R.id.dayButton);
     }
     Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -89,13 +94,6 @@ public class ProfileFragment extends Fragment {
                     mUser = (User) msg.obj;
                     Session.putLong(getActivity(),"myUserid",mUser.getId());
                     initProfile();
-                    if(mRefreshLayout!=null && mRefreshLayout.isRefreshing()){
-                        mRefreshLayout.onRefreshComplete();
-                        mDays = null;
-                        mPhotos = null;
-                        mLikeDays = null;
-                        mLikePhotos = null;
-                    }
                     mapRendering(DAY);
                     break;
                 case -1:
@@ -103,7 +101,6 @@ public class ProfileFragment extends Fragment {
             }
         }
     };
-
     Handler dayHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -120,8 +117,6 @@ public class ProfileFragment extends Fragment {
             }
         }
     };
-
-
     Handler photoHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -136,7 +131,6 @@ public class ProfileFragment extends Fragment {
             }
         }
     };
-
     Handler likeDayHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -155,8 +149,6 @@ public class ProfileFragment extends Fragment {
             }
         }
     };
-
-
     Handler likePhotoHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -206,16 +198,9 @@ public class ProfileFragment extends Fragment {
                     params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                     params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                     int margin = Util.convertDpToPixel(16, getActivity());
-                    params.setMargins(0,margin,margin,0);
+                    params.setMargins(0, margin, margin, 0);
                     // Update margins, set to 10dp
                 }
-            }
-        });
-        mRefreshLayout = (PullToRefreshScrollView) mView.findViewById(R.id.pullToRefreshLayout);
-        mRefreshLayout.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ScrollView>() {
-            @Override
-            public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
-                new ProfileAsyncTask(handler).execute(mAccessToken);
             }
         });
     }
@@ -273,25 +258,18 @@ public class ProfileFragment extends Fragment {
     class ProfileBarOnClickListner implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            clearSelect();
+            nowTabIndicator(v.getId());
             switch (v.getId()) {
                 case R.id.dayButton:
                     nowTab = DAY;
-                    mView.findViewById(R.id.daySelectBar).setVisibility(View.VISIBLE);
-                    ((TextView) mView.findViewById(R.id.dayCount)).setTextColor(getResources().getColor(R.color.light_black));
                     mapRendering(DAY);
                     break;
                 case R.id.photoButton:
                     nowTab = PHOTO;
-                    mView.findViewById(R.id.photoSelectBar).setVisibility(View.VISIBLE);
-                    ((TextView) mView.findViewById(R.id.photoCount)).setTextColor(getResources().getColor(R.color.light_black));
                     mapRendering(PHOTO);
                     break;
                 case R.id.likeButton:
                     nowTab = LOVE;
-                    mView.findViewById(R.id.loveSelectBar).setVisibility(View.VISIBLE);
-                    ((TextView) mView.findViewById(R.id.loveCount)).setTextColor(getResources().getColor(R.color.light_black));
-                    mView.findViewById(R.id.likeBar).setVisibility(View.VISIBLE);
                     subTab = DAY;
                     initLikeBar();
                     mapRendering(LOVE);
@@ -301,16 +279,27 @@ public class ProfileFragment extends Fragment {
             }
         }
     }
-
+    public void nowTabIndicator(int id){
+        clearSelect();
+        mView.findViewById(id).setSelected(true);
+        if(id == R.id.dayButton)
+            ((TextView) mView.findViewById(R.id.dayCount)).setTextColor(getResources().getColor(R.color.light_black));
+        else if(id == R.id.photoButton)
+            ((TextView) mView.findViewById(R.id.photoCount)).setTextColor(getResources().getColor(R.color.light_black));
+        else {
+            mView.findViewById(R.id.likeBar).setVisibility(View.VISIBLE);
+            ((TextView) mView.findViewById(R.id.loveCount)).setTextColor(getResources().getColor(R.color.light_black));
+        }
+    }
     protected void clearSelect() {
+        mView.findViewById(R.id.dayButton).setSelected(false);
+        mView.findViewById(R.id.photoButton).setSelected(false);
+        mView.findViewById(R.id.likeButton).setSelected(false);
         mView.findViewById(R.id.likeBar).setVisibility(View.GONE);
-        mView.findViewById(R.id.loveSelectBar).setVisibility(View.GONE);
         ((TextView) mView.findViewById(R.id.loveCount)).setTextColor(getResources().getColor(R.color.light_gray));
-        mView.findViewById(R.id.photoSelectBar).setVisibility(View.GONE);
         ((TextView) mView.findViewById(R.id.photoCount)).setTextColor(getResources().getColor(R.color.light_gray));
-        mView.findViewById(R.id.daySelectBar).setVisibility(View.GONE);
         ((TextView) mView.findViewById(R.id.dayCount)).setTextColor(getResources().getColor(R.color.light_gray));
-        mMap.clear();
+        if(mMap!=null) mMap.clear();
     }
 
     protected void initProfile() {
