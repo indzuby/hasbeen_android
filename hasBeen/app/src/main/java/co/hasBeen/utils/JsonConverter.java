@@ -182,9 +182,7 @@ public class JsonConverter {
                         return true;
                 }
                 else if(f.getDeclaredClass() == Day.class) {
-                    if(f.getName().equals("photoList") || f.getName().equals("photoCount"))
-                        return false;
-                    else
+                    if(f.getName().equals("positionList") || f.getName().equals("commentList") || f.getName().equals("user")|| f.getName().equals("placeList") || f.getName().equals("user") || f.getName().contains("main"))
                         return true;
                 }
                 else if(f.getDeclaredClass() == Follow.class) {
@@ -192,9 +190,7 @@ public class JsonConverter {
                         return true;
                 }
                 else if(f.getDeclaredClass()==Loved.class) {
-                    if(f.getName().equals("id"))
-                        return false;
-                    else
+                    if(f.getName().equals("day") || f.getName().equals("photo"))
                         return true;
                 }else if(f.getDeclaredClass()== User.class) {
                     if(f.getName().equals("follow"))

@@ -25,7 +25,7 @@ import co.hasBeen.utils.Session;
  * Created by 주현 on 2015-02-26.
  */
 public class AlarmListAsyncTask extends AsyncTask<Object, Void, List<Alarm>> {
-    final static String URL = Session.DOMAIN+"/alarmsCount";
+    final static String URL = Session.DOMAIN+"/alarms";
     final static String CATEGORY_PARAMS="category";
     public final static String CATEGORY_YOU = "YOU";
     public final static String CATEGORY_NEWS="NEWS";
@@ -35,7 +35,12 @@ public class AlarmListAsyncTask extends AsyncTask<Object, Void, List<Alarm>> {
         HttpResponse response;
         Uri uri;
         try {
-            uri = Uri.parse(URL+"?"+CATEGORY_PARAMS+"="+params[1]);
+            String url = URL+"?"+CATEGORY_PARAMS+"="+params[1];
+            if(params.length>3)
+                url +="&firstAlarmId="+params[3];
+            else if(params.length>2)
+                url +="&lastAlarmId="+params[2];
+            uri = Uri.parse(url);
             HttpGet get = new HttpGet(uri.toString());
             get.addHeader("User-Agent", "Android");
             get.addHeader("Content-Type", "application/json");
