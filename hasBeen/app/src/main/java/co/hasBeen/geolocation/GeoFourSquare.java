@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 import co.hasBeen.model.database.Category;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.database.Place;
 
 public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
     private Handler mHandler;
@@ -36,7 +36,7 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
     final static String QUERY_PARAM = "query";
     final static String LOCALE_PARAM = "locale";
     String ll;
-    Photo photo;
+    Place place;
     int placeCount = 25;
     Category mCategory ;
 
@@ -49,7 +49,7 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
 //            LatLng location = getLocation();
         ll = params[0] + "," + params[1];
         if (params[2] != null)
-            photo = (Photo) params[2];
+            place = (Place) params[2];
         if (params[3] != null)
             placeCount = (int) params[3];
         HttpClient client = new DefaultHttpClient();
@@ -82,23 +82,32 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
     protected void onPostExecute(JSONObject result) {
         Message msg = mHandler.obtainMessage();
         try {
-//                Log.e("object",result.toString());
             Gson gson = new Gson();
             JSONObject jsonObject = result.getJSONObject("response");
             JSONArray jsonArray = jsonObject.getJSONArray("venues");
             if (placeCount == 1) {
-                msg.obj = photo;
-                if (jsonArray.length() == 0) {
-                    photo.setPlaceId(null);
-                    photo.setFourSquare(null, null, null, "", "");
-                } else {
-                    //          Toast.makeText(mContext, jsonArray.getJSONObject(0).get("name") + "", Toast.LENGTH_LONG).show();
-
-                    photo.setPlaceName(jsonArray.getJSONObject(0).getString("name"));
-                    JSONObject category = jsonArray.getJSONObject(0).getJSONArray("categories").getJSONObject(0);
-                    JSONObject icon = category.getJSONObject("icon");
-                    photo.setFourSquare(jsonArray.getJSONObject(0).getString("id"), category.getString("id"), category.getString("name"), icon.getString("prefix"), icon.getString("suffix"));
-
+                msg.obj = place;
+                if (jsonArray.length()>0) {
+                    for (int i = 0; i < jsonArray.length() && i < placeCount; i++) {
+                        JSONObject item = jsonArray.getJSONObject(i);
+                        if(item.isNull("categories")) continue;
+                        place.setName(item.getString("name"));
+                        JSONObject category = item.getJSONArray("categories").getJSONObject(0);
+                        JSONObject icon = category.getJSONObject("icon");
+                        place.setVenueId(item.getString("id"));
+                        place.setCategoryId(category.getString("id"));
+                        place.setCategoryName(category.getString("name"));
+                        place.setCategoryIconPrefix(icon.getString("prefix"));
+                        place.setCategoryIconSuffix(icon.getString("suffix"));
+                        JSONObject location = item.getJSONObject("location");
+                        if (location.has("city"))
+                            place.setCity(location.getString("city"));
+                        if (location.has("country"))
+                            place.setCountry(location.getString("country"));
+                        place.setLat((float) location.getDouble("lat"));
+                        place.setLon((float) location.getDouble("lng"));
+                        break;
+                    }
                 }
             } else {
                 Log.i("Geo", ll);

@@ -5,10 +5,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import co.hasBeen.alarm.AlarmFragment;
+import co.hasBeen.gallery.GalleryView;
 import co.hasBeen.newsfeed.NewsFeedFragment;
-import co.hasBeen.search.SearchFragment;
-import co.hasBeen.gallery.GalleryFragment;
 import co.hasBeen.profile.ProfileFragment;
+import co.hasBeen.search.SearchFragment;
 
 /**
  * Created by zuby on 2015-01-20.
@@ -34,7 +34,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
                 return mSearch;
             case 2:
                 if (mGallery == null)
-                    mGallery = new GalleryFragment();
+                    mGallery = new GalleryView();
                 return mGallery;
             case 3:
                 if (mAlarm == null)

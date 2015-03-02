@@ -35,7 +35,7 @@ public class GalleryFragment extends Fragment implements SlidingUpPanelLayout.Pa
     View mView;
     ListView mListView;
     List<Day> mGalleryList;
-    GalleryDayAdapter mListAdapter;
+    GalleryDayAdapter2 mListAdapter;
     DatabaseHelper database;
     TextView mTextDate;
     TextView mAreaView;
@@ -66,7 +66,7 @@ public class GalleryFragment extends Fragment implements SlidingUpPanelLayout.Pa
             mGalleryList = new ArrayList<>();
             e.printStackTrace();
         }
-        mListAdapter = new GalleryDayAdapter(getActivity(), mGalleryList);
+        mListAdapter = new GalleryDayAdapter2(getActivity(), mGalleryList);
 
 
         mapFragment.getMapAsync(new OnMapReadyCallback() {

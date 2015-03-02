@@ -46,7 +46,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        showProgress();
         setContentView(R.layout.activity_main);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(false);
@@ -79,13 +78,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
             }
         });
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                initDatabase();
-                dialog.dismiss();
-            }
-        }).start();
         getAlarmCount();
     }
     public void getAlarmCount(){

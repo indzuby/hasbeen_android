@@ -146,6 +146,9 @@ public class Place {
     }
 
     public Place() {
+        name = "";
+        city = "";
+        country = "";
     }
     Photo mainPhoto;
 

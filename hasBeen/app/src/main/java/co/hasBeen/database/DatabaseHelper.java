@@ -162,7 +162,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
     public List<Photo> selectAllPhoto() throws  SQLException{
         Dao<Photo,Long> photoDao = getPhotoDao();
-        return photos.queryBuilder().orderBy("id",true).query();
+        return photos.queryBuilder().orderBy("id", true).query();
     }
     public boolean hasPhotoId(Long photoId) throws SQLException{
         Dao<Photo,Long> photoDao = getPhotoDao();
@@ -199,12 +199,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
     public List<Photo> selectPhotoClearestPhoto() throws SQLException {
         Dao<Photo,Long> photoDao = getPhotoDao();
-        return photoDao.queryBuilder().orderBy("id",false).where().eq("clearest_id",new ColumnArg("id")).query();
+        return photoDao.queryBuilder().orderBy("id", false).where().eq("clearest_id",new ColumnArg("id")).query();
     }
     public List<Day> selectBeforeFiveDay() throws SQLException {
         Dao<Day,Long> dayDao = getDayDao();
         Date date = new LocalDateTime(getLastPhoto().getTakenTime()).minusDays(10).toDate();
         return dayDao.queryBuilder().orderBy("id",false).where().ge("date", date.getTime()).query();
+    }
+    public List<Day> selectBeforeTenDay(Long start) throws SQLException {
+        Dao<Day,Long> dayDao = getDayDao();
+        Date date = new LocalDateTime(start).minusDays(10).toDate();
+        return dayDao.queryBuilder().orderBy("id",false).where().ge("date", date.getTime()).and().lt("date",start).query();
     }
     public List<Position> selectPositionByDayId(Long dayId) throws SQLException{
         Dao<Position,Long> positionDao = getPositionDao();
@@ -235,6 +240,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         UpdateBuilder<Photo,Long> updateBuilder = photoDao.updateBuilder();
         updateBuilder.updateColumnValue("place_id",placeId).where().eq("position_id",positionId);
         updateBuilder.update();
+    }
+    public Day selectLastDay() throws SQLException {
+        Dao<Day,Long> dayDao = getDayDao();
+        if(dayDao.countOf()==0)
+            return null;
+        return dayDao.query(dayDao.queryBuilder().orderBy("date", false).limit(1L).prepare()).get(0);
+    }
+    public int countPosition(Long dayid) throws SQLException {
+        Dao<Position,Long> positionDao = getPositionDao();
+        return (int) positionDao.queryBuilder().where().eq("day_id",dayid).countOf();
     }
 }
 //select * from photo where id = clearest_id

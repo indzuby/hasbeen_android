@@ -16,9 +16,12 @@ import co.hasBeen.model.database.Photo;
 public class HasBeenDate {
     String[] month = {"","Jan.","Feb.","Mar.","April.","May","Jun.","Jul.","Aug.","Sep.","Oct.","Nov.","Dec."};
     public static boolean isSameDate(Photo beforePhoto,Photo photo) {
-        int k = calculateDateRange(beforePhoto,photo);
-        if(k==0) return true;
-        return false;
+        int k = calculateDateRange(beforePhoto.getTakenTime(),photo.getTakenTime());
+        return (k==0);
+    }
+    public static boolean isSameDate(Long aDate, Long bDate) {
+        int k = calculateDateRange(aDate,bDate);
+        return (k==0);
     }
     public static boolean isBeforeThatDate(Photo lastPhoto , Photo currentPhoto){
         if(lastPhoto==null) return false;
@@ -31,17 +34,21 @@ public class HasBeenDate {
     public static Date getDate(long taken_date) {
         return new Date(taken_date);
     }
-    public static int calculateDateRange(Photo from, Photo to) {
-        LocalDateTime start = new LocalDateTime(from.getTakenTime());
-        LocalDateTime end = new LocalDateTime(to.getTakenTime());
+    public static int calculateDateRange(Long from, Long to) {
+        LocalDateTime start = new LocalDateTime(from);
+        LocalDateTime end = new LocalDateTime(to);
         return Days.daysBetween(start.toLocalDate(), end.toLocalDate()).getDays();
     }
 
     public static boolean isDateRangeInThree(Photo photo, Photo standardPhoto){
-        int k = calculateDateRange(photo,standardPhoto);
+        int k = calculateDateRange(photo.getTakenTime(),standardPhoto.getTakenTime());
         if(k<=5) return true;
 
         return false;
+    }
+    public static Long getBefore10Day(Long currentTime){
+        Date date = new LocalDateTime(currentTime).minusDays(10).toDate();
+        return date.getTime();
     }
     public static String convertDate(Date date) {
         LocalDate newDate = new LocalDate(date);
