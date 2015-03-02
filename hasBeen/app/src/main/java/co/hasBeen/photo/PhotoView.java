@@ -34,6 +34,7 @@ import co.hasBeen.loved.LoveListner;
 import co.hasBeen.model.api.Comment;
 import co.hasBeen.model.database.Photo;
 import co.hasBeen.profile.ProfileClickListner;
+import co.hasBeen.social.ShareListner;
 import co.hasBeen.utils.CircleTransform;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.Session;
@@ -116,6 +117,9 @@ public class PhotoView extends ActionBarActivity {
             loveText.setTypeface(regular);
         }
         loveButton.setOnClickListener(new LoveListner(this, mPhoto, "photos", mSocialAction));
+        LinearLayout shareButton = (LinearLayout) findViewById(R.id.shareButton);
+        String url = Session.WEP_DOMAIN+"days/"+mPhoto.getId();
+        shareButton.setOnClickListener(new ShareListner(this,url));
 
 
     }

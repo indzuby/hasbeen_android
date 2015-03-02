@@ -22,8 +22,10 @@ import co.hasBeen.loved.LoveListner;
 import co.hasBeen.model.database.Day;
 import co.hasBeen.model.database.Photo;
 import co.hasBeen.profile.ProfileClickListner;
+import co.hasBeen.social.ShareListner;
 import co.hasBeen.utils.CircleTransform;
 import co.hasBeen.utils.HasBeenDate;
+import co.hasBeen.utils.Session;
 import co.hasBeen.utils.Util;
 import co.hasBeen.R;
 
@@ -116,6 +118,9 @@ public class NewsFeedAdapter extends BaseAdapter {
         profileImage.setOnClickListener(new ProfileClickListner(mContext,feed.getUser().getId()));
         profileName.setOnClickListener(new ProfileClickListner(mContext,feed.getUser().getId()));
         LinearLayout loveButton = (LinearLayout) view.findViewById(R.id.loveButton);
+        LinearLayout shareButton = (LinearLayout) view.findViewById(R.id.shareButton);
+        String url = Session.WEP_DOMAIN+"days/"+feed.getId();
+        shareButton.setOnClickListener(new ShareListner(mContext,url));
         ImageView love = (ImageView) loveButton.findViewById(R.id.love);
         TextView loveText = (TextView) loveButton.findViewById(R.id.loveText);
         if(feed.getLove()!=null) {

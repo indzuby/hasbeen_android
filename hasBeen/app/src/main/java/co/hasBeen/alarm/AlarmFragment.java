@@ -139,7 +139,7 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
         newButton.setOnClickListener(this);
         youButton.setOnClickListener(this);
         ((TextView)mView.findViewById(R.id.you)).setTypeface(medium);
-        ((TextView)mView.findViewById(R.id.news)).setTypeface(medium)r;
+        ((TextView)mView.findViewById(R.id.news)).setTypeface(medium);
         mNewList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -233,10 +233,16 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
         }
     }
     public void getNewAlarmNews(){
-        new AlarmListAsyncTask(alarmNewsHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_NEWS, "", mAlarmsNews.get(0).getId());
+        if(mAlarmsNews.size()>0)
+            new AlarmListAsyncTask(alarmNewsHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_NEWS, "", mAlarmsNews.get(0).getId());
+        else
+            new AlarmListAsyncTask(alarmNewsHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_NEWS);
     }
     public void getNewAlarmYou(){
-        new AlarmListAsyncTask(alarmYouHandler).execute(mAccessToken,AlarmListAsyncTask.CATEGORY_YOU,"",mAlarmsYou.get(0).getId());
+        if(mAlarmsYou.size()>0)
+            new AlarmListAsyncTask(alarmYouHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_YOU, "", mAlarmsYou.get(0).getId());
+        else
+            new AlarmListAsyncTask(alarmYouHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_YOU);
     }
     public void getOldAlarmNews(){
         new AlarmListAsyncTask(alarmNewsHandler).execute(mAccessToken,AlarmListAsyncTask.CATEGORY_NEWS,mAlarmsNews.get(mAlarmsNews.size()-1).getId());

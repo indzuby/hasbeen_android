@@ -45,6 +45,7 @@ import co.hasBeen.model.database.Day;
 import co.hasBeen.model.database.Position;
 import co.hasBeen.profile.ProfileClickListner;
 import co.hasBeen.report.ReportAsyncTask;
+import co.hasBeen.social.ShareListner;
 import co.hasBeen.utils.CircleTransform;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.Session;
@@ -170,6 +171,7 @@ public class DayView extends ActionBarActivity{
         LinearLayout commentButton = (LinearLayout)findViewById(R.id.commentButton);
         commentButton.setOnClickListener(new EnterCommentListner(getBaseContext(),"days",mDay.getId(),mDay.getCommentCount()));
         LinearLayout loveButton = (LinearLayout) findViewById(R.id.loveButton);
+        LinearLayout shareButton = (LinearLayout) findViewById(R.id.shareButton);
         ImageView love = (ImageView) loveButton.findViewById(R.id.love);
         TextView loveText = (TextView) loveButton.findViewById(R.id.loveText);
         if(mDay.getLove()!=null) {
@@ -183,7 +185,8 @@ public class DayView extends ActionBarActivity{
             loveText.setTypeface(regular);
         }
         loveButton.setOnClickListener(new LoveListner(this,mDay,"days",mSocialAction));
-
+        String url = Session.WEP_DOMAIN+"days/"+mDay.getId();
+        shareButton.setOnClickListener(new ShareListner(this, url));
         LinearLayout commentBox = (LinearLayout) findViewById(R.id.commetBox);
         TextView moreComments = (TextView) findViewById(R.id.moreComments);
         List<Comment> comments = mDay.getCommentList();

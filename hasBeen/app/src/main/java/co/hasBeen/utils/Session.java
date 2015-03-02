@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 public class Session {
 //    public final static String DOMAIN = "http://testapi.hasbeen.co/";
     public final static String DOMAIN = "http://192.168.0.5:8080/";
+    public final static String WEP_DOMAIN = "http://hasbeen.co/#/";
     public static void putString(Context context,String key , String value){
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.putString(key,value);

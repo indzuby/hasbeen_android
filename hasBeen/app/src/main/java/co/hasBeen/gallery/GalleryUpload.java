@@ -2,7 +2,6 @@ package co.hasBeen.gallery;
 
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,12 +27,11 @@ import java.util.Map;
 
 import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
-import co.hasBeen.day.DayView;
 import co.hasBeen.model.database.Day;
 import co.hasBeen.model.database.Photo;
 import co.hasBeen.model.database.Place;
 import co.hasBeen.model.database.Position;
-import co.hasBeen.model.network.UploadStorage;
+import co.hasBeen.model.network.TakeStaticMap;
 import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
 import co.hasBeen.utils.Util;
@@ -48,12 +46,13 @@ public class GalleryUpload extends ActionBarActivity {
     String mData;
     Day mDayUpload;
     DatabaseHelper database;
-    UploadStorage mStorage;
     Long mUserid;
     ContentResolver resolver;
     EditText mTitle;
     EditText mDescription;
     String mAccessToekn;
+    int mUploadCount;
+    boolean mStaticMapUpload ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +65,6 @@ public class GalleryUpload extends ActionBarActivity {
         setContentView(R.layout.gallery_upload);
         mAccessToekn = Session.getString(this,"accessToken",null);
         initActionBar();
-        mStorage = new UploadStorage(this);
         mData = getIntent().getStringExtra("data");
         mDayUpload = JsonConverter.convertJsonToDay(mData);
         notifyDayChanged(mDayUpload);
@@ -114,12 +112,13 @@ public class GalleryUpload extends ActionBarActivity {
                 }
 
                 showProgress();
-                uploadStorage();
+                mUploadCount = 0;
+                mStaticMapUpload = false;
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        while(mStorage.mPhotoCnt != mDayUpload.getPhotoCount()*3)  {
-                            dialog.setProgress(mStorage.mPhotoCnt/3);
+                        while(mUploadCount != mDayUpload.getPhotoCount() || !mStaticMapUpload)  {
+                            dialog.setProgress(mUploadCount);
                         }
                         String title = mTitle.getText().toString();
                         String description = mDescription.getText().toString();
@@ -131,6 +130,7 @@ public class GalleryUpload extends ActionBarActivity {
                         new UploadAsyncTask(mUploadHandler).execute(mAccessToekn, mDayUpload);
                     }
                 }).start();
+                uploadStorage();
             }
         });
         actionBar.setCustomView(mCustomActionBar);
@@ -143,10 +143,14 @@ public class GalleryUpload extends ActionBarActivity {
             if(msg.what==0) {
                 Toast.makeText(getBaseContext(),"Upload complete.",Toast.LENGTH_LONG).show();
                 dialog.dismiss();
-                Intent intent = new Intent(getBaseContext(), DayView.class);
-                intent.putExtra("dayId", (Long)msg.obj);
-                startActivity(intent);
+//                Intent intent = new Intent(getBaseContext(), DayView.class);
+//                intent.putExtra("dayId", (Long)msg.obj);
+//                startActivity(intent);
                 setResult(RESULT_OK);
+                finish();
+            }else {
+                Toast.makeText(getBaseContext(),"Upload error.",Toast.LENGTH_LONG).show();
+                setResult(RESULT_CANCELED);
                 finish();
             }
         }
@@ -210,18 +214,37 @@ public class GalleryUpload extends ActionBarActivity {
     }
 
     protected void uploadStorage() {
-        mStorage.makeStaticMapUrl(mDayUpload, mUserid);
-        for (Position position : mDayUpload.getPositionList()) {
-            for (Photo photo : position.getPhotoList()) {
-                try {
-                    mStorage.makePhotoStorageUrl(photo, mUserid);
-                }catch (Exception e) {
-                    e.printStackTrace();
+        try {
+            new TakeStaticMap(new Handler(Looper.getMainLooper()) {
+                @Override
+                public void handleMessage(Message msg) {
+                    super.handleMessage(msg);
+                    if(msg.what==0) {
+                        String binary = (String) msg.obj;
+                        mDayUpload.setStaticMapBinary(binary);
+                        mStaticMapUpload = true;
+                    }else {
+                        Toast.makeText(getBaseContext(),"Upload error.",Toast.LENGTH_LONG).show();
+                        setResult(RESULT_CANCELED);
+                        finish();
+                    }
+
+                }
+            }).execute(mDayUpload.getMainPhoto().getLat(), mDayUpload.getMainPhoto().getLon());
+            for (Position position : mDayUpload.getPositionList()) {
+                for (Photo photo : position.getPhotoList()) {
+                    try {
+                        photo.setBinary(Util.getLargeImage(photo));
+                        mUploadCount++;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
+        }catch (Exception e) {
+            e.printStackTrace();
         }
     }
-
     ProgressDialog dialog;
 
     protected void showProgress() {
@@ -231,6 +254,5 @@ public class GalleryUpload extends ActionBarActivity {
         dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         dialog.setMax(mDayUpload.getPhotoCount());
         dialog.show();
-        dialog.setProgress(1);
     }
 }

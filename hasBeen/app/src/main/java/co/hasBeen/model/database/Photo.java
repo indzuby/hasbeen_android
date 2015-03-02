@@ -353,4 +353,14 @@ public class Photo {
     public void setLargeUrl(String largeUrl) {
         this.largeUrl = largeUrl;
     }
+
+    String binary;
+
+    public String getBinary() {
+        return binary;
+    }
+
+    public void setBinary(String binary) {
+        this.binary = binary;
+    }
 }

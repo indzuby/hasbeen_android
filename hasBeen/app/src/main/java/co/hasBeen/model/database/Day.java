@@ -282,14 +282,14 @@ public class Day {
     public void setTripId(Long tripId) {
         this.tripId = tripId;
     }
-    String staticMapUrl;
+    String staticMapBinary;
 
-    public String getStaticMapUrl() {
-        return staticMapUrl;
+    public String getStaticMapBinary() {
+        return staticMapBinary;
     }
 
-    public void setStaticMapUrl(String staticMapUrl) {
-        this.staticMapUrl = staticMapUrl;
+    public void setStaticMapBinary(String staticMapBinary) {
+        this.staticMapBinary = staticMapBinary;
     }
     List<Place> placeList;
 

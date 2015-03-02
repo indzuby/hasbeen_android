@@ -140,7 +140,7 @@ public class SignUpActivity extends Activity {
             super.handleMessage(msg);
             if (msg.what == 0) {
                 String token = (String) msg.obj;
-                new LogInAsyncTask(loginHandler).execute(token, "", "password", "read write delete", LogInAsyncTask.BASIC_FB);
+                new LogInAsyncTask(loginHandler).execute(token, "", "password", "read write delete", LogInAsyncTask.BASIC);
             } else {
 
             }
