@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/slidingLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/day_background"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#ffffff" />
+
+    <ImageView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:scaleType="centerCrop" />
+
+    <include layout="@layout/description_layout" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:alpha="0.1"
+        android:background="#000000" />
+
+    <TextView
+        android:id="@+id/totalPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:background="@color/day_background"
+        android:paddingBottom="4dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="4dp"
+        android:text="Total 85 photos"
+        android:textColor="@color/light_gray"
+        android:textSize="12sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:alpha="0.1"
+        android:background="#000000" />
+</LinearLayout>

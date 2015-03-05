@@ -59,6 +59,7 @@ public class GalleryAdapter extends BaseAdapter {
         container.setLayoutParams(new AbsListView.LayoutParams(height,height));
         ImageView imageView = (ImageView) view.findViewById(R.id.photo);
         imageView.setOnClickListener(new ImageListner(position,photo));
+
         Glide.with(mContext).load(photo.getPhotoPath())
                 .centerCrop().placeholder(Util.getPlaceHolder(photo.getEdgeCount())).override(height, height)
                 .into(imageView);
@@ -79,17 +80,13 @@ public class GalleryAdapter extends BaseAdapter {
             Intent intent = new Intent(mContext, GalleryPhoto.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("photoId",photo.getId());
-            intent.putExtra("photoCount",getCount());
-            intent.putExtra("photoNth",position+1);
             mContext.startActivity(intent);
             flag = false;
 
         }
     }
-    public int  getHeight(){
-        int width = mContext.getResources().getDisplayMetrics().widthPixels;
-        int px = Util.pxFromDp(mContext,1);
-        return width * 4 / 15 - px*2;
+    public int getHeight(){
+        return Util.getPhotoHeight(mContext);
     }
 }
 

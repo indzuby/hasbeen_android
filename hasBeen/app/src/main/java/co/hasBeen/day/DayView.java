@@ -230,6 +230,8 @@ public class DayView extends ActionBarActivity{
         mFooterView =  LayoutInflater.from(this).inflate(R.layout.day_footer, null, false);
         mListView = (ListView) findViewById(R.id.listPhotos);
         mListView.addHeaderView(mHeaderView);
+        mHeaderView.setVerticalScrollBarEnabled(false);
+        mHeaderView.setClickable(false);
         mListView.addFooterView(mFooterView);
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override

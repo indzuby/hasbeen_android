@@ -80,7 +80,7 @@ public class GalleryDayAdapter2 extends BaseAdapter {
                 str = str.substring(0,35)+"...";
             areaView.setText(str);
             int width = mContext.getResources().getDisplayMetrics().widthPixels;
-            int photoCnt = database.selectPhotoByDayid(day.getId());
+            int photoCnt = database.countPhotoByDayid(day.getId());
             View line = view.findViewById(R.id.line);
             ViewGroup.LayoutParams params = dayList.getLayoutParams();
             int height;

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/theme_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@drawable/oval" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_toRightOf="@+id/back"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="July 20,2014"
+                    android:id="@+id/date"
+                    android:textColor="@color/light_black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:id="@+id/placeName"
+                    android:singleLine="true"
+                    android:text="Place Name"
+                    android:textColor="@color/light_black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:alpha="0.2"
+                android:background="@color/theme_black" />
+        </RelativeLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:gravity="top"
+            android:ems="255"
+            android:id="@+id/description"
+            android:hint="Write description"
+            android:lineSpacingExtra="4dp"
+            android:minHeight="200dp"
+            android:padding="16dp"
+            android:textColor="@color/light_black"
+            android:textSize="14sp">
+            <requestFocus/>
+            </EditText>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/day_background">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:alpha="0.1"
+            android:background="@color/theme_black" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:paddingRight="16dp"
+            android:id="@+id/done"
+            android:paddingLeft="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:id="@+id/editIcon"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/oval" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_toRightOf="@+id/editIcon"
+                android:layout_marginLeft="8dp"
+                android:textSize="14sp"
+                android:textColor="@color/light_gray"
+                android:text="DONE"
+                android:layout_centerVertical="true"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

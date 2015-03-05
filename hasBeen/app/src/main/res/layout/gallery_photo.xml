@@ -4,101 +4,64 @@
               android:background="@color/list_background"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <LinearLayout
+     <ImageView
         android:layout_width="match_parent"
-        android:background="@drawable/actionbar_shadow"
-        android:layout_height="wrap_content"/>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:id="@+id/scroll_view"
-        android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll"
-        android:layout_height="wrap_content">
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/framelayout">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:scaleType="fitStart"
-                android:id="@+id/full_size_photo"/>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/full_size_photo"
-                android:padding="16dp"
-                android:background="@color/list_background">
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:adjustViewBounds="true"
-                    android:id="@+id/profileImage"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/light_black"
-                    android:textSize="16sp"
-                    android:id="@+id/profileName"
-                    android:layout_marginLeft="16dp"
-                    android:layout_alignTop="@+id/profileImage"
-                    android:layout_toRightOf="@+id/profileImage"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/date"
-                    android:textColor="@color/light_gray"
-                    android:textSize="13sp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_below="@+id/profileName"
-                    android:layout_toRightOf="@+id/profileImage"
-                    />
-            </RelativeLayout>
-        </RelativeLayout>
-            <ImageButton
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                android:background="@drawable/share_effect"
-                android:src="@drawable/edit"
-                android:id="@+id/edit_button"
-                android:layout_marginRight="8dp"
-                android:layout_alignBottom="@+id/profileName"
-                android:layout_gravity="bottom|right"
-                android:layout_marginBottom="36dp"
-                />
-        </FrameLayout>
-            <EditText
-                android:background="@color/list_background"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="false"
-                android:id="@+id/description"
-                android:textSize="14sp"
-                android:textColor="#5A5A5A"
-                android:focusable="false"
-                android:minHeight="160dp"
-                android:hint="Writte a comment..."
-                android:includeFontPadding="false"
-                android:lineSpacingExtra="6dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_below="@+id/framelayout"
-                />
-        </RelativeLayout>
-    </ScrollView>
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:src="@drawable/photo_sample"
+        android:scaleType="center"
+        android:id="@+id/photo"/>
     <View
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:alpha="0.5"
-        android:background="@drawable/full_photo_gradient"
-        />
+        android:layout_height="match_parent"
+        android:id="@+id/filter"
+        android:background="@drawable/gallery_filter" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:background="#AA000000"
+        android:layout_height="wrap_content">
+    <include layout="@layout/action_bar_place" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:padding="16dp"
+        android:background="@color/transparent"
+        android:id="@+id/descriptionLayout"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/date"
+            android:textSize="14sp"
+            android:textColor="@color/theme_white"
+            android:text="July 20, 2014"
+            android:layout_height="wrap_content" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/theme_white"
+            android:layout_height="1dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:maxLines="3"
+            android:gravity="center_vertical"
+            android:minHeight="50dp"
+            android:id="@+id/description"
+            android:textSize="14sp"
+            android:includeFontPadding="false"
+            android:textColor="@color/theme_white"
+            android:lineSpacingExtra="5dp"
+            android:textColorHint="@color/list_background_pressed"
+            android:hint="Write description...."
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="match_parent"
+            android:textSize="14sp"
+            android:id="@+id/moreDescription"
+            android:textColor="@color/light_gray2"
+            android:text="See more description"
+            android:layout_height="wrap_content" />
+        </LinearLayout>
 </RelativeLayout>

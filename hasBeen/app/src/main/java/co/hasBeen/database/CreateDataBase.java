@@ -38,7 +38,8 @@ public class CreateDataBase {
     Cursor cursor;
     List<Photo> mPhotoList;
     Photo lastPhoto;
-    public CreateDataBase(Context context) throws SQLException{
+
+    public CreateDataBase(Context context) throws SQLException {
         mContext = context;
         database = new DatabaseHelper(context);
         resolver = context.getContentResolver();
@@ -46,6 +47,7 @@ public class CreateDataBase {
         lastPhoto = database.getLastPhoto();
 
     }
+
     public void takePhoto() {
         String[] proj = {
                 MediaStore.Images.Media._ID,
@@ -94,7 +96,6 @@ public class CreateDataBase {
 
                 if (displayName != null) {
                     Photo photo = new Photo();
-//                            "", "", "", "", "", lat, lon, getDate(dataTaken), new Long(0), null, new Long(photoID), photoPath,null
                     photo.setTitle("");
                     photo.setCity("");
                     photo.setCountry("");
@@ -114,6 +115,7 @@ public class CreateDataBase {
             insertDB();
         }
     }
+
     public boolean isNotJpg(String format) {
         if (!format.endsWith("jpg") && !format.endsWith("jpeg")) return true;
         return false;
@@ -180,7 +182,6 @@ public class CreateDataBase {
                     if (edge == null) {
                         edge = HasBeenOpenCv.detectEdge(getThumbnail(photo.getPhotoId()));
                         photo.setEdgeCount(edge);
-//                        database.updatePhoto(photo);
                     }
                     if (bestPhoto != null && HasBeenDate.isSameDate(bestPhoto, photo)) {
                         if (isSimilary(bestPhoto, photo)) {

@@ -1,6 +1,7 @@
 package co.hasBeen.gallery;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,7 +79,23 @@ public class GalleryDayAdapter extends BaseAdapter {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        mainPhoto.setOnClickListener(new EnterGalleryDayViewListner(day));
         return view;
+    }
+    class EnterGalleryDayViewListner implements View.OnClickListener {
+        Day day;
+
+        EnterGalleryDayViewListner(Day day) {
+            this.day = day;
+        }
+        @Override
+        public void onClick(View v) {
+            if(day.getMainPlaceId()!=null) {
+                Intent intent = new Intent(mContext, GalleryDayView.class);
+                intent.putExtra("dayId", day.getId());
+                mContext.startActivity(intent);
+            }
+        }
     }
     protected void initPlaceName(TextView placeName ,Day day) throws Exception{
         if (day.getMainPlaceId() == null && day.getMainPlace() == null) {
@@ -95,19 +112,23 @@ public class GalleryDayAdapter extends BaseAdapter {
         }
     }
     protected void initPlace(List<Position> positions) throws Exception{
-        for(Position position : positions) 
+        for(Position position : positions)
             position.setPlace(database.selectPlace(position.getPlaceId()));
     }
     protected void initDayStatus(TextView dayStatus ,Day day) throws Exception {
         int placeCount;
         int photoCount;
+        String text;
+        day.setCreatedTime(database.selectDay(day.getId()).getCreatedTime());
         placeCount = database.countPosition(day.getId());
         photoCount = day.getPhotoCount();
-        if(placeCount == 1 && photoCount == 1) {
-            dayStatus.setVisibility(View.INVISIBLE);
-        }else {
-            dayStatus.setText(placeCount + " places · "+photoCount+" photos");
-            dayStatus.setVisibility(View.VISIBLE);
+        if(day.getCreatedTime()==null)
+            text = placeCount + "+ places · " + photoCount + " photos";
+        else {
+            day.setPhotoCount(database.countPhotoByDayid(day.getId()));
+            photoCount =day.getPhotoCount();
+            text = placeCount + " places · " + photoCount + " photos";
         }
+        dayStatus.setText(text);
     }
 }

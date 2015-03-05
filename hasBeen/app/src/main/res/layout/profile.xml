@@ -42,13 +42,14 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:layout_marginLeft="16dp"
-                        android:layout_toLeftOf="@+id/followImage"
+                        android:layout_toLeftOf="@+id/setting_follow"
                         android:layout_toRightOf="@+id/profileImage"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/profileName"
-                            android:layout_width="wrap_content"
+                            android:singleLine="true"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="-3dp"
                             android:text="name"

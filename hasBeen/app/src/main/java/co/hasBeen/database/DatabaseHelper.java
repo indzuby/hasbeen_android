@@ -14,12 +14,11 @@ import org.joda.time.LocalDateTime;
 
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Place;
 import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.database.Place;
 import co.hasBeen.model.database.Position;
 
 /**
@@ -158,11 +157,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
     public Long getPlaceIdByVenueId(String venueId) throws SQLException{
         Dao<Place,Long> placeDao = getPlaceDao();
-        return placeDao.queryForEq("venue_id",venueId).get(0).getId();
+        return placeDao.queryForEq("venue_id", venueId).get(0).getId();
     }
     public List<Photo> selectAllPhoto() throws  SQLException{
         Dao<Photo,Long> photoDao = getPhotoDao();
-        return photos.queryBuilder().orderBy("id", true).query();
+        return photos.queryBuilder().orderBy("taken_time", true).query();
+    }
+    public List<Photo> selectPhotosByDayId(Long dayId) throws  SQLException{
+        Dao<Photo,Long> photoDao = getPhotoDao();
+        return photos.queryBuilder().orderBy("taken_time", true).where().eq("day_id",dayId).query();
     }
     public boolean hasPhotoId(Long photoId) throws SQLException{
         Dao<Photo,Long> photoDao = getPhotoDao();
@@ -195,33 +198,32 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
     public List<Photo> selectPhotoByPositionId(Long positionId) throws  SQLException{
         Dao<Photo,Long> photoDao = getPhotoDao();
-        return photoDao.queryBuilder().orderBy("id",true).where().eq("position_id",positionId).and().eq("clearest_id", new ColumnArg("id")).query();
+        return photoDao.queryBuilder().orderBy("taken_time",true).where().eq("position_id", positionId).and().eq("clearest_id", new ColumnArg("id")).query();
     }
     public List<Photo> selectPhotoClearestPhoto() throws SQLException {
         Dao<Photo,Long> photoDao = getPhotoDao();
-        return photoDao.queryBuilder().orderBy("id", false).where().eq("clearest_id",new ColumnArg("id")).query();
+        return photoDao.queryBuilder().orderBy("taken_time", false).where().eq("clearest_id", new ColumnArg("id")).query();
     }
     public List<Day> selectBeforeFiveDay() throws SQLException {
         Dao<Day,Long> dayDao = getDayDao();
         Date date = new LocalDateTime(getLastPhoto().getTakenTime()).minusDays(10).toDate();
-        return dayDao.queryBuilder().orderBy("id",false).where().ge("date", date.getTime()).query();
+        return dayDao.queryBuilder().orderBy("date", false).where().ge("date", date.getTime()).query();
     }
     public List<Day> selectBeforeTenDay(Long start) throws SQLException {
         Dao<Day,Long> dayDao = getDayDao();
         Date date = new LocalDateTime(start).minusDays(10).toDate();
-        return dayDao.queryBuilder().orderBy("id",false).where().ge("date", date.getTime()).and().lt("date",start).query();
+        return dayDao.queryBuilder().orderBy("date",false).where().ge("date", date.getTime()).and().lt("date", start).query();
     }
     public List<Position> selectPositionByDayId(Long dayId) throws SQLException{
         Dao<Position,Long> positionDao = getPositionDao();
 
-        return positionDao.queryBuilder().orderBy("id", true).where().eq("day_id",dayId).query();
+        return positionDao.queryBuilder().orderBy("start_time", true).where().eq("day_id", dayId).query();
     }
-    public int selectPhotoByDayid(Long dayId) throws SQLException{
+    public int countPhotoByDayid(Long dayId) throws SQLException{
         List<Position> positions = selectPositionByDayId(dayId);
-        Iterator iterator = positions.iterator();
         int photoCnt=0;
-        while(iterator.hasNext())
-            photoCnt += Math.ceil(selectPhotoByPositionId(((Position)iterator.next()).getId()).size()/3.0);
+        for(Position position : positions)
+            photoCnt += selectPhotoByPositionId(position.getId()).size();
         return photoCnt;
     }
     public String selectPlaceNameByPlaceId(Long placeId) throws SQLException {

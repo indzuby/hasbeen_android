@@ -17,7 +17,6 @@
         android:textSize="16sp"
         android:textColor="#FFFFFF"
         android:id="@+id/actionBarTitle"
-        android:text="Share Photos"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/actionBarBack"
         android:layout_toEndOf="@+id/actionBarBack"

@@ -47,7 +47,10 @@ public class HasBeenDate {
         return false;
     }
     public static Long getBefore10Day(Long currentTime){
-        Date date = new LocalDateTime(currentTime).minusDays(10).toDate();
+        return getBeforeDay(currentTime,10);
+    }
+    public static Long getBeforeDay(Long currentTime, int day){
+        Date date = new LocalDateTime(currentTime).minusDays(day).toDate();
         return date.getTime();
     }
     public static String convertDate(Date date) {

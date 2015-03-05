@@ -81,7 +81,7 @@ public class MapRoute {
                     .position(new LatLng(place.getLat(), place.getLon())));
         }
         LatLng location = new LatLng(placeList.get(0).getLat(),placeList.get(0).getLon());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 16));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 14));
         for(int i = 1; i <placeList.size();i++) {
             LatLng from = new LatLng(placeList.get(i - 1).getLat(),placeList.get(i - 1).getLon());
             LatLng to = new LatLng(placeList.get(i).getLat(),placeList.get(i).getLon());

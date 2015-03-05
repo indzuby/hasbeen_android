@@ -34,6 +34,8 @@ public class Day {
     Long mainPhotoId;
     @DatabaseField(columnName = "main_place_id")
     Long mainPlaceId;
+    @DatabaseField(columnName = "created_time")
+    Long createdTime;
 
     public Long getMainPlaceId() {
         return mainPlaceId;
@@ -124,7 +126,6 @@ public class Day {
     public Day() {
     }
     User user;
-    Long createdTime;
     int commentCount;
     int loveCount;
     int shareCount;

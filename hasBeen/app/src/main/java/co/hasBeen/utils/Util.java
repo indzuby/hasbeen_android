@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Path;
 import android.media.ExifInterface;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 
 import org.bson.BasicBSONObject;
@@ -80,15 +81,8 @@ public class Util {
         String place = start;
         if(!start.equals(end)) {
             place+=" — "+end;
-        }if (place.length() > 35)
-            place = place.substring(0, 35) + " ...";
+        }
         return place;
-    }
-    public static String cropPlaceName(String name) {
-        String placeName = name;
-        if (placeName.length() > 30)
-            placeName = placeName.substring(0, 30) + " ...";
-        return placeName;
     }
 
     public static Bitmap getBitmapClippedCircle(Bitmap bitmap) {
@@ -216,5 +210,13 @@ public class Util {
         photo.setWidth(bitmap.getWidth());
         return getBinaryBitmap(bitmap,false);
     }
-
+    public static int getPhotoHeight(Context mContext){
+        int width = mContext.getResources().getDisplayMetrics().widthPixels;
+        int catgoryWith = Util.convertDpToPixel(72,mContext);
+        return (width -catgoryWith)/3 - 2;
+    }
+    Handler mHandler;
+    public static String getMapUrl(float lat,float lon) {
+        return MAP_URL + lat + "," + lon;
+    }
 }

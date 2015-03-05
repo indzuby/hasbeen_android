@@ -3,10 +3,12 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:background="@android:color/transparent"
-              android:paddingTop="12dp"
-              android:paddingRight="16dp"
               android:layout_height="72dp">
     <ImageButton
+        android:paddingTop="12dp"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"
@@ -17,13 +19,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
+        android:layout_marginTop="12dp"
+        android:singleLine="true"
         android:textColor="#FFFFFF"
         android:includeFontPadding="false"
         android:text="BeatienBerg, Swiss"
         android:id="@+id/profileName"
+        android:layout_toLeftOf="@+id/moreVert"
         android:layout_toRightOf="@+id/photoBack"
         android:layout_toEndOf="@+id/photoBack"
-        android:layout_marginLeft="32dp"/>
+        android:layout_marginLeft="16dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,9 +40,13 @@
         android:layout_below="@+id/profileName"
         android:layout_alignLeft="@+id/profileName"
         />
-    <ImageButton
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="16dp"
         android:background="@null"
         android:id="@+id/moreVert"
         android:src="@drawable/more_vert_white"

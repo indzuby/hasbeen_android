@@ -16,13 +16,14 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
 import co.hasBeen.model.database.Photo;
 import co.hasBeen.model.database.Place;
 import co.hasBeen.model.database.Position;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.Session;
-import co.hasBeen.R;
+import co.hasBeen.utils.Util;
 
 /**
  * Created by zuby on 2015-01-05.
@@ -69,6 +70,7 @@ public class GalleryPositionAdapter extends BaseAdapter{
         }
         TextView timeView = (TextView) view.findViewById(R.id.placeTime);
         TextView areaView = (TextView) view.findViewById(R.id.placeName);
+        TextView photoCount = (TextView) view.findViewById(R.id.photoCount);
         GridView gridView = (GridView) view.findViewById(R.id.galleryL2GridView);
         ImageView categoryIcon = (ImageView) view.findViewById(R.id.placeIcon);
         categoryIcon.setOnClickListener(new CategoryListner(index,position));
@@ -80,13 +82,20 @@ public class GalleryPositionAdapter extends BaseAdapter{
             Glide.with(mContext).load(place.getCategoryIconPrefix() + "88" + place.getCategoryIconSuffix()).into(categoryIcon);
             areaView.setText(place.getName());
             List<Photo> photos = database.selectPhotoByPositionId(position.getId());
+            gridView.getLayoutParams().height = getHeight(photos.size());
             GalleryAdapter galleryAdapter = new GalleryAdapter(mContext,photos);
             gridView.setAdapter(galleryAdapter);
-
+            String text = photos.size()+" photo";
+            if(photos.size()>1) text+="s";
+            photoCount.setText(text);
         }catch (Exception e) {
             e.printStackTrace();
         }
         return view;
+    }
+    protected int getHeight(int photoCount) {
+        int count = (int)Math.ceil((float)photoCount/3);
+        return Util.getPhotoHeight(mContext)*count;
     }
     class CategoryListner implements View.OnClickListener{
         int index;
@@ -103,9 +112,8 @@ public class GalleryPositionAdapter extends BaseAdapter{
             intent.putExtra("index",index);
             mPositionId = position.getId();
             mIndex = index;
-            Activity activity = (Activity) mContext;
             Session.putBoolean(mContext, "placeChange", false);
-            activity.startActivityForResult(intent,REQUEST);
+            mContext.startActivity(intent);
             startCallBack(index);
 
         }
@@ -121,7 +129,6 @@ public class GalleryPositionAdapter extends BaseAdapter{
                     flag = Session.getBoolean(mContext,"placeChange",false);
                     if(flag) {
                         try {
-
                             mPositions.set(index, database.selectPosition(mPositions.get(index).getId()));
                             ((Activity) mContext).runOnUiThread(new Runnable() {
                                 @Override

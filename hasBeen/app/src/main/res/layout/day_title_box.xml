@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/light_black"
                     android:textSize="12sp"
-                    android:text="name"
+
                     android:layout_below="@+id/placeName"
                     android:id="@+id/profileName"/>
 
@@ -52,10 +52,11 @@
                     />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/placeName"
-                    android:text="Swiss"
+
+                    android:singleLine="true"
                     android:layout_marginTop="-4dp"
                     android:textColor="@color/light_black"
                     android:layout_toRightOf="@+id/pin"

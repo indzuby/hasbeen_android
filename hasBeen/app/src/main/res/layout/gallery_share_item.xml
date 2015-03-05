@@ -30,10 +30,12 @@
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:paddingTop="8dp"
+            android:layout_marginRight="16dp"
             android:layout_height="48dp">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
                 android:id="@+id/placeName"
                 android:textColor="@color/light_black"
                 android:textSize="13sp"

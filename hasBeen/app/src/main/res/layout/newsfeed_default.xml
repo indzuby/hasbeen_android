@@ -73,7 +73,7 @@
                 android:layout_height="72dp"
                 android:gravity="center"
                 android:lineSpacingExtra="4sp"
-                android:text="당신의 페이스북 친구 183명이 \nhasBeen을 이용중입니다."
+                android:text="당신의 페이스북 친구 0명이 \nhasBeen을 이용중입니다."
                 android:textColor="@color/theme_color"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -103,7 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:gravity="center"
-                android:text="183명의 친구들 모두 보기"
+                android:text="0명의 친구들 모두 보기"
                 android:background="@drawable/description_selector"
                 android:textColor="@color/light_gray"
                 android:textSize="14sp"

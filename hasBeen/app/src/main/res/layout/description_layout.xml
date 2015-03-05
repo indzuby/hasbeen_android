@@ -11,18 +11,28 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColorHint="@color/light_gray2"
         android:id="@+id/title"
+        android:singleLine="true"
         android:layout_marginTop="-2dp"
         android:focusable="false"
         android:background="@drawable/description_selector"
         android:focusableInTouchMode="false"
-        android:text="title"
-        android:fontFamily="sans-serif-medium"
+        android:hint="write your title"
+        android:textStyle="bold"
         android:textColor="@color/light_black"
         android:textSize="14sp"
         />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="6dp"
+        android:layout_below="@+id/title"
+        android:alpha="0.2"
+        android:background="@color/theme_black" />
     <ImageView
         android:layout_width="wrap_content"
         android:layout_marginTop="-1dp"
@@ -34,13 +44,14 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:textColorHint="@color/light_gray2"
+        android:layout_marginTop="16dp"
         android:includeFontPadding="false"
         android:fontFamily="sans-serif-regular"
         android:background="@drawable/description_selector"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:text="decription"
+        android:hint="write your day memo"
         android:id="@+id/description"
         android:layout_below="@+id/title"
         android:textColor="@color/light_black"
@@ -52,6 +63,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/light_gray"
         android:id="@+id/socialAction"
+
         android:layout_below="@+id/description"
         android:textSize="13sp"
         />

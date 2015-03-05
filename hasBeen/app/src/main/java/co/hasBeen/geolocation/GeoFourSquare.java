@@ -75,7 +75,6 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
             e.printStackTrace();
         }
         return null;
-
     }
 
     @Override

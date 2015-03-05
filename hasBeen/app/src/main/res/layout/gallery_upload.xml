@@ -27,15 +27,18 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/imageBox"
                 android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:paddingLeft="16dp">
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/date"
-                    android:layout_width="wrap_content"
+                    android:singleLine="true"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="2015년 1월 1일"
                     android:textColor="@color/light_black"
@@ -43,7 +46,8 @@
 
                 <TextView
                     android:id="@+id/placeName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
+                    android:singleLine="true"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/date"
                     android:text="Area1 - Araea7"

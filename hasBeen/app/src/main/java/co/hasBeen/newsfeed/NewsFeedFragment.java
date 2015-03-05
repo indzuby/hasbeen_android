@@ -106,7 +106,7 @@ public class NewsFeedFragment extends Fragment{
         });
         mActualListView = mListView.getRefreshableView();
         mActualListView.setAdapter(mFeedAdapter);
-        mLoadingView =  LayoutInflater.from(getActivity()).inflate(R.layout.newsfeed_loading, null, false);
+        mLoadingView =  LayoutInflater.from(getActivity()).inflate(R.layout.loading_layout, null, false);
         mLoading = mLoadingView.findViewById(R.id.refresh);
         mActualListView.addFooterView(mLoadingView);
         mDefaultView = LayoutInflater.from(getActivity()).inflate(R.layout.newsfeed_default,null,false);

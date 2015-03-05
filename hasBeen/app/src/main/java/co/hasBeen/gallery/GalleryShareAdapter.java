@@ -10,13 +10,12 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import java.util.Arrays;
 import java.util.List;
 
-import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.R;
 import co.hasBeen.model.database.Photo;
 import co.hasBeen.model.database.Position;
+import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.Util;
 
 /**
@@ -63,14 +62,7 @@ public class GalleryShareAdapter extends GalleryPositionAdapter {
         timeView.setText(HasBeenDate.convertTime(position.getStartTime(), position.getEndTime()));
         try{
             areaView.setText(database.selectPlaceNameByPlaceId(position.getPlaceId()));
-            if(position.getPhotoList()==null) {
-                position.setPhotoList(database.selectPhotoByPositionId(position.getId()));
-                Boolean[] isCheckedPhoto = new Boolean[position.getPhotoList().size()];
-                Arrays.fill(isCheckedPhoto,true);
-                position.setIsCheckedPhoto(isCheckedPhoto);
-            }
             List<Photo> photos = position.getPhotoList();
-
             GallerySharePhotoAdapter galleryAdapter = new GallerySharePhotoAdapter(mContext,photos,position.getIsCheckedPhoto());
             gridView.setAdapter(galleryAdapter);
             ViewGroup.LayoutParams params = gridView.getLayoutParams();

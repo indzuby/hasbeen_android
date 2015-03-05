@@ -121,8 +121,8 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
         regular = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Roboto-Regular.ttf");
         mNewList = (PullToRefreshListView) mView.findViewById(R.id.alarmNewList);
         mYouList = (PullToRefreshListView) mView.findViewById(R.id.alarmYouList);
-        mNewLoadingView =  LayoutInflater.from(getActivity()).inflate(R.layout.newsfeed_loading, null, false);
-        mYouLoadingView =  LayoutInflater.from(getActivity()).inflate(R.layout.newsfeed_loading, null, false);
+        mNewLoadingView =  LayoutInflater.from(getActivity()).inflate(R.layout.loading_layout, null, false);
+        mYouLoadingView =  LayoutInflater.from(getActivity()).inflate(R.layout.loading_layout, null, false);
         mNewsRedDot = (ImageView) mView.findViewById(R.id.newsRedDot);
         mYouRedDot = (ImageView) mView.findViewById(R.id.youRedDot);
         mAlarmsNews = new ArrayList<>();

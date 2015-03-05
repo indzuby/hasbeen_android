@@ -40,6 +40,14 @@
             android:divider="#00000000"
             android:scrollbars="none" />
 
+        <ImageButton
+            android:id="@+id/shareButton"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="8dp"
+            android:background="@drawable/share_effect"
+            android:src="@drawable/share" />
     </FrameLayout>
     <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->

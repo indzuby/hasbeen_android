@@ -20,6 +20,8 @@ import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
 import co.hasBeen.model.database.Day;
 import co.hasBeen.model.database.Position;
+import co.hasBeen.utils.HasBeenDate;
+import co.hasBeen.utils.Util;
 
 /**
  * Created by zuby on 2015-01-20.
@@ -39,16 +41,18 @@ public class GalleryShare extends ActionBarActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gallery_share_photos);
-        mDayId = getIntent().getLongExtra("id",0);
-        mTextDate = (TextView) findViewById(R.id.date);
-        mTextDate.setText(getIntent().getStringExtra("date"));
-        mTextArea = (TextView) findViewById(R.id.placeName);
-        mTextArea.setText(getIntent().getStringExtra("area"));
+        mDayId = getIntent().getLongExtra("dayId",0);
         database = new DatabaseHelper(this);
         mListView = (ListView) findViewById(R.id.listView);
+        mTextDate = (TextView) findViewById(R.id.date);
+        mTextArea = (TextView) findViewById(R.id.placeName);
         try {
             mDay = database.selectDay(mDayId);
+            mTextDate.setText(HasBeenDate.convertDate(mDay.getDate()));
             mDay.setPositionList(database.selectPositionByDayId(mDayId));
+            initPositionItem(mDay.getPositionList());
+
+            mTextArea.setText(Util.convertPlaceName(mDay.getPositionList()));
             isCheckedPosition = new Boolean[mDay.getPositionList().size()];
             mDay.setIsCheckedPosition(isCheckedPosition);
             Arrays.fill(isCheckedPosition,true);
@@ -63,6 +67,8 @@ public class GalleryShare extends ActionBarActivity{
         actionBar.setDisplayHomeAsUpEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(this);
         View mCustomActionBar = mInflater.inflate(R.layout.action_bar_default,null);
+        TextView title = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
+        title.setText("Share Day");
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +90,7 @@ public class GalleryShare extends ActionBarActivity{
                             Position position = mDay.getPositionList().get(i);
                             Long placeId = position.getPlaceId();
                             try {
-                                mDay.setMainPlace(database.selectPlace(placeId));
+                                mDay.setMainPlace(position.getPlace());
                                 mDay.setMainPlaceId(placeId);
                                 database.updateDayMainPlaceId(mDayId, placeId);
                                 for(int j = 0 ;j<position.getIsCheckedPhoto().length;j++) {
@@ -107,7 +113,6 @@ public class GalleryShare extends ActionBarActivity{
                     Intent intent = new Intent(getBaseContext(), GalleryUpload.class);
                     String json = convertObjectToJson();
                     intent.putExtra("data",json);
-                    intent.putExtras(getIntent().getExtras());
                     startActivityForResult(intent,REQUEST_EXIT);
                     flag = false;
                 }
@@ -115,6 +120,15 @@ public class GalleryShare extends ActionBarActivity{
         });
         actionBar.setCustomView(mCustomActionBar);
         actionBar.setDisplayShowCustomEnabled(true);
+    }
+    protected void initPositionItem(List<Position> positions) throws Exception{
+        for(Position position : positions) {
+            position.setPlace(database.selectPlace(position.getPlaceId()));
+            position.setPhotoList(database.selectPhotoByPositionId(position.getId()));
+            Boolean[] isCheckedPhoto = new Boolean[position.getPhotoList().size()];
+            Arrays.fill(isCheckedPhoto,true);
+            position.setIsCheckedPhoto(isCheckedPhoto);
+        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

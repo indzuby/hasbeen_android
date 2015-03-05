@@ -36,12 +36,14 @@
                 android:id="@+id/placeName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
                 android:text="Area 1, Norway"
                 android:textColor="@color/light_black"
                 android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/placeTime"
+                android:singleLine="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="10:22AM - 11:34Am"

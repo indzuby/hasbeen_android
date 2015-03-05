@@ -94,7 +94,7 @@ public class PhotoView extends ActionBarActivity {
         Glide.with(this).load(mPhoto.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).placeholder(R.drawable.placeholder1).into(profileImage);
         Log.i(TAG, mPhoto.getPlaceName());
         profileName.setText(Util.parseName(mPhoto.getUser(), 0));
-        placeName.setText(Util.cropPlaceName(mPhoto.getPlaceName()));
+        placeName.setText(mPhoto.getPlaceName());
         date.setText(HasBeenDate.convertDate(mPhoto.getTakenTime()));
         description.setText(mPhoto.getDescription());
         findViewById(R.id.title).setVisibility(View.GONE);

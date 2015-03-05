@@ -43,7 +43,6 @@ public class GalleryView extends Fragment {
         @Override
         public void run() {
             if (isLoading) {
-                isLoading = false;
                 try {
                     List<Day> days;
                     days = mDayData.bringTenDay(date);
@@ -68,12 +67,11 @@ public class GalleryView extends Fragment {
         mDayList = new ArrayList<>();
         mDayAdapter = new GalleryDayAdapter(getActivity(), mDayList);
         mGalleryListView.setRefreshing(false);
-        mLoadingView = LayoutInflater.from(getActivity()).inflate(R.layout.newsfeed_loading, null, false);
+        mLoadingView = LayoutInflater.from(getActivity()).inflate(R.layout.loading_layout, null, false);
         mLoading = mLoadingView.findViewById(R.id.refresh);
         ListView listView = mGalleryListView.getRefreshableView();
         listView.addFooterView(mLoadingView);
         listView.setAdapter(mDayAdapter);
-        isLoading = true;
         startLoading();
         new LoadThread(new Date().getTime()).start();
         mGalleryListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
@@ -81,7 +79,6 @@ public class GalleryView extends Fragment {
             public void onLastItemVisible() {
                 if(!isLoading) {
                     startLoading();
-                    isLoading = true;
                     if (mDayList.size() > 0)
                         new LoadThread(mDayList.get(mDayList.size() - 1).getDate()).start();
                 }
@@ -103,12 +100,14 @@ public class GalleryView extends Fragment {
     }
 
     protected void startLoading() {
+        isLoading = true;
         mLoadingView.setVisibility(View.VISIBLE);
         Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
         mLoading.startAnimation(rotate);
     }
 
     protected void stopLoading() {
+        isLoading = false;
         mLoadingView.setVisibility(View.GONE);
         mLoading.clearAnimation();
     }

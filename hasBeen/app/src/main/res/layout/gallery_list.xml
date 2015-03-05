@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/theme_white">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:weightSum="5"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+            <View
+                android:layout_width="4dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:alpha="0.08"
+                android:background="#000000"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+    <ListView
+        android:layout_width="match_parent"
+        android:id="@+id/listPhotos"
+        android:background="@color/transparent"
+        android:divider="@color/transparent"
+        android:layout_height="wrap_content">
+    </ListView>
+    <include layout="@layout/gallery_title_box" android:id="@+id/galleryTitleBox" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/refresh"
+        android:layout_gravity="center"
+        android:src="@drawable/loading"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/actionbar_shadow" />
+    <ImageButton
+        android:id="@+id/shareButton"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="8dp"
+        android:background="@drawable/share_effect"
+        android:src="@drawable/share" />
+</FrameLayout>
