@@ -80,6 +80,10 @@ public class GalleryUpload extends ActionBarActivity {
         photoCount.setText("+"+ (mDayUpload.getPhotoCount()-1));
         mTitle = (EditText) findViewById(R.id.title);
         mDescription = (EditText) findViewById(R.id.description);
+        mTitle.setText(mDayUpload.getTitle());
+        mTitle.setSelection(mDayUpload.getTitle().length());
+        mDescription.setText(mDayUpload.getDescription());
+        mDescription.setSelection(mDayUpload.getDescription().length());
     }
 
     protected void initActionBar() {

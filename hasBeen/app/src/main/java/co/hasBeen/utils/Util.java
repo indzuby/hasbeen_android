@@ -75,12 +75,13 @@ public class Util {
 
     public static String convertPlaceName(List<Position> positions) {
         if (positions.size() <= 0) return "";
-        return convertPlaceName(positions.get(0).getPlace().getName(),positions.get(positions.size()-1).getPlace().getName());
+        return convertPlaceName(positions.get(0).getPlace().getName(), positions.get(positions.size() - 1).getPlace().getName());
     }
+
     public static String convertPlaceName(String start, String end) {
         String place = start;
-        if(!start.equals(end)) {
-            place+=" — "+end;
+        if (!start.equals(end)) {
+            place += " — " + end;
         }
         return place;
     }
@@ -164,6 +165,7 @@ public class Util {
                     return bitmap;
             }
             Bitmap bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            bitmap.recycle();
             return bmRotated;
         } catch (Exception e) {
             e.printStackTrace();
@@ -171,10 +173,10 @@ public class Util {
         }
     }
 
-    public static String getBinaryBitmap(Bitmap bitmap, boolean isMap){
+    public static String getBinaryBitmap(Bitmap bitmap, boolean isMap) {
         BasicBSONObject basicBSONObject = new BasicBSONObject();
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        if(!isMap)
+        if (!isMap)
             bitmap.compress(Bitmap.CompressFormat.JPEG, 80, bos);
         else
             bitmap.compress(Bitmap.CompressFormat.PNG, 80, bos);
@@ -182,6 +184,7 @@ public class Util {
         basicBSONObject.put("binary", bitmapdata);
         return basicBSONObject.toString();
     }
+
     public static String getLargeImage(Photo photo) throws Exception {
         String path = photo.getPhotoPath();
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -205,18 +208,21 @@ public class Util {
 
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
 
-        rotateBitmap(bitmap, orientation);
-        photo.setHeight(bitmap.getHeight());
-        photo.setWidth(bitmap.getWidth());
-        return getBinaryBitmap(bitmap,false);
+        Bitmap rotateBitmap = rotateBitmap(bitmap, orientation);
+        photo.setHeight(rotateBitmap.getHeight());
+        photo.setWidth(rotateBitmap.getWidth());
+        return getBinaryBitmap(rotateBitmap, false);
     }
-    public static int getPhotoHeight(Context mContext){
+
+    public static int getPhotoHeight(Context mContext) {
         int width = mContext.getResources().getDisplayMetrics().widthPixels;
-        int catgoryWith = Util.convertDpToPixel(72,mContext);
-        return (width -catgoryWith)/3 - 2;
+        int catgoryWith = Util.convertDpToPixel(72, mContext);
+        return (width - catgoryWith) / 3 - 2;
     }
+
     Handler mHandler;
-    public static String getMapUrl(float lat,float lon) {
+
+    public static String getMapUrl(float lat, float lon) {
         return MAP_URL + lat + "," + lon;
     }
 }

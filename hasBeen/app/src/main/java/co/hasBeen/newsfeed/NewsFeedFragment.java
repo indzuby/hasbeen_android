@@ -214,6 +214,9 @@ public class NewsFeedFragment extends Fragment{
                                         }
                                         if(mFeeds.size()<=0)
                                             showDefaultPage();
+                                        else {
+                                            dismissDefaultPage();
+                                        }
                                     }
                                 });
                             } catch (Exception e) {

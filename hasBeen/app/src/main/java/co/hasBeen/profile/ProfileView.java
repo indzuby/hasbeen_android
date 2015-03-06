@@ -66,8 +66,6 @@ public class ProfileView extends ActionBarActivity {
     List<Day> mLikeDays;
     List<Photo> mLikePhotos;
 
-    List<Loved> mLovedPhotos;
-    List<Loved> mLovedDays;
     SupportMapFragment mMapFragment;
     MapRoute mMapRoute;
     GoogleMap mMap;
@@ -125,7 +123,7 @@ public class ProfileView extends ActionBarActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mLovedDays = (List<Loved>) msg.obj;
+                    List<Loved> mLovedDays = (List<Loved>) msg.obj;
                     mLikeDays = new ArrayList<>();
                     for(Loved love : mLovedDays)
                         mLikeDays.add(love.getDay());
@@ -145,7 +143,7 @@ public class ProfileView extends ActionBarActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mLovedPhotos = (List<Loved>) msg.obj;
+                    List<Loved> mLovedPhotos = (List<Loved>) msg.obj;
                     mLikePhotos = new ArrayList<>();
                     for(Loved love : mLovedPhotos)
                         mLikePhotos.add(love.getPhoto());
@@ -396,8 +394,6 @@ public class ProfileView extends ActionBarActivity {
                     dayRendering(mLikeDays);
                 else
                     new LikeDayAsyncTask(likeDayHandler).execute(mAccessToken,mUser.getId());
-
-
             } else {
                 if (mLikePhotos != null)
                     photoRendering(mLikePhotos);
@@ -407,7 +403,7 @@ public class ProfileView extends ActionBarActivity {
         }
     }
 
-    protected void dayRendering(final List<Day> days) {
+    protected void dayRendering( List<Day> days) {
 
         try {
             LatLng location = new LatLng(days.get(0).getMainPlace().getLat(), days.get(0).getMainPlace().getLon());
@@ -419,7 +415,7 @@ public class ProfileView extends ActionBarActivity {
         }
     }
 
-    protected void photoRendering(final List<Photo> photos) {
+    protected void photoRendering( List<Photo> photos) {
         try {
             LatLng location = new LatLng(photos.get(0).getLat(), photos.get(0).getLon());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
