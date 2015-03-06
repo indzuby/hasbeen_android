@@ -134,7 +134,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             loveText.setTypeface(regular);
         }
         loveButton.setOnClickListener(new LoveListner(mContext,feed,"days",socialAction));
-        date.setText(HasBeenDate.convertDate(feed.getCreatedTime()));
+        date.setText(HasBeenDate.convertDate(feed.getDate()));
         placeName.setTypeface(medium);
         dayTitle.setTypeface(medium);
         profileName.setTypeface(regular);
@@ -143,7 +143,7 @@ public class NewsFeedAdapter extends BaseAdapter {
         moreVert.setVisibility(View.VISIBLE);
 
         ImageView mapThumbnail = (ImageView) view.findViewById(R.id.mapThumbnail);
-        Glide.with(mContext).load(MAP_URL+feed.getMainPlace().getLat()+","+feed.getMainPlace().getLon()).into(mapThumbnail);
+        Glide.with(mContext).load(feed.getStaticMapUrl()).into(mapThumbnail);
         view.setBackground(mContext.getResources().getDrawable(R.drawable.long_pressed_selector));
         return view;
     }

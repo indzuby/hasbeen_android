@@ -15,7 +15,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/icon"
+        android:icon="@drawable/icon3"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:screenOrientation="portrait"
@@ -25,6 +25,7 @@
             android:name="co.hasBeen.MainActivity"
             android:theme="@style/hasBeenShare">
         </activity>
+        <activity android:name=".map.MapActivity"  android:theme="@style/hasBeenShare" />
         <activity android:name="co.hasBeen.gallery.GalleryPhoto" android:theme="@style/NoActionBar" android:label="@string/app_name" />
         <activity android:name="co.hasBeen.gallery.GalleryPhotoEdit" android:theme="@style/NoActionBar" android:label="@string/app_name" android:windowSoftInputMode="adjustResize" />
         <activity android:name="co.hasBeen.gallery.GalleryShare"  android:theme="@style/hasBeenShare" />

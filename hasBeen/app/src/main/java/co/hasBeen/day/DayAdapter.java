@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.hasBeen.R;
+import co.hasBeen.map.EnterMapLisnter;
+import co.hasBeen.model.database.Day;
 import co.hasBeen.model.database.Photo;
 import co.hasBeen.model.database.Position;
 import co.hasBeen.photo.PhotoView;
@@ -39,12 +41,15 @@ public class DayAdapter extends BaseAdapter {
     List<PhotoAdapter> recycleAdapter = new ArrayList<>();
     boolean isMine;
     String mAccessToken;
-    public DayAdapter(Context mContext, List mPositionList,boolean isMine)
+    Day mDay;
+    public DayAdapter(Context mContext, List mPositionList,boolean isMine,Day mDay)
     {
         this.mContext = mContext;
         this.mPositionList = mPositionList;
         this.isMine = isMine;
+        this.mDay = mDay;
         mAccessToken = Session.getString(mContext,"accessToken",null);
+
     }
     public void recycle(){
         for(PhotoAdapter adapter : recycleAdapter)
@@ -88,6 +93,8 @@ public class DayAdapter extends BaseAdapter {
         }
         if(position.getPlace()!=null) {
             placeName.setText(position.getPlace().getName());
+            placeName.setOnClickListener(new EnterMapLisnter(mContext, mDay,position.getId()));
+            placeTime.setOnClickListener(new EnterMapLisnter(mContext,mDay,position.getId()));
             Glide.with(mContext).load(position.getPlace().getCategoryIconPrefix() + "88" + position.getPlace().getCategoryIconSuffix()).into(placeIcon);
         }else {
             placeName.setText("Can not find the place");

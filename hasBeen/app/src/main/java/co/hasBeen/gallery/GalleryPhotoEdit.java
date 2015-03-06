@@ -2,8 +2,11 @@ package co.hasBeen.gallery;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +22,8 @@ public class GalleryPhotoEdit extends Activity {
     Long mPhotoId;
     Photo mPhoto;
     DatabaseHelper database;
+    ImageView mEditButton;
+    boolean isEdit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +31,7 @@ public class GalleryPhotoEdit extends Activity {
         try{
             database = new DatabaseHelper(this);
             mPhoto = database.selectPhoto(mPhotoId);
+            isEdit = false;
             init();
         }catch (Exception e) {
             e.printStackTrace();
@@ -48,24 +54,42 @@ public class GalleryPhotoEdit extends Activity {
                 finish();
             }
         });
-        View done = findViewById(R.id.done);
-        done.setOnClickListener(new View.OnClickListener() {
+
+        mEditButton = (ImageView) findViewById(R.id.editButton);
+        mEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TextView description = (TextView) findViewById(R.id.description);
-                String des = description.getText().toString();
-                if(des.length()>=2 && des.length()<=255) {
-                    mPhoto.setDescription(des);
-                    try {                        database.updatePhoto(mPhoto);
-                        setResult(RESULT_OK);
-                        Toast.makeText(getBaseContext(),"Complete written",Toast.LENGTH_LONG).show();
-                        finish();
-                    }catch (Exception e){
-                        e.printStackTrace();
+                if(isEdit) {
+                    TextView description = (TextView) findViewById(R.id.description);
+                    String des = description.getText().toString();
+                    if (des.length() >= 2 && des.length() <= 255) {
+                        mPhoto.setDescription(des);
+                        try {
+                            database.updatePhoto(mPhoto);
+                            setResult(RESULT_OK);
+                            Toast.makeText(getBaseContext(), "Complete written", Toast.LENGTH_LONG).show();
+                            finish();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Toast.makeText(getBaseContext(), "Letters can range from 2 to 255 characters.", Toast.LENGTH_LONG).show();
                     }
-                }else {
-                    Toast.makeText(getBaseContext(),"Letters can range from 2 to 255 characters.",Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+        description.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                isEdit = true;
+                mEditButton.setImageResource(R.drawable.edit_done_green);
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
     }

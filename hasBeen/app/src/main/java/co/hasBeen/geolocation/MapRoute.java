@@ -35,59 +35,43 @@ public class MapRoute {
     GoogleMap mMap;
     DatabaseHelper database;
     Context mContext;
-    private ClusterManager<MyItem> mClusterManager;
     public MapRoute(GoogleMap mMap,Context context) {
         this.mMap = mMap;
         database = new DatabaseHelper(context);
         mContext = context;
     }
-    public void createRouteDay(Long dayId){
-        mMap.clear();
-        try {
-            List<Position> positionList = database.selectPositionByDayId(dayId);
-            List<Place> placeList = new ArrayList<>();
-
-            for(Position position : positionList){
-                Long placeId = position.getPlaceId();
-                Place place = database.selectPlace(placeId);
-                placeList.add(place);
-//                Bitmap icon =PlaceMarker.getMarker(mContext, place.getCategoryIconPrefix() + "88" + place.getCategoryIconSuffix()).makeIcon();
-                mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
-                        .position(new LatLng(place.getLat(), place.getLon())));
-            }
-            LatLng location = new LatLng(placeList.get(0).getLat(),placeList.get(0).getLon());
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
-            for(int i = 1; i <placeList.size();i++) {
-                LatLng from = new LatLng(placeList.get(i-1).getLat(),placeList.get(i-1).getLon());
-                LatLng to = new LatLng(placeList.get(i).getLat(),placeList.get(i).getLon());
-                displayRoute(from,to);
-            }
-
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     public void createRouteDay(List<Position> positions) {
+        float sumX=0,sumY=0;
         mMap.clear();
-        mMap.setOnCameraChangeListener(mClusterManager);
-        mMap.setOnMarkerClickListener(mClusterManager);
         List<Place> placeList = new ArrayList<>();
         for(Position position : positions) {
             Place place = position.getPlace();
             if(place==null) continue;
             placeList.add(place);
-//            Bitmap icon =PlaceMarker.getMarker(mContext, place.getCategoryIconPrefix() + "88" + place.getCategoryIconSuffix()).makeIcon();
             mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))
-                    .position(new LatLng(place.getLat(), place.getLon())));
+                    .position(new LatLng(place.getLat(), place.getLon()))).setSnippet(position.getId()+"");
+            sumX+= place.getLat();
+            sumY+= place.getLon();
         }
-        LatLng location = new LatLng(placeList.get(0).getLat(),placeList.get(0).getLon());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 14));
-        for(int i = 1; i <placeList.size();i++) {
-            LatLng from = new LatLng(placeList.get(i - 1).getLat(),placeList.get(i - 1).getLon());
-            LatLng to = new LatLng(placeList.get(i).getLat(),placeList.get(i).getLon());
-            displayRoute(from,to);
+        LatLng location = new LatLng(sumX/placeList.size(),sumY/placeList.size());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 12));
+        LatLng from=null,to;
+        for(Position position : positions) {
+            Place place = position.getPlace();
+            if(place==null) {
+                for(Position.Gps gps : position.getGpsList()){
+                    to = new LatLng(gps.getLat(),gps.getLon());
+                    if(from!=null)
+                        displayRoute(from,to);
+                    from = to;
+                }
+            }else {
+                to = new LatLng(place.getLat(),place.getLon());
+                if(from!=null)
+                    displayRoute(from,to);
+                from = to;
+            }
         }
-
     }
     public void addMarkerCluster(List<Day> days){
         mMap.clear();

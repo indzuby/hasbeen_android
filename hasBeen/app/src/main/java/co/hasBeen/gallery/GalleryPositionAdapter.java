@@ -18,6 +18,8 @@ import java.util.List;
 
 import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.map.EnterMapLisnter;
+import co.hasBeen.model.database.Day;
 import co.hasBeen.model.database.Photo;
 import co.hasBeen.model.database.Place;
 import co.hasBeen.model.database.Position;
@@ -37,12 +39,13 @@ public class GalleryPositionAdapter extends BaseAdapter{
     Long mPositionId;
     int mIndex;
     List<View> mItemList;
-    public GalleryPositionAdapter(Context context, List positions) {
+    Day mDay;
+    public GalleryPositionAdapter(Context context, List positions,Day mDay) {
         mContext = context;
         mPositions = positions;
         database = new DatabaseHelper(context);
         mItemList = new ArrayList<>();
-
+        this.mDay =mDay;
     }
 
     @Override
@@ -68,20 +71,22 @@ public class GalleryPositionAdapter extends BaseAdapter{
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.gallery_level_2_item, null);
         }
-        TextView timeView = (TextView) view.findViewById(R.id.placeTime);
-        TextView areaView = (TextView) view.findViewById(R.id.placeName);
+        TextView placeTime = (TextView) view.findViewById(R.id.placeTime);
+        TextView placeName = (TextView) view.findViewById(R.id.placeName);
         TextView photoCount = (TextView) view.findViewById(R.id.photoCount);
         GridView gridView = (GridView) view.findViewById(R.id.galleryL2GridView);
         ImageView categoryIcon = (ImageView) view.findViewById(R.id.placeIcon);
         categoryIcon.setOnClickListener(new CategoryListner(index,position));
         categoryIcon.setScaleType(ImageView.ScaleType.FIT_XY);
-        timeView.setText(HasBeenDate.convertTime(position.getStartTime(), position.getEndTime()));
+        placeTime.setText(HasBeenDate.convertTime(position.getStartTime(), position.getEndTime()));
 
         try{
             Place place = database.selectPlace(position.getPlaceId());
             Glide.with(mContext).load(place.getCategoryIconPrefix() + "88" + place.getCategoryIconSuffix()).into(categoryIcon);
-            areaView.setText(place.getName());
-            List<Photo> photos = database.selectPhotoByPositionId(position.getId());
+            placeName.setText(place.getName());
+            placeName.setOnClickListener(new EnterMapLisnter(mContext, mDay, position.getId()));
+            placeTime.setOnClickListener(new EnterMapLisnter(mContext, mDay, position.getId()));
+            List<Photo> photos = position.getPhotoList();
             gridView.getLayoutParams().height = getHeight(photos.size());
             GalleryAdapter galleryAdapter = new GalleryAdapter(mContext,photos);
             gridView.setAdapter(galleryAdapter);

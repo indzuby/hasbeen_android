@@ -366,6 +366,7 @@ public class ProfileFragment extends Fragment {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
             mMapRoute.addMarkerCluster(days);
         }catch (Exception e) {
+            mMap.clear();
             e.printStackTrace();
         }
     }
@@ -376,6 +377,7 @@ public class ProfileFragment extends Fragment {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
             mMapRoute.addMarkerClusterPhoto(photos);
         }catch (Exception e) {
+            mMap.clear();
             e.printStackTrace();
         }
     }

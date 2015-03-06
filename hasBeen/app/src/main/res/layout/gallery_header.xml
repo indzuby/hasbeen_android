@@ -10,12 +10,22 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="#ffffff" />
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="160dp">
     <ImageView
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="160dp"
         android:scaleType="centerCrop" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:src="@drawable/oval"
+            android:padding="16dp"
+            android:id="@+id/fullScreen"
+            android:layout_gravity="right|bottom"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 
     <include layout="@layout/description_layout" />
 

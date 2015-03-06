@@ -26,10 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.UiSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +33,8 @@ import java.util.List;
 import co.hasBeen.R;
 import co.hasBeen.comment.CommentView;
 import co.hasBeen.comment.EnterCommentListner;
-import co.hasBeen.geolocation.MapRoute;
 import co.hasBeen.loved.LoveListner;
+import co.hasBeen.map.EnterMapLisnter;
 import co.hasBeen.model.api.Comment;
 import co.hasBeen.model.api.User;
 import co.hasBeen.model.database.Day;
@@ -62,9 +58,7 @@ public class DayView extends ActionBarActivity{
     View mHeaderView;
     View mFooterView;
     int nowScrolled = 0 ;
-    GoogleMap mMap = null;
     Day mDay;
-    MapRoute mMapRoute = null;
     DayAdapter mDayAdapter;
     Long mDayId;
     String mAccessToken;
@@ -81,6 +75,7 @@ public class DayView extends ActionBarActivity{
     String mBeforeTitle="",mBeforeDescription;
     InputMethodManager mImm;
     Long userId;
+    List<Position> mPositions;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         showProgress();
@@ -102,8 +97,8 @@ public class DayView extends ActionBarActivity{
                         if(position.getType().equals("PLACE"))
                             positions.add(position);
                     }
+                    mPositions = positions;
                     mDay = day;
-                    mDay.setPositionList(positions);
                     Log.i(TAG,mDay.getId()+"");
                     titleView.setText(mDay.getTitle());
                     initHeaderView();
@@ -132,7 +127,7 @@ public class DayView extends ActionBarActivity{
         Glide.with(this).load(mDay.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(profileImage);
         Log.i(TAG, mDay.getMainPlace().getName());
         profileName.setText(Util.parseName(mDay.getUser(), 0));
-        placeName.setText(Util.convertPlaceName(mDay.getPositionList()));
+        placeName.setText(Util.convertPlaceName(mPositions));
         date.setText(HasBeenDate.convertDate(mDay.getDate()));
         mDayTitle.setText(mDay.getTitle());
         mDayTitle.setTypeface(medium);
@@ -140,30 +135,15 @@ public class DayView extends ActionBarActivity{
         mDescription.setTypeface(regular);
         mSocialAction.setText(mDay.getLoveCount()+" Likes · " + mDay.getCommentCount()+" Commnents · "+mDay.getShareCount()+" Shared");
         totalPhoto.setText("Total " + mDay.getPhotoCount() + " photos");
-        Log.i(TAG, mDay.getPositionList().size() + "");
         profileImage.setOnClickListener(new ProfileClickListner(this, mDay.getUser().getId()));
         profileName.setOnClickListener(new ProfileClickListner(this, mDay.getUser().getId()));
-        new Thread(new Runnable() {
-            boolean flag=true;
-            @Override
-            public void run() {
-                while(flag) {
-                    if(mMapRoute!=null && mMap!=null){
-                        flag = false;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mMapRoute.createRouteDay(mDay.getPositionList());
-                            }
-                        });
-
-                    }
-                }
-            }
-        }).start();
+        ImageView map = (ImageView) findViewById(R.id.map);
+        Glide.with(this).load(mDay.getStaticMapUrl()).centerCrop().placeholder(Util.getPlaceHolder(1)).into(map);
+        View fullScreen = findViewById(R.id.fullScreen);
+        fullScreen.setOnClickListener(new EnterMapLisnter(this,mDay,mDay.getPositionList().get(0).getId()));
     }
     protected void initBodyView (){
-        mDayAdapter = new DayAdapter(this,mDay.getPositionList(),userId == mDay.getUser().getId());
+        mDayAdapter = new DayAdapter(this,mPositions,userId == mDay.getUser().getId(),mDay);
         mListView.setAdapter(mDayAdapter);
     }
     protected  void initFoorteView(){
@@ -205,7 +185,11 @@ public class DayView extends ActionBarActivity{
         enterComment.setOnClickListener(new EnterCommentListner(getBaseContext(),"days",mDay.getId(),mDay.getCommentCount()));
 
         mRecommendationLayout = (LinearLayout) findViewById(R.id.recommendationLayout);
-        new RecommendationAsyncTask(recommendationHandler).execute(mAccessToken,mDayId);
+        try {
+            new RecommendationAsyncTask(recommendationHandler).execute(mAccessToken, mDayId);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
     Handler recommendationHandler = new Handler(Looper.getMainLooper()) {
@@ -213,9 +197,13 @@ public class DayView extends ActionBarActivity{
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if(msg.what==0) {
-                mRecommendationList = (List) msg.obj;
-                for(Day day : mRecommendationList) {
-                    mRecommendationLayout.addView(initRecommendation(day));
+                try {
+                    mRecommendationList = (List) msg.obj;
+                    for (Day day : mRecommendationList) {
+                        mRecommendationLayout.addView(initRecommendation(day));
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         }
@@ -226,7 +214,7 @@ public class DayView extends ActionBarActivity{
         regular = Typeface.createFromAsset(this.getAssets(),"fonts/Roboto-Regular.ttf");
         initActionBar();
         new DayAsyncTask(handler).execute(mAccessToken, mDayId);
-        mHeaderView =  LayoutInflater.from(this).inflate(R.layout.day_header, null, false);
+        mHeaderView =  LayoutInflater.from(this).inflate(R.layout.gallery_header, null, false);
         mFooterView =  LayoutInflater.from(this).inflate(R.layout.day_footer, null, false);
         mListView = (ListView) findViewById(R.id.listPhotos);
         mListView.addHeaderView(mHeaderView);
@@ -241,7 +229,6 @@ public class DayView extends ActionBarActivity{
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                Log.i("scroll position",firstVisibleItem+" "+totalItemCount);
                 if(firstVisibleItem+1 == totalItemCount) {
                     if(hasSocialBar) {
                         Animation ani = AnimationUtils.loadAnimation(getBaseContext(),R.anim.slide_down);
@@ -258,21 +245,6 @@ public class DayView extends ActionBarActivity{
                     }
                 }
 
-            }
-        });
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
-
-
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap map) {
-                mMap = map;
-                mMapRoute = new MapRoute(mMap,getBaseContext());
-                UiSettings setting = map.getUiSettings();
-                setting.setRotateGesturesEnabled(false);
-                setting.setZoomControlsEnabled(false);
-                setting.setMyLocationButtonEnabled(false);
             }
         });
 
@@ -426,8 +398,8 @@ public class DayView extends ActionBarActivity{
         profileName.setText(Util.parseName(user, 0));
         Glide.with(this).load(user.getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(profileImage);
         date.setText(HasBeenDate.convertDate(day.getDate()));
-//        Glide.with(this).load(day.getMainPhoto().getMediumUrl()).into(mainPhoto);
-        Glide.with(this).load(day.getPhotoList().get(0).getMediumUrl()).placeholder(Util.getPlaceHolder(day.getItineraryIndex())).into(mainPhoto);
+        Glide.with(this).load(day.getMainPhoto().getMediumUrl()).placeholder(Util.getPlaceHolder(day.getItineraryIndex())).into(mainPhoto);
+//        Glide.with(this).load(day.getPhotoList().get(0).getMediumUrl()).placeholder(Util.getPlaceHolder(day.getItineraryIndex())).into(mainPhoto);
         loveCount.setText(day.getLoveCount()+"");
         commentCount.setText(day.getCommentCount() + "");
         shareCount.setText(day.getShareCount()+"");
@@ -505,6 +477,11 @@ public class DayView extends ActionBarActivity{
         if(requestCode==REQUEST_CODE && resultCode == RESULT_OK) {
             startActivity(getIntent());
             finish();
+        }else if(requestCode==EnterMapLisnter.REQUEST_CODE && resultCode == RESULT_OK) {
+            int index = data.getIntExtra("index",-1);
+            Log.i("call back index",index+"");
+            if(index!=-1)
+                mListView.setSelection(index);
         }
     }
 }

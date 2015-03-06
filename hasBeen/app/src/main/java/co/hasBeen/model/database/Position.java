@@ -162,4 +162,35 @@ public class Position {
     public void setDirection(String direction) {
         this.direction = direction;
     }
+
+    List<Gps> gpsList;
+
+    public List<Gps> getGpsList() {
+        return gpsList;
+    }
+
+    public void setGpsList(List<Gps> gpsList) {
+        this.gpsList = gpsList;
+    }
+
+    public class Gps {
+        float lat,lon;
+
+        public float getLat() {
+            return lat;
+        }
+
+        public void setLat(float lat) {
+            this.lat = lat;
+        }
+
+        public float getLon() {
+            return lon;
+        }
+
+        public void setLon(float lon) {
+            this.lon = lon;
+        }
+    }
+
 }

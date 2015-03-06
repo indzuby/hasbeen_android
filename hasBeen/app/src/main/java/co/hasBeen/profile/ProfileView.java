@@ -171,6 +171,7 @@ public class ProfileView extends ActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(this);
         ColorDrawable colorDrawable = new ColorDrawable(getResources().getColor(R.color.theme_color));
         actionBar.setBackgroundDrawable(colorDrawable);
@@ -273,7 +274,7 @@ public class ProfileView extends ActionBarActivity {
         ((TextView) findViewById(R.id.loveCount)).setTextColor(getResources().getColor(R.color.light_gray));
         ((TextView) findViewById(R.id.photoCount)).setTextColor(getResources().getColor(R.color.light_gray));
         ((TextView) findViewById(R.id.dayCount)).setTextColor(getResources().getColor(R.color.light_gray));
-        mMap.clear();
+        if(mMap!=null) mMap.clear();
     }
     protected void initProfile() {
         ImageView coverImage = (ImageView) findViewById(R.id.coverImage);
@@ -424,6 +425,7 @@ public class ProfileView extends ActionBarActivity {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
             mMapRoute.addMarkerClusterPhoto(photos);
         }catch (Exception e) {
+            mMap.clear();
             e.printStackTrace();
         }
     }

@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -27,6 +28,7 @@ import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
 import co.hasBeen.database.ItemModule;
 import co.hasBeen.day.DayDialog;
+import co.hasBeen.map.EnterMapLisnter;
 import co.hasBeen.model.database.Day;
 import co.hasBeen.model.database.Position;
 import co.hasBeen.utils.HasBeenDate;
@@ -69,11 +71,13 @@ public class GalleryDayView extends ActionBarActivity {
                     mPositionList =  mItemModule.getPhotosByDate(mDayId);
                     initPlace(mPositionList);
                     mDay.setPositionList(mPositionList);
+                    View fullScreen = findViewById(R.id.fullScreen);
+                    fullScreen.setOnClickListener(new EnterMapLisnter(GalleryDayView.this, mDay, mDay.getPositionList().get(0).getId()));
                     Thread.sleep(500);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mPositionAdapter = new GalleryPositionAdapter(getBaseContext(),mPositionList);
+                            mPositionAdapter = new GalleryPositionAdapter(GalleryDayView.this,mPositionList,mDay);
                             mListView.setAdapter(mPositionAdapter);
                             try {
                                 initHeader();
@@ -238,8 +242,10 @@ public class GalleryDayView extends ActionBarActivity {
         });
     }
     protected void initPlace(List<Position> positions) throws Exception{
-        for(Position position : positions)
+        for(Position position : positions) {
             position.setPlace(database.selectPlace(position.getPlaceId()));
+            position.setPhotoList(database.selectPhotoByPositionId(position.getId()));
+        }
     }
     protected void startLoading() {
         isLoading = true;
@@ -265,5 +271,16 @@ public class GalleryDayView extends ActionBarActivity {
         initActionBar();
         initHeader();
         mImm.hideSoftInputFromWindow(mDayTitle.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==EnterMapLisnter.REQUEST_CODE && resultCode == RESULT_OK) {
+            int index = data.getIntExtra("index",-1);
+            Log.i("call back index", index + "");
+            if(index!=-1)
+                mListView.setSelection(index);
+        }
     }
 }

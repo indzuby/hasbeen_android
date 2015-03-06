@@ -26,16 +26,8 @@
         android:textSize="14sp"
         />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="6dp"
-        android:layout_below="@+id/title"
-        android:alpha="0.2"
-        android:background="@color/theme_black" />
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_marginTop="-1dp"
         android:visibility="gone"
         android:id="@id/moreVert"
         android:src="@drawable/newsfeed_more"
@@ -45,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColorHint="@color/light_gray2"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:includeFontPadding="false"
         android:fontFamily="sans-serif-regular"
         android:background="@drawable/description_selector"

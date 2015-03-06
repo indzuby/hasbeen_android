@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import android.widget.ToggleButton;
 import java.util.List;
 
 import co.hasBeen.R;
+import co.hasBeen.database.DatabaseHelper;
 import co.hasBeen.model.database.Photo;
 import co.hasBeen.model.database.Position;
 import co.hasBeen.utils.HasBeenDate;
@@ -21,32 +23,33 @@ import co.hasBeen.utils.Util;
 /**
  * Created by zuby on 2015-01-21.
  */
-public class GalleryShareAdapter extends GalleryPositionAdapter {
+public class GalleryShareAdapter extends BaseAdapter{
     Boolean[] isCheckedPosition;
-    int[] mCheckedCount;
+    Context mContext;
+    List<Position> mPositions;
+    DatabaseHelper database;
     public GalleryShareAdapter(Context context, List positions, Boolean[] isCheckedPosition) {
-        super(context, positions);
+
+        mContext = context;
+        mPositions = positions;
         this.isCheckedPosition = isCheckedPosition;
+        database = new DatabaseHelper(context);
     }
 
     @Override
     public int getCount() {
-        return super.getCount();
+        return mPositions.size();
     }
 
     @Override
     public Position getItem(int position) {
-        return super.getItem(position);
+        return mPositions.get(position);
     }
 
-    public void setChecked(boolean value, int position) {
-        isCheckedPosition[position] = value;
-    }
     @Override
     public long getItemId(int position) {
-        return super.getItemId(position);
+        return position;
     }
-
     @Override
     public View getView(int index, View convertView, ViewGroup parent) {
         View view = convertView;

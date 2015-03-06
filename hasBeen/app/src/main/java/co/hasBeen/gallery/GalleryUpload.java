@@ -31,7 +31,6 @@ import co.hasBeen.model.database.Day;
 import co.hasBeen.model.database.Photo;
 import co.hasBeen.model.database.Place;
 import co.hasBeen.model.database.Position;
-import co.hasBeen.model.network.TakeStaticMap;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
@@ -53,7 +52,6 @@ public class GalleryUpload extends ActionBarActivity {
     EditText mDescription;
     String mAccessToekn;
     int mUploadCount;
-    boolean mStaticMapUpload ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,11 +112,10 @@ public class GalleryUpload extends ActionBarActivity {
 
                 showProgress();
                 mUploadCount = 0;
-                mStaticMapUpload = false;
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        while(mUploadCount != mDayUpload.getPhotoCount() || !mStaticMapUpload)  {
+                        while(mUploadCount != mDayUpload.getPhotoCount())  {
                             dialog.setProgress(mUploadCount);
                         }
                         String title = mTitle.getText().toString();
@@ -216,22 +213,6 @@ public class GalleryUpload extends ActionBarActivity {
 
     protected void uploadStorage() {
         try {
-            new TakeStaticMap(new Handler(Looper.getMainLooper()) {
-                @Override
-                public void handleMessage(Message msg) {
-                    super.handleMessage(msg);
-                    if(msg.what==0) {
-                        String binary = (String) msg.obj;
-                        mDayUpload.setStaticMapBinary(binary);
-                        mStaticMapUpload = true;
-                    }else {
-                        Toast.makeText(getBaseContext(),"Upload error.",Toast.LENGTH_LONG).show();
-                        setResult(RESULT_CANCELED);
-                        finish();
-                    }
-
-                }
-            }).execute(mDayUpload.getMainPhoto().getLat(), mDayUpload.getMainPhoto().getLon());
             for (Position position : mDayUpload.getPositionList()) {
                 for (Photo photo : position.getPhotoList()) {
                     try {
