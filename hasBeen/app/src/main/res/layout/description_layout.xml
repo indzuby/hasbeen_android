@@ -43,7 +43,7 @@
         android:background="@drawable/description_selector"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:hint="write your day memo"
+        android:hint="write your memo"
         android:id="@+id/description"
         android:layout_below="@+id/title"
         android:textColor="@color/light_black"

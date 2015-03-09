@@ -26,6 +26,11 @@ public class Session {
         editor.putLong(key,value);
         editor.commit();
     }
+    public static void putInt(Context context,String key , int value){
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putInt(key,value);
+        editor.commit();
+    }
     public static void remove(Context context, String key){
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.remove(key);
@@ -42,5 +47,9 @@ public class Session {
     public static long getLong(Context context, String key, long defValue) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         return pref.getLong(key,defValue);
+    }
+    public static int getInt(Context context, String key, int defValue) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        return pref.getInt(key,defValue);
     }
 }

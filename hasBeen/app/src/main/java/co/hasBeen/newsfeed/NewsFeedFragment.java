@@ -44,7 +44,7 @@ import co.hasBeen.utils.Util;
 public class NewsFeedFragment extends Fragment{
     final String TAG = "NewsFeed";
     View mView;
-    String mAccessToekn;
+    String mAccessToken;
     private NewsFeedAdapter mFeedAdapter;
     List<Day> mFeeds;
     boolean flag;
@@ -74,9 +74,9 @@ public class NewsFeedFragment extends Fragment{
                 isFirst = true;
                 if(mFeeds.size()>0) {
                     firstUpdateTime = mFeeds.get(0).getUpdatedTime();
-                    new NewsFeedAsyncTask(handler).execute(mAccessToekn, "", firstUpdateTime);
+                    new NewsFeedAsyncTask(handler).execute(mAccessToken, "", firstUpdateTime);
                 }
-                else new NewsFeedAsyncTask(handler).execute(mAccessToekn);
+                else new NewsFeedAsyncTask(handler).execute(mAccessToken);
             }
         });
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -100,7 +100,7 @@ public class NewsFeedFragment extends Fragment{
                     isLoading = true;
                     isFirst = false;
                     startLoading();
-                    new NewsFeedAsyncTask(handler).execute(mAccessToekn, lastUpdateTime);
+                    new NewsFeedAsyncTask(handler).execute(mAccessToken, lastUpdateTime);
                 }
             }
         });
@@ -176,13 +176,13 @@ public class NewsFeedFragment extends Fragment{
 
                 }
             }
-        }).execute(mAccessToekn);
+        }).execute(mAccessToken);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.newsfeed, container, false);
-        mAccessToekn = Session.getString(getActivity(),"accessToken",null);
-        new NewsFeedAsyncTask(handler).execute(mAccessToekn);
+        mAccessToken = Session.getString(getActivity(),"accessToken",null);
+        new NewsFeedAsyncTask(handler).execute(mAccessToken);
         init();
         return mView;
     }

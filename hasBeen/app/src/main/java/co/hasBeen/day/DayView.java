@@ -1,6 +1,5 @@
 package co.hasBeen.day;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -58,7 +57,9 @@ public class DayView extends ActionBarActivity{
     View mHeaderView;
     View mFooterView;
     int nowScrolled = 0 ;
+    View mLoading;
     Day mDay;
+    boolean isLoading;
     DayAdapter mDayAdapter;
     Long mDayId;
     String mAccessToken;
@@ -78,7 +79,6 @@ public class DayView extends ActionBarActivity{
     List<Position> mPositions;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        showProgress();
         super.onCreate(savedInstanceState);
         mDayId = getIntent().getLongExtra("dayId",0);
         mAccessToken = Session.getString(this,"accessToken",null);
@@ -104,7 +104,7 @@ public class DayView extends ActionBarActivity{
                     initHeaderView();
                     initBodyView();
                     initFoorteView();
-                    dialog.dismiss();
+                    stopLoading();
                     break;
                 case -1:
                     Log.i(TAG,"NULL");
@@ -213,6 +213,8 @@ public class DayView extends ActionBarActivity{
         medium = Typeface.createFromAsset(this.getAssets(),"fonts/Roboto-Medium.ttf");
         regular = Typeface.createFromAsset(this.getAssets(),"fonts/Roboto-Regular.ttf");
         initActionBar();
+        mLoading = findViewById(R.id.refresh);
+        startLoading();
         new DayAsyncTask(handler).execute(mAccessToken, mDayId);
         mHeaderView =  LayoutInflater.from(this).inflate(R.layout.gallery_header, null, false);
         mFooterView =  LayoutInflater.from(this).inflate(R.layout.day_footer, null, false);
@@ -287,6 +289,8 @@ public class DayView extends ActionBarActivity{
                                     if(msg.what==0) {
                                         Toast.makeText(getBaseContext(),"여행일을 삭제했습니다.",Toast.LENGTH_LONG).show();
                                         finish();
+                                    }else {
+                                        Toast.makeText(getBaseContext(),"오류가 발생했습니다.",Toast.LENGTH_LONG).show();
                                     }
                                 }
                             }).execute(mAccessToken,mDay.getId());
@@ -321,17 +325,15 @@ public class DayView extends ActionBarActivity{
                                     if(msg.what==0) {
                                         Toast.makeText(getBaseContext(),"여행일을 신고했습니다.",Toast.LENGTH_LONG).show();
                                         mDayDialog.dismiss();
+                                    }else {
+                                        Toast.makeText(getBaseContext(),"오류가 발생했습니다.",Toast.LENGTH_LONG).show();
                                     }
                                 }
                             }).execute(mAccessToken,"days/"+mDay.getId()+"/report");
                         }
                     };
-                    View.OnClickListener edit = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Toast.makeText(getBaseContext(),"준비중 입니다.",Toast.LENGTH_LONG).show();
-                        }
-                    };
+                    String url = Session.WEP_DOMAIN+"days/"+mDay.getId();
+                    View.OnClickListener edit = new ShareListner(getBaseContext(), url);
                     mDayDialog = new DayDialog(DayView.this, del,edit,true);
                     mDayDialog.show();
                 }
@@ -424,15 +426,6 @@ public class DayView extends ActionBarActivity{
         profileName.setOnClickListener(new ProfileClickListner(this, day.getUser().getId()));
         return mRecommend;
     }
-    ProgressDialog dialog;
-
-    protected void showProgress() {
-        dialog = new ProgressDialog(this);
-        dialog.setCancelable(true);
-        dialog.setMessage("Wait a minutes...");
-        dialog.setProgress(100);
-        dialog.show();
-    }
     protected void backOnEditView(String title, String description){
         mDayTitle.setFocusable(false);
         mDayTitle.setFocusableInTouchMode(false);
@@ -452,6 +445,18 @@ public class DayView extends ActionBarActivity{
         else
             backOnEditView(mBeforeTitle,mBeforeDescription);
 
+    }
+    protected void startLoading() {
+        isLoading = true;
+        mLoading.setVisibility(View.VISIBLE);
+        Animation rotate = AnimationUtils.loadAnimation(getBaseContext(), R.anim.rotate);
+        mLoading.startAnimation(rotate);
+    }
+
+    protected void stopLoading() {
+        isLoading = false;
+        mLoading.setVisibility(View.GONE);
+        mLoading.clearAnimation();
     }
 
     @Override

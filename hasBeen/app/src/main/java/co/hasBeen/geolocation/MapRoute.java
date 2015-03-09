@@ -100,7 +100,10 @@ public class MapRoute {
                 Log.i("Cluster","click");
                 LatLng location = dayPinCluster.getItems().iterator().next().getPosition();
 //                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, mMap.getCameraPosition().zoom+1));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, mMap.getCameraPosition().zoom+1),500,null);
+                if(mMap.getCameraPosition().zoom+1>=11) {
+
+                }
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, mMap.getCameraPosition().zoom+2),500,null);
                 return true;
             }
         });
@@ -137,7 +140,10 @@ public class MapRoute {
                 Log.i("Cluster","click");
                 LatLng location = photoPinCluster.getItems().iterator().next().getPosition();
 //                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, mMap.getCameraPosition().zoom+1));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, mMap.getCameraPosition().zoom+1),500,null);
+                if(mMap.getCameraPosition().zoom+1>=11) {
+
+                }
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, mMap.getCameraPosition().zoom+2),500,null);
                 return true;
             }
         });

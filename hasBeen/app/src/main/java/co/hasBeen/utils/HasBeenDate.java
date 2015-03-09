@@ -7,7 +7,6 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 import java.util.Date;
-import java.util.TimeZone;
 
 import co.hasBeen.model.database.Photo;
 
@@ -75,10 +74,10 @@ public class HasBeenDate {
         return Math.abs(a - b) < 1000;
     }
     public static String getGapTime(Long time) {
-        Date currentTime = new Date(System.currentTimeMillis());
-        Date commentTime = new Date(time + TimeZone.getDefault().getOffset(currentTime.getTime()));
-        Log.i("TIME",new Date().getTime()+"");
-        Long gap = new Date().getTime() - currentTime.getTime();
+        Date currentTime = new Date();
+        Date commentTime = new Date(time);
+        Log.i("TIME", new Date().getTime() + "");
+        Long gap = currentTime.getTime() - commentTime.getTime();
         int dayGap = Days.daysBetween(new LocalDate(commentTime),new LocalDate(currentTime)).getDays();
         if(dayGap<7) {
             if(dayGap<=1) {
@@ -96,7 +95,7 @@ public class HasBeenDate {
         }else if(dayGap<28){
             return (dayGap/7) + " weeks ago";
         }else
-            return new LocalDate(commentTime).toString("MMMM dd, yyyy");
+            return new LocalDateTime(commentTime).toString("MMMM dd, yyyy");
     }
 
 }

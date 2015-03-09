@@ -67,7 +67,6 @@ public class ProfileFragment extends Fragment {
 
     List<Loved> mLovedPhotos;
     List<Loved> mLovedDays;
-    PullToRefreshScrollView mRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -109,8 +108,6 @@ public class ProfileFragment extends Fragment {
                 case 0:
                     mDays = (List<Day>) msg.obj;
                     dayRendering(mDays);
-                    if(mRefreshLayout!=null && mRefreshLayout.isRefreshing())
-                        mRefreshLayout.onRefreshComplete();
                     break;
                 case -1:
                     break;

@@ -32,15 +32,18 @@ import co.hasBeen.utils.Util;
  * Created by 주현 on 2015-02-03.
  */
 public class AlarmAdapter extends BaseAdapter {
+    final static int NEWS = 0;
+    final static int YOU = 1;
 
     List<Alarm> mAlarms;
     Context mContext;
     LayoutInflater inflater;
-
-    public AlarmAdapter(List<Alarm> mAlarms, Context mContext) {
+    int mTab;
+    public AlarmAdapter(List<Alarm> mAlarms, Context mContext ,int tab) {
         this.mAlarms = mAlarms;
         this.mContext = mContext;
         inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
+        mTab = tab;
     }
 
     @Override
@@ -147,6 +150,7 @@ public class AlarmAdapter extends BaseAdapter {
             Glide.with(mContext).load(toUser.getImageUrl()).asBitmap().transform(new CircleTransform(mContext)).into(profileImage);
             name.setText(Util.parseName(toUser, 0));
             socialStatus.setText(toUser.getFollowerCount() + " Follower · " + toUser.getFollowingCount() + " Following");
+            if(mTab==YOU) view.setVisibility(View.GONE);
         }else {
             User toUser = alarm.getUser();
             view = inflater.inflate(R.layout.alarm_follow, null);
@@ -165,15 +169,22 @@ public class AlarmAdapter extends BaseAdapter {
         Spanned description = null;
         String toUser="";
         if(type != Alarm.Type.FB_FRIEND)
-            toUser = Util.parseName(alarm.getToUser(), 0);
+            toUser = Util.parseName(alarm.getToUser(), 0) +"</b>";
+        if(type != Alarm.Type.FOLLOW)
+            toUser +="'s";
+        if(mTab == YOU) {
+            toUser = "You</b>";
+            if(type != Alarm.Type.FOLLOW)
+                toUser = "Your<b>";
+        }
         if (type == Alarm.Type.PHOTO_COMMENT) {
-            description = Html.fromHtml("<b>" + Util.parseName(alarm.getUser(), 0) + "</b> " + "commented <b>" + toUser + "</b>'s photo.");
+            description = Html.fromHtml("<b>" + Util.parseName(alarm.getUser(), 0) + "</b> " + "commented <b>" + toUser + " photo.");
         } else if (type == Alarm.Type.PHOTO_LOVE) {
-            description = Html.fromHtml("<b>" + Util.parseName(alarm.getUser(), 0) + "</b> " + "liked <b>" + toUser + "</b>'s photo.");
+            description = Html.fromHtml("<b>" + Util.parseName(alarm.getUser(), 0) + "</b> " + "liked <b>" + toUser + " photo.");
         } else if (type == Alarm.Type.DAY_COMMENT) {
-            description = Html.fromHtml("<b>" + Util.parseName(alarm.getUser(), 0) + "</b> " + "commented <b>" + toUser + "</b>'s day trip.");
+            description = Html.fromHtml("<b>" + Util.parseName(alarm.getUser(), 0) + "</b> " + "commented <b>" + toUser + " day trip.");
         } else if (type == Alarm.Type.DAY_LOVE) {
-            description = Html.fromHtml("<b>" + Util.parseName(alarm.getUser(), 0) + "</b> " + "liked <b>" + toUser + "</b>'s day trip.");
+            description = Html.fromHtml("<b>" + Util.parseName(alarm.getUser(), 0) + "</b> " + "liked <b>" + toUser + " day trip.");
         } else if (type == Alarm.Type.DAY_POST) {
             description = Html.fromHtml("<b>" + Util.parseName(alarm.getUser(), 0) + "</b> " + "uploaded new trip.");
         } else if (type == Alarm.Type.FOLLOW) {

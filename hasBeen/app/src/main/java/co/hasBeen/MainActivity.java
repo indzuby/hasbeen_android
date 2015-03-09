@@ -18,7 +18,6 @@ import org.opencv.android.OpenCVLoader;
 
 import co.hasBeen.alarm.AlarmCountAsyncTask;
 import co.hasBeen.alarm.AlarmFragment;
-import co.hasBeen.database.CreateDataBase;
 import co.hasBeen.model.api.AlarmCount;
 import co.hasBeen.profile.ProfileFragment;
 import co.hasBeen.utils.Session;
@@ -74,8 +73,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             @Override
             public void onPageSelected(int position) {
                 changeIcon(position);
-
-
             }
         });
         getAlarmCount();
@@ -148,7 +145,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 alarm.setSelected(true);
                 isAlarmRead = true;
                 AlarmFragment alarm =(AlarmFragment)mPagerAdapter.getItem(3);
-                alarm.redDotRefresh(mAlarmCount);
+                alarm.newAlarmLoad(mAlarmCount);
                 readAlarm();
                 break;
             case 4:
@@ -156,16 +153,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 ProfileFragment profile = (ProfileFragment)mPagerAdapter.getItem(4);
                 profile.initAll();
                 break;
-        }
-    }
-
-    protected void initDatabase(){
-        try {
-            CreateDataBase createDataBase = new CreateDataBase(this);
-            createDataBase.takePhoto();
-            createDataBase.buildDay();
-        }catch (Exception e) {
-            e.printStackTrace();
         }
     }
     public void changeTab(int position) {
@@ -191,15 +178,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     }
 
     ProgressDialog dialog;
-
-    protected void showProgress() {
-        dialog = new ProgressDialog(this);
-        dialog.setCancelable(true);
-        dialog.setMessage("Writting on database");
-        dialog.setProgress(100);
-        dialog.show();
-    }
-
     @Override
     protected void onDestroy() {
         System.gc();
@@ -207,4 +185,5 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         System.exit(0);
         super.onDestroy();
     }
+
 }

@@ -164,6 +164,8 @@ public class ItemModule {
                                     placeName.setVisibility(View.VISIBLE);
                             }
                         });
+                        day.setMainPlaceId(place.getId());
+                        database.updateDay(day);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -203,7 +205,7 @@ public class ItemModule {
 
     public List<Position> getPhotosByDate(Long dayId) throws Exception {
         Day day = database.selectDay(dayId);
-        if (day.getUpdatedTime()==null) {
+        if (day.getCreatedTime()==null) {
             insertPhotos(day.getDate(), dayId);
             insertPosition(dayId);
             day.setCreatedTime(new Date().getTime());
@@ -314,6 +316,8 @@ public class ItemModule {
                                 bestPhoto = photo;
                                 similaryPhotos.add(photo);
                                 isRun = true;
+                            }else {
+                                throw new NullPointerException();
                             }
                         }catch (Exception e){
                             e.printStackTrace();
@@ -325,24 +329,6 @@ public class ItemModule {
         }
         updateClearestId(similaryPhotos, bestPhoto);
 
-    }
-
-    class GeoThread{
-        float lat, lon;
-        List<Photo> photos;
-        Photo bestPhoto;
-        Photo photo;
-        GeoThread(Photo photo,List<Photo> photos, Photo bestPhoto) {
-            this.lat = photo.getLat();
-            this.lon = photo.getLon();
-            this.photos = photos;
-            this.bestPhoto = bestPhoto;
-            this.photo = photo;
-        }
-        public void start() {
-            Place place = new Place();
-
-        }
     }
     protected boolean isSamePlace(Place aPlace, Place bPlace) {
         if (aPlace.getVenueId().equals(bPlace.getVenueId()))

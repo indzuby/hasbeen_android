@@ -33,6 +33,7 @@ import co.hasBeen.utils.Session;
 public class AlarmFragment extends Fragment implements View.OnClickListener{
     final static int NEWS = 0;
     final static int YOU = 1;
+    int mTab = NEWS;
     View mView;
     PullToRefreshListView mNewList,mYouList;
     List<Alarm> mAlarmsNews;
@@ -47,6 +48,7 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
     View mNewLoadingView;
     View mYouLoadingView;
     boolean isLoad = true;
+    boolean isNewLoad = false;
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.alarm,container,false);
@@ -67,7 +69,7 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
         @Override
         public void run() {
             for(Alarm alarm : newAlarms) {
-                if(mNewList.isRefreshing() || mYouList.isRefreshing()) {
+                if(mNewList.isRefreshing() || mYouList.isRefreshing() || isNewLoad) {
                     alarms.add(0, alarm);
                 }
                 else
@@ -79,8 +81,10 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
                     adapter.notifyDataSetChanged();
                     if(mNewList.isRefreshing()) mNewList.onRefreshComplete();
                     if(mYouList.isRefreshing()) mYouList.onRefreshComplete();
+                    redDotRefresh();
                 }
             });
+            isNewLoad = false;
         }
     }
     Handler alarmNewsHandler = new Handler(Looper.getMainLooper()) {
@@ -92,10 +96,9 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
                     Collections.reverse(alarms);
                 }
                 new RefreshThread(alarms,mAlarmsNews,mNewAdapter).start();
-                if(isLoad) {
-                    isLoad = false;
-                    stopLoading(NEWS);
-                }
+                if(isLoad)
+                    stopLoading();
+
             }
         }
     };
@@ -108,10 +111,9 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
                     Collections.reverse(alarms);
                 }
                 new RefreshThread(alarms,mAlarmsYou,mYouAdapter).start();
-                if(isLoad) {
-                    isLoad = false;
-                    stopLoading(YOU);
-                }
+                if(isLoad)
+                    stopLoading();
+
 
             }
         }
@@ -127,12 +129,10 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
         mYouRedDot = (ImageView) mView.findViewById(R.id.youRedDot);
         mAlarmsNews = new ArrayList<>();
         mAlarmsYou = new ArrayList<>();
-        mNewAdapter = new AlarmAdapter(mAlarmsNews,getActivity());
-        new AlarmListAsyncTask(alarmNewsHandler).execute(mAccessToken,AlarmListAsyncTask.CATEGORY_NEWS);
-        mNewList.getRefreshableView().addFooterView(mNewLoadingView);
+        mNewAdapter = new AlarmAdapter(mAlarmsNews,getActivity(),NEWS);
+//        new AlarmListAsyncTask(alarmNewsHandler).execute(mAccessToken,AlarmListAsyncTask.CATEGORY_NEWS);
         mNewList.getRefreshableView().setAdapter(mNewAdapter);
-        mYouAdapter = new AlarmAdapter(mAlarmsYou,getActivity());
-        mYouList.getRefreshableView().addFooterView(mYouLoadingView);
+        mYouAdapter = new AlarmAdapter(mAlarmsYou,getActivity(),YOU);
         mYouList.getRefreshableView().setAdapter(mYouAdapter);
         View newButton = mView.findViewById(R.id.alarmNews);
         View youButton = mView.findViewById(R.id.alarmYou);
@@ -145,7 +145,6 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
                 getNewAlarmNews();
                 mAlarmCount.setNewsCount(0);
-                redDotRefresh(mAlarmCount);
             }
         });
         mYouList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
@@ -153,7 +152,6 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
                 getNewAlarmYou();
                 mAlarmCount.setYouCount(0);
-                redDotRefresh(mAlarmCount);
             }
         });
         mNewList.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
@@ -161,7 +159,7 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
             public void onLastItemVisible() {
                 if(!isLoad) {
                     isLoad = true;
-                    startLoading(NEWS);
+                    startLoading();
                     getOldAlarmNews();
                 }
             }
@@ -171,32 +169,23 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
             public void onLastItemVisible() {
                 if(!isLoad) {
                     isLoad = true;
-                    startLoading(YOU);
+                    startLoading();
                     getOldAlarmYou();
                 }
             }
         });
     }
-    protected void startLoading(int index){
+    protected void startLoading(){
+        isLoad = true;
         View loading;
-        View view ;
-        if(index==NEWS)
-            view = mNewLoadingView;
-        else
-            view = mYouLoadingView;
-        view.setVisibility(View.VISIBLE);
-        loading = view.findViewById(R.id.refresh);
+        loading = mView.findViewById(R.id.refresh);
         Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
         loading.startAnimation(rotate);
     }
-    protected void stopLoading(int index){
-        View view;
-        if(index==NEWS)
-            view = mNewLoadingView;
-        else
-            view = mYouLoadingView;
-        View loading = view.findViewById(R.id.refresh);
-        view.setVisibility(View.GONE);
+    protected void stopLoading(){
+        isLoad = false;
+        View loading = mView.findViewById(R.id.refresh);
+        loading.setVisibility(View.GONE);
         loading.clearAnimation();
     }
     @Override
@@ -207,12 +196,14 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
             ((TextView)v.findViewById(R.id.news)).setTextColor(getResources().getColor(R.color.theme_color));
             selectTab(NEWS);
             mAlarmCount.setNewsCount(0);
-            redDotRefresh(mAlarmCount);
+            redDotRefresh();
+            if(mAlarmsYou.size()<=0)
+                new AlarmListAsyncTask(alarmNewsHandler).execute(mAccessToken,AlarmListAsyncTask.CATEGORY_NEWS);
         }else {
             ((TextView)v.findViewById(R.id.you)).setTextColor(getResources().getColor(R.color.theme_color));
             selectTab(YOU);
             mAlarmCount.setYouCount(0);
-            redDotRefresh(mAlarmCount);
+            redDotRefresh();
             if(mAlarmsYou.size()<=0)
                 new AlarmListAsyncTask(alarmYouHandler).execute(mAccessToken,AlarmListAsyncTask.CATEGORY_YOU);
         }
@@ -226,32 +217,52 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
             mNewList.setVisibility(View.VISIBLE);
             mYouList.setVisibility(View.GONE);
             if(mAlarmsNews.size()>0)getNewAlarmNews();
+            mTab = NEWS;
         }else {
             mYouList.setVisibility(View.VISIBLE);
             mNewList.setVisibility(View.GONE);
             if(mAlarmsYou.size()>0) getNewAlarmYou();
+            mTab = YOU;
         }
     }
     public void getNewAlarmNews(){
-        if(mAlarmsNews.size()>0)
+        startLoading();
+        if(mAlarmsNews.size()>0) {
+            isNewLoad = true;
             new AlarmListAsyncTask(alarmNewsHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_NEWS, "", mAlarmsNews.get(0).getId());
+
+        }
         else
             new AlarmListAsyncTask(alarmNewsHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_NEWS);
     }
     public void getNewAlarmYou(){
-        if(mAlarmsYou.size()>0)
+        startLoading();
+        if(mAlarmsYou.size()>0) {
+            isNewLoad = true;
             new AlarmListAsyncTask(alarmYouHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_YOU, "", mAlarmsYou.get(0).getId());
+        }
         else
             new AlarmListAsyncTask(alarmYouHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_YOU);
     }
     public void getOldAlarmNews(){
+        startLoading();
         new AlarmListAsyncTask(alarmNewsHandler).execute(mAccessToken,AlarmListAsyncTask.CATEGORY_NEWS,mAlarmsNews.get(mAlarmsNews.size()-1).getId());
     }
     public void getOldAlarmYou(){
+        startLoading();
         new AlarmListAsyncTask(alarmYouHandler).execute(mAccessToken,AlarmListAsyncTask.CATEGORY_YOU,mAlarmsYou.get(mAlarmsYou.size()-1).getId());
     }
-    public void redDotRefresh(AlarmCount count){
+    public void newAlarmLoad(AlarmCount count){
         mAlarmCount = count;
+        if(mTab == NEWS) {
+            mAlarmCount.setNewsCount(0);
+            getNewAlarmNews();
+        }else {
+            mAlarmCount.setYouCount(0);
+            getNewAlarmYou();
+        }
+    }
+    public void redDotRefresh(){
         mNewsRedDot.setVisibility(View.VISIBLE);
         mYouRedDot.setVisibility(View.VISIBLE);
         if(mAlarmCount.getNewsCount()==0)

@@ -1,6 +1,5 @@
 package co.hasBeen.photo;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -13,6 +12,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -34,6 +36,7 @@ import co.hasBeen.loved.LoveListner;
 import co.hasBeen.model.api.Comment;
 import co.hasBeen.model.database.Photo;
 import co.hasBeen.profile.ProfileClickListner;
+import co.hasBeen.report.ReportAsyncTask;
 import co.hasBeen.social.ShareListner;
 import co.hasBeen.utils.CircleTransform;
 import co.hasBeen.utils.HasBeenDate;
@@ -53,11 +56,18 @@ public class PhotoView extends ActionBarActivity {
     int mViewCommentCount;
     Long lastCommentId;
     Typeface medium, regular;
+    PhotoDialog mPhotoDialog;
     Long mMyid;
+    EditText mDescription;
+    String mBeforeDescription;
+    boolean isEdit;
+    InputMethodManager mImm;
+    View mLoading;
+    boolean isLoading;
+    TextView titleView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        showProgress();
         mPhotoId = getIntent().getLongExtra("photoId", 0);
         mAccessToken = Session.getString(this, "accessToken", null);
         mMyid = Session.getLong(this, "myUserid", 0);
@@ -74,7 +84,7 @@ public class PhotoView extends ActionBarActivity {
                     Log.i("Photo", mPhoto.getPlaceName());
                     initView();
                     initComment();
-                    dialog.dismiss();
+                    stopLoading();
                     break;
                 case -1:
                     break;
@@ -89,14 +99,15 @@ public class PhotoView extends ActionBarActivity {
         TextView placeName = (TextView) titleBox.findViewById(R.id.placeName);
         TextView date = (TextView) titleBox.findViewById(R.id.date);
 
-        TextView description = (TextView) findViewById(R.id.description);
+        mImm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        mDescription = (EditText) findViewById(R.id.description);
         mSocialAction = (TextView) findViewById(R.id.socialAction);
         Glide.with(this).load(mPhoto.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).placeholder(R.drawable.placeholder1).into(profileImage);
         Log.i(TAG, mPhoto.getPlaceName());
         profileName.setText(Util.parseName(mPhoto.getUser(), 0));
         placeName.setText(mPhoto.getPlaceName());
         date.setText(HasBeenDate.convertDate(mPhoto.getTakenTime()));
-        description.setText(mPhoto.getDescription());
+        mDescription.setText(mPhoto.getDescription());
         findViewById(R.id.title).setVisibility(View.GONE);
         mSocialAction.setText(mPhoto.getLoveCount() + " Likes · " + mPhoto.getCommentCount() + " Commnents · " + mPhoto.getShareCount() + " Shared");
         ImageView imageView = (ImageView) findViewById(R.id.photo);
@@ -206,6 +217,8 @@ public class PhotoView extends ActionBarActivity {
     }
     protected void init() {
         setContentView(R.layout.photo);
+        mLoading = findViewById(R.id.refresh);
+        startLoading();
         medium = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Medium.ttf");
         regular = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Regular.ttf");
         new PhotoAsyncTask(handler).execute(mAccessToken, mPhotoId);
@@ -291,7 +304,7 @@ public class PhotoView extends ActionBarActivity {
 
         View mCustomActionBar = mInflater.inflate(R.layout.action_bar_place, null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
-        TextView titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
+        titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
         titleView.setText("Photo");
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -301,17 +314,149 @@ public class PhotoView extends ActionBarActivity {
         });
         actionBar.setCustomView(mCustomActionBar);
         actionBar.setDisplayShowCustomEnabled(true);
+        ImageView moreVert = (ImageView) mCustomActionBar.findViewById(R.id.moreVert);
 
+        moreVert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mPhoto.getUser().getId() == mMyid) {
+                    View.OnClickListener del = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            new PhotoDeleteAsyncTask(new Handler(Looper.getMainLooper()){
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    super.handleMessage(msg);
+                                    if(msg.what==0) {
+                                        Toast.makeText(getBaseContext(),"사진을 삭제했습니다.",Toast.LENGTH_LONG).show();
+                                        finish();
+                                    }else {
+                                        Toast.makeText(getBaseContext(),"오류가 발생했습니다.",Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            }).execute(mAccessToken,mPhoto.getId());
+                        }
+                    };
+                    View.OnClickListener edit = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mPhotoDialog.dismiss();
+                            mDescription.setFocusable(true);
+                            mDescription.setFocusableInTouchMode(true);
+                            isEdit = true;
+                            mBeforeDescription = mDescription.getText().toString();
+                            initEditActionBar();
+                            mImm.showSoftInput(mDescription, InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                            mDescription.requestFocus(mBeforeDescription.length() - 1);
+                        }
+                    };
+                    View.OnClickListener cover = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            new CoverAsyncTask(new Handler(Looper.getMainLooper()) {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    super.handleMessage(msg);
+                                    if(msg.what==0) {
+                                        Toast.makeText(getBaseContext(),"커버 사진으로 선택했습니다.",Toast.LENGTH_LONG).show();
+                                        finish();
+                                    }else {
+                                        Toast.makeText(getBaseContext(),"오류가 발생했습니다.",Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            }).execute(mAccessToken,mPhoto.getId());
+                        }
+                    };
+                    mPhotoDialog = new PhotoDialog(PhotoView.this,cover, del,edit);
+                    mPhotoDialog.show();
+                }else {
+                    View.OnClickListener del = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            new ReportAsyncTask(new Handler(Looper.getMainLooper()) {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    super.handleMessage(msg);
+                                    if(msg.what==0) {
+                                        Toast.makeText(getBaseContext(),"사진을 신고했습니다.",Toast.LENGTH_LONG).show();
+                                        mPhotoDialog.dismiss();
+                                    }else {
+                                        Toast.makeText(getBaseContext(),"오류가 발생했습니다.",Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            }).execute(mAccessToken,"photo/"+mPhoto.getId()+"/report");
+                        }
+                    };
+                    String url = Session.WEP_DOMAIN+"photo/"+mPhoto.getId();
+                    View.OnClickListener edit = new ShareListner(getBaseContext(), url);
+                    mPhotoDialog = new PhotoDialog(PhotoView.this, del,edit,true);
+                    mPhotoDialog.show();
+                }
+            }
+        });
     }
 
-    ProgressDialog dialog;
+    protected void initEditActionBar(){
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        LayoutInflater mInflater = LayoutInflater.from(this);
+        ColorDrawable colorDrawable = new ColorDrawable(getResources().getColor(R.color.theme_color));
+        actionBar.setBackgroundDrawable(colorDrawable);
+        View mCustomActionBar = mInflater.inflate(R.layout.action_bar_default,null);
+        ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
+        titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
+        titleView.setText("Edit Photo");
+        titleView.setTypeface(medium);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backOnEditView(mBeforeDescription);
+            }
+        });
+        actionBar.setCustomView(mCustomActionBar);
+        actionBar.setDisplayShowCustomEnabled(true);
+        TextView done = (TextView) mCustomActionBar.findViewById(R.id.actionBarDone);
 
-    protected void showProgress() {
-        dialog = new ProgressDialog(this);
-        dialog.setCancelable(true);
-        dialog.setMessage("Wait a minutes...");
-        dialog.setProgress(100);
-        dialog.show();
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBeforeDescription = mDescription.getText().toString();
+                new PhotoEditAsyncTask(new Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        super.handleMessage(msg);
+                        if(msg.what==0)
+                            backOnEditView(mBeforeDescription);
+                        else
+                            Toast.makeText(getBaseContext(),"오류가 발생했습니다.",Toast.LENGTH_LONG).show();
+
+                    }
+                }).execute(mAccessToken, mPhoto.getId(),mBeforeDescription);
+            }
+        });
+    }
+    protected void startLoading() {
+        isLoading = true;
+        mLoading.setVisibility(View.VISIBLE);
+        Animation rotate = AnimationUtils.loadAnimation(getBaseContext(), R.anim.rotate);
+        mLoading.startAnimation(rotate);
+    }
+
+    protected void stopLoading() {
+        isLoading = false;
+        mLoading.setVisibility(View.GONE);
+        mLoading.clearAnimation();
+    }
+
+    protected void backOnEditView(String description){
+        mDescription.setFocusable(false);
+        mDescription.setFocusableInTouchMode(false);
+        mDescription.setText(description);
+        isEdit = false;
+        initActionBar();
+        mImm.hideSoftInputFromWindow(mDescription.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
     }
 
     @Override

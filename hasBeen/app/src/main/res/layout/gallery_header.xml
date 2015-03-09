@@ -20,7 +20,7 @@
         android:scaleType="centerCrop" />
         <ImageView
             android:layout_width="wrap_content"
-            android:src="@drawable/oval"
+            android:src="@drawable/route"
             android:padding="16dp"
             android:id="@+id/fullScreen"
             android:layout_gravity="right|bottom"

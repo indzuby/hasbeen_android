@@ -8,6 +8,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +25,7 @@ import java.util.Arrays;
 
 import co.hasBeen.MainActivity;
 import co.hasBeen.R;
+import co.hasBeen.gcm.GcmRegister;
 import co.hasBeen.model.network.LoginTokenResponse;
 
 /**
@@ -35,6 +38,10 @@ public class LoginActivity extends Activity {
     EditText mEmail;
     EditText mPassword;
     String mAccessToken;
+    String regid;
+    GcmRegister gcm;
+    View mLoading;
+    boolean isLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +51,14 @@ public class LoginActivity extends Activity {
 
     protected void init() {
         setContentView(R.layout.login);
+        gcm = new GcmRegister(this);
         mAccessToken = co.hasBeen.utils.Session.getString(getBaseContext(), "accessToken", null);
-        if(mAccessToken!=null) {
-            Intent intent = new Intent(getBaseContext(), MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
+//        if(mAccessToken!=null) {
+//            Intent intent = new Intent(getBaseContext(), MainActivity.class);
+//            startActivity(intent);
+//            finish();
+//        }
+        mLoading = findViewById(R.id.refresh);
         TextView goSignUp = (TextView) findViewById(R.id.goSignUp);
         goSignUp.setOnClickListener(new View.OnClickListener() {
             boolean flag = false;
@@ -67,7 +76,7 @@ public class LoginActivity extends Activity {
         });
         LoginButton authButton = (LoginButton) findViewById(R.id.facebookLogin);
         // set permission list, Don't foeget to add email
-        authButton.setReadPermissions(Arrays.asList("public_profile", "email","user_friends"));
+        authButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends"));
         // session state call back event
         authButton.setSessionStatusCallback(new Session.StatusCallback() {
 
@@ -83,10 +92,8 @@ public class LoginActivity extends Activity {
                                     if (user != null) {
                                         Log.i(TAG, "User ID " + user.getId());
                                         Log.i(TAG, "Email " + user.asMap().get("email"));
-                                        Toast.makeText(getBaseContext(), user.asMap().get("email").toString(), Toast.LENGTH_LONG).show();
-                                            new SignUpAsyncTask(socialHandler).execute(SOCIAL, session.getAccessToken());
-//                                        new LogInAsyncTask(loginHandler).execute(session.getAccessToken(), "", "password", "read write delete", LogInAsyncTask.BASIC_FB);
-
+                                        startLoading();
+                                        new SignUpAsyncTask(socialHandler).execute(SOCIAL, session.getAccessToken());
                                     }
                                 }
                             });
@@ -98,30 +105,33 @@ public class LoginActivity extends Activity {
         TextView loginBtn = (TextView) findViewById(R.id.emailLoginBtn);
         loginBtn.setOnClickListener(new View.OnClickListener() {
             boolean flag = false;
+
             @Override
             public void onClick(View v) {
-                if(!flag) {
+                if (!flag) {
                     String email = mEmail.getText().toString();
                     String password = mPassword.getText().toString();
                     flag = true;
-                    new LogInAsyncTask(new Handler(Looper.getMainLooper()){
-                        @Override
-                        public void handleMessage(Message msg) {
-                            super.handleMessage(msg);
-                            flag = false;
-                            if (msg.what == 0) {
-                                LoginTokenResponse loginToken = (LoginTokenResponse) msg.obj;
-                                co.hasBeen.utils.Session.putString(getBaseContext(), "accessToken", loginToken.getAccess_token());
-                                Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        }
-                    }).execute(email,password, "password", "read write delete", LogInAsyncTask.BASIC);
+                    startLoading();
+                    new LogInAsyncTask(loginHandler).execute(email, password, "password", "read write delete", LogInAsyncTask.BASIC);
                 }
             }
         });
     }
+
+    protected void startLoading() {
+        isLoading = true;
+        mLoading.setVisibility(View.VISIBLE);
+        Animation rotate = AnimationUtils.loadAnimation(getBaseContext(), R.anim.rotate);
+        mLoading.startAnimation(rotate);
+    }
+
+    protected void stopLoading() {
+        isLoading = false;
+        mLoading.setVisibility(View.GONE);
+        mLoading.clearAnimation();
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -146,12 +156,37 @@ public class LoginActivity extends Activity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 0) {
-                LoginTokenResponse loginToken = (LoginTokenResponse) msg.obj;
+                String regid = gcm.getRegistrationId();
+                final LoginTokenResponse loginToken = (LoginTokenResponse) msg.obj;
                 co.hasBeen.utils.Session.putString(getBaseContext(), "accessToken", loginToken.getAccess_token());
+                gcm.registerGcm(registHandler);
+            }else
+                Toast.makeText(getBaseContext(),"오류가 발생했습니다",Toast.LENGTH_LONG).show();
+        }
+    };
+    Handler registHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0) {
+                String regid = (String) msg.obj;
+                String accessToken = co.hasBeen.utils.Session.getString(getBaseContext(), "accessToken", null);
+                new DeviceAsyncTask(deviceHandler).execute(accessToken, regid);
+            }else
+                Toast.makeText(getBaseContext(),"오류가 발생했습니다",Toast.LENGTH_LONG).show();
+        }
+    };
+    Handler deviceHandler = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(Message msg) {
+            if(msg.what==0) {
+                stopLoading();
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 startActivity(intent);
                 finish();
-            }
+            }else
+                Toast.makeText(getBaseContext(),"오류가 발생했습니다",Toast.LENGTH_LONG).show();
+            super.handleMessage(msg);
         }
     };
 }

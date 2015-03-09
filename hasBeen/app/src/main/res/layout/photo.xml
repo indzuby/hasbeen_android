@@ -145,6 +145,12 @@
                     layout="@layout/near_by" />
             </LinearLayout>
         </ScrollView>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/refresh"
+        android:layout_gravity="center"
+        android:src="@drawable/loading"/>
 
 
     <LinearLayout

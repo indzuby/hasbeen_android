@@ -9,6 +9,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
+import co.hasBeen.R;
 import co.hasBeen.model.database.Day;
 import co.hasBeen.utils.Util;
 
@@ -30,26 +31,14 @@ public class DayPin implements ClusterItem{
         if(mDay.getImage()!=null) {
             image = mDay.getImage();
         }else {
-                Glide.with(context).load(mDay.getMainPhoto().getSmallUrl()).asBitmap().into(new SimpleTarget<Bitmap>(Util.convertDpToPixel(32, context), Util.convertDpToPixel(32, context)) {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        image = Util.getBitmapClippedCircle(resource);
+            Glide.with(context).load(mDay.getMainPhoto().getSmallUrl()).asBitmap().placeholder(R.drawable.photo_placeholder).into(new SimpleTarget<Bitmap>(Util.convertDpToPixel(32, context), Util.convertDpToPixel(32, context)) {
+                @Override
+                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                    image = Util.getBitmapClippedCircle(resource);
 //                        image = resource;
-
-                        mDay.setImage(image);
-                    }
-                });
-//            try {
-//                URL url = new URL(mDay.getPhotoList().get(0).getSmallUrl());
-//                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//                conn.setDoInput(true);
-//                conn.connect();
-//                InputStream is = conn.getInputStream();
-//                image = BitmapFactory.decodeStream(is);
-//                mDay.setMainPhoto(image);
-//            }catch(Exception e) {
-//                e.printStackTrace();
-//            }
+                    mDay.setImage(image);
+                }
+            });
         }
     }
 

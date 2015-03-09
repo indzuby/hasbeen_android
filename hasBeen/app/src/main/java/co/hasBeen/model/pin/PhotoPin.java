@@ -9,6 +9,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
+import co.hasBeen.R;
 import co.hasBeen.model.database.Photo;
 import co.hasBeen.utils.Util;
 
@@ -33,7 +34,7 @@ public class PhotoPin  implements ClusterItem{
         if(mPhoto.getImage()!=null)
             image = photo.getImage();
         else {
-            Glide.with(context).load(mPhoto.getSmallUrl()).asBitmap().into(new SimpleTarget<Bitmap>(Util.convertDpToPixel(40, context), Util.convertDpToPixel(40, context)) {
+            Glide.with(context).load(mPhoto.getSmallUrl()).asBitmap().placeholder(R.drawable.photo_placeholder).into(new SimpleTarget<Bitmap>(Util.convertDpToPixel(40, context), Util.convertDpToPixel(40, context)) {
                 @Override
                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                     image = resource;
