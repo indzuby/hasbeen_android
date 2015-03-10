@@ -27,7 +27,7 @@ public class DayMergeAsyncTask extends AsyncTask<Object,Void,Boolean> {
         HttpResponse response;
         Uri uri;
         try {
-            uri = Uri.parse(URL+params[1]+"/mergeTo/"+params[2]);
+            uri = Uri.parse(URL+params[1]+"/mergeToPrev");
             HttpPut put = new HttpPut(uri.toString());
             put.addHeader("User-Agent","Android");
             put.addHeader("Content-Type", "application/json");

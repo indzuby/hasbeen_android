@@ -15,8 +15,8 @@ import java.util.List;
 
 import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
-import co.hasBeen.model.database.Photo;
-import co.hasBeen.model.database.Position;
+import co.hasBeen.model.api.Photo;
+import co.hasBeen.model.api.Position;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.Util;
 

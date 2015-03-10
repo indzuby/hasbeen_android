@@ -37,18 +37,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
+                android:textStyle="bold"
                 android:text="Area 1, Norway"
                 android:textColor="@color/light_black"
                 android:textSize="13sp" />
-
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:paddingRight="16dp"
+                android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/placeTime"
                 android:singleLine="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/photoCount"
                 android:text="10:22AM - 11:34Am"
                 android:textColor="@color/light_gray"
                 android:textSize="11sp" />
+            <TextView
+                android:id="@+id/photoCount"
+                android:layout_width="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/light_gray2"
+                android:layout_alignParentRight="true"
+                android:text="8 photos"
+                android:layout_height="wrap_content" />
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 

@@ -1,7 +1,5 @@
 package co.hasBeen.model.api;
 
-import co.hasBeen.model.database.Photo;
-
 /**
  * Created by zuby on 2015-01-26.
  */

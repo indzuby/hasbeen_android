@@ -16,10 +16,10 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import co.hasBeen.database.DatabaseHelper;
-import co.hasBeen.model.database.Category;
-import co.hasBeen.model.database.Photo;
-import co.hasBeen.model.database.Place;
-import co.hasBeen.model.database.Position;
+import co.hasBeen.model.api.Category;
+import co.hasBeen.model.api.Photo;
+import co.hasBeen.model.api.Place;
+import co.hasBeen.model.api.Position;
 import co.hasBeen.utils.Session;
 import co.hasBeen.R;
 

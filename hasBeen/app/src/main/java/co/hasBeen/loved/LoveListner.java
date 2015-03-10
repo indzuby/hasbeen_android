@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import co.hasBeen.R;
 import co.hasBeen.model.api.Loved;
-import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Photo;
 import co.hasBeen.utils.Session;
 
 /**

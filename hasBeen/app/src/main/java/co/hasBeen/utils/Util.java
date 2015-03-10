@@ -19,8 +19,8 @@ import java.util.List;
 
 import co.hasBeen.R;
 import co.hasBeen.model.api.User;
-import co.hasBeen.model.database.Photo;
-import co.hasBeen.model.database.Position;
+import co.hasBeen.model.api.Photo;
+import co.hasBeen.model.api.Position;
 
 /**
  * Created by zuby on 2015-01-16.
@@ -56,7 +56,13 @@ public class Util {
 
     public static String parseName(User user, int countryCode) {
 
-        return user.getFirstName() + " " + user.getLastName();
+        return parseName(user.getFirstName(),user.getLastName(),countryCode);
+
+    }
+
+    public static String parseName(String firstName, String lastName, int countryCode) {
+
+        return firstName + " " + lastName;
 
     }
 

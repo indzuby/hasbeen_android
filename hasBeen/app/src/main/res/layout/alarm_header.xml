@@ -19,6 +19,7 @@
                 android:layout_width="wrap_content"
                 android:src="@drawable/alarm_red_dot"
                 android:id="@+id/newsRedDot"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/news"
                 android:layout_centerVertical="true"
@@ -28,6 +29,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/theme_color"
             android:textSize="14sp"
+            android:textStyle="bold"
             android:id="@+id/news"
             android:layout_centerInParent="true"
             android:text="NEWS"/>
@@ -40,6 +42,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:id="@+id/youRedDot"
+                android:visibility="gone"
                 android:src="@drawable/alarm_red_dot"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/you"
@@ -49,6 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/you"
+            android:textStyle="bold"
             android:textColor="@color/light_gray"
             android:textSize="14sp"
             android:layout_centerInParent="true"

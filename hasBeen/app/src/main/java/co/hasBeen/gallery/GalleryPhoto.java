@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 
 import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.api.Photo;
 import co.hasBeen.utils.HasBeenDate;
 
 /**
@@ -95,7 +95,7 @@ public class GalleryPhoto extends Activity {
             public void onClick(View v) {
                 Log.i("description clicked", "");
                 Intent intent = new Intent(getBaseContext(), GalleryPhotoEdit.class);
-                intent.putExtra("photoId", mPhotoId);
+                intent.putExtra("id", mPhotoId);
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
@@ -119,7 +119,7 @@ public class GalleryPhoto extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPhotoId = getIntent().getLongExtra("photoId", 0);
+        mPhotoId = getIntent().getLongExtra("id", 0);
         try {
             database = new DatabaseHelper(this);
             mPhoto = database.selectPhoto(mPhotoId);

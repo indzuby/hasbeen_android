@@ -1,7 +1,6 @@
 package co.hasBeen.day;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,8 +35,8 @@ import co.hasBeen.loved.LoveListner;
 import co.hasBeen.map.EnterMapLisnter;
 import co.hasBeen.model.api.Comment;
 import co.hasBeen.model.api.User;
-import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Position;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Position;
 import co.hasBeen.profile.ProfileClickListner;
 import co.hasBeen.report.ReportAsyncTask;
 import co.hasBeen.social.ShareListner;
@@ -64,7 +63,6 @@ public class DayView extends ActionBarActivity{
     Long mDayId;
     String mAccessToken;
     TextView mSocialAction;
-    Typeface medium,regular;
     LinearLayout mRecommendationLayout;
     List<Day> mRecommendationList;
     LinearLayout mSocialBar;
@@ -80,7 +78,7 @@ public class DayView extends ActionBarActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDayId = getIntent().getLongExtra("dayId",0);
+        mDayId = getIntent().getLongExtra("id",0);
         mAccessToken = Session.getString(this,"accessToken",null);
         userId = Session.getLong(getBaseContext(), "myUserid", 0);
         init();
@@ -130,9 +128,7 @@ public class DayView extends ActionBarActivity{
         placeName.setText(Util.convertPlaceName(mPositions));
         date.setText(HasBeenDate.convertDate(mDay.getDate()));
         mDayTitle.setText(mDay.getTitle());
-        mDayTitle.setTypeface(medium);
         mDescription.setText(mDay.getDescription());
-        mDescription.setTypeface(regular);
         mSocialAction.setText(mDay.getLoveCount()+" Likes · " + mDay.getCommentCount()+" Commnents · "+mDay.getShareCount()+" Shared");
         totalPhoto.setText("Total " + mDay.getPhotoCount() + " photos");
         profileImage.setOnClickListener(new ProfileClickListner(this, mDay.getUser().getId()));
@@ -157,12 +153,10 @@ public class DayView extends ActionBarActivity{
         if(mDay.getLove()!=null) {
             love.setImageResource(R.drawable.photo_like_pressed);
             loveText.setTextColor(this.getResources().getColor(R.color.light_black));
-            loveText.setTypeface(medium);
         }
         else {
             love.setImageResource(R.drawable.photo_like);
             loveText.setTextColor(this.getResources().getColor(R.color.light_gray));
-            loveText.setTypeface(regular);
         }
         loveButton.setOnClickListener(new LoveListner(this,mDay,"days",mSocialAction));
         String url = Session.WEP_DOMAIN+"days/"+mDay.getId();
@@ -210,8 +204,6 @@ public class DayView extends ActionBarActivity{
     };
     protected void init(){
         setContentView(R.layout.day);
-        medium = Typeface.createFromAsset(this.getAssets(),"fonts/Roboto-Medium.ttf");
-        regular = Typeface.createFromAsset(this.getAssets(),"fonts/Roboto-Regular.ttf");
         initActionBar();
         mLoading = findViewById(R.id.refresh);
         startLoading();
@@ -264,7 +256,6 @@ public class DayView extends ActionBarActivity{
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
         titleView.setText(mBeforeTitle);
-        titleView.setTypeface(medium);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -352,7 +343,6 @@ public class DayView extends ActionBarActivity{
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
         titleView.setText("Edit Day");
-        titleView.setTypeface(medium);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -404,10 +394,8 @@ public class DayView extends ActionBarActivity{
 //        Glide.with(this).load(day.getPhotoList().get(0).getMediumUrl()).placeholder(Util.getPlaceHolder(day.getItineraryIndex())).into(mainPhoto);
         loveCount.setText(day.getLoveCount()+"");
         commentCount.setText(day.getCommentCount() + "");
-        shareCount.setText(day.getShareCount()+"");
-        dayIndex.setText("Day "+day.getItineraryIndex());
-        dayIndex.setTypeface(medium);
-        placeName.setTypeface(medium);
+        shareCount.setText(day.getShareCount() + "");
+        dayIndex.setText("Day " + day.getItineraryIndex());
         mRecommend.setOnClickListener(new View.OnClickListener() {
             boolean flag;
 
@@ -416,7 +404,7 @@ public class DayView extends ActionBarActivity{
                 if (!flag) {
                     flag = true;
                     Intent intent = new Intent(getBaseContext(), DayView.class);
-                    intent.putExtra("dayId", day.getId());
+                    intent.putExtra("id", day.getId());
                     startActivity(intent);
                     flag = false;
                 }
@@ -484,9 +472,12 @@ public class DayView extends ActionBarActivity{
             finish();
         }else if(requestCode==EnterMapLisnter.REQUEST_CODE && resultCode == RESULT_OK) {
             int index = data.getIntExtra("index",-1);
-            Log.i("call back index",index+"");
-            if(index!=-1)
-                mListView.setSelection(index);
+            if(index!=-1) {
+                Log.i("call back index",mDay.getPositionList().get(index).getPlace().getName());
+                Log.i("call back index",mPositions.indexOf(mDay.getPositionList().get(index))+"");
+                mListView.setSelection(mPositions.indexOf(mDay.getPositionList().get(index))+1);
+                mListView.setScrollY(mListView.getScrollY()-Util.convertDpToPixel(56,this));
+            }
         }
     }
 }

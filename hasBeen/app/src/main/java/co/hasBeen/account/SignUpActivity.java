@@ -23,6 +23,7 @@ import java.util.Arrays;
 
 import co.hasBeen.MainActivity;
 import co.hasBeen.R;
+import co.hasBeen.error.NetworkCheck;
 import co.hasBeen.model.network.LoginTokenResponse;
 
 /**
@@ -73,6 +74,10 @@ public class SignUpActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if(!flag) {
+                    if(!NetworkCheck.isOnline(SignUpActivity.this)) {
+                        Toast.makeText(getBaseContext(),"인터넷 연결을 확인하세요.",Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     flag=true;
                     String firstName = mFirstName.getText().toString();
                     String lastName = mLastName.getText().toString();
@@ -114,7 +119,10 @@ public class SignUpActivity extends Activity {
 
             @Override
             public void call(final Session session, SessionState state, Exception exception) {
-
+                if(!NetworkCheck.isOnline(SignUpActivity.this)) {
+                    Toast.makeText(getBaseContext(),"인터넷 연결을 확인하세요.",Toast.LENGTH_LONG).show();
+                    return;
+                }
                 if (session.isOpened()) {
                     Log.i(TAG, "Access Token" + session.getAccessToken());
                     Request.executeMeRequestAsync(session,

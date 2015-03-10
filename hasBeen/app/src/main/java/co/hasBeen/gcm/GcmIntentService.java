@@ -5,82 +5,97 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import co.hasBeen.MainActivity;
 import co.hasBeen.R;
+import co.hasBeen.day.DayView;
+import co.hasBeen.model.api.PushAlarm;
+import co.hasBeen.photo.PhotoView;
+import co.hasBeen.utils.CircleTransform;
+import co.hasBeen.utils.JsonConverter;
 
 public class GcmIntentService extends IntentService {
     public static final int NOTIFICATION_ID = 1;
     private NotificationManager mNotificationManager;
-    NotificationCompat.Builder builder;
 
     public GcmIntentService() {
         super("GcmIntentService");
     }
-
     @Override
     protected void onHandleIntent(Intent intent) {
         Bundle extras = intent.getExtras();
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
-        // The getMessageType() intent parameter must be the intent you received
-        // in your BroadcastReceiver.
         String messageType = gcm.getMessageType(intent);
-
-        if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
-            /*
-             * Filter messages based on message type. Since it is likely that GCM
-             * will be extended in the future with new message types, just ignore
-             * any message types you're not interested in, or that you don't
-             * recognize.
-             */
+        if (!extras.isEmpty()) {
             if (GoogleCloudMessaging.
-                    MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-                sendNotification("Send error: " + extras.toString());
-            } else if (GoogleCloudMessaging.
-                    MESSAGE_TYPE_DELETED.equals(messageType)) {
-                sendNotification("Deleted messages on server: " +
-                        extras.toString());
-                // If it's a regular GCM message, do some work.
-            } else if (GoogleCloudMessaging.
                     MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                // This loop represents the service doing some work.
-                for (int i=0; i<5; i++) {
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                    }
-                }
-                // Post notification of received message.
-                sendNotification("Received: " + extras.toString());
+                sendNotification(extras.getString("push"));
             }
         }
-        // Release the wake lock provided by the WakefulBroadcastReceiver.
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
-
-    // Put the message into a notification and post it.
-    // This is just one simple example of what you might choose to do with
-    // a GCM message.
     private void sendNotification(String msg) {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
+        try {
+            final PushAlarm push = JsonConverter.convertJsonToPushAlarm(msg);
+            Bitmap bitmap = getBitmapFromURL(push.getUserImageUrl());
+            Intent intent = getActivity(push);
+            PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.icon)
+                            .setLargeIcon(bitmap)
+                            .setContentTitle("HasBeen")
+                            .setStyle(new NotificationCompat.BigTextStyle()
+                                    .bigText(push.getMessage()))
+                            .setContentText(push.getMessage()).setAutoCancel(true)
+                            .setVibrate(new long[]{0, 500});
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), 0);
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.icon3)
-                        .setContentTitle("GCM Notification")
-                        .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(msg))
-                        .setContentText(msg);
-
-        mBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+            mBuilder.setContentIntent(contentIntent);
+            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private Intent getActivity(PushAlarm push) {
+        String resource = push.getResource();
+        Intent intent = new Intent(this,MainActivity.class);
+        if(resource.equalsIgnoreCase("photo")){
+            intent = new Intent(this,PhotoView.class);
+            intent.putExtra("id",push.getId());
+            intent.putExtra("type","comment");
+        }else if(resource.equalsIgnoreCase("day")){
+            intent = new Intent(this,DayView.class);
+            intent.putExtra("id",push.getId());
+            intent.putExtra("type","comment");
+        }
+        return intent;
+    }
+    public Bitmap getBitmapFromURL(String strURL) {
+        try {
+            URL url = new URL(strURL);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return CircleTransform.getCircularBitmapImage(myBitmap);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

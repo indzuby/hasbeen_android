@@ -1,6 +1,5 @@
 package co.hasBeen.profile.follow;
 
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -27,7 +26,6 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
     ViewPager mViewPager;
     Long mUserId;
     String mType;
-    Typeface medium,regular;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mUserId = getIntent().getLongExtra("userId",0);
@@ -37,8 +35,6 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
 
     protected void init() {
         setContentView(R.layout.follow);
-        medium = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Medium.ttf");
-        regular = Typeface.createFromAsset(this.getAssets(),"fonts/Roboto-Regular.ttf");
         initActionBar();
 
     }
@@ -70,9 +66,7 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
         mFollowingButton = (TextView) findViewById(R.id.following);
 
         mFollowerButton.setOnClickListener(this);
-        mFollowerButton.setTypeface(medium);
         mFollowingButton.setOnClickListener(this);
-        mFollowingButton.setTypeface(medium);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         FollowPagerAdapter pagerAdapter = new FollowPagerAdapter(getSupportFragmentManager(),mUserId,mType);
         mViewPager.setAdapter(pagerAdapter);

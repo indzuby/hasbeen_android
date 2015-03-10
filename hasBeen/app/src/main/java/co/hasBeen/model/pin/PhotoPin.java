@@ -10,7 +10,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
 import co.hasBeen.R;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.api.Photo;
 import co.hasBeen.utils.Util;
 
 /**

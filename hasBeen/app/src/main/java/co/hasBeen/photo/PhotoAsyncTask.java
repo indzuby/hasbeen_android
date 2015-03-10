@@ -21,10 +21,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Place;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Place;
 import co.hasBeen.utils.Session;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.api.Photo;
 
 /**
  * Created by zuby on 2015-01-29.

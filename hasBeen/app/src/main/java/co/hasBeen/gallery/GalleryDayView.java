@@ -29,8 +29,8 @@ import co.hasBeen.database.DatabaseHelper;
 import co.hasBeen.database.ItemModule;
 import co.hasBeen.day.DayDialog;
 import co.hasBeen.map.EnterMapLisnter;
-import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Position;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Position;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.Util;
 
@@ -58,7 +58,7 @@ public class GalleryDayView extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDayId = getIntent().getLongExtra("dayId", 0);
+        mDayId = getIntent().getLongExtra("id", 0);
         init();
     }
 
@@ -116,7 +116,7 @@ public class GalleryDayView extends ActionBarActivity {
                 public void onClick(View v) {
 //                Toast.makeText(getActivity().getBaseContext(),"Floating button pressed ",Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getBaseContext(), GalleryShare.class);
-                    intent.putExtra("dayId", mDayId);
+                    intent.putExtra("id", mDayId);
                     startActivity(intent);
                 }
             });

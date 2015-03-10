@@ -23,7 +23,7 @@ import java.io.Reader;
 
 import co.hasBeen.model.api.Follow;
 import co.hasBeen.model.api.User;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.api.Photo;
 import co.hasBeen.utils.Session;
 
 /**

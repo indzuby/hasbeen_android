@@ -9,7 +9,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
-import co.hasBeen.model.database.Place;
+import co.hasBeen.model.api.Place;
 import co.hasBeen.utils.Util;
 
 /**

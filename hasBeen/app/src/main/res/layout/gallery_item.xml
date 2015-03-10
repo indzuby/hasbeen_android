@@ -33,7 +33,6 @@
         android:layout_height="wrap_content">
         <TextView
             android:layout_width="match_parent"
-            android:text="July 2, 2014"
             android:id="@+id/date"
             android:textColor="@color/theme_white"
             android:textSize="16sp"
@@ -44,7 +43,6 @@
             android:id="@+id/placeName"
             android:singleLine="true"
             android:layout_width="match_parent"
-            android:text="Beatenberg, Swiss - Thunersee, Swiss"
             android:textColor="@color/theme_white"
             android:textSize="16sp"
             android:layout_height="wrap_content" />
@@ -52,7 +50,6 @@
             android:layout_marginTop="4dp"
             android:layout_width="match_parent"
             android:id="@+id/dayStatus"
-            android:text="4 Places · 23 Photos"
             android:textColor="@color/theme_white"
             android:textSize="13sp"
             android:alpha="0.7"

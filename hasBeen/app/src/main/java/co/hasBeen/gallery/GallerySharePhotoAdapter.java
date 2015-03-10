@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import co.hasBeen.R;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.api.Photo;
 import co.hasBeen.utils.Util;
 
 /**

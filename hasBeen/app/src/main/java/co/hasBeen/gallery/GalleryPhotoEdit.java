@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.api.Photo;
 import co.hasBeen.utils.HasBeenDate;
 
 /**
@@ -27,7 +27,7 @@ public class GalleryPhotoEdit extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPhotoId = getIntent().getLongExtra("photoId",0);
+        mPhotoId = getIntent().getLongExtra("id",0);
         try{
             database = new DatabaseHelper(this);
             mPhoto = database.selectPhoto(mPhotoId);

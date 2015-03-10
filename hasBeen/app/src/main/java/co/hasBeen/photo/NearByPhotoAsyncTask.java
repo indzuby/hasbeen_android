@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
 
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.api.Photo;
 import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
 

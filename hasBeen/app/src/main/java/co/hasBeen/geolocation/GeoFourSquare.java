@@ -21,8 +21,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import co.hasBeen.model.database.Category;
-import co.hasBeen.model.database.Place;
+import co.hasBeen.model.api.Category;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Place;
 
 public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
     private Handler mHandler;
@@ -39,11 +40,14 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
     Place place;
     int placeCount = 25;
     Category mCategory ;
-
+    Day mDay=null;
     public GeoFourSquare(Handler handler) {
         mHandler = handler;
     }
-
+    public GeoFourSquare(Handler handler,Day day) {
+        mHandler = handler;
+        mDay = day;
+    }
     @Override
     protected JSONObject doInBackground(Object... params) {
 //            LatLng location = getLocation();
@@ -106,6 +110,10 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
                         place.setLat((float) location.getDouble("lat"));
                         place.setLon((float) location.getDouble("lng"));
                         break;
+                    }
+                    if(mDay!=null) {
+                        mDay.setMainPlace(place);
+                        msg.obj = mDay;
                     }
                 }
             } else {

@@ -1,6 +1,5 @@
 package co.hasBeen.alarm;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -42,9 +41,6 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
     public AlarmCount mAlarmCount;
     ImageView mNewsRedDot,mYouRedDot;
     String mAccessToken;
-    Long lastNewAlarmId;
-    Long lastYouAlarmId;
-    Typeface medium,regular;
     View mNewLoadingView;
     View mYouLoadingView;
     boolean isLoad = true;
@@ -119,8 +115,6 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
         }
     };
     protected void init(){
-        medium = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Roboto-Medium.ttf");
-        regular = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Roboto-Regular.ttf");
         mNewList = (PullToRefreshListView) mView.findViewById(R.id.alarmNewList);
         mYouList = (PullToRefreshListView) mView.findViewById(R.id.alarmYouList);
         mNewLoadingView =  LayoutInflater.from(getActivity()).inflate(R.layout.loading_layout, null, false);
@@ -138,8 +132,6 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
         View youButton = mView.findViewById(R.id.alarmYou);
         newButton.setOnClickListener(this);
         youButton.setOnClickListener(this);
-        ((TextView)mView.findViewById(R.id.you)).setTypeface(medium);
-        ((TextView)mView.findViewById(R.id.news)).setTypeface(medium);
         mNewList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {

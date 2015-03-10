@@ -13,4 +13,5 @@
     <color name="light_gray2">#B4B4B4</color>
     <color name="line_color">#c8c8c8</color>
     <color name="oval_red">#ff3f5a</color>
+    <color name="poly_line">#9909DC9E</color>
 </resources>

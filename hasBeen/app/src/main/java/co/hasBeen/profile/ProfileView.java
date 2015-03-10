@@ -1,7 +1,6 @@
 package co.hasBeen.profile;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,7 +14,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -25,23 +23,21 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import co.hasBeen.model.api.User;
-import co.hasBeen.model.database.Day;
+import co.hasBeen.model.api.Day;
 import co.hasBeen.profile.follow.DoFollowAsyncTask;
 import co.hasBeen.profile.follow.FollowView;
 import co.hasBeen.profile.map.LikeDayAsyncTask;
 import co.hasBeen.utils.CircleTransform;
 import co.hasBeen.utils.Session;
 import co.hasBeen.R;
-import co.hasBeen.geolocation.MapRoute;
+import co.hasBeen.map.MapRoute;
 import co.hasBeen.model.api.Loved;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.api.Photo;
 import co.hasBeen.profile.map.LikePhotoAsyncTask;
 import co.hasBeen.profile.map.ProfileDayAsyncTask;
 import co.hasBeen.profile.map.ProfilePhotoAsyncTask;
@@ -69,7 +65,6 @@ public class ProfileView extends ActionBarActivity {
     SupportMapFragment mMapFragment;
     MapRoute mMapRoute;
     GoogleMap mMap;
-    Typeface medium,regular;
     Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -192,8 +187,6 @@ public class ProfileView extends ActionBarActivity {
     protected void init(){
         setContentView(R.layout.profile);
         initActionBar();
-        medium = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Medium.ttf");
-        regular = Typeface.createFromAsset(this.getAssets(),"fonts/Roboto-Regular.ttf");
         mMapFragment = ((SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map));
 

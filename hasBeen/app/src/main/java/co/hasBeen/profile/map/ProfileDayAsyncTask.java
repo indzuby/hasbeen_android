@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
 
-import co.hasBeen.model.database.Day;
+import co.hasBeen.model.api.Day;
 import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
 

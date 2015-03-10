@@ -13,17 +13,18 @@ import java.util.List;
 import co.hasBeen.model.api.Alarm;
 import co.hasBeen.model.api.Follow;
 import co.hasBeen.model.api.Loved;
+import co.hasBeen.model.api.PushAlarm;
 import co.hasBeen.model.api.User;
-import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Photo;
-import co.hasBeen.model.database.Position;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Photo;
+import co.hasBeen.model.api.Position;
 
 /**
  * Created by 주현 on 2015-02-13.
  */
 public class JsonConverter {
 
-    public static Day convertJsonToDay(String json) {
+    public static Day convertJsonToDay(String json) throws Exception{
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
             @Override
@@ -44,7 +45,7 @@ public class JsonConverter {
         Day day = gson.fromJson(json, Day.class);
         return day;
     }
-    public static Position convertJsonToPosition(String json) {
+    public static Position convertJsonToPosition(String json) throws Exception{
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
             @Override
@@ -62,7 +63,7 @@ public class JsonConverter {
         Position position = gson.fromJson(json, Position.class);
         return position;
     }
-    public static Day convertJsonDay(Reader reader) {
+    public static Day convertJsonDay(Reader reader) throws Exception{
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
             @Override
@@ -83,7 +84,7 @@ public class JsonConverter {
         }).create();
         return gson.fromJson(reader, Day.class);
     }
-    public static List<Day> convertJsonDayList(Reader reader) {
+    public static List<Day> convertJsonDayList(Reader reader) throws Exception{
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
             @Override
@@ -109,7 +110,7 @@ public class JsonConverter {
         Type listType = new TypeToken<List<Day>>(){}.getType();
         return gson.fromJson(reader, listType);
     }
-    public static List<Photo> convertJsonPhotoList(Reader reader) {
+    public static List<Photo> convertJsonPhotoList(Reader reader) throws Exception{
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
             @Override
@@ -130,7 +131,7 @@ public class JsonConverter {
         Type listType = new TypeToken<List<Photo>>(){}.getType();
         return gson.fromJson(reader, listType);
     }
-    public static List<Loved> convertJsonLovedList(Reader reader) {
+    public static List<Loved> convertJsonLovedList(Reader reader) throws Exception{
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
             @Override
@@ -152,7 +153,7 @@ public class JsonConverter {
         Type listType = new TypeToken<List<Loved>>(){}.getType();
         return gson.fromJson(reader, listType);
     }
-    public static List<Follow> convertJsonFollowList(Reader reader) {
+    public static List<Follow> convertJsonFollowList(Reader reader) throws Exception{
 
 
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -172,7 +173,7 @@ public class JsonConverter {
         Type listType = new TypeToken<List<Follow>>(){}.getType();
         return gson.fromJson(reader, listType);
     }
-    public static List<Alarm> convertJsonAlarmList(Reader reader) {
+    public static List<Alarm> convertJsonAlarmList(Reader reader) throws Exception{
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
             @Override
@@ -208,5 +209,11 @@ public class JsonConverter {
         }).create();
         Type listType = new TypeToken<List<Alarm>>(){}.getType();
         return gson.fromJson(reader, listType);
+    }
+    public static PushAlarm convertJsonToPushAlarm(String json) throws Exception{
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        PushAlarm push = gson.fromJson(json, PushAlarm.class);
+        return push;
     }
 }

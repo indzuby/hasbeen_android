@@ -18,8 +18,8 @@ import java.util.List;
 
 import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
-import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Position;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Position;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.Util;
 
@@ -41,7 +41,7 @@ public class GalleryShare extends ActionBarActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gallery_share_photos);
-        mDayId = getIntent().getLongExtra("dayId",0);
+        mDayId = getIntent().getLongExtra("id",0);
         database = new DatabaseHelper(this);
         mListView = (ListView) findViewById(R.id.listView);
         mTextDate = (TextView) findViewById(R.id.date);

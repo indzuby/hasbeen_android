@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -22,17 +21,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import co.hasBeen.geolocation.MapRoute;
+import co.hasBeen.map.MapRoute;
 import co.hasBeen.model.api.Loved;
 import co.hasBeen.model.api.User;
-import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Photo;
 import co.hasBeen.profile.follow.FollowView;
 import co.hasBeen.profile.map.LikeDayAsyncTask;
 import co.hasBeen.profile.map.LikePhotoAsyncTask;

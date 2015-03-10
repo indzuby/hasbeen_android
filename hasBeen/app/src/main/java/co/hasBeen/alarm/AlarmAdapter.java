@@ -20,7 +20,7 @@ import co.hasBeen.R;
 import co.hasBeen.day.DayView;
 import co.hasBeen.model.api.Alarm;
 import co.hasBeen.model.api.User;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.api.Photo;
 import co.hasBeen.photo.PhotoView;
 import co.hasBeen.profile.ProfileClickListner;
 import co.hasBeen.profile.ProfileView;
@@ -98,11 +98,11 @@ public class AlarmAdapter extends BaseAdapter {
                 flag = true;
                 if (type == Alarm.Type.PHOTO_COMMENT || type == Alarm.Type.PHOTO_LOVE) {
                     Intent intent = new Intent(mContext, PhotoView.class);
-                    intent.putExtra("photoId", alarm.getPhoto().getId());
+                    intent.putExtra("id", alarm.getPhoto().getId());
                     mContext.startActivity(intent);
                 } else if (type == Alarm.Type.DAY_COMMENT || type == Alarm.Type.DAY_LOVE || type == Alarm.Type.DAY_POST) {
                     Intent intent = new Intent(mContext, DayView.class);
-                    intent.putExtra("dayId", alarm.getDay().getId());
+                    intent.putExtra("id", alarm.getDay().getId());
                     mContext.startActivity(intent);
                 } else if (type == Alarm.Type.FOLLOW ) {
                     Intent intent = new Intent(mContext, ProfileView.class);

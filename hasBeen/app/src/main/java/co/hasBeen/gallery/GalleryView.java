@@ -17,8 +17,9 @@ import java.util.Date;
 import java.util.List;
 
 import co.hasBeen.R;
+import co.hasBeen.database.DatabaseHelper;
 import co.hasBeen.database.ItemModule;
-import co.hasBeen.model.database.Day;
+import co.hasBeen.model.api.Day;
 
 /**
  * Created by zuby on 2015-01-14.
@@ -31,8 +32,8 @@ public class GalleryView extends Fragment {
     List<Day> mDayList;
     View mLoadingView;
     View mLoading;
+    DatabaseHelper database;
     boolean isLoading;
-
     class LoadThread extends Thread {
         Long date;
 
@@ -54,6 +55,10 @@ public class GalleryView extends Fragment {
                             stopLoading();
                         }
                     });
+                    if(mDayList.size()<=0) {
+                        mView.findViewById(R.id.galleryDefault).setVisibility(View.VISIBLE);
+                    }else
+                        mView.findViewById(R.id.galleryDefault).setVisibility(View.GONE);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -73,7 +78,12 @@ public class GalleryView extends Fragment {
         listView.addFooterView(mLoadingView);
         listView.setAdapter(mDayAdapter);
         startLoading();
-        new LoadThread(new Date().getTime()).start();
+        database = new DatabaseHelper(getActivity());
+        Day day = database.selectLastDay();
+        Long date = new Date().getTime();
+        if(day!=null)
+            date = day.getDate()+10000;
+        new LoadThread(date).start();
         mGalleryListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
             @Override
             public void onLastItemVisible() {
@@ -84,9 +94,7 @@ public class GalleryView extends Fragment {
                 }
             }
         });
-
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

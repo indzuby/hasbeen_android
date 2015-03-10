@@ -24,9 +24,9 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import co.hasBeen.model.database.Day;
+import co.hasBeen.model.api.Day;
 import co.hasBeen.utils.Session;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.api.Photo;
 
 /**
  * Created by zuby on 2015-01-27.

@@ -28,6 +28,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
+                    android:textStyle="bold"
                     android:text="FOLLOWERS"
                     android:textColor="@color/theme_color"
                     android:textSize="14sp" />
@@ -46,6 +47,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="center"
+                    android:textStyle="bold"
                     android:text="FOLLOWING"
                     android:textColor="@color/light_gray"
                     android:textSize="14sp" />

@@ -26,7 +26,7 @@ import java.io.Reader;
 
 import co.hasBeen.model.api.Comment;
 import co.hasBeen.utils.Session;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.api.Photo;
 
 /**
  * Created by 주현 on 2015-02-06.

@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import co.hasBeen.R;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.api.Photo;
 import co.hasBeen.utils.Util;
 
 /**
@@ -79,7 +79,7 @@ public class GalleryAdapter extends BaseAdapter {
             flag = true;
             Intent intent = new Intent(mContext, GalleryPhoto.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("photoId",photo.getId());
+            intent.putExtra("id",photo.getId());
             mContext.startActivity(intent);
             flag = false;
 

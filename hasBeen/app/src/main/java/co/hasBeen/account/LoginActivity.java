@@ -25,6 +25,7 @@ import java.util.Arrays;
 
 import co.hasBeen.MainActivity;
 import co.hasBeen.R;
+import co.hasBeen.error.NetworkCheck;
 import co.hasBeen.gcm.GcmRegister;
 import co.hasBeen.model.network.LoginTokenResponse;
 
@@ -42,6 +43,7 @@ public class LoginActivity extends Activity {
     GcmRegister gcm;
     View mLoading;
     boolean isLoading;
+    View mLoadingBg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +55,17 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.login);
         gcm = new GcmRegister(this);
         mAccessToken = co.hasBeen.utils.Session.getString(getBaseContext(), "accessToken", null);
-//        if(mAccessToken!=null) {
-//            Intent intent = new Intent(getBaseContext(), MainActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
+        if(mAccessToken!=null) {
+            if(!NetworkCheck.isOnline(LoginActivity.this)) {
+                Toast.makeText(getBaseContext(),"인터넷 연결을 확인하세요.",Toast.LENGTH_LONG).show();
+            }else {
+                Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }
         mLoading = findViewById(R.id.refresh);
+        mLoadingBg = findViewById(R.id.loadingBG);
         TextView goSignUp = (TextView) findViewById(R.id.goSignUp);
         goSignUp.setOnClickListener(new View.OnClickListener() {
             boolean flag = false;
@@ -66,6 +73,10 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (!flag) {
+                    if(!NetworkCheck.isOnline(LoginActivity.this)) {
+                        Toast.makeText(getBaseContext(),"인터넷 연결을 확인하세요.",Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     flag = true;
                     Intent intent = new Intent(getBaseContext(), SignUpActivity.class);
                     startActivity(intent);
@@ -82,7 +93,10 @@ public class LoginActivity extends Activity {
 
             @Override
             public void call(final Session session, SessionState state, Exception exception) {
-
+                if(!NetworkCheck.isOnline(LoginActivity.this)) {
+                    Toast.makeText(getBaseContext(),"인터넷 연결을 확인하세요.",Toast.LENGTH_LONG).show();
+                    return;
+                }
                 if (session.isOpened()) {
                     Log.i(TAG, "Access Token" + session.getAccessToken());
                     Request.executeMeRequestAsync(session,
@@ -122,6 +136,7 @@ public class LoginActivity extends Activity {
     protected void startLoading() {
         isLoading = true;
         mLoading.setVisibility(View.VISIBLE);
+        mLoadingBg.setVisibility(View.VISIBLE);
         Animation rotate = AnimationUtils.loadAnimation(getBaseContext(), R.anim.rotate);
         mLoading.startAnimation(rotate);
     }
@@ -129,6 +144,7 @@ public class LoginActivity extends Activity {
     protected void stopLoading() {
         isLoading = false;
         mLoading.setVisibility(View.GONE);
+        mLoadingBg.setVisibility(View.GONE);
         mLoading.clearAnimation();
     }
 
@@ -180,9 +196,9 @@ public class LoginActivity extends Activity {
         @Override
         public void handleMessage(Message msg) {
             if(msg.what==0) {
-                stopLoading();
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 startActivity(intent);
+                stopLoading();
                 finish();
             }else
                 Toast.makeText(getBaseContext(),"오류가 발생했습니다",Toast.LENGTH_LONG).show();

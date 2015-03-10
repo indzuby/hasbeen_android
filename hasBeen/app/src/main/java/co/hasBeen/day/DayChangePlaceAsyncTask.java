@@ -16,7 +16,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
-import co.hasBeen.model.database.Place;
+import co.hasBeen.model.api.Place;
 import co.hasBeen.utils.Session;
 
 /**

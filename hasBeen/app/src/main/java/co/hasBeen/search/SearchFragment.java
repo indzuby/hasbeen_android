@@ -1,6 +1,5 @@
 package co.hasBeen.search;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,9 +23,9 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 
 import co.hasBeen.R;
-import co.hasBeen.geolocation.MapRoute;
-import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.map.MapRoute;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Photo;
 import co.hasBeen.utils.Session;
 
 /**
@@ -47,7 +46,6 @@ public class SearchFragment extends Fragment {
     int nowTab = DAY;
     String mAccessToken;
     boolean isrefresh = false;
-    Typeface medium,regular;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,8 +59,6 @@ public class SearchFragment extends Fragment {
     protected void init() {
         mMapFragment = ((SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map));
-        medium = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Medium.ttf");
-        regular = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Roboto-Regular.ttf");
         mMapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap map) {
@@ -78,8 +74,6 @@ public class SearchFragment extends Fragment {
         });
         mDayButton = (TextView) mView.findViewById(R.id.dayButton);
         mPhotoButton = (TextView) mView.findViewById(R.id.photoButton);
-        mDayButton.setTypeface(medium);
-        mPhotoButton.setTypeface(medium);
         mRefresh = (ImageView) mView.findViewById(R.id.refresh);
 
         mDayButton.setOnClickListener(new ButtonClickListner());

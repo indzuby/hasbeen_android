@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import co.hasBeen.database.ItemModule;
-import co.hasBeen.model.database.Day;
+import co.hasBeen.model.api.Day;
 
 /**
  * Created by 주현 on 2015-03-02.

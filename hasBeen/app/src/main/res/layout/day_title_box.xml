@@ -55,7 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/placeName"
-
+                    android:textStyle="bold"
                     android:singleLine="true"
                     android:layout_marginTop="-4dp"
                     android:textColor="@color/light_black"

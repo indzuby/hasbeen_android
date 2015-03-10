@@ -1,7 +1,6 @@
 package co.hasBeen.newsfeed;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -23,10 +22,10 @@ import java.util.List;
 import co.hasBeen.R;
 import co.hasBeen.comment.EnterCommentListner;
 import co.hasBeen.day.DayDialog;
-import co.hasBeen.geolocation.MapRoute;
 import co.hasBeen.loved.LoveListner;
-import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.map.MapRoute;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Photo;
 import co.hasBeen.profile.ProfileClickListner;
 import co.hasBeen.report.ReportAsyncTask;
 import co.hasBeen.social.ShareListner;
@@ -45,7 +44,6 @@ public class NewsFeedAdapter extends BaseAdapter {
     GoogleMap mMap;
     MapRoute mMapRoute;
     boolean flag;
-    Typeface medium, regular;;
     DayDialog mDayDialog;
     String mAccessToken;
     int layout[] = {R.layout.newsfeed_image_layout_6, R.layout.newsfeed_image_layout_4, R.layout.newsfeed_image_layout_1, R.layout.newsfeed_image_layout_3, R.layout.newsfeed_image_layout_5, R.layout.newsfeed_image_layout_2};
@@ -56,8 +54,6 @@ public class NewsFeedAdapter extends BaseAdapter {
     public NewsFeedAdapter(Context mContext, List feeds) {
         this.mContext = mContext;
         mFeeds = feeds;
-        medium = Typeface.createFromAsset(mContext.getAssets(), "fonts/Roboto-Medium.ttf");
-        regular = Typeface.createFromAsset(mContext.getAssets(), "fonts/Roboto-Regular.ttf");
         mAccessToken = Session.getString(mContext,"accessToken",null);
     }
 
@@ -87,8 +83,6 @@ public class NewsFeedAdapter extends BaseAdapter {
 
         TextView newsfeedName = (TextView) view.findViewById(R.id.newsfeedName);
         TextView newsfeedReason = (TextView) view.findViewById(R.id.newsfeedReason);
-        newsfeedName.setTypeface(medium);
-        newsfeedReason.setTypeface(regular);
         if (!feed.getNewsFeedType().equals("DAY_POST")) {
             newsfeedName.setText(Util.parseName(feed.getFollowing(), 0));
             newsfeedName.setOnClickListener(new ProfileClickListner(mContext, feed.getFollowing().getId()));
@@ -135,18 +129,12 @@ public class NewsFeedAdapter extends BaseAdapter {
         if (feed.getLove() != null) {
             love.setImageResource(R.drawable.photo_like_pressed);
             loveText.setTextColor(mContext.getResources().getColor(R.color.light_black));
-            loveText.setTypeface(medium);
         } else {
             love.setImageResource(R.drawable.photo_like);
             loveText.setTextColor(mContext.getResources().getColor(R.color.light_gray));
-            loveText.setTypeface(regular);
         }
         loveButton.setOnClickListener(new LoveListner(mContext, feed, "days", socialAction));
         date.setText(HasBeenDate.convertDate(feed.getDate()));
-        placeName.setTypeface(medium);
-        dayTitle.setTypeface(medium);
-        profileName.setTypeface(regular);
-        dayDescription.setTypeface(regular);
         ImageView moreVert = (ImageView) view.findViewById(R.id.moreVert);
         moreVert.setVisibility(View.VISIBLE);
 

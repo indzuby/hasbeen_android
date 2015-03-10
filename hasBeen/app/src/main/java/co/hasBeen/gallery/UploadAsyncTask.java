@@ -18,7 +18,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import co.hasBeen.model.database.Day;
+import co.hasBeen.model.api.Day;
 import co.hasBeen.utils.Session;
 
 /**

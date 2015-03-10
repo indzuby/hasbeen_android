@@ -18,8 +18,8 @@ import java.util.List;
 import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
 import co.hasBeen.database.ItemModule;
-import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Position;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Position;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.Util;
 
@@ -32,6 +32,7 @@ public class GalleryDayAdapter extends BaseAdapter {
     DatabaseHelper database;
     ItemModule itemModule;
     Typeface medium,regular;
+
     public GalleryDayAdapter(Context context, List<Day> galleryList) throws Exception{
         mContext = context;
         mGalleryList = galleryList;
@@ -93,7 +94,7 @@ public class GalleryDayAdapter extends BaseAdapter {
         public void onClick(View v) {
             if(day.getMainPlaceId()!=null || day.getMainPlace()!=null) {
                 Intent intent = new Intent(mContext, GalleryDayView.class);
-                intent.putExtra("dayId", day.getId());
+                intent.putExtra("id", day.getId());
                 mContext.startActivity(intent);
             }else {
                 Toast.makeText(mContext,"지역 정보를 가져오는 중입니다.\n잠시만 기다려주세요.",Toast.LENGTH_LONG).show();
@@ -102,7 +103,7 @@ public class GalleryDayAdapter extends BaseAdapter {
     }
     protected void initPlaceName(TextView placeName ,Day day) throws Exception{
         if (day.getMainPlaceId()==null && day.getMainPlace()==null) {
-            itemModule.getPlace(day, placeName);
+            itemModule.getPlace(day,placeName);
         } else {
             List<Position> positions = database.selectPositionByDayId(day.getId());
             initPlace(positions);

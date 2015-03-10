@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:paddingTop="4dp"
     android:paddingBottom="4dp"
@@ -9,4 +9,34 @@
         android:id="@+id/galleryList"
         android:divider="@color/transparent"
         android:layout_height="match_parent"/>
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/galleryDefault"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:src="@drawable/notfound"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginTop="24dp"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="@string/gallery_default_1"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginTop="18dp"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="@string/gallery_default_2"
+            android:layout_height="wrap_content" />
+        </LinearLayout>
+</RelativeLayout>

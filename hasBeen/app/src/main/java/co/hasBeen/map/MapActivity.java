@@ -20,16 +20,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import java.util.List;
 
 import co.hasBeen.R;
-import co.hasBeen.geolocation.MapRoute;
-import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Photo;
-import co.hasBeen.model.database.Position;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Photo;
+import co.hasBeen.model.api.Position;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Util;
@@ -42,6 +42,7 @@ public class MapActivity extends ActionBarActivity implements OnMapReadyCallback
     GoogleMap mMap;
     MapRoute mMapRoute;
     MapFragment mMapFragment;
+    Long beforeid=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,10 +78,14 @@ public class MapActivity extends ActionBarActivity implements OnMapReadyCallback
             params.setMargins(0,margin,margin,0);
             // Update margins, set to 10dp
         }
-        init();
+        try {
+            init();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
-    protected void init(){
+    protected void init() throws Exception{
         Long positionId = getIntent().getLongExtra("positionId",0);
         String data = getIntent().getStringExtra("day");
         mDay = JsonConverter.convertJsonToDay(data);
@@ -122,6 +127,8 @@ public class MapActivity extends ActionBarActivity implements OnMapReadyCallback
             }
         }
         mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(position.getPlace().getLat(),position.getPlace().getLon())), 300, null);
+        selectMarker(positionId+"");
+        beforeid = positionId;
         List<Photo> photoList = position.getPhotoList();
         int photoCount = position.getPhotoList().size();
         photoBox.removeAllViews();
@@ -152,5 +159,13 @@ public class MapActivity extends ActionBarActivity implements OnMapReadyCallback
         TextView time = (TextView) findViewById(R.id.time);
         placeName.setText(position.getPlace().getName());
         time.setText(HasBeenDate.convertTime(position.getStartTime(),position.getEndTime()));
+    }
+    public void selectMarker(String snippet) {
+
+        for(Marker marker : mMapRoute.getmMarkers())
+            if(marker.getSnippet().equalsIgnoreCase(snippet)) {
+                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_select));
+            }else if(beforeid!=null && marker.getSnippet().equalsIgnoreCase(beforeid+""))
+                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
     }
 }

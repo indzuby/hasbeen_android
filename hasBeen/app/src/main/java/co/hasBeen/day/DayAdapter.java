@@ -23,9 +23,9 @@ import java.util.List;
 
 import co.hasBeen.R;
 import co.hasBeen.map.EnterMapLisnter;
-import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Photo;
-import co.hasBeen.model.database.Position;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Photo;
+import co.hasBeen.model.api.Position;
 import co.hasBeen.photo.PhotoView;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.RecycleUtils;
@@ -83,13 +83,15 @@ public class DayAdapter extends BaseAdapter {
         }
         TextView placeName = (TextView) view.findViewById(R.id.placeName);
         TextView placeTime = (TextView) view.findViewById(R.id.placeTime);
+        TextView photoCount = (TextView) view.findViewById(R.id.photoCount);
         ImageView placeIcon = (ImageView) view.findViewById(R.id.placeIcon);
         placeTime.setText(HasBeenDate.convertTime(position.getStartTime(), position.getEndTime()));
+        photoCount.setText(position.getPhotoList().size()+" photos");
         if(isMine) {
             if (index == 0)
                 placeIcon.setOnClickListener(new PlaceIconClick(index, position.getId()));
             else if (index != 0)
-                placeIcon.setOnClickListener(new PlaceIconClick(index, position.getId(), getItem(index - 1).getId()));
+                placeIcon.setOnClickListener(new PlaceIconClick(index, position.getId()));
         }
         if(position.getPlace()!=null) {
             placeName.setText(position.getPlace().getName());
@@ -154,17 +156,14 @@ public class DayAdapter extends BaseAdapter {
                             public void handleMessage(Message msg) {
                                 super.handleMessage(msg);
                                 if(msg.what==0) {
-                                    Position beforePosition= getItem(index-1);
-                                    Position currentPosition = getItem(index);
-                                    beforePosition.getPhotoList().addAll(currentPosition.getPhotoList());
-                                    notifyDataSetChanged();
-                                    mPositionList.remove(index);
+                                   mergePosition(index);
+                                   notifyDataSetChanged();
                                 }else {
                                     Toast.makeText(mContext,"오류가 발생하였습니다.",Toast.LENGTH_LONG).show();
                                 }
                                 dialog.dismiss();
                             }
-                        }).execute(mAccessToken,id,beforeid);
+                        }).execute(mAccessToken,id);
                     }
                 };
                 dialog = new PositionDialog(mContext, change, merge);
@@ -172,6 +171,21 @@ public class DayAdapter extends BaseAdapter {
             }
         }
     }
+    protected void mergePosition(int from) {
+        Position toPosition = getItem(from-1);
+        Position fromPosition = getItem(from);
+
+        toPosition.getPhotoList().addAll(fromPosition.getPhotoList());
+
+        int start = mDay.getPositionList().indexOf(toPosition) + 1;
+        int end = mDay.getPositionList().indexOf(fromPosition);
+        for(Position route : mDay.getPositionList().subList(start,end)) {
+            if(route.getType().equalsIgnoreCase("direction")) // transportation type 추가 예정
+                mDay.getPositionList().remove(route);
+        }
+        mPositionList.remove(from);
+    }
+
     class PhotoAdapter extends BaseAdapter {
         List<Photo> mPhotoList;
         private List<WeakReference<View>> mRecycleList = new ArrayList<WeakReference<View>>();
@@ -216,7 +230,7 @@ public class DayAdapter extends BaseAdapter {
                     if(!flag) {
                         flag = true;
                         Intent intent = new Intent(mContext, PhotoView.class);
-                        intent.putExtra("photoId",photo.getId());
+                        intent.putExtra("id",photo.getId());
                         mContext.startActivity(intent);
                         flag = false;
                     }

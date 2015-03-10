@@ -25,7 +25,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import co.hasBeen.model.api.Comment;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.api.Photo;
 import co.hasBeen.utils.Session;
 
 /**

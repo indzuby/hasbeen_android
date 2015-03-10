@@ -21,6 +21,7 @@ public class ShareListner implements View.OnClickListener {
         msg.addCategory(Intent.CATEGORY_DEFAULT);
         msg.putExtra(Intent.EXTRA_TEXT, url);
         msg.putExtra(Intent.EXTRA_STREAM,url);
+        msg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         msg.setType("text/plain");
         context.startActivity(Intent.createChooser(msg, "Share"));
     }

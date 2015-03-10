@@ -1,6 +1,5 @@
 package co.hasBeen.gallery;
 
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -27,10 +26,10 @@ import java.util.Map;
 
 import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
-import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Photo;
-import co.hasBeen.model.database.Place;
-import co.hasBeen.model.database.Position;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Photo;
+import co.hasBeen.model.api.Place;
+import co.hasBeen.model.api.Position;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
@@ -57,10 +56,14 @@ public class GalleryUpload extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         database = new DatabaseHelper(this);
         resolver = getContentResolver();
-        init();
+        try {
+            init();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
-    protected void init() {
+    protected void init() throws Exception{
         setContentView(R.layout.gallery_upload);
         mAccessToekn = Session.getString(this,"accessToken",null);
         initActionBar();
@@ -113,14 +116,13 @@ public class GalleryUpload extends ActionBarActivity {
                     Toast.makeText(getBaseContext(),"Title은 2글자이상 30글자 이하여야하고,\nDescription은 2글자 이상 255글자 이하여야합니다",Toast.LENGTH_LONG).show();
                     return ;
                 }
-
                 showProgress();
                 mUploadCount = 0;
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         while(mUploadCount != mDayUpload.getPhotoCount())  {
-                            dialog.setProgress(mUploadCount);
+                            dialog.setPhotoCount(mUploadCount);
                         }
                         String title = mTitle.getText().toString();
                         String description = mDescription.getText().toString();
@@ -146,7 +148,7 @@ public class GalleryUpload extends ActionBarActivity {
                 Toast.makeText(getBaseContext(),"Upload complete.",Toast.LENGTH_LONG).show();
                 dialog.dismiss();
 //                Intent intent = new Intent(getBaseContext(), DayView.class);
-//                intent.putExtra("dayId", (Long)msg.obj);
+//                intent.putExtra("id", (Long)msg.obj);
 //                startActivity(intent);
                 setResult(RESULT_OK);
                 finish();
@@ -231,14 +233,12 @@ public class GalleryUpload extends ActionBarActivity {
             e.printStackTrace();
         }
     }
-    ProgressDialog dialog;
+    UploadDialog dialog;
 
     protected void showProgress() {
-        dialog = new ProgressDialog(this);
+        dialog = new UploadDialog(this);
         dialog.setCancelable(false);
-        dialog.setMessage("Uploading image...");
-        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        dialog.setMax(mDayUpload.getPhotoCount());
+        dialog.setMaxCount(mDayUpload.getPhotoCount());
         dialog.show();
     }
 }

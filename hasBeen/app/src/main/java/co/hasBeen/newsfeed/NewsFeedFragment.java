@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -29,11 +30,13 @@ import java.util.List;
 
 import co.hasBeen.MainActivity;
 import co.hasBeen.R;
+import co.hasBeen.account.LoginActivity;
 import co.hasBeen.day.DayView;
 import co.hasBeen.model.api.Follow;
-import co.hasBeen.model.database.Day;
-import co.hasBeen.social.FbFriendsItem;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.account.FacebookApi;
 import co.hasBeen.social.FbFriendsAsyncTask;
+import co.hasBeen.social.FbFriendsItem;
 import co.hasBeen.social.FbFriendsView;
 import co.hasBeen.utils.Session;
 import co.hasBeen.utils.Util;
@@ -65,7 +68,6 @@ public class NewsFeedFragment extends Fragment{
 
         mListView = (PullToRefreshListView) mView.findViewById(R.id.list);
         mListView.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
-
         mFeeds = new ArrayList<>();
         mFeedAdapter = new NewsFeedAdapter(getActivity(), mFeeds);
         mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
@@ -87,7 +89,7 @@ public class NewsFeedFragment extends Fragment{
                     Log.i(TAG, mFeeds.get(index).getId() + "");
                     flag = true;
                     Intent intent = new Intent(getActivity(), DayView.class);
-                    intent.putExtra("dayId", mFeeds.get(index).getId());
+                    intent.putExtra("id", mFeeds.get(index).getId());
                     startActivity(intent);
                     flag = false;
                 }
@@ -233,6 +235,15 @@ public class NewsFeedFragment extends Fragment{
                     }
                     break;
                 case -1:
+                    int statusLine = (int) msg.obj;
+                    if(statusLine == 401) {
+                        Toast.makeText(getActivity(),"세션이 만료되었습니다 다시 로그인 해주세요.",Toast.LENGTH_LONG).show();
+                        Session.remove(getActivity(),"accessToken");
+                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        FacebookApi.callFacebookLogout(getActivity());
+                        startActivity(intent);
+//                        getActivity().finish();
+                    }
                     break;
             }
         }

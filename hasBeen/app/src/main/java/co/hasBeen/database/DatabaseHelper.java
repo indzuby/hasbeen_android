@@ -16,10 +16,10 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Photo;
-import co.hasBeen.model.database.Place;
-import co.hasBeen.model.database.Position;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Photo;
+import co.hasBeen.model.api.Place;
+import co.hasBeen.model.api.Position;
 
 /**
  * Created by zuby on 2015-01-13.

@@ -23,4 +23,6 @@
     <string name="domain">http://192.168.0.5:8080/</string>
     <string name="medium">sans-serif-medium</string>
     <string name="map_id">AIzaSyDGLVU0yTEqcNnIRk-SiLXEytDAsJ-Pi0E</string>
+    <string name="gallery_default_1">위치정보(또는 GPS 태그 등)기능이 해제되어 있거나\n기기내에 위치정보를 포함한 사진이 없습니다.</string>
+    <string name="gallery_default_2">카메라 설정에서 위치정보(또는 GPS 태그 등)를\n설정한 후 새로운 사진을 촬영해주세요.</string>
 </resources>

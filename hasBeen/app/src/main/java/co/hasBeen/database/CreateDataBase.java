@@ -16,10 +16,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import co.hasBeen.geolocation.GeoFourSquare;
-import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Place;
-import co.hasBeen.model.database.Photo;
-import co.hasBeen.model.database.Position;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Place;
+import co.hasBeen.model.api.Photo;
+import co.hasBeen.model.api.Position;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.HasBeenOpenCv;
 

@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
 
-import co.hasBeen.model.database.Day;
+import co.hasBeen.model.api.Day;
 import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
 
@@ -28,10 +28,11 @@ public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<Day>> {
     Handler mHandler;
 //    final static String URL = "https://gist.githubusercontent.com/indzuby/c9e87b33ca65eac93065/raw/4000d9c125b1e56c60f77523dc806e4a9cdb303d/NewsFeed";
     final static String URL = Session.DOMAIN+"newsFeed";
+    int status;
     @Override
     protected List<Day> doInBackground(Object... params) {
         HttpClient client = new DefaultHttpClient();
-        HttpResponse response;
+        HttpResponse response = null;
         Uri uri;
         try {
             uri = Uri.parse(URL);
@@ -55,9 +56,15 @@ public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<Day>> {
                 List<Day> posts = JsonConverter.convertJsonDayList(reader);
                 content.close();
                 return posts;
+            }else if(statusLine.getStatusCode()==401) {
+                status = 401;
+                return null;
             }
-
         }catch (Exception e) {
+            if(response!=null && response.getStatusLine().getStatusCode()==401) {
+                status = 401;
+                return null;
+            }
             e.printStackTrace();
         }
         return null;
@@ -71,6 +78,7 @@ public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<Day>> {
             msg.obj = newsFeeds;
             msg.what = 0;
         }else {
+            msg.obj = status ;
             msg.what = -1;
         }
         mHandler.sendMessage(msg);

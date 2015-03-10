@@ -19,9 +19,9 @@ import java.util.List;
 
 import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
-import co.hasBeen.model.database.Category;
-import co.hasBeen.model.database.Place;
-import co.hasBeen.model.database.Position;
+import co.hasBeen.model.api.Category;
+import co.hasBeen.model.api.Place;
+import co.hasBeen.model.api.Position;
 import co.hasBeen.utils.Session;
 
 /**

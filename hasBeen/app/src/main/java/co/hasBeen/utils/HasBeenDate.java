@@ -8,7 +8,7 @@ import org.joda.time.LocalDateTime;
 
 import java.util.Date;
 
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.api.Photo;
 
 /**
  * Created by zuby on 2015-01-15.

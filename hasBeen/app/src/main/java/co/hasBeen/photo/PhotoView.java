@@ -1,7 +1,6 @@
 package co.hasBeen.photo;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,7 +33,7 @@ import co.hasBeen.comment.EnterCommentListner;
 import co.hasBeen.comment.WriteCommentAsyncTask;
 import co.hasBeen.loved.LoveListner;
 import co.hasBeen.model.api.Comment;
-import co.hasBeen.model.database.Photo;
+import co.hasBeen.model.api.Photo;
 import co.hasBeen.profile.ProfileClickListner;
 import co.hasBeen.report.ReportAsyncTask;
 import co.hasBeen.social.ShareListner;
@@ -55,7 +54,6 @@ public class PhotoView extends ActionBarActivity {
     TextView mSocialAction;
     int mViewCommentCount;
     Long lastCommentId;
-    Typeface medium, regular;
     PhotoDialog mPhotoDialog;
     Long mMyid;
     EditText mDescription;
@@ -68,7 +66,7 @@ public class PhotoView extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPhotoId = getIntent().getLongExtra("photoId", 0);
+        mPhotoId = getIntent().getLongExtra("id", 0);
         mAccessToken = Session.getString(this, "accessToken", null);
         mMyid = Session.getLong(this, "myUserid", 0);
         init();
@@ -121,15 +119,13 @@ public class PhotoView extends ActionBarActivity {
         if (mPhoto.getLove() != null) {
             love.setImageResource(R.drawable.photo_like_pressed);
             loveText.setTextColor(this.getResources().getColor(R.color.light_black));
-            loveText.setTypeface(medium);
         } else {
             love.setImageResource(R.drawable.photo_like);
             loveText.setTextColor(this.getResources().getColor(R.color.light_gray));
-            loveText.setTypeface(regular);
         }
         loveButton.setOnClickListener(new LoveListner(this, mPhoto, "photos", mSocialAction));
         LinearLayout shareButton = (LinearLayout) findViewById(R.id.shareButton);
-        String url = Session.WEP_DOMAIN+"days/"+mPhoto.getId();
+        String url = Session.WEP_DOMAIN+"photos/"+mPhoto.getId();
         shareButton.setOnClickListener(new ShareListner(this,url));
 
 
@@ -219,8 +215,6 @@ public class PhotoView extends ActionBarActivity {
         setContentView(R.layout.photo);
         mLoading = findViewById(R.id.refresh);
         startLoading();
-        medium = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Medium.ttf");
-        regular = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Regular.ttf");
         new PhotoAsyncTask(handler).execute(mAccessToken, mPhotoId);
         initActionBar();
         new NearByPhotoAsyncTask(nearByHandler).execute(mAccessToken, mPhotoId);
@@ -262,15 +256,12 @@ public class PhotoView extends ActionBarActivity {
 
             Glide.with(this).load(photo.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(image);
             name.setText(Util.parseName(photo.getUser(), 0));
-            name.setTypeface(medium);
             Glide.with(this).load(photo.getMediumUrl()).into(nearPhoto);
             description.setText(photo.getPlaceName());
-            description.setTypeface(medium);
             likeCount.setText(photo.getLoveCount() + "");
             commentCount.setText(photo.getCommentCount() + "");
             shareCount.setText(photo.getShareCount() + "");
             date.setText(HasBeenDate.convertDate(photo.getTakenTime()));
-            date.setTypeface(regular);
             if (i % 2 == 0)
                 nearBy1.addView(nearByItem);
             else
@@ -283,7 +274,7 @@ public class PhotoView extends ActionBarActivity {
                     if (!flag) {
                         flag = true;
                         Intent intent = new Intent(getBaseContext(), PhotoView.class);
-                        intent.putExtra("photoId", photo.getId());
+                        intent.putExtra("id", photo.getId());
                         startActivity(intent);
                         finish();
                         flag = false;
@@ -384,10 +375,10 @@ public class PhotoView extends ActionBarActivity {
                                         Toast.makeText(getBaseContext(),"오류가 발생했습니다.",Toast.LENGTH_LONG).show();
                                     }
                                 }
-                            }).execute(mAccessToken,"photo/"+mPhoto.getId()+"/report");
+                            }).execute(mAccessToken,"photos/"+mPhoto.getId()+"/report");
                         }
                     };
-                    String url = Session.WEP_DOMAIN+"photo/"+mPhoto.getId();
+                    String url = Session.WEP_DOMAIN+"photos/"+mPhoto.getId();
                     View.OnClickListener edit = new ShareListner(getBaseContext(), url);
                     mPhotoDialog = new PhotoDialog(PhotoView.this, del,edit,true);
                     mPhotoDialog.show();
@@ -407,7 +398,6 @@ public class PhotoView extends ActionBarActivity {
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
         titleView.setText("Edit Photo");
-        titleView.setTypeface(medium);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

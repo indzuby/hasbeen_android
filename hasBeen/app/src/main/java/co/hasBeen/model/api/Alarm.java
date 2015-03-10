@@ -1,8 +1,5 @@
 package co.hasBeen.model.api;
 
-import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Photo;
-
 /**
  * Created by 주현 on 2015-02-03.
  */

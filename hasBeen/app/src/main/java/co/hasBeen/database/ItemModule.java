@@ -19,10 +19,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import co.hasBeen.geolocation.GeoFourSquare;
-import co.hasBeen.model.database.Day;
-import co.hasBeen.model.database.Photo;
-import co.hasBeen.model.database.Place;
-import co.hasBeen.model.database.Position;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Photo;
+import co.hasBeen.model.api.Place;
+import co.hasBeen.model.api.Position;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.HasBeenOpenCv;
 
@@ -142,36 +142,44 @@ public class ItemModule {
         if (!format.endsWith("jpg") && !format.endsWith("jpeg")) return true;
         return false;
     }
-
-    public void getPlace(final Day day, final TextView placeName) throws Exception {
+    class PlaceName implements Runnable {
+        TextView placeName;
+        Day day;
+        PlaceName(TextView placeName, Day day) {
+            this.placeName = placeName;
+            this.day = day;
+        }
+        @Override
+        public void run() {
+            while(day.getMainPlace()==null);
+            placeName.setText(day.getMainPlace().getName());
+            if (day.getMainPlace().getName().length() <= 0)
+                placeName.setVisibility(View.INVISIBLE);
+            else
+                placeName.setVisibility(View.VISIBLE);
+        }
+    }
+    public void getPlace(Day day ,final TextView placeName) throws Exception {
         Photo photo = database.selectPhoto(day.getMainPhotoId());
         day.setMainPhoto(photo);
-        final Place place = new Place();
+        Place place = new Place();
         day.setMainPlace(place);
         new GeoFourSquare(new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 try {
                     if (msg.what == 0) {
-                        insertNewPosition(place, day.getMainPhoto());
-                        ((Activity) mContext).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                placeName.setText(place.getName());
-                                if (place.getName().length() <= 0)
-                                    placeName.setVisibility(View.INVISIBLE);
-                                else
-                                    placeName.setVisibility(View.VISIBLE);
-                            }
-                        });
-                        day.setMainPlaceId(place.getId());
+                        Day day = (Day) msg.obj;
+                        insertNewPosition(day.getMainPlace(), day.getMainPhoto());
+                        day.setMainPlaceId(day.getMainPlace().getId());
                         database.updateDay(day);
+                        ((Activity) mContext).runOnUiThread(new PlaceName(placeName, day));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        }).execute(photo.getLat(), photo.getLon(), place, 1);
+        },day).execute(photo.getLat(), photo.getLon(), place, 1);
     }
 
     protected void insertNewPosition(Place place, Photo photo) throws SQLException {
@@ -182,8 +190,7 @@ public class ItemModule {
             placeId = database.getPlaceIdByVenueId(place.getVenueId());
         else
             placeId = database.insertPlace(place);
-
-        database.updateDayMainPlaceId(photo.getDayId(), placeId);
+        place.setId(placeId);
 
         position.setDayId(photo.getDayId());
         position.setStartTime(photo.getTakenTime());
