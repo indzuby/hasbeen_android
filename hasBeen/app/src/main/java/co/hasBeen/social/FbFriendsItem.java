@@ -50,10 +50,10 @@ public class FbFriendsItem {
         ImageView followImage = (ImageView) view.findViewById(R.id.followImage);
 
         Glide.with(mContext).load(toUser.getImageUrl()).asBitmap().transform(new CircleTransform(mContext)).into(profileImage);
-        profileName.setText(Util.parseName(toUser, 0));
+        profileName.setText(Util.parseName(toUser, mContext));
         profileImage.setOnClickListener(new ProfileClickListner(mContext, toUser.getId()));
         profileName.setOnClickListener(new ProfileClickListner(mContext, toUser.getId()));
-        followSatus.setText(toUser.getFollowerCount() + " follower · " + toUser.getFollowingCount() + " following");
+        followSatus.setText( mContext.getString(R.string.follow_status,toUser.getFollowerCount(),toUser.getFollowingCount()));
         if (follow.getFollowingId() == null) {
             followImage.setImageResource(R.drawable.follow_gray);
         } else {

@@ -1,6 +1,5 @@
 package co.hasBeen.newsfeed;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -30,16 +29,15 @@ import java.util.List;
 
 import co.hasBeen.MainActivity;
 import co.hasBeen.R;
+import co.hasBeen.account.FacebookApi;
 import co.hasBeen.account.LoginActivity;
 import co.hasBeen.day.DayView;
-import co.hasBeen.model.api.Follow;
 import co.hasBeen.model.api.Day;
-import co.hasBeen.account.FacebookApi;
+import co.hasBeen.model.api.Follow;
 import co.hasBeen.social.FbFriendsAsyncTask;
 import co.hasBeen.social.FbFriendsItem;
 import co.hasBeen.social.FbFriendsView;
 import co.hasBeen.utils.Session;
-import co.hasBeen.utils.Util;
 
 /**
  * Created by zuby on 2015-01-23.
@@ -152,9 +150,9 @@ public class NewsFeedFragment extends Fragment{
                     TextView count1 = (TextView) mDefaultView.findViewById(R.id.fbFriendsCountFirst);
                     TextView count2 = (TextView) mDefaultView.findViewById(R.id.fbFriendsCountSecond);
 //                    당신의 페이스북 친구 183명이 \nhasBeen을 이용중입니다.
-                    count1.setText(Util.getFbCountFirst(count,0));
+                    count1.setText(getString(R.string.no_newsfeed,count));
                     count1.setTypeface(medium);
-                    count2.setText(Util.getFbCountSecond(count, 0));
+                    count2.setText(getString(R.string.your_facebook_friend_count,count));
                     count2.setTypeface(medium);
                     LinearLayout fbFriendsThree = (LinearLayout) mDefaultView.findViewById(R.id.fbFriendsThree);
                     List subUser = users.subList(0,(3<count ? 3 : count));
@@ -237,7 +235,7 @@ public class NewsFeedFragment extends Fragment{
                 case -1:
                     int statusLine = (int) msg.obj;
                     if(statusLine == 401) {
-                        Toast.makeText(getActivity(),"세션이 만료되었습니다 다시 로그인 해주세요.",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(),getString(R.string.session_gone),Toast.LENGTH_LONG).show();
                         Session.remove(getActivity(),"accessToken");
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
                         FacebookApi.callFacebookLogout(getActivity());
@@ -248,13 +246,4 @@ public class NewsFeedFragment extends Fragment{
             }
         }
     };
-    ProgressDialog dialog;
-
-    protected void showProgress() {
-        dialog = new ProgressDialog(getActivity());
-        dialog.setCancelable(false);
-        dialog.setMessage("Loading the NewsFeeds");
-        dialog.setProgress(100);
-        dialog.show();
-    }
 }

@@ -69,7 +69,7 @@ public class GalleryPositionAdapter extends BaseAdapter{
         Position position = getItem(index);
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.gallery_level_2_item, null);
+            view = inflater.inflate(R.layout.gallery_position_item, null);
         }
         TextView placeTime = (TextView) view.findViewById(R.id.placeTime);
         TextView placeName = (TextView) view.findViewById(R.id.placeName);
@@ -78,7 +78,7 @@ public class GalleryPositionAdapter extends BaseAdapter{
         ImageView categoryIcon = (ImageView) view.findViewById(R.id.placeIcon);
         categoryIcon.setOnClickListener(new CategoryListner(index,position));
         categoryIcon.setScaleType(ImageView.ScaleType.FIT_XY);
-        placeTime.setText(HasBeenDate.convertTime(position.getStartTime(), position.getEndTime()));
+        placeTime.setText(HasBeenDate.convertTime(position.getStartTime(), position.getEndTime(),mContext));
 
         try{
             Place place = database.selectPlace(position.getPlaceId());
@@ -90,9 +90,7 @@ public class GalleryPositionAdapter extends BaseAdapter{
             gridView.getLayoutParams().height = getHeight(photos.size());
             GalleryAdapter galleryAdapter = new GalleryAdapter(mContext,photos);
             gridView.setAdapter(galleryAdapter);
-            String text = photos.size()+" photo";
-            if(photos.size()>1) text+="s";
-            photoCount.setText(text);
+            photoCount.setText(mContext.getString(R.string.photo_count,photos.size()));
         }catch (Exception e) {
             e.printStackTrace();
         }

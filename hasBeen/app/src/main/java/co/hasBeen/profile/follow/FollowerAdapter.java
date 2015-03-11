@@ -66,10 +66,10 @@ public class FollowerAdapter extends BaseAdapter {
         final ImageView followImage = (ImageView) view.findViewById(R.id.followImage);
 
         Glide.with(mContext).load(fromUser.getImageUrl()).asBitmap().transform(new CircleTransform(mContext)).into(profileImage);
-        profileName.setText(Util.parseName(fromUser, 0));
+        profileName.setText(Util.parseName(fromUser, mContext));
         profileImage.setOnClickListener(new ProfileClickListner(mContext, fromUser.getId()));
         profileName.setOnClickListener(new ProfileClickListner(mContext, fromUser.getId()));
-        followSatus.setText(fromUser.getFollowerCount()+" Follower · "+fromUser.getFollowingCount()+" following");
+        followSatus.setText(mContext.getString(R.string.follow_status,fromUser.getFollowerCount(),fromUser.getFollowingCount()));
         if(follow.getFollowingId()==null) {
             followImage.setImageResource(R.drawable.follow_gray);
         }else {

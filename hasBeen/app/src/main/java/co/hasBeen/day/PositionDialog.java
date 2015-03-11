@@ -56,8 +56,8 @@ public class PositionDialog extends Dialog {
     private void setLayout() {
         mRemoveButton = (TextView) findViewById(R.id.removeDay);
         mEditButton = (TextView) findViewById(R.id.editDay);
-        mRemoveButton.setText("Change Position");
-        mEditButton.setText("Merge with above place");
+        mRemoveButton.setText(getContext().getString(R.string.change_place));
+        mEditButton.setText(getContext().getString(R.string.merge_place));
         if (isFirst)
             mEditButton.setVisibility(View.GONE);
     }

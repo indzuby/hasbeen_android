@@ -44,7 +44,7 @@
                 <EditText
                     android:id="@+id/firstName"
                     style="@style/Signup.TextView"
-                    android:hint="First name"
+                    android:hint="@string/first_name"
                     android:inputType="textPersonName" />
 
                 <View
@@ -55,7 +55,7 @@
                 <EditText
                     android:id="@+id/lastName"
                     style="@style/Signup.TextView"
-                    android:hint="Last name"
+                    android:hint="@string/last_name"
                     android:inputType="textPersonName" />
 
                 <View
@@ -94,7 +94,7 @@
                 android:layout_marginTop="24dp"
                 android:background="@color/theme_color"
                 android:gravity="center"
-                android:text="Sign up with Email"
+                android:text="@string/sign_up"
                 android:textColor="@color/theme_white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -135,7 +135,7 @@
                 android:id="@+id/facebookLogin"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                fb:login_text="Sign up with Facebook" />
+                fb:login_text="@string/login_facebook" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -150,15 +150,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Already have an account? "
+                        android:text="@string/already_account"
                         android:textColor="@color/theme_white"
                         android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/goSignIn"
                         android:layout_width="wrap_content"
+                        android:layout_marginLeft="4dp"
                         android:layout_height="wrap_content"
-                        android:text="Sign in."
+                        android:text="@string/login_email"
                         android:textColor="@color/theme_color"
                         android:textSize="14sp" />
                 </LinearLayout>

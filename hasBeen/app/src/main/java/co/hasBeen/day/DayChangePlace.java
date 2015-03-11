@@ -139,7 +139,7 @@ public class DayChangePlace extends ActionBarActivity implements OnMapReadyCallb
         View mCustomActionBar = mInflater.inflate(R.layout.action_bar_place,null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         TextView titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
-        titleView.setText("Select Place");
+        titleView.setText(getString(R.string.action_bar_place_title));
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

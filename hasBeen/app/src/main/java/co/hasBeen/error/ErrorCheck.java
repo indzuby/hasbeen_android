@@ -3,12 +3,15 @@ package co.hasBeen.error;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.Toast;
+
+import co.hasBeen.R;
 
 /**
  * Created by 주현 on 2015-03-10.
  */
-public class NetworkCheck {
-    public static boolean isOnline(Context context) { // network 연결 상태 확인
+public class ErrorCheck {
+    public static boolean NetworkOnline(Context context) { // network 연결 상태 확인
         try {
             ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -27,5 +30,8 @@ public class NetworkCheck {
         }
 
         return false;
+    }
+    public static void errorToast(Context context){
+        Toast.makeText(context, context.getString(R.string.common_error), Toast.LENGTH_LONG).show();
     }
 }

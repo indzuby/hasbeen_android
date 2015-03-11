@@ -20,7 +20,7 @@
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
             android:background="@drawable/long_pressed_selector"
-            android:text="Remove this days"
+            android:text="@string/remove_day"
             android:textColor="@color/light_black"
             android:textSize="16sp" />
 
@@ -37,7 +37,7 @@
             android:gravity="center_vertical"
             android:background="@drawable/long_pressed_selector"
             android:paddingLeft="16dp"
-            android:text="Edit this days"
+            android:text="@string/edit_day"
             android:textColor="@color/light_black"
             android:textSize="16sp" />
     </LinearLayout>

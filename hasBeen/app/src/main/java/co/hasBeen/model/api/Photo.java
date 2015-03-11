@@ -251,18 +251,18 @@ public class Photo {
     }
 
     User user;
-    int commentCount;
-    int loveCount;
+    Integer commentCount;
+    Integer loveCount;
 
     public User getUser() {
         return user;
     }
 
-    public int getCommentCount() {
+    public Integer getCommentCount() {
         return commentCount;
     }
 
-    public int getLoveCount() {
+    public Integer getLoveCount() {
         return loveCount;
     }
 
@@ -270,7 +270,7 @@ public class Photo {
         this.loveCount = loveCount;
     }
 
-    public int getShareCount() {
+    public Integer getShareCount() {
         return shareCount;
     }
 
@@ -286,7 +286,7 @@ public class Photo {
         return commentList;
     }
 
-    int shareCount;
+    Integer shareCount;
     Day day;
     Place place;
     List<Comment> commentList;

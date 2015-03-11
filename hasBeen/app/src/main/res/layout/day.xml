@@ -46,8 +46,7 @@
                     android:layout_marginLeft="4dp"
                     android:textSize="13dp"
                     android:id="@+id/loveText"
-                    android:fontFamily="@string/medium"
-                    android:text="Like"
+                    android:text="@string/love"
                     android:textColor="@color/light_gray" />
             </LinearLayout>
 
@@ -67,9 +66,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
-                    android:fontFamily="@string/medium"
 
-                    android:text="Comment"
+                    android:text="@string/comment"
                     android:textSize="13dp"
                     android:textColor="@color/light_gray" />
             </LinearLayout>
@@ -90,9 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
-
-                    android:fontFamily="@string/medium"
-                    android:text="Share"
+                    android:text="@string/share"
                     android:textSize="13dp"
                     android:textColor="@color/light_gray" />
             </LinearLayout>

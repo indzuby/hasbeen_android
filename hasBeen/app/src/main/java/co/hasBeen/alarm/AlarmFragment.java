@@ -94,7 +94,6 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
                 new RefreshThread(alarms,mAlarmsNews,mNewAdapter).start();
                 if(isLoad)
                     stopLoading();
-
             }
         }
     };
@@ -109,8 +108,6 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
                 new RefreshThread(alarms,mAlarmsYou,mYouAdapter).start();
                 if(isLoad)
                     stopLoading();
-
-
             }
         }
     };

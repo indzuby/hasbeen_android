@@ -60,9 +60,9 @@ public class CommnetAdapter extends BaseAdapter{
         TextView commentTime = (TextView) view.findViewById(R.id.commentTime);
 
         Glide.with(mContext).load(comment.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(mContext)).into(profileImage);
-        profileName.setText(Util.parseName(comment.getUser(),0));
+        profileName.setText(Util.parseName(comment.getUser(),mContext));
         contents.setText(comment.getContents());
-        commentTime.setText(HasBeenDate.getGapTime(comment.getCreatedTime()));
+        commentTime.setText(HasBeenDate.getGapTime(comment.getCreatedTime(),mContext));
         profileImage.setOnClickListener(new ProfileClickListner(mContext,comment.getUser().getId()));
         profileName.setOnClickListener(new ProfileClickListner(mContext, comment.getUser().getId()));
         view.setBackground(mContext.getResources().getDrawable(R.drawable.long_pressed_selector));

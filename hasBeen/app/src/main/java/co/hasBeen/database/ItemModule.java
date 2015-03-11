@@ -105,9 +105,9 @@ public class ItemModule {
         database.updateDay(day);
     }
 
-    public List<Day> bringTenDay(Long date) throws SQLException {
+    public List<Day> bringTenDay(Long id) throws SQLException {
         insertDay();
-        return database.selectBeforeTenDay(date);
+        return database.selectBeforeTenDay(id);
     }
 
     public Day makeDayData(Photo photo) {

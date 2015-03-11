@@ -2,7 +2,6 @@ package co.hasBeen.gallery;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,13 +30,10 @@ public class GalleryDayAdapter extends BaseAdapter {
     List<Day> mGalleryList;
     DatabaseHelper database;
     ItemModule itemModule;
-    Typeface medium,regular;
 
     public GalleryDayAdapter(Context context, List<Day> galleryList) throws Exception{
         mContext = context;
         mGalleryList = galleryList;
-        medium = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Medium.ttf");
-        regular = Typeface.createFromAsset(context.getAssets(),"fonts/Roboto-Regular.ttf");
         database = new DatabaseHelper(context);
         itemModule = new ItemModule(context);
     }
@@ -71,8 +67,6 @@ public class GalleryDayAdapter extends BaseAdapter {
         TextView dayStatus = (TextView) view.findViewById(R.id.dayStatus);
 
         date.setText(HasBeenDate.convertDate(day.getDate()));
-        date.setTypeface(medium);
-        placeName.setTypeface(regular);
         try {
             day.setMainPhoto(database.selectPhoto(day.getMainPhotoId()));
             Glide.with(mContext).load(day.getMainPhoto().getPhotoPath()).placeholder(Util.getPlaceHolder(position)).into(mainPhoto);
@@ -127,11 +121,11 @@ public class GalleryDayAdapter extends BaseAdapter {
         placeCount = database.countPosition(day.getId());
         photoCount = day.getPhotoCount();
         if(day.getCreatedTime()==null)
-            text = placeCount + "+ places · " + photoCount + " photos";
+            text = mContext.getString(R.string.non_load_status,placeCount,photoCount);
         else {
             day.setPhotoCount(database.countPhotoByDayid(day.getId()));
             photoCount =day.getPhotoCount();
-            text = placeCount + " places · " + photoCount + " photos";
+            text = mContext.getString(R.string.load_status,placeCount,photoCount);
         }
         dayStatus.setText(text);
     }

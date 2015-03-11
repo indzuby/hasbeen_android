@@ -34,7 +34,7 @@
         android:id="@+id/totalPhoto"
         android:paddingBottom="4dp"
         android:textSize="12sp"
-        android:text="Total 85 photos"/>
+        android:text="@string/photo_count"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="2px"

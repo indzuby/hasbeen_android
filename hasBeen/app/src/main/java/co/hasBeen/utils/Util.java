@@ -26,9 +26,8 @@ import co.hasBeen.model.api.Position;
  * Created by zuby on 2015-01-16.
  */
 public class Util {
-    final static String MAP_URL = "http://maps.googleapis.com/maps/api/staticmap?size=480x240&scale=2&zoom=14&markers=icon:http://image.hasbeen.co/common/marker.png%7C";
+    final static String MAP_URL = "http://maps.googleapis.com/maps/api/staticmap?size=480x240&scale=2&zoom=14&markers=icon:http://hasbeen.blob.core.windows.net/common/marker.png%7C";
     final static int imgSize = 1080;
-
     public static float convertDpToPixel(float dp, Context context) {
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
@@ -54,15 +53,15 @@ public class Util {
         return Math.round(dp * context.getResources().getDisplayMetrics().density);
     }
 
-    public static String parseName(User user, int countryCode) {
+    public static String parseName(User user,Context context) {
 
-        return parseName(user.getFirstName(),user.getLastName(),countryCode);
+        return parseName(user.getFirstName(),user.getLastName(),context);
 
     }
 
-    public static String parseName(String firstName, String lastName, int countryCode) {
+    public static String parseName(String firstName, String lastName,Context context) {
 
-        return firstName + " " + lastName;
+        return context.getString(R.string.name,firstName,lastName);
 
     }
 
@@ -111,17 +110,17 @@ public class Util {
         return outputBitmap;
     }
 
-    public static String getNewsFeedReason(String type) {
+    public static String getNewsFeedReason(String type,Context context) {
         if (type.equals("PHOTO_COMMENT")) {
-            return " Commented on photo";
+            return context.getString(R.string.comment_photo);
         } else if (type.equals("PHOTO_LOVE")) {
-            return " liked on photo";
+            return context.getString(R.string.love_photo);
         } else if (type.equals("DAY_POST")) {
-            return " Posted on day trip";
+            return context.getString(R.string.post_day_trip);
         } else if (type.equals("DAY_COMMENT")) {
-            return " Commented on day trip";
+            return context.getString(R.string.comment_day_trip);
         } else if (type.equals("DAY_LOVE")) {
-            return " liked on day trip";
+            return context.getString(R.string.love_day_trip);
         }
         return "";
     }
@@ -130,14 +129,6 @@ public class Util {
 
     public static int getPlaceHolder(int index) {
         return placeHolder[index % 5];
-    }
-
-    public static String getFbCountFirst(int count, int countryCode) {
-        return "당신의 페이스북 친구" + count + "명이 \nhasBeen을 이용중입니다.";
-    }
-
-    public static String getFbCountSecond(int count, int countryCode) {
-        return count + "명의 친구들 모두 보기";
     }
 
     public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {

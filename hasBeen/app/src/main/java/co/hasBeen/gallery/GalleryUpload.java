@@ -101,7 +101,7 @@ public class GalleryUpload extends ActionBarActivity {
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         TextView titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
         TextView doneButton = (TextView) mCustomActionBar.findViewById(R.id.actionBarDone);
-        titleView.setText("Upload");
+        titleView.setText(getString(R.string.action_bar_upload_title));
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,9 +111,11 @@ public class GalleryUpload extends ActionBarActivity {
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if((mTitle.getText().toString().length()<2 || mTitle.getText().toString().length()>30) &&
-                        (mDescription.getText().toString().length()<2 || mDescription.getText().toString().length()>255)) {
-                    Toast.makeText(getBaseContext(),"Title은 2글자이상 30글자 이하여야하고,\nDescription은 2글자 이상 255글자 이하여야합니다",Toast.LENGTH_LONG).show();
+                if(mTitle.getText().toString().length()<2 || mTitle.getText().toString().length()>30){
+                    Toast.makeText(getBaseContext(),getString(R.string.title_size_error),Toast.LENGTH_LONG).show();
+                    return;
+                }if(mDescription.getText().toString().length()<2 || mDescription.getText().toString().length()>255) {
+                    Toast.makeText(getBaseContext(),getString(R.string.description_size_error),Toast.LENGTH_LONG).show();
                     return ;
                 }
                 showProgress();
@@ -145,7 +147,7 @@ public class GalleryUpload extends ActionBarActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if(msg.what==0) {
-                Toast.makeText(getBaseContext(),"Upload complete.",Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(),getString(R.string.upload_ok),Toast.LENGTH_LONG).show();
                 dialog.dismiss();
 //                Intent intent = new Intent(getBaseContext(), DayView.class);
 //                intent.putExtra("id", (Long)msg.obj);
@@ -153,7 +155,7 @@ public class GalleryUpload extends ActionBarActivity {
                 setResult(RESULT_OK);
                 finish();
             }else {
-                Toast.makeText(getBaseContext(),"Upload error.",Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
                 setResult(RESULT_CANCELED);
                 finish();
             }

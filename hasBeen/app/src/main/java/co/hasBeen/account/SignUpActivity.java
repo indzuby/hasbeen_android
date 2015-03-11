@@ -23,7 +23,7 @@ import java.util.Arrays;
 
 import co.hasBeen.MainActivity;
 import co.hasBeen.R;
-import co.hasBeen.error.NetworkCheck;
+import co.hasBeen.error.ErrorCheck;
 import co.hasBeen.model.network.LoginTokenResponse;
 
 /**
@@ -74,8 +74,8 @@ public class SignUpActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if(!flag) {
-                    if(!NetworkCheck.isOnline(SignUpActivity.this)) {
-                        Toast.makeText(getBaseContext(),"인터넷 연결을 확인하세요.",Toast.LENGTH_LONG).show();
+                    if(!ErrorCheck.NetworkOnline(SignUpActivity.this)) {
+                        Toast.makeText(getBaseContext(),getString(R.string.internet_error),Toast.LENGTH_LONG).show();
                         return;
                     }
                     flag=true;
@@ -88,7 +88,7 @@ public class SignUpActivity extends Activity {
                         return;
                     }
                     if(password.length()<8 || password.length()>50) {
-                        Toast.makeText(getBaseContext(),"비밀번호는 8글자이상 50글자 이하여아합니다.",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getBaseContext(),getString(R.string.password_size_error),Toast.LENGTH_LONG).show();
                         flag = false;
                         return ;
                     }
@@ -98,7 +98,7 @@ public class SignUpActivity extends Activity {
                             super.handleMessage(msg);
                             if(msg.what==0) {
                                 flag = false;
-                                Toast.makeText(getBaseContext(),"회원가입 완료, 로그인 하세요.",Toast.LENGTH_LONG).show();
+                                Toast.makeText(getBaseContext(),getString(R.string.sign_up_ok),Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(getBaseContext(), LoginActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -119,8 +119,8 @@ public class SignUpActivity extends Activity {
 
             @Override
             public void call(final Session session, SessionState state, Exception exception) {
-                if(!NetworkCheck.isOnline(SignUpActivity.this)) {
-                    Toast.makeText(getBaseContext(),"인터넷 연결을 확인하세요.",Toast.LENGTH_LONG).show();
+                if(!ErrorCheck.NetworkOnline(SignUpActivity.this)) {
+                    Toast.makeText(getBaseContext(),getString(R.string.internet_error),Toast.LENGTH_LONG).show();
                     return;
                 }
                 if (session.isOpened()) {
@@ -150,7 +150,7 @@ public class SignUpActivity extends Activity {
                 String token = (String) msg.obj;
                 new LogInAsyncTask(loginHandler).execute(token, "", "password", "read write delete", LogInAsyncTask.BASIC);
             } else {
-
+                Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
             }
         }
     };
@@ -164,7 +164,8 @@ public class SignUpActivity extends Activity {
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 startActivity(intent);
                 finish();
-            }
+            }else
+                Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
         }
     };
 }

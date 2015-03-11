@@ -50,7 +50,7 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
         View mCustomActionBar = mInflater.inflate(R.layout.action_bar_place, null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         TextView titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
-        titleView.setText("Follower & Following");
+        titleView.setText(getString(R.string.action_bar_follow_title));
         ImageView moreVert = (ImageView) mCustomActionBar.findViewById(R.id.moreVert);
         moreVert.setVisibility(View.GONE);
         back.setOnClickListener(new View.OnClickListener() {
@@ -90,17 +90,9 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        if(v.equals(mFollowerButton)) {
-            mNowTab = FOLLOWER;
-            ((TextView)findViewById(R.id.follower)).setTextColor(getResources().getColor(R.color.theme_color));
-            ((TextView)findViewById(R.id.following)).setTextColor(getResources().getColor(R.color.light_gray));
-            mViewPager.setCurrentItem(mNowTab);
-        }else if(v.equals(mFollowingButton)){
-            mNowTab = FOLLOWING;
-            ((TextView)findViewById(R.id.following)).setTextColor(getResources().getColor(R.color.theme_color));
-            ((TextView)findViewById(R.id.follower)).setTextColor(getResources().getColor(R.color.light_gray));
-            mViewPager.setCurrentItem(mNowTab);
-        }
-
+        if(v.getId() == R.id.follower) {
+            mViewPager.setCurrentItem(FOLLOWER);
+        }else
+            mViewPager.setCurrentItem(FOLLOWING);
     }
 }

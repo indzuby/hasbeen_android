@@ -43,7 +43,7 @@
         android:paddingBottom="4dp"
         android:paddingLeft="16dp"
         android:paddingTop="4dp"
-        android:text="Total 85 photos"
+        android:text="@string/photo_count"
         android:textColor="@color/light_gray"
         android:textSize="12sp" />
 

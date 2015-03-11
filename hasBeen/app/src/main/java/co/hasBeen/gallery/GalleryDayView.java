@@ -1,7 +1,6 @@
 package co.hasBeen.gallery;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -40,7 +39,6 @@ import co.hasBeen.utils.Util;
 public class GalleryDayView extends ActionBarActivity {
     Long mDayId;
     ItemModule mItemModule;
-    Typeface medium,regular;
     ListView mListView;
     GalleryPositionAdapter mPositionAdapter ;
     List<Position> mPositionList;
@@ -95,8 +93,6 @@ public class GalleryDayView extends ActionBarActivity {
     }
     protected void init(){
         setContentView(R.layout.gallery_list);
-        medium = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Medium.ttf");
-        regular = Typeface.createFromAsset(this.getAssets(),"fonts/Roboto-Regular.ttf");
         try {
             database = new DatabaseHelper(getBaseContext());
             mDay = database.selectDay(mDayId);
@@ -138,7 +134,6 @@ public class GalleryDayView extends ActionBarActivity {
         View mCustomActionBar = mInflater.inflate(R.layout.action_bar_place,null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
-        titleView.setTypeface(medium);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,7 +149,7 @@ public class GalleryDayView extends ActionBarActivity {
                 View.OnClickListener del = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getBaseContext(), "준비중입니다.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getBaseContext(), "Coming soon...", Toast.LENGTH_LONG).show();
                     }
                 };
                 View.OnClickListener edit = new View.OnClickListener() {
@@ -194,8 +189,7 @@ public class GalleryDayView extends ActionBarActivity {
         TextView totalPhoto = (TextView) findViewById(R.id.totalPhoto);
         mDayTitle.setText(mDay.getTitle());
         mDescription.setText(mDay.getDescription());
-        mDescription.setTypeface(regular);
-        totalPhoto.setText("Total " + mDay.getPhotoCount() + " photos");
+        totalPhoto.setText(getString(R.string.total_photo_count,mDay.getPhotoCount()));
         findViewById(R.id.socialAction).setVisibility(View.GONE);
     }
     protected void initEditActionBar(){
@@ -209,8 +203,7 @@ public class GalleryDayView extends ActionBarActivity {
         View mCustomActionBar = mInflater.inflate(R.layout.action_bar_default,null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
-        titleView.setText("Edit Day");
-        titleView.setTypeface(medium);
+        titleView.setText(getString(R.string.edit_day));
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

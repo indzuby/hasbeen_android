@@ -17,42 +17,33 @@
             android:layout_height="match_parent"
             android:weightSum="2">
 
-            <RelativeLayout
-                android:id="@+id/followerButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/follower"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
                     android:layout_centerInParent="true"
                     android:textStyle="bold"
-                    android:text="FOLLOWERS"
+                    android:text="@string/follower"
                     android:textColor="@color/theme_color"
                     android:textSize="14sp" />
 
-            </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/followingButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/following"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
                     android:layout_centerInParent="true"
                     android:gravity="center"
                     android:textStyle="bold"
-                    android:text="FOLLOWING"
+                    android:text="@string/following"
                     android:textColor="@color/light_gray"
                     android:textSize="14sp" />
 
-            </RelativeLayout>
         </LinearLayout>
 
         <View

@@ -25,7 +25,7 @@ import java.util.Arrays;
 
 import co.hasBeen.MainActivity;
 import co.hasBeen.R;
-import co.hasBeen.error.NetworkCheck;
+import co.hasBeen.error.ErrorCheck;
 import co.hasBeen.gcm.GcmRegister;
 import co.hasBeen.model.network.LoginTokenResponse;
 
@@ -56,8 +56,8 @@ public class LoginActivity extends Activity {
         gcm = new GcmRegister(this);
         mAccessToken = co.hasBeen.utils.Session.getString(getBaseContext(), "accessToken", null);
         if(mAccessToken!=null) {
-            if(!NetworkCheck.isOnline(LoginActivity.this)) {
-                Toast.makeText(getBaseContext(),"인터넷 연결을 확인하세요.",Toast.LENGTH_LONG).show();
+            if(!ErrorCheck.NetworkOnline(LoginActivity.this)) {
+                Toast.makeText(getBaseContext(),getString(R.string.internet_error),Toast.LENGTH_LONG).show();
             }else {
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 startActivity(intent);
@@ -73,8 +73,8 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (!flag) {
-                    if(!NetworkCheck.isOnline(LoginActivity.this)) {
-                        Toast.makeText(getBaseContext(),"인터넷 연결을 확인하세요.",Toast.LENGTH_LONG).show();
+                    if(!ErrorCheck.NetworkOnline(LoginActivity.this)) {
+                        Toast.makeText(getBaseContext(),getString(R.string.internet_error),Toast.LENGTH_LONG).show();
                         return;
                     }
                     flag = true;
@@ -93,8 +93,8 @@ public class LoginActivity extends Activity {
 
             @Override
             public void call(final Session session, SessionState state, Exception exception) {
-                if(!NetworkCheck.isOnline(LoginActivity.this)) {
-                    Toast.makeText(getBaseContext(),"인터넷 연결을 확인하세요.",Toast.LENGTH_LONG).show();
+                if(!ErrorCheck.NetworkOnline(LoginActivity.this)) {
+                    Toast.makeText(getBaseContext(),getString(R.string.internet_error),Toast.LENGTH_LONG).show();
                     return;
                 }
                 if (session.isOpened()) {
@@ -177,7 +177,7 @@ public class LoginActivity extends Activity {
                 co.hasBeen.utils.Session.putString(getBaseContext(), "accessToken", loginToken.getAccess_token());
                 gcm.registerGcm(registHandler);
             }else
-                Toast.makeText(getBaseContext(),"오류가 발생했습니다",Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
         }
     };
     Handler registHandler = new Handler(Looper.getMainLooper()) {
@@ -189,7 +189,7 @@ public class LoginActivity extends Activity {
                 String accessToken = co.hasBeen.utils.Session.getString(getBaseContext(), "accessToken", null);
                 new DeviceAsyncTask(deviceHandler).execute(accessToken, regid);
             }else
-                Toast.makeText(getBaseContext(),"오류가 발생했습니다",Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
         }
     };
     Handler deviceHandler = new Handler(Looper.getMainLooper()){
@@ -201,7 +201,7 @@ public class LoginActivity extends Activity {
                 stopLoading();
                 finish();
             }else
-                Toast.makeText(getBaseContext(),"오류가 발생했습니다",Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
             super.handleMessage(msg);
         }
     };

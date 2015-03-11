@@ -308,8 +308,8 @@ public class ProfileFragment extends Fragment {
         if(mUser.getCoverPhoto()!=null) Glide.with(getActivity()).load(mUser.getCoverPhoto().getLargeUrl()).placeholder(R.drawable.coverholder).into(coverImage);
         else Glide.with(getActivity()).load(R.drawable.coverholder).into(coverImage);
         Glide.with(getActivity()).load(mUser.getImageUrl()).transform(new CircleTransform(getActivity())).into(profileImage);
-        profileName.setText(Util.parseName(mUser, 0));
-        followStatus.setText(mUser.getFollowerCount() + " Follower · " + mUser.getFollowingCount() + " Following");
+        profileName.setText(Util.parseName(mUser, getActivity()));
+        followStatus.setText(getString(R.string.follow_status,mUser.getFollowerCount(),mUser.getFollowingCount()));
         followStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

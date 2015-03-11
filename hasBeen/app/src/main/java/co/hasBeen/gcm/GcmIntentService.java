@@ -60,8 +60,8 @@ public class GcmIntentService extends IntentService {
                             .setLargeIcon(bitmap)
                             .setContentTitle("HasBeen")
                             .setStyle(new NotificationCompat.BigTextStyle()
-                                    .bigText(push.getMessage()))
-                            .setContentText(push.getMessage()).setAutoCancel(true)
+                                    .bigText(push.getMessage(this)))
+                            .setContentText(push.getMessage(this)).setAutoCancel(true)
                             .setVibrate(new long[]{0, 500});
 
             mBuilder.setContentIntent(contentIntent);

@@ -74,7 +74,7 @@
             android:gravity="top"
             android:ems="255"
             android:id="@+id/description"
-            android:hint="Write description"
+            android:hint="@string/description_hint"
             android:lineSpacingExtra="4dp"
             android:minHeight="200dp"
             android:padding="16dp"

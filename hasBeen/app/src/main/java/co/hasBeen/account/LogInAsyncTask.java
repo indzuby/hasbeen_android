@@ -26,7 +26,6 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.hasBeen.error.NetworkCheck;
 import co.hasBeen.model.network.LoginTokenResponse;
 import co.hasBeen.utils.Session;
 import co.hasBeen.model.network.LoginTokenRequest;

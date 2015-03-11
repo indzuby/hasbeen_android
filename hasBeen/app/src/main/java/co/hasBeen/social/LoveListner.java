@@ -1,7 +1,6 @@
-package co.hasBeen.loved;
+package co.hasBeen.social;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -10,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import co.hasBeen.R;
-import co.hasBeen.model.api.Loved;
 import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Loved;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.utils.Session;
 
@@ -28,7 +27,6 @@ public class LoveListner implements View.OnClickListener{
     String mType;
     Long mid;
     TextView mSocialAction;
-    Typeface medium,regular;
     public LoveListner(Context mContext, Object data,String type,TextView socialAction) {
         this.mContext = mContext;
         mAccessToken = Session.getString(mContext,"accessToken",null);
@@ -47,8 +45,6 @@ public class LoveListner implements View.OnClickListener{
         else
             isLoved = false;
         mSocialAction = socialAction;
-        medium = Typeface.createFromAsset(mContext.getAssets(),"fonts/Roboto-Medium.ttf");
-        regular = Typeface.createFromAsset(mContext.getAssets(),"fonts/Roboto-Regular.ttf");
     }
 
     @Override
@@ -68,20 +64,17 @@ public class LoveListner implements View.OnClickListener{
                         love.setId((Long) msg.obj);
                         if(mType.equals("days")) {
                             mDay.setLove(love);
-                            mDay.setLoveCount(mDay.getLoveCount()+1);
-                            mSocialAction.setText(mDay.getLoveCount() + " Likes · " + mDay.getCommentCount() + " Commnents · " + mDay.getShareCount() + " Shared");
+                            mDay.setLoveCount(mDay.getLoveCount() + 1);
+                            mSocialAction.setText(mContext.getString(R.string.social_status,mDay.getLoveCount(),mDay.getCommentCount(),mDay.getShareCount()));
                         }else {
                             mPhoto.setLove(love);
                             mPhoto.setLoveCount(mPhoto.getLoveCount() + 1);
-                            mSocialAction.setText(mPhoto.getLoveCount() + " Likes · " + mPhoto.getCommentCount() + " Commnents · " + mPhoto.getShareCount() + " Shared");
+                            mSocialAction.setText(mContext.getString(R.string.social_status,mPhoto.getLoveCount(),mPhoto.getCommentCount(),mPhoto.getShareCount()));
                         }
                         mLove = love;
                         isLoved = false;
                         loveText.setTextColor(mContext.getResources().getColor(R.color.light_black));
-                        loveText.setTypeface(medium);
-
                     }
-
                 }
             }).execute(mAccessToken,mType,mid);
         }else {
@@ -103,7 +96,6 @@ public class LoveListner implements View.OnClickListener{
                         isLoved = true;
                         mLove = null;
                         loveText.setTextColor(mContext.getResources().getColor(R.color.light_gray));
-                        loveText.setTypeface(regular);
                     }
                 }
             }).execute(mAccessToken,mLove.getId());

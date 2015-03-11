@@ -211,8 +211,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
     public List<Day> selectBeforeTenDay(Long start) throws SQLException {
         Dao<Day,Long> dayDao = getDayDao();
-        Date date = new LocalDateTime(start).minusDays(10).toDate();
-        return dayDao.queryBuilder().orderBy("date",false).where().ge("date", date.getTime()).and().lt("date", start).query();
+        return dayDao.query(dayDao.queryBuilder().orderBy("date",false).limit(10L).where().lt("date", start).prepare());
     }
     public List<Position> selectPositionByDayId(Long dayId) throws SQLException{
         Dao<Position,Long> positionDao = getPositionDao();

@@ -85,8 +85,8 @@ public class DayAdapter extends BaseAdapter {
         TextView placeTime = (TextView) view.findViewById(R.id.placeTime);
         TextView photoCount = (TextView) view.findViewById(R.id.photoCount);
         ImageView placeIcon = (ImageView) view.findViewById(R.id.placeIcon);
-        placeTime.setText(HasBeenDate.convertTime(position.getStartTime(), position.getEndTime()));
-        photoCount.setText(position.getPhotoList().size()+" photos");
+        placeTime.setText(HasBeenDate.convertTime(position.getStartTime(), position.getEndTime(),mContext));
+        photoCount.setText(mContext.getString(R.string.photo_count,position.getPhotoList().size()));
         if(isMine) {
             if (index == 0)
                 placeIcon.setOnClickListener(new PlaceIconClick(index, position.getId()));
@@ -159,7 +159,7 @@ public class DayAdapter extends BaseAdapter {
                                    mergePosition(index);
                                    notifyDataSetChanged();
                                 }else {
-                                    Toast.makeText(mContext,"오류가 발생하였습니다.",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(mContext,mContext.getString(R.string.common_error),Toast.LENGTH_LONG).show();
                                 }
                                 dialog.dismiss();
                             }

@@ -279,8 +279,8 @@ public class ProfileView extends ActionBarActivity {
         if(mUser.getCoverPhoto()!=null) Glide.with(this).load(mUser.getCoverPhoto().getLargeUrl()).placeholder(R.drawable.placeholder1).into(coverImage);
         else Glide.with(this).load(R.drawable.coverholder).into(coverImage);
         Glide.with(this).load(mUser.getImageUrl()).transform(new CircleTransform(this)).into(profileImage);
-        profileName.setText(Util.parseName(mUser, 0));
-        followStatus.setText(mUser.getFollowerCount() + " Follower · " + mUser.getFollowingCount() + " Following");
+        profileName.setText(Util.parseName(mUser, this));
+        followStatus.setText(getString(R.string.follow_status,mUser.getFollowerCount(),mUser.getFollowingCount()));
         followStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

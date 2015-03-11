@@ -29,9 +29,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:gravity="center_vertical"
-                android:text=" Commented on day trip"
+                android:text="@string/comment_photo"
                 android:id="@+id/newsfeedReason"
-                android:textSize="13sp"
+                android:textSize="12dp"
                 android:textColor="@color/light_black"
                 android:layout_height="match_parent" />
         </LinearLayout>
@@ -102,7 +102,7 @@
                         android:textSize="13dp"
                         android:textStyle="bold"
                         android:id="@+id/loveText"
-                        android:text="Like"
+                        android:text="@string/love"
                         android:textColor="@color/light_gray" />
                 </LinearLayout>
 
@@ -123,7 +123,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
                         android:textStyle="bold"
-                        android:text="Comment"
+                        android:text="@string/comment"
                         android:textSize="13dp"
                         android:textColor="@color/light_gray" />
                 </LinearLayout>
@@ -145,7 +145,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
                         android:textStyle="bold"
-                        android:text="Share"
+                        android:text="@string/share"
                         android:textSize="13dp"
                         android:textColor="@color/light_gray" />
                 </LinearLayout>

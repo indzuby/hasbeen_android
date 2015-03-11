@@ -158,7 +158,7 @@ public class MapActivity extends ActionBarActivity implements OnMapReadyCallback
         TextView placeName = (TextView) findViewById(R.id.placeName);
         TextView time = (TextView) findViewById(R.id.time);
         placeName.setText(position.getPlace().getName());
-        time.setText(HasBeenDate.convertTime(position.getStartTime(),position.getEndTime()));
+        time.setText(HasBeenDate.convertTime(position.getStartTime(),position.getEndTime(),this));
     }
     public void selectMarker(String snippet) {
 

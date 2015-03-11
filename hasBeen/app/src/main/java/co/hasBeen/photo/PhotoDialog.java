@@ -70,11 +70,8 @@ public class PhotoDialog extends Dialog{
         mCoverPhoto = (TextView) findViewById(R.id.coverPhoto);
         if(isReport) {
             mCoverPhoto.setVisibility(View.GONE);
-            mRemoveButton.setText("Report this photo");
-            mEditButton.setText("Share this photo");
-        }else {
-            mRemoveButton.setText("Remove this photo");
-            mEditButton.setText("Edit this photo");
+            mRemoveButton.setText(getContext().getString(R.string.report_photo));
+            mEditButton.setText(getContext().getString(R.string.share_photo));
         }
     }
 }

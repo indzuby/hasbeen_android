@@ -2,32 +2,32 @@
 <RelativeLayout
     android:background="@color/theme_white"
     android:layout_width="match_parent"
-    android:paddingTop="16dp"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp"
     android:paddingBottom="12dp"
     android:id="@+id/descriptionBox"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditText
+        android:layout_marginTop="14dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColorHint="@color/light_gray2"
         android:id="@+id/title"
         android:singleLine="true"
-        android:layout_marginTop="-2dp"
         android:focusable="false"
         android:background="@drawable/description_selector"
         android:focusableInTouchMode="false"
-        android:hint="write your title"
+        android:hint="@string/title_hint"
         android:textStyle="bold"
         android:textColor="@color/light_black"
+        android:layout_toLeftOf="@+id/moreVert"
         android:textSize="14sp"
         />
 
     <ImageView
         android:layout_width="wrap_content"
+        android:padding="16dp"
         android:visibility="gone"
         android:id="@id/moreVert"
         android:src="@drawable/newsfeed_more"
@@ -43,7 +43,7 @@
         android:background="@drawable/description_selector"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:hint="write your memo"
+        android:hint="@string/description_hint"
         android:id="@+id/description"
         android:layout_below="@+id/title"
         android:textColor="@color/light_black"

@@ -18,7 +18,7 @@
             android:id="@+id/dayButton"
             android:layout_gravity="center"
             android:textStyle="bold"
-            android:text="DAY"
+            android:text="@string/day"
             android:textColor="@color/theme_color"
             android:layout_height="match_parent"/>
         <View
@@ -37,7 +37,7 @@
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_gravity="center"
-            android:text="PHOTO"
+            android:text="@string/photo"
             android:textColor="@color/light_gray"
             android:layout_height="match_parent"/>
 
@@ -83,7 +83,7 @@
                 android:singleLine="true"
                 android:layout_gravity="center_vertical"
                 android:background="@color/theme_white"
-                android:hint="Search for trips, photos, people..."
+                android:hint="@string/search_hint"
                 />
             </LinearLayout>
         <ImageView

@@ -63,7 +63,7 @@
                         android:textSize="12sp"
                         android:textColor="@color/light_gray2"
                         android:layout_alignParentRight="true"
-                        android:text="8 photos"
+                        android:text="@string/photo_count"
                         android:layout_height="wrap_content" />
                 </RelativeLayout>
             </LinearLayout>

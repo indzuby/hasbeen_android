@@ -53,8 +53,8 @@ public class DayDialog extends Dialog{
         mRemoveButton = (TextView) findViewById(R.id.removeDay);
         mEditButton = (TextView) findViewById(R.id.editDay);
         if(isReport) {
-            mRemoveButton.setText("Report this day trip");
-            mEditButton.setText("Share this day trip");
+            mRemoveButton.setText(getContext().getString(R.string.report_day));
+            mEditButton.setText(getContext().getString(R.string.share_day));
         }
     }
 }

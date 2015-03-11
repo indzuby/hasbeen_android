@@ -182,7 +182,7 @@ public class CommentView extends ActionBarActivity {
         View mCustomActionBar = mInflater.inflate(R.layout.action_bar_place, null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         TextView titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
-        titleView.setText("Comments");
+        titleView.setText(getString(R.string.action_bar_comment_title));
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,13 +204,13 @@ public class CommentView extends ActionBarActivity {
         TextView contents = (TextView) commentView.findViewById(R.id.contents);
         TextView commentTime = (TextView) commentView.findViewById(R.id.commentTime);
         contents.setText(comment.getContents());
-        commentTime.setText(HasBeenDate.getGapTime(comment.getCreatedTime()));
+        commentTime.setText(HasBeenDate.getGapTime(comment.getCreatedTime(),context));
         ImageView profileImage = (ImageView) commentView.findViewById(R.id.profileImage);
         TextView profileName = (TextView) commentView.findViewById(R.id.profileName);
         Glide.with(context).load(comment.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(context)).into(profileImage);
         profileImage.setOnClickListener(new ProfileClickListner(context,comment.getUser().getId()));
         profileName.setOnClickListener(new ProfileClickListner(context, comment.getUser().getId()));
-        profileName.setText(Util.parseName(comment.getUser(), 0));
+        profileName.setText(Util.parseName(comment.getUser(),context));
         return commentView;
     }
 }

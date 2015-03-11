@@ -19,8 +19,8 @@ import java.util.List;
 import co.hasBeen.R;
 import co.hasBeen.day.DayView;
 import co.hasBeen.model.api.Alarm;
-import co.hasBeen.model.api.User;
 import co.hasBeen.model.api.Photo;
+import co.hasBeen.model.api.User;
 import co.hasBeen.photo.PhotoView;
 import co.hasBeen.profile.ProfileClickListner;
 import co.hasBeen.profile.ProfileView;
@@ -72,7 +72,7 @@ public class AlarmAdapter extends BaseAdapter {
         profileImage.setOnClickListener(new ProfileClickListner(mContext, alarm.getUser().getId()));
         TextView description = (TextView) view.findViewById(R.id.description);
         TextView time = (TextView) view.findViewById(R.id.time);
-        time.setText(HasBeenDate.getGapTime(alarm.getCreatedTime()));
+        time.setText(HasBeenDate.getGapTime(alarm.getCreatedTime(),mContext));
         Glide.with(mContext).load(alarm.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(mContext)).into(profileImage);
         description.setText(getDescription(alarm));
         LinearLayout alarmBox = (LinearLayout) view.findViewById(R.id.alarmBox);
@@ -141,25 +141,19 @@ public class AlarmAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.alarm_photo, null);
             ImageView image = (ImageView) view.findViewById(R.id.photo);
             Glide.with(mContext).load(alarm.getPhoto().getSmallUrl()).into(image);
-        } else if(type== Alarm.Type.FOLLOW){
-            User toUser = alarm.getToUser();
-            view = inflater.inflate(R.layout.alarm_follow, null);
-            ImageView profileImage = (ImageView) view.findViewById(R.id.profileImage);
-            TextView name = (TextView) view.findViewById(R.id.name);
-            TextView socialStatus = (TextView) view.findViewById(R.id.socailStatus);
-            Glide.with(mContext).load(toUser.getImageUrl()).asBitmap().transform(new CircleTransform(mContext)).into(profileImage);
-            name.setText(Util.parseName(toUser, 0));
-            socialStatus.setText(toUser.getFollowerCount() + " Follower · " + toUser.getFollowingCount() + " Following");
-            if(mTab==YOU) view.setVisibility(View.GONE);
         }else {
             User toUser = alarm.getUser();
+            if(type== Alarm.Type.FOLLOW)
+                toUser = alarm.getToUser();
             view = inflater.inflate(R.layout.alarm_follow, null);
             ImageView profileImage = (ImageView) view.findViewById(R.id.profileImage);
             TextView name = (TextView) view.findViewById(R.id.name);
             TextView socialStatus = (TextView) view.findViewById(R.id.socailStatus);
             Glide.with(mContext).load(toUser.getImageUrl()).asBitmap().transform(new CircleTransform(mContext)).into(profileImage);
-            name.setText(Util.parseName(toUser, 0));
-            socialStatus.setText(toUser.getFollowerCount() + " Follower · " + toUser.getFollowingCount() + " Following");
+            name.setText(Util.parseName(toUser,mContext));
+            String socialString = mContext.getString(R.string.follow_status,toUser.getFollowerCount(),toUser.getFollowingCount());
+            socialStatus.setText(socialString);
+            if(mTab==YOU) view.setVisibility(View.GONE);
         }
         return view;
     }
@@ -168,30 +162,33 @@ public class AlarmAdapter extends BaseAdapter {
         Alarm.Type type = alarm.getType();
         Spanned description = null;
         String toUser="";
-        if(type != Alarm.Type.FB_FRIEND)
-            toUser = Util.parseName(alarm.getToUser(), 0) +"</b>";
-        if(type != Alarm.Type.FOLLOW)
-            toUser +="'s";
-        if(mTab == YOU) {
-            toUser = "You</b>";
+        if(type != Alarm.Type.FB_FRIEND) {
+            toUser = Util.parseName(alarm.getToUser(), mContext);
             if(type != Alarm.Type.FOLLOW)
-                toUser = "Your<b>";
+                toUser += mContext.getString(R.string.possessive);
         }
+        if(mTab == YOU) {
+            toUser = mContext.getString(R.string.you_user);
+            if(type != Alarm.Type.FOLLOW)
+                toUser = mContext.getString(R.string.your_user);
+        }
+        String temp="";
         if (type == Alarm.Type.PHOTO_COMMENT) {
-            description = Html.fromHtml("<b>" + Util.parseName(alarm.getUser(), 0) + "</b> " + "commented <b>" + toUser + " photo.");
+            temp = mContext.getString(R.string.commented_photo_alarm, Util.parseName(alarm.getUser(),mContext) ,toUser);
         } else if (type == Alarm.Type.PHOTO_LOVE) {
-            description = Html.fromHtml("<b>" + Util.parseName(alarm.getUser(), 0) + "</b> " + "liked <b>" + toUser + " photo.");
+            temp = mContext.getString(R.string.loved_photo_alarm, Util.parseName(alarm.getUser(),mContext) ,toUser);
         } else if (type == Alarm.Type.DAY_COMMENT) {
-            description = Html.fromHtml("<b>" + Util.parseName(alarm.getUser(), 0) + "</b> " + "commented <b>" + toUser + " day trip.");
+            temp = mContext.getString(R.string.commented_day_alarm, Util.parseName(alarm.getUser(),mContext) ,toUser);
         } else if (type == Alarm.Type.DAY_LOVE) {
-            description = Html.fromHtml("<b>" + Util.parseName(alarm.getUser(), 0) + "</b> " + "liked <b>" + toUser + " day trip.");
+            temp = mContext.getString(R.string.loved_day_alarm, Util.parseName(alarm.getUser(),mContext) ,toUser);
         } else if (type == Alarm.Type.DAY_POST) {
-            description = Html.fromHtml("<b>" + Util.parseName(alarm.getUser(), 0) + "</b> " + "uploaded new trip.");
+            temp = mContext.getString(R.string.post_day_alarm, Util.parseName(alarm.getUser(),mContext));
         } else if (type == Alarm.Type.FOLLOW) {
-            description = Html.fromHtml("<b>" + Util.parseName(alarm.getUser(), 0) + "</b> " + "followed <b>" + toUser + "</b>.");
+            temp = mContext.getString(R.string.following_alarm, Util.parseName(alarm.getUser(),mContext) ,toUser);
         } else if (type == Alarm.Type.FB_FRIEND) {
-            description = Html.fromHtml("Facebook friend <b>" + Util.parseName(alarm.getUser(), 0) + "</b> " + "sign up <b>hasBeen</b>.");
+            temp = mContext.getString(R.string.account_facebook_friend_alarm, Util.parseName(alarm.getUser(),mContext));
         }
+        description = Html.fromHtml(temp);
         return description;
     }
 }

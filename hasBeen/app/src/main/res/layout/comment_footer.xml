@@ -27,7 +27,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:layout_toLeftOf="@+id/send"
-            android:hint="Write a comment...">
+            android:hint="@string/write_comment">
             </EditText>
         <ImageView
             android:layout_width="32dp"

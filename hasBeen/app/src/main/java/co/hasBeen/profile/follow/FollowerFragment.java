@@ -42,7 +42,7 @@ public class FollowerFragment extends Fragment {
         }
     };
     protected void initFollower() {
-        mCount.setText(mFollowers.size() + " followers");
+        mCount.setText(mFollowers.size()+" " + getString(R.string.follower));
 
         FollowerAdapter followerAdapter = new FollowerAdapter(mFollowers, getActivity());
         mList.setAdapter(followerAdapter);

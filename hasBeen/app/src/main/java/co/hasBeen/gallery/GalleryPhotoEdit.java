@@ -67,13 +67,13 @@ public class GalleryPhotoEdit extends Activity {
                         try {
                             database.updatePhoto(mPhoto);
                             setResult(RESULT_OK);
-                            Toast.makeText(getBaseContext(), "Complete written", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getBaseContext(), getString(R.string.description_ok), Toast.LENGTH_LONG).show();
                             finish();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     } else {
-                        Toast.makeText(getBaseContext(), "Letters can range from 2 to 255 characters.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getBaseContext(), getString(R.string.description_size_error), Toast.LENGTH_LONG).show();
                     }
                 }
             }

@@ -54,14 +54,14 @@
             android:textColor="@color/theme_white"
             android:lineSpacingExtra="5dp"
             android:textColorHint="@color/list_background_pressed"
-            android:hint="Write description...."
+            android:hint="@string/description_hint"
             android:layout_height="wrap_content" />
         <TextView
             android:layout_width="match_parent"
             android:textSize="14sp"
             android:id="@+id/moreDescription"
             android:textColor="@color/light_gray2"
-            android:text="See more description"
+            android:text="@string/see_more_description"
             android:layout_height="wrap_content" />
         </LinearLayout>
 </RelativeLayout>

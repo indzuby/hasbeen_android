@@ -122,9 +122,9 @@ public class Day {
     public Day() {
     }
     User user;
-    int commentCount;
-    int loveCount;
-    int shareCount;
+    Integer commentCount;
+    Integer loveCount;
+    Integer shareCount;
     int itineraryIndex;
     Place mainPlace;
     User following;
@@ -150,7 +150,7 @@ public class Day {
         this.createdTime = createdTime;
     }
 
-    public int getCommentCount() {
+    public Integer getCommentCount() {
         return commentCount;
     }
 
@@ -158,7 +158,7 @@ public class Day {
         this.commentCount = commentCount;
     }
 
-    public int getLoveCount() {
+    public Integer getLoveCount() {
         return loveCount;
     }
 
@@ -166,7 +166,7 @@ public class Day {
         this.loveCount = loveCount;
     }
 
-    public int getShareCount() {
+    public Integer getShareCount() {
         return shareCount;
     }
 

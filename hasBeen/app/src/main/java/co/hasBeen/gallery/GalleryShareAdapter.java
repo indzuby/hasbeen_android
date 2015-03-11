@@ -62,7 +62,7 @@ public class GalleryShareAdapter extends BaseAdapter{
         TextView areaView = (TextView) view.findViewById(R.id.placeName);
         GridView gridView = (GridView) view.findViewById(R.id.gridView);
 
-        timeView.setText(HasBeenDate.convertTime(position.getStartTime(), position.getEndTime()));
+        timeView.setText(HasBeenDate.convertTime(position.getStartTime(), position.getEndTime(),mContext));
         try{
             areaView.setText(database.selectPlaceNameByPlaceId(position.getPlaceId()));
             List<Photo> photos = position.getPhotoList();

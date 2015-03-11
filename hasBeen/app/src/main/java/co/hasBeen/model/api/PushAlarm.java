@@ -1,5 +1,8 @@
 package co.hasBeen.model.api;
 
+import android.content.Context;
+
+import co.hasBeen.R;
 import co.hasBeen.utils.Util;
 
 /**
@@ -37,15 +40,12 @@ public class PushAlarm {
         return userImageUrl;
     }
 
-    public String getMessage(){
-        String msg = Util.parseName(firstName,lastName,0)+" ";
-        if(action.equalsIgnoreCase("comment")) {
-            msg+="commented ";
-        }
-        if(resource.equalsIgnoreCase("photo")) {
-            msg += "your photo";
-        }else if(resource.equalsIgnoreCase("day")){
-            msg += "your day trip";
+    public String getMessage(Context context){
+        String msg = Util.parseName(firstName,lastName,context);
+        if(action.equalsIgnoreCase("comment") && resource.equalsIgnoreCase("photo")) {
+            msg+=context.getString(R.string.commented_photo_alarm,msg,context.getString(R.string.you_user));
+        }else if(action.equalsIgnoreCase("comment") && resource.equalsIgnoreCase("day")) {
+            msg+=context.getString(R.string.commented_day_alarm,msg,context.getString(R.string.you_user));
         }
         return msg;
     }

@@ -31,11 +31,11 @@ import co.hasBeen.comment.CommentAsyncTask;
 import co.hasBeen.comment.CommentView;
 import co.hasBeen.comment.EnterCommentListner;
 import co.hasBeen.comment.WriteCommentAsyncTask;
-import co.hasBeen.loved.LoveListner;
+import co.hasBeen.social.LoveListner;
 import co.hasBeen.model.api.Comment;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.profile.ProfileClickListner;
-import co.hasBeen.report.ReportAsyncTask;
+import co.hasBeen.report.ReportListner;
 import co.hasBeen.social.ShareListner;
 import co.hasBeen.utils.CircleTransform;
 import co.hasBeen.utils.HasBeenDate;
@@ -102,12 +102,12 @@ public class PhotoView extends ActionBarActivity {
         mSocialAction = (TextView) findViewById(R.id.socialAction);
         Glide.with(this).load(mPhoto.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).placeholder(R.drawable.placeholder1).into(profileImage);
         Log.i(TAG, mPhoto.getPlaceName());
-        profileName.setText(Util.parseName(mPhoto.getUser(), 0));
+        profileName.setText(Util.parseName(mPhoto.getUser(), this));
         placeName.setText(mPhoto.getPlaceName());
         date.setText(HasBeenDate.convertDate(mPhoto.getTakenTime()));
         mDescription.setText(mPhoto.getDescription());
         findViewById(R.id.title).setVisibility(View.GONE);
-        mSocialAction.setText(mPhoto.getLoveCount() + " Likes · " + mPhoto.getCommentCount() + " Commnents · " + mPhoto.getShareCount() + " Shared");
+        mSocialAction.setText(getString(R.string.social_status,mPhoto.getLoveCount(),mPhoto.getCommentCount(),mPhoto.getShareCount()));;
         ImageView imageView = (ImageView) findViewById(R.id.photo);
         Glide.with(this).load(mPhoto.getLargeUrl()).placeholder(R.drawable.placeholder1).into(imageView);
         profileImage.setOnClickListener(new ProfileClickListner(this, mPhoto.getUser().getId()));
@@ -125,8 +125,7 @@ public class PhotoView extends ActionBarActivity {
         }
         loveButton.setOnClickListener(new LoveListner(this, mPhoto, "photos", mSocialAction));
         LinearLayout shareButton = (LinearLayout) findViewById(R.id.shareButton);
-        String url = Session.WEP_DOMAIN+"photos/"+mPhoto.getId();
-        shareButton.setOnClickListener(new ShareListner(this,url));
+        shareButton.setOnClickListener(new ShareListner(this,"photos",mPhoto.getId(),mPhoto.getLoveCount(),mPhoto.getCommentCount(),mPhoto.getShareCount(),mSocialAction));
 
 
     }
@@ -154,7 +153,6 @@ public class PhotoView extends ActionBarActivity {
                             Collections.reverse(commentList);
                             for (Comment comment : commentList) {
                                 commentBox.addView(CommentView.makeComment(getBaseContext(), comment), 2);
-                                mSocialAction.setText(mPhoto.getLoveCount() + " Likes · " + mPhoto.getCommentCount() + " Commnents · " + mPhoto.getShareCount() + " Shared");
                                 mViewCommentCount++;
                             }
 
@@ -190,7 +188,7 @@ public class PhotoView extends ActionBarActivity {
                     flag = true;
                     String contents = mEnterComment.getText().toString();
                     mEnterComment.setText("");
-                    Toast.makeText(getBaseContext(), "Complete written", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), getString(R.string.description_ok), Toast.LENGTH_LONG).show();
                     new WriteCommentAsyncTask(new Handler(Looper.getMainLooper()) {
                         @Override
                         public void handleMessage(Message msg) {
@@ -201,7 +199,7 @@ public class PhotoView extends ActionBarActivity {
                                 commentBox.addView(CommentView.makeComment(getBaseContext(), comment));
                                 mTotalCommentCount++;
                                 mPhoto.setCommentCount(mTotalCommentCount);
-                                mSocialAction.setText(mPhoto.getLoveCount() + " Likes · " + mPhoto.getCommentCount() + " Commnents · " + mPhoto.getShareCount() + " Shared");
+                                mSocialAction.setText(getString(R.string.social_status,mPhoto.getLoveCount(),mPhoto.getCommentCount(),mPhoto.getShareCount()));
                                 mViewCommentCount++;
                             }
                         }
@@ -255,7 +253,7 @@ public class PhotoView extends ActionBarActivity {
             TextView shareCount = (TextView) nearByItem.findViewById(R.id.shareCount);
 
             Glide.with(this).load(photo.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(image);
-            name.setText(Util.parseName(photo.getUser(), 0));
+            name.setText(Util.parseName(photo.getUser(), this));
             Glide.with(this).load(photo.getMediumUrl()).into(nearPhoto);
             description.setText(photo.getPlaceName());
             likeCount.setText(photo.getLoveCount() + "");
@@ -296,7 +294,7 @@ public class PhotoView extends ActionBarActivity {
         View mCustomActionBar = mInflater.inflate(R.layout.action_bar_place, null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
-        titleView.setText("Photo");
+        titleView.setText(getString(R.string.photo));
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -319,10 +317,10 @@ public class PhotoView extends ActionBarActivity {
                                 public void handleMessage(Message msg) {
                                     super.handleMessage(msg);
                                     if(msg.what==0) {
-                                        Toast.makeText(getBaseContext(),"사진을 삭제했습니다.",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getBaseContext(),getString(R.string.remove_photo_ok),Toast.LENGTH_LONG).show();
                                         finish();
                                     }else {
-                                        Toast.makeText(getBaseContext(),"오류가 발생했습니다.",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
                                     }
                                 }
                             }).execute(mAccessToken,mPhoto.getId());
@@ -349,10 +347,10 @@ public class PhotoView extends ActionBarActivity {
                                 public void handleMessage(Message msg) {
                                     super.handleMessage(msg);
                                     if(msg.what==0) {
-                                        Toast.makeText(getBaseContext(),"커버 사진으로 선택했습니다.",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getBaseContext(),getString(R.string.cover_ok),Toast.LENGTH_LONG).show();
                                         finish();
                                     }else {
-                                        Toast.makeText(getBaseContext(),"오류가 발생했습니다.",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
                                     }
                                 }
                             }).execute(mAccessToken,mPhoto.getId());
@@ -361,25 +359,8 @@ public class PhotoView extends ActionBarActivity {
                     mPhotoDialog = new PhotoDialog(PhotoView.this,cover, del,edit);
                     mPhotoDialog.show();
                 }else {
-                    View.OnClickListener del = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            new ReportAsyncTask(new Handler(Looper.getMainLooper()) {
-                                @Override
-                                public void handleMessage(Message msg) {
-                                    super.handleMessage(msg);
-                                    if(msg.what==0) {
-                                        Toast.makeText(getBaseContext(),"사진을 신고했습니다.",Toast.LENGTH_LONG).show();
-                                        mPhotoDialog.dismiss();
-                                    }else {
-                                        Toast.makeText(getBaseContext(),"오류가 발생했습니다.",Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            }).execute(mAccessToken,"photos/"+mPhoto.getId()+"/report");
-                        }
-                    };
-                    String url = Session.WEP_DOMAIN+"photos/"+mPhoto.getId();
-                    View.OnClickListener edit = new ShareListner(getBaseContext(), url);
+                    View.OnClickListener del = new ReportListner("photos",mPhoto.getId(),getBaseContext(),mPhotoDialog);
+                    View.OnClickListener edit = new ShareListner(getBaseContext(),"photos",mPhoto.getId(),mPhoto.getLoveCount(),mPhoto.getCommentCount(),mPhoto.getShareCount(),mSocialAction);
                     mPhotoDialog = new PhotoDialog(PhotoView.this, del,edit,true);
                     mPhotoDialog.show();
                 }
@@ -397,7 +378,7 @@ public class PhotoView extends ActionBarActivity {
         View mCustomActionBar = mInflater.inflate(R.layout.action_bar_default,null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
-        titleView.setText("Edit Photo");
+        titleView.setText(getString(R.string.action_bar_edit_title));
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -419,7 +400,7 @@ public class PhotoView extends ActionBarActivity {
                         if(msg.what==0)
                             backOnEditView(mBeforeDescription);
                         else
-                            Toast.makeText(getBaseContext(),"오류가 발생했습니다.",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
 
                     }
                 }).execute(mAccessToken, mPhoto.getId(),mBeforeDescription);

@@ -52,7 +52,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="-3dp"
-                            android:text="name"
                             android:textColor="@color/theme_white"
                             android:textSize="14sp" />
 
@@ -61,7 +60,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textStyle="bold"
-                            android:text="status"
                             android:textColor="@color/theme_white"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -106,7 +104,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="DAYS"
+                            android:text="@string/day"
                             android:textColor="@color/light_gray"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -137,7 +135,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/light_gray"
-                            android:text="PHOTOS"
+                            android:text="@string/photo"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -167,7 +165,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/light_gray"
-                            android:text="LIKES"
+                            android:text="@string/love"
                             android:textSize="12sp" />
                     </LinearLayout>
                 </RelativeLayout>

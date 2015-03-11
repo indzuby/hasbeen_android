@@ -19,7 +19,7 @@ import co.hasBeen.utils.Util;
  * Created by 주현 on 2015-03-02.
  */
 public class TakeStaticMap extends AsyncTask<Object, Void, Bitmap> {
-    final static String MAP_URL = "http://maps.googleapis.com/maps/api/staticmap?size=480x240&scale=2&zoom=14&markers=icon:https://hasbeen.blob.core.windows.net/common/marker.png%7C";
+    final static String MAP_URL = "http://maps.googleapis.com/maps/api/staticmap?size=480x240&scale=2&zoom=14&markers=icon:http://hasbeen.blob.core.windows.net/common/marker.png%7C";
     Handler mHandler;
     public TakeStaticMap(Handler mHandler) {
         this.mHandler = mHandler;

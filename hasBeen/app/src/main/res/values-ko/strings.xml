@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--액션바-->
+    <string name="action_bar_share_title"> 공유하기 </string>
+    <string name="action_bar_edit_title"> 수정하기 </string>
+    <string name="action_bar_setting_title"> 설정 </string>
+    <string name="action_bar_comment_title"> 댓글 </string>
+    <string name="action_bar_follow_title"> 팔로워 · 팔로잉 </string>
+    <string name="action_bar_place_title"> 장소 선택 </string>
+    <string name="action_bar_upload_title"> 업로드 </string>
+    <string name="action_bar_done">확인</string>
+    <!--로그인,회원가입-->
+    <string name="login_email"> 로그인</string>
+    <string name="login_facebook"> facebook으로 로그인</string>
+    <string name="first_name">이름</string>
+    <string name="signup_email">가입하기</string>
+    <string name="dont_have_account">계정이 없으신가요? </string>
+    <string name="already_account">계정이 이미 있으신가요? </string>
+    <string name="sign_up">가입하기</string>
+    <string name="last_name">성</string>
+    <!--뉴스피드-->
+    <string name="no_newsfeed">뉴스피드에 표시할 게시물이 없습니다.\n여행기를 둘러보거나 친구들을 팔로우하세요.</string>
+    <string name="find_trip">여행 둘러보기.</string>
+    <string name="your_facebook_friend_count">당신의 페이스북 친구 %1$d명이 \nhasBeen을 이용중입니다.</string>
+    <string name="show_all_facebook_friend">%1$d명의 친구들 모두 보기.</string>
+    <string name="comment_day_trip">님이 여행에 댓글을 남겼습니다.</string>
+    <string name="love_day_trip">님이 여행을 좋아했습니다.</string>
+    <string name="post_day_trip">님이 여행을 포스팅했습니다.</string>
+    <string name="love_photo">님이 사진을 좋아했습니다.</string>
+    <string name="comment_photo">님이 사진에 댓글을 남겼습니다.</string>
+    <string name="title_hint">제목을 남기세요.</string>
+    <string name="description_hint">메모를 남기세요.</string>
+    <string name="love">좋아요</string>
+    <string name="comment">댓글 달기</string>
+    <string name="share">공유하기</string>
+    <string name="report_day">여행 신고</string>
+    <string name="share_day">여행 공유</string>
+    <string name="social_status">%1$d 좋아요 · %2$d 댓글 · %3$d 공유</string>
+    <!--여행기-->
+    <string name="photo_count">%d 장</string>
+    <string name="total_photo_count">총 %d 장</string>
+    <string name="write_comment">댓글 달기</string>
+    <string name="recommedation">흥미로운 여행을 추천해드립니다.</string>
+    <string name="remove_day">여행 삭제</string>
+    <string name="edit_day">여행 수정</string>
+    <string name="change_place">장소 바꾸기</string>
+    <string name="merge_place">위 장소와 합치기</string>
+    <string name="choose_trip">여행기 선택하기</string>
+    <string name="uploading">업로드 중..</string>
+    <string name="uploading_count">%1$d/%2$d 장</string>
+    <!--사진-->
+    <string name="near_by">근처 사진</string>
+    <string name="remove_photo">사진 삭제</string>
+    <string name="edit_photo">사진 수정</string>
+    <string name="select_cover_photo">커버 사진으로 바꾸기</string>
+    <string name="report_photo">사진 신고</string>
+    <string name="share_photo">사진 공유</string>
+    <string name="see_more_description">메모 더보기</string>
+    <!--댓글-->
+    <string name="remove_comment">댓글 삭제</string>
+    <string name="edit_comment">댓글 수정</string>
+    <string name="report_comment">댓글 신고</string>
+    <string name="more_comment">%d개 댓글 더보기</string>
+    <string name="load_comment">댓글 더보기</string>
+
+    <!--시간-->
+    <string name="hour_ago">%1$d시간 전</string>
+    <string name="miniutes_ago">%1$d분 전</string>
+    <string name="just_now">방금 전</string>
+    <string name="day_ago">E, a h:mm</string>
+    <string name="week_ago">%1$d 주 전</string>
+    <string name="month_ago">MMMM dd, yyyy</string>
+    <string name="photo_time">a hh:mm</string>
+
+    <!--이름-->
+    <string name="name">%2$s %1$s</string>
+    <!--검색-->
+    <string name="day">여행</string>
+    <string name="photo">사진</string>
+    <string name="search_hint">여행,사진,사람을 검색할 수 있습니다.</string>
+    <!--겔러리-->
+    <string name="gallery_default_1">위치정보(또는 GPS 태그 등)기능이 해제되어 있거나\n기기내에 위치정보를 포함한 사진이 없습니다.</string>
+    <string name="gallery_default_2">카메라 설정에서 위치정보(또는 GPS 태그 등)를\n설정한 후 새로운 사진을 촬영해주세요.</string>
+    <string name="place">장소</string>
+    <string name="non_load_status">장소 %1$d+ · 사진 %2$d </string>
+    <string name="load_status">장소 %1$d · 사진 %2$d </string>
+    <!--알람-->
+    <string name="news">뉴스</string>
+    <string name="you">나</string>
+    <string name="commented_photo_alarm">&lt;b&gt;%1$s&lt;/b&gt;님이 &lt;b&gt;%2$s&lt;/b&gt; 사진에 댓글을 남겼습니다.</string>
+    <string name="loved_photo_alarm">&lt;b&gt;%1$s&lt;/b&gt;님이 &lt;b&gt;%2$s&lt;/b&gt; 사진을 좋아합니다.</string>
+    <string name="commented_day_alarm">&lt;b&gt;%1$s&lt;/b&gt;님이 &lt;b&gt;%2$s&lt;/b&gt; 여행에 댓글을 남겼습니다.</string>
+    <string name="loved_day_alarm">&lt;b&gt;%1$s&lt;/b&gt;님이 &lt;b&gt;%2$s&lt;/b&gt; 여행을 좋아합니다.</string>
+    <string name="post_day_alarm">&lt;b&gt;%1$s&lt;/b&gt;님이 새로운 여행을 포스팅했습니다.</string>
+    <string name="following_alarm">&lt;b&gt;%1$s&lt;/b&gt;님이 &lt;b&gt;%2$s&lt;/b&gt;님을 팔로잉했습니다.</string>
+    <string name="account_facebook_friend_alarm">페이스북 친구 &lt;b&gt;%1$d&lt;/b&gt;님이 &lt;b&gt;hasBeen&lt;/b&gt;에 가입했습니다.</string>
+    <string name="you_user">회원</string>
+    <string name="your_user">회원</string>
+    <string name="possessive">님</string>
+    <!--프로필-->
+    <string name="follower">팔로워</string>
+    <string name="following">팔로잉</string>
+    <string name="follow_status">%1$d 팔로워 · %2$d 팔로잉</string>
+
+    <!--에러-->
+    <string name="internet_error">인터넷 연결을 확인하세요.</string>
+    <string name="common_error">오류가 발생했습니다.</string>
+    <string name="password_size_error">비밀번호는 8글자이상 50글자 이하여아합니다.</string>
+    <string name="description_size_error">메모는 2글자이상 255글자 이하여야합니다.</string>
+    <string name="title_size_error">제목은 2글자이상 255글자 이하여야합니다.</string>
+    <string name="session_gone">세션이 만료되었습니다 다시 로그인 해주세요.</string>
+    <!--확인-->
+    <string name="sign_up_ok">회원가입 완료, 로그인 해주세요.</string>
+    <string name="report_ok">신고했습니다.</string>
+    <string name="remove_day_ok">여행을 삭제했습니다.</string>
+    <string name="remove_photo_ok">사진을 삭제했습니다.</string>
+    <string name="description_ok">작성 완료</string>
+    <string name="upload_ok">업로드 완료</string>
+    <string name="cover_ok">커버 사진으로 선택했습니다.</string>
+</resources>

@@ -31,14 +31,14 @@ import java.util.List;
 import co.hasBeen.R;
 import co.hasBeen.comment.CommentView;
 import co.hasBeen.comment.EnterCommentListner;
-import co.hasBeen.loved.LoveListner;
+import co.hasBeen.social.LoveListner;
 import co.hasBeen.map.EnterMapLisnter;
 import co.hasBeen.model.api.Comment;
-import co.hasBeen.model.api.User;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Position;
+import co.hasBeen.model.api.User;
 import co.hasBeen.profile.ProfileClickListner;
-import co.hasBeen.report.ReportAsyncTask;
+import co.hasBeen.report.ReportListner;
 import co.hasBeen.social.ShareListner;
 import co.hasBeen.utils.CircleTransform;
 import co.hasBeen.utils.HasBeenDate;
@@ -124,13 +124,13 @@ public class DayView extends ActionBarActivity{
         TextView totalPhoto = (TextView) findViewById(R.id.totalPhoto);
         Glide.with(this).load(mDay.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(profileImage);
         Log.i(TAG, mDay.getMainPlace().getName());
-        profileName.setText(Util.parseName(mDay.getUser(), 0));
+        profileName.setText(Util.parseName(mDay.getUser(), this));
         placeName.setText(Util.convertPlaceName(mPositions));
         date.setText(HasBeenDate.convertDate(mDay.getDate()));
         mDayTitle.setText(mDay.getTitle());
         mDescription.setText(mDay.getDescription());
-        mSocialAction.setText(mDay.getLoveCount()+" Likes · " + mDay.getCommentCount()+" Commnents · "+mDay.getShareCount()+" Shared");
-        totalPhoto.setText("Total " + mDay.getPhotoCount() + " photos");
+        mSocialAction.setText(getString(R.string.social_status,mDay.getLoveCount(),mDay.getCommentCount(),mDay.getShareCount()));
+        totalPhoto.setText(getString(R.string.total_photo_count,mDay.getPhotoCount()));
         profileImage.setOnClickListener(new ProfileClickListner(this, mDay.getUser().getId()));
         profileName.setOnClickListener(new ProfileClickListner(this, mDay.getUser().getId()));
         ImageView map = (ImageView) findViewById(R.id.map);
@@ -159,8 +159,8 @@ public class DayView extends ActionBarActivity{
             loveText.setTextColor(this.getResources().getColor(R.color.light_gray));
         }
         loveButton.setOnClickListener(new LoveListner(this,mDay,"days",mSocialAction));
-        String url = Session.WEP_DOMAIN+"days/"+mDay.getId();
-        shareButton.setOnClickListener(new ShareListner(this, url));
+
+        shareButton.setOnClickListener(new ShareListner(this, "days",mDay.getId(),mDay.getLoveCount(),mDay.getPhotoCount(),mDay.getShareCount(),mSocialAction));
         LinearLayout commentBox = (LinearLayout) findViewById(R.id.commetBox);
         TextView moreComments = (TextView) findViewById(R.id.moreComments);
         List<Comment> comments = mDay.getCommentList();
@@ -169,7 +169,7 @@ public class DayView extends ActionBarActivity{
             commentBox.addView(CommentView.makeComment(this, comment));
         }
         if(mDay.getCommentCount()>3)
-            moreComments.setText(mDay.getCommentCount()-3+" comments more");
+            moreComments.setText(getString(R.string.more_comment,mDay.getCommentCount()-3));
         else {
             moreComments.setVisibility(View.GONE);
         }
@@ -278,10 +278,10 @@ public class DayView extends ActionBarActivity{
                                 public void handleMessage(Message msg) {
                                     super.handleMessage(msg);
                                     if(msg.what==0) {
-                                        Toast.makeText(getBaseContext(),"여행일을 삭제했습니다.",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getBaseContext(),getString(R.string.remove_day_ok),Toast.LENGTH_LONG).show();
                                         finish();
                                     }else {
-                                        Toast.makeText(getBaseContext(),"오류가 발생했습니다.",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
                                     }
                                 }
                             }).execute(mAccessToken,mDay.getId());
@@ -306,25 +306,8 @@ public class DayView extends ActionBarActivity{
                     mDayDialog = new DayDialog(DayView.this, del,edit);
                     mDayDialog.show();
                 }else {
-                    View.OnClickListener del = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            new ReportAsyncTask(new Handler(Looper.getMainLooper()) {
-                                @Override
-                                public void handleMessage(Message msg) {
-                                    super.handleMessage(msg);
-                                    if(msg.what==0) {
-                                        Toast.makeText(getBaseContext(),"여행일을 신고했습니다.",Toast.LENGTH_LONG).show();
-                                        mDayDialog.dismiss();
-                                    }else {
-                                        Toast.makeText(getBaseContext(),"오류가 발생했습니다.",Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            }).execute(mAccessToken,"days/"+mDay.getId()+"/report");
-                        }
-                    };
-                    String url = Session.WEP_DOMAIN+"days/"+mDay.getId();
-                    View.OnClickListener edit = new ShareListner(getBaseContext(), url);
+                    View.OnClickListener del = new ReportListner("days",mDay.getId(),getBaseContext(),mDayDialog);
+                    View.OnClickListener edit = new ShareListner(getBaseContext(), "days",mDay.getId(),mDay.getLoveCount(),mDay.getPhotoCount(),mDay.getShareCount(),mSocialAction);
                     mDayDialog = new DayDialog(DayView.this, del,edit,true);
                     mDayDialog.show();
                 }
@@ -342,7 +325,7 @@ public class DayView extends ActionBarActivity{
         View mCustomActionBar = mInflater.inflate(R.layout.action_bar_default,null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
-        titleView.setText("Edit Day");
+        titleView.setText(getString(R.string.edit_day));
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -365,7 +348,7 @@ public class DayView extends ActionBarActivity{
                         if(msg.what==0)
                             backOnEditView(mBeforeTitle,mBeforeDescription);
                         else
-                            Toast.makeText(getBaseContext(),"오류가 발생했습니다.",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
 
                     }
                 }).execute(mAccessToken, mDay.getId(),mBeforeTitle,mBeforeDescription);
@@ -387,7 +370,7 @@ public class DayView extends ActionBarActivity{
 
         User user = day.getUser();
         placeName.setText(day.getTitle());
-        profileName.setText(Util.parseName(user, 0));
+        profileName.setText(Util.parseName(user, this));
         Glide.with(this).load(user.getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(profileImage);
         date.setText(HasBeenDate.convertDate(day.getDate()));
         Glide.with(this).load(day.getMainPhoto().getMediumUrl()).placeholder(Util.getPlaceHolder(day.getItineraryIndex())).into(mainPhoto);

@@ -66,7 +66,7 @@
             android:id="@+id/emailLoginBtn"
             android:background="@drawable/radius_layout_2"
             android:gravity="center"
-            android:text="Sign in with Email"
+            android:text="@string/login_email"
             android:textColor="@color/theme_white"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -107,7 +107,7 @@
             android:id="@+id/facebookLogin"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            fb:login_text="Sign in with Facebook"
+            fb:login_text="@string/login_facebook"
             />
 
         <RelativeLayout
@@ -125,14 +125,15 @@
                     android:layout_gravity="center"
                     android:textSize="14sp"
                     android:textColor="@color/theme_white"
-                    android:text="Don't have an account? " />
+                    android:text="@string/dont_have_account" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
+                    android:layout_marginLeft="4dp"
                     android:id="@+id/goSignUp"
-                    android:text="Sign up."
+                    android:text="@string/sign_up"
                     android:textColor="@color/theme_color" />
             </LinearLayout>
 

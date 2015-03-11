@@ -1,5 +1,6 @@
 package co.hasBeen.utils;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.joda.time.Days;
@@ -8,6 +9,7 @@ import org.joda.time.LocalDateTime;
 
 import java.util.Date;
 
+import co.hasBeen.R;
 import co.hasBeen.model.api.Photo;
 
 /**
@@ -15,6 +17,7 @@ import co.hasBeen.model.api.Photo;
  */
 public class HasBeenDate {
     String[] month = {"","Jan.","Feb.","Mar.","April.","May","Jun.","Jul.","Aug.","Sep.","Oct.","Nov.","Dec."};
+
     public static boolean isSameDate(Photo beforePhoto,Photo photo) {
         int k = calculateDateRange(beforePhoto.getTakenTime(),photo.getTakenTime());
         return (k==0);
@@ -55,47 +58,48 @@ public class HasBeenDate {
     }
     public static String convertDate(Date date) {
         LocalDate newDate = new LocalDate(date);
-        return newDate.toString("YYYY, MMMMM dd");
+        return newDate.toString("MMMM dd, yyyy");
     }
     public static String convertDate(long timeStamp) {
         Date date = new Date();
         date.setTime(timeStamp);
         return new LocalDate(date).toString("MMMM dd, yyyy");
     }
-    public static String convertTime(Long startTime, Long endTime) {
-        LocalDateTime start = new LocalDateTime(startTime);
-        LocalDateTime end = new LocalDateTime(endTime);
-        if(start.toString("a hh:mm").equals(end.toString("a hh:mm")))
-            return start.toString("a hh : mm");
-        return start.toString("a hh : mm – ")+end.toString("a hh : mm");
+    public static String convertTime(Long startTime, Long endTime,Context context) {
+        String start = new LocalDateTime(startTime).toString(context.getString(R.string.photo_time));
+        String end = new LocalDateTime(endTime).toString(context.getString(R.string.photo_time));
+
+        if(start.equals(end))
+            return start;
+        return start+" – "+end;
     }
     public static boolean isTimeRangeInFive(Long a, Long b){
 
         return Math.abs(a - b) < 1000;
     }
-    public static String getGapTime(Long time) {
+    public static String getGapTime(Long time,Context context) {
         Date currentTime = new Date();
         Date commentTime = new Date(time);
         Log.i("TIME", new Date().getTime() + "");
         Long gap = currentTime.getTime() - commentTime.getTime();
         int dayGap = Days.daysBetween(new LocalDate(commentTime),new LocalDate(currentTime)).getDays();
         if(dayGap<7) {
-            if(dayGap<=1) {
+            if(dayGap<1) {
                 gap = gap/1000;
                 long hour = gap/3600;
                 if(hour>=1)
-                    return hour+" hours ago";
+                    return context.getString(R.string.hour_ago,hour);
                 else {
                     if(gap/60 ==0)
-                        return "Just Now";
-                    return gap / 60 + " minutes ago";
+                        return context.getString(R.string.just_now);
+                    return context.getString(R.string.miniutes_ago,gap / 60);
                 }
             }else
-                return new LocalDateTime(commentTime).toString("E, a h:mm");
+                return new LocalDateTime(commentTime).toString(context.getString(R.string.day_ago));
         }else if(dayGap<28){
-            return (dayGap/7) + " weeks ago";
+            return context.getString(R.string.week_ago, dayGap / 7);
         }else
-            return new LocalDateTime(commentTime).toString("MMMM dd, yyyy");
+            return new LocalDateTime(commentTime).toString(context.getString(R.string.month_ago));
     }
 
 }

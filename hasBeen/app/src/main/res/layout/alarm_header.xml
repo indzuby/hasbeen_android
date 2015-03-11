@@ -32,7 +32,7 @@
             android:textStyle="bold"
             android:id="@+id/news"
             android:layout_centerInParent="true"
-            android:text="NEWS"/>
+            android:text="@string/news"/>
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="0dp"
@@ -56,7 +56,7 @@
             android:textColor="@color/light_gray"
             android:textSize="14sp"
             android:layout_centerInParent="true"
-            android:text="YOU"/>
+            android:text="@string/you"/>
         </RelativeLayout>
 
         </LinearLayout>

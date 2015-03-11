@@ -98,7 +98,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/theme_white"
-                android:hint="Auto Title"
+                android:hint="@string/title_hint"
                 android:paddingBottom="4dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
@@ -125,7 +125,7 @@
                 android:layout_below="@+id/line"
                 android:background="@color/theme_white"
                 android:gravity="top"
-                android:hint="Write a something..."
+                android:hint="@string/description_hint"
                 android:inputType="textMultiLine"
                 android:lineSpacingExtra="4sp"
                 android:paddingBottom="4dp"
@@ -163,7 +163,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="6dp"
                     android:layout_toRightOf="@+id/addTrip"
-                    android:text="Choose your trip"
+                    android:text="@string/choose_trip"
                     android:textColor="@color/light_black"
                     android:textSize="14sp" />
             </LinearLayout>

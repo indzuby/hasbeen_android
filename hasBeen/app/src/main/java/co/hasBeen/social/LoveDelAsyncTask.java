@@ -1,4 +1,4 @@
-package co.hasBeen.loved;
+package co.hasBeen.social;
 
 import android.net.Uri;
 import android.os.AsyncTask;

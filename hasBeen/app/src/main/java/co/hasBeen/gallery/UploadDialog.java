@@ -48,10 +48,9 @@ public class UploadDialog extends Dialog {
     public void setPhotoCount(int count) {
         int percent = (int) (((float) (count+1) / maxCount) * 100)-1;
         progress.setText(percent + "%");
-        photoCount.setText((count+1) + "/" + maxCount + " photos");
+        photoCount.setText(getContext().getString(R.string.uploading_count,count+1,maxCount));
         this.count = count;
     }
-
     private void setLayout() {
         progress = (TextView) findViewById(R.id.progress);
         photoCount = (TextView) findViewById(R.id.photoCount);
