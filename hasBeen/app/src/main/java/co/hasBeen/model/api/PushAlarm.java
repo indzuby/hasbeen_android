@@ -9,19 +9,14 @@ import co.hasBeen.utils.Util;
  * Created by 주현 on 2015-03-10.
  */
 public class PushAlarm {
-    String resource;
-    String action;
     Long id;
     String firstName;
     String lastName;
     String userImageUrl;
+    Alarm.Type type;
 
-    public String getResource() {
-        return resource;
-    }
-
-    public String getAction() {
-        return action;
+    public Alarm.Type getType() {
+        return type;
     }
 
     public Long getId() {
@@ -41,11 +36,16 @@ public class PushAlarm {
     }
 
     public String getMessage(Context context){
-        String msg = Util.parseName(firstName,lastName,context);
-        if(action.equalsIgnoreCase("comment") && resource.equalsIgnoreCase("photo")) {
-            msg+=context.getString(R.string.commented_photo_alarm,msg,context.getString(R.string.you_user));
-        }else if(action.equalsIgnoreCase("comment") && resource.equalsIgnoreCase("day")) {
-            msg+=context.getString(R.string.commented_day_alarm,msg,context.getString(R.string.you_user));
+        String msg = "";
+        if(getType().equals(Alarm.Type.PHOTO_COMMENT)) {
+            msg=context.getString(R.string.commented_photo_push, Util.parseName(firstName, lastName, context),context.getString(R.string.your_user));
+        }else if(getType().equals(Alarm.Type.DAY_COMMENT)) {
+            msg=context.getString(R.string.commented_day_push,Util.parseName(firstName, lastName, context),context.getString(R.string.your_user));
+        }
+        else if(getType().equals(Alarm.Type.PHOTO_LOVE)) {
+            msg=context.getString(R.string.loved_photo_push,Util.parseName(firstName, lastName, context),context.getString(R.string.your_user));
+        }else if(getType().equals(Alarm.Type.DAY_LOVE)) {
+            msg=context.getString(R.string.loved_day_push,Util.parseName(firstName, lastName, context),context.getString(R.string.your_user));
         }
         return msg;
     }

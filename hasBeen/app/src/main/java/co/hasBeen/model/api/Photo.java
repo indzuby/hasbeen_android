@@ -11,9 +11,7 @@ import java.util.List;
  * Created by zuby on 2015-01-09.
  */
 @DatabaseTable(tableName = "photo")
-public class Photo {
-    @DatabaseField(generatedId = true)
-    Long id;
+public class Photo extends Social{
     @DatabaseField
     String title;
     @DatabaseField
@@ -178,14 +176,6 @@ public class Photo {
     public Photo() {
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -251,27 +241,9 @@ public class Photo {
     }
 
     User user;
-    Integer commentCount;
-    Integer loveCount;
 
     public User getUser() {
         return user;
-    }
-
-    public Integer getCommentCount() {
-        return commentCount;
-    }
-
-    public Integer getLoveCount() {
-        return loveCount;
-    }
-
-    public void setLoveCount(int loveCount) {
-        this.loveCount = loveCount;
-    }
-
-    public Integer getShareCount() {
-        return shareCount;
     }
 
     public Day getDay() {
@@ -286,7 +258,6 @@ public class Photo {
         return commentList;
     }
 
-    Integer shareCount;
     Day day;
     Place place;
     List<Comment> commentList;
@@ -302,11 +273,6 @@ public class Photo {
 
     public void setCommentCount(int commentCount) {
         this.commentCount = commentCount;
-    }
-    Loved love;
-
-    public Loved getLove() {
-        return love;
     }
 
     String smallUrl;
@@ -325,9 +291,6 @@ public class Photo {
         return largeUrl;
     }
 
-    public void setLove(Loved love) {
-        this.love = love;
-    }
     Long idFromMobile;
 
     public Long getIdFromMobile() {

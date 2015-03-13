@@ -21,13 +21,12 @@ import java.util.List;
 
 import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
-import co.hasBeen.day.DayView;
+import co.hasBeen.map.pin.DayPin;
+import co.hasBeen.map.pin.PhotoPin;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.model.api.Place;
 import co.hasBeen.model.api.Position;
-import co.hasBeen.model.pin.DayPin;
-import co.hasBeen.model.pin.PhotoPin;
 import co.hasBeen.photo.PhotoView;
 import co.hasBeen.utils.Util;
 
@@ -95,14 +94,7 @@ public class MapRoute {
             boolean flag = false;
             @Override
             public boolean onClusterItemClick(DayPin dayPin) {
-                if(!flag) {
-                    flag = true;
-                    Intent intent = new Intent(mContext, DayView.class);
-                    intent.putExtra("id",dayPin.getDay().getId());
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mContext.startActivity(intent);
-                    flag = false;
-                }
+                new ClusterDayDialog(mContext, dayPin).show();
                 return true;
             }
         });
@@ -112,10 +104,11 @@ public class MapRoute {
                 Log.i("Cluster","click");
                 LatLng location = dayPinCluster.getItems().iterator().next().getPosition();
 //                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, mMap.getCameraPosition().zoom+1));
-                if(mMap.getCameraPosition().zoom+1>=11) {
-
-                }
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, mMap.getCameraPosition().zoom+2),500,null);
+                if(needDialog(mMap.getCameraPosition().zoom,dayPinCluster.getSize())) {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, mMap.getCameraPosition().zoom),500,null);
+                    new ClusterDayDialog(mContext, dayPinCluster.getItems()).show();
+                }else
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, mMap.getCameraPosition().zoom+2),500,null);
                 return true;
             }
         });
@@ -124,8 +117,11 @@ public class MapRoute {
             clusterManager.addItem(new DayPin(day,mContext));
         }
         clusterManager.cluster();
+        LatLng location = new LatLng(days.get(0).getMainPlace().getLat(),days.get(0).getMainPlace().getLon());
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 3));
     }
     public void addMarkerClusterPhoto(List<Photo> photos) {
+        mMap.moveCamera(CameraUpdateFactory.zoomIn());
         mMap.clear();
         ClusterManager<PhotoPin> clusterManager = new ClusterManager<PhotoPin>(mContext,mMap);
         clusterManager.setRenderer(new PhotoMarker(mContext,mMap,clusterManager));
@@ -152,10 +148,11 @@ public class MapRoute {
                 Log.i("Cluster","click");
                 LatLng location = photoPinCluster.getItems().iterator().next().getPosition();
 //                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, mMap.getCameraPosition().zoom+1));
-                if(mMap.getCameraPosition().zoom+1>=11) {
-
-                }
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, mMap.getCameraPosition().zoom+2),500,null);
+                if(needDialog(mMap.getCameraPosition().zoom,photoPinCluster.getSize())) {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, mMap.getCameraPosition().zoom),500,null);
+                    new ClusterPhotoDialog(mContext,photoPinCluster.getItems()).show();
+                }else
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, mMap.getCameraPosition().zoom+2),500,null);
                 return true;
             }
         });
@@ -163,9 +160,15 @@ public class MapRoute {
             clusterManager.addItem(new PhotoPin(photo,mContext));
         }
         clusterManager.cluster();
+        LatLng location = new LatLng(photos.get(0).getLat(),photos.get(0).getLon());
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 3));
 
     }
-
+    protected boolean needDialog(float zoom , int size){
+        if(zoom>=14 || (zoom>=12 && size<=9) || (zoom>=8 && size<=4))
+            return true;
+        return false;
+    }
     public void  displayRoute(LatLng from,LatLng to) {
 //        mMap.addPolyline(new PolylineOptions().add(from, to)).setColor(mContext.getResources().getColor(R.color.theme_color));
         Polyline line = mMap.addPolyline(new PolylineOptions().add(from, to));

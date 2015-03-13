@@ -75,7 +75,7 @@ public class HasBeenDate {
     }
     public static boolean isTimeRangeInFive(Long a, Long b){
 
-        return Math.abs(a - b) < 1000;
+        return Math.abs(a - b) < 500;
     }
     public static String getGapTime(Long time,Context context) {
         Date currentTime = new Date();

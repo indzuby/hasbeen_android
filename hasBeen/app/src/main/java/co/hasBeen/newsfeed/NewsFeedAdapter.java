@@ -93,7 +93,9 @@ public class NewsFeedAdapter extends BaseAdapter {
         TextView date = (TextView) view.findViewById(R.id.date);
         TextView dayTitle = (TextView) view.findViewById(R.id.title);
         TextView dayDescription = (TextView) view.findViewById(R.id.description);
-        final TextView socialAction = (TextView) view.findViewById(R.id.socialAction);
+        final TextView likeCount = (TextView) view.findViewById(R.id.likeCount);
+        final TextView commentCount = (TextView) view.findViewById(R.id.commentCount);
+        final TextView shareCount = (TextView) view.findViewById(R.id.shareCount);
 //        View imageBox = view.findViewById(R.id.imageBox);
 //        ImageView mainImage = (ImageView) imageBox.findViewById(R.id.mainImage);
         FrameLayout imageBox = (FrameLayout) view.findViewById(R.id.imageBox);
@@ -107,18 +109,21 @@ public class NewsFeedAdapter extends BaseAdapter {
 //        date.setText(HasBeenDate.convertDate(feed.getDate()));
         dayTitle.setText(feed.getTitle());
         dayDescription.setText(feed.getDescription());
-        socialAction.setText(mContext.getString(R.string.social_status,feed.getLoveCount(),feed.getCommentCount(),feed.getShareCount()));
+        likeCount.setText(mContext.getString(R.string.like_count,feed.getLoveCount()));
+        commentCount.setText(mContext.getString(R.string.comment_count, feed.getCommentCount()));
+        shareCount.setText(mContext.getString(R.string.share_count,feed.getShareCount()));
+//        socialAction.setText(mContext.getString(R.string.social_status,feed.getLoveCount(),feed.getCommentCount(),feed.getShareCount()));
         Glide.with(mContext).load(feed.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(mContext)).into(profileImage);
 //        Glide.with(mContext).load(feed.getMainPhoto().getMediumUrl()).centerCrop().into(mainImage);
         imageBox.addView(imageLayout);
 
         LinearLayout commentButton = (LinearLayout) view.findViewById(R.id.commentButton);
-        commentButton.setOnClickListener(new EnterCommentListner(mContext, "days", feed.getId(), feed.getCommentCount()));
+        commentButton.setOnClickListener(new EnterCommentListner(mContext, "days", feed,commentCount));
         profileImage.setOnClickListener(new ProfileClickListner(mContext, feed.getUser().getId()));
         profileName.setOnClickListener(new ProfileClickListner(mContext, feed.getUser().getId()));
         LinearLayout loveButton = (LinearLayout) view.findViewById(R.id.loveButton);
         LinearLayout shareButton = (LinearLayout) view.findViewById(R.id.shareButton);
-        shareButton.setOnClickListener(new ShareListner(mContext, "days",feed.getId(),feed.getLoveCount(),feed.getCommentCount(),feed.getShareCount(),socialAction));
+        shareButton.setOnClickListener(new ShareListner(mContext, "days",feed,shareCount));
         ImageView love = (ImageView) loveButton.findViewById(R.id.love);
         TextView loveText = (TextView) loveButton.findViewById(R.id.loveText);
         if (feed.getLove() != null) {
@@ -128,7 +133,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             love.setImageResource(R.drawable.photo_like);
             loveText.setTextColor(mContext.getResources().getColor(R.color.light_gray));
         }
-        loveButton.setOnClickListener(new LoveListner(mContext, feed, "days", socialAction));
+        loveButton.setOnClickListener(new LoveListner(mContext, feed, "days", likeCount));
         date.setText(HasBeenDate.convertDate(feed.getDate()));
         ImageView moreVert = (ImageView) view.findViewById(R.id.moreVert);
         moreVert.setVisibility(View.VISIBLE);
@@ -137,7 +142,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 View.OnClickListener del = new ReportListner("days",feed.getId(),mContext,mDayDialog);
-                View.OnClickListener edit = new ShareListner(mContext, "days",feed.getId(),feed.getLoveCount(),feed.getCommentCount(),feed.getShareCount(),socialAction);
+                View.OnClickListener edit = new ShareListner(mContext, "days",feed,shareCount);
                 mDayDialog = new DayDialog(mContext, del,edit,true);
                 mDayDialog.show();
             }

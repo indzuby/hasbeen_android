@@ -5,11 +5,6 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -25,8 +20,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 import co.hasBeen.model.api.Comment;
+import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
-import co.hasBeen.model.api.Photo;
 
 /**
  * Created by 주현 on 2015-02-06.
@@ -56,26 +51,7 @@ public class WriteCommentAsyncTask extends AsyncTask<Object,Void,Comment> {
                 //Read the server response and attempt to parse it as JSON
                 Reader reader = new InputStreamReader(content);
 
-
-                GsonBuilder gsonBuilder = new GsonBuilder();
-                Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
-                    @Override
-                    public boolean shouldSkipField(FieldAttributes f) {
-                        if(f.getDeclaredClass() == Photo.class){
-                            if(f.getName().equals("day") || f.getName().equals("place"))
-                                return true;
-                        }
-                        if(f.getName().equals("coverPhoto"))
-                            return true;
-                        return false;
-                    }
-
-                    @Override
-                    public boolean shouldSkipClass(Class<?> clazz) {
-                        return false;
-                    }
-                }).create();
-                Comment comment = gson.fromJson(reader, Comment.class);
+                Comment comment = JsonConverter.convertJsonToComment(reader);
                 content.close();
                 return comment;
             }

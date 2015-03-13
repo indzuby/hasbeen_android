@@ -1,6 +1,5 @@
 package co.hasBeen.photo;
 
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,11 +30,11 @@ import co.hasBeen.comment.CommentAsyncTask;
 import co.hasBeen.comment.CommentView;
 import co.hasBeen.comment.EnterCommentListner;
 import co.hasBeen.comment.WriteCommentAsyncTask;
-import co.hasBeen.social.LoveListner;
 import co.hasBeen.model.api.Comment;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.profile.ProfileClickListner;
 import co.hasBeen.report.ReportListner;
+import co.hasBeen.social.LoveListner;
 import co.hasBeen.social.ShareListner;
 import co.hasBeen.utils.CircleTransform;
 import co.hasBeen.utils.HasBeenDate;
@@ -51,7 +50,9 @@ public class PhotoView extends ActionBarActivity {
     Long mPhotoId;
     String mAccessToken;
     int mTotalCommentCount;
-    TextView mSocialAction;
+    TextView mLikeCount;
+    TextView mCommentCount;
+    TextView mShareCount;
     int mViewCommentCount;
     Long lastCommentId;
     PhotoDialog mPhotoDialog;
@@ -99,7 +100,9 @@ public class PhotoView extends ActionBarActivity {
 
         mImm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         mDescription = (EditText) findViewById(R.id.description);
-        mSocialAction = (TextView) findViewById(R.id.socialAction);
+        mLikeCount = (TextView) findViewById(R.id.likeCount);
+        mCommentCount = (TextView) findViewById(R.id.commentCount);
+        mShareCount = (TextView) findViewById(R.id.shareCount);
         Glide.with(this).load(mPhoto.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).placeholder(R.drawable.placeholder1).into(profileImage);
         Log.i(TAG, mPhoto.getPlaceName());
         profileName.setText(Util.parseName(mPhoto.getUser(), this));
@@ -107,7 +110,10 @@ public class PhotoView extends ActionBarActivity {
         date.setText(HasBeenDate.convertDate(mPhoto.getTakenTime()));
         mDescription.setText(mPhoto.getDescription());
         findViewById(R.id.title).setVisibility(View.GONE);
-        mSocialAction.setText(getString(R.string.social_status,mPhoto.getLoveCount(),mPhoto.getCommentCount(),mPhoto.getShareCount()));;
+        mLikeCount.setText(getString(R.string.like_count, mPhoto.getLoveCount()));
+        mCommentCount.setText(getString(R.string.comment_count, mPhoto.getCommentCount()));
+        mShareCount.setText(getString(R.string.share_count,mPhoto.getShareCount()));
+
         ImageView imageView = (ImageView) findViewById(R.id.photo);
         Glide.with(this).load(mPhoto.getLargeUrl()).placeholder(R.drawable.placeholder1).into(imageView);
         profileImage.setOnClickListener(new ProfileClickListner(this, mPhoto.getUser().getId()));
@@ -123,9 +129,9 @@ public class PhotoView extends ActionBarActivity {
             love.setImageResource(R.drawable.photo_like);
             loveText.setTextColor(this.getResources().getColor(R.color.light_gray));
         }
-        loveButton.setOnClickListener(new LoveListner(this, mPhoto, "photos", mSocialAction));
+        loveButton.setOnClickListener(new LoveListner(this, mPhoto, "photos", mLikeCount));
         LinearLayout shareButton = (LinearLayout) findViewById(R.id.shareButton);
-        shareButton.setOnClickListener(new ShareListner(this,"photos",mPhoto.getId(),mPhoto.getLoveCount(),mPhoto.getCommentCount(),mPhoto.getShareCount(),mSocialAction));
+        shareButton.setOnClickListener(new ShareListner(this,"photos",mPhoto,mShareCount));
 
 
     }
@@ -169,14 +175,14 @@ public class PhotoView extends ActionBarActivity {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new EnterCommentListner(getBaseContext(), "photos", mPhoto.getId(),mPhoto.getCommentCount());
+                    new EnterCommentListner(PhotoView.this, "photos", mPhoto,mCommentCount);
                 }
             });
             commentBox.addView(view);
         }
 
         LinearLayout commentButton = (LinearLayout) findViewById(R.id.commentButton);
-        commentButton.setOnClickListener(new EnterCommentListner(this, "photos", mPhoto.getId(),mPhoto.getCommentCount()));
+        commentButton.setOnClickListener(new EnterCommentListner(PhotoView.this, "photos", mPhoto,mCommentCount,commentBox));
         final EditText mEnterComment = (EditText) findViewById(R.id.enterComment);
         ImageView send = (ImageView) findViewById(R.id.send);
         send.setOnClickListener(new View.OnClickListener() {
@@ -199,7 +205,7 @@ public class PhotoView extends ActionBarActivity {
                                 commentBox.addView(CommentView.makeComment(getBaseContext(), comment));
                                 mTotalCommentCount++;
                                 mPhoto.setCommentCount(mTotalCommentCount);
-                                mSocialAction.setText(getString(R.string.social_status,mPhoto.getLoveCount(),mPhoto.getCommentCount(),mPhoto.getShareCount()));
+                                mCommentCount.setText(getString(R.string.comment_count, mPhoto.getCommentCount()));
                                 mViewCommentCount++;
                             }
                         }
@@ -264,22 +270,7 @@ public class PhotoView extends ActionBarActivity {
                 nearBy1.addView(nearByItem);
             else
                 nearBy2.addView(nearByItem);
-            nearByItem.setOnClickListener(new View.OnClickListener() {
-                boolean flag = false;
-
-                @Override
-                public void onClick(View v) {
-                    if (!flag) {
-                        flag = true;
-                        Intent intent = new Intent(getBaseContext(), PhotoView.class);
-                        intent.putExtra("id", photo.getId());
-                        startActivity(intent);
-                        finish();
-                        flag = false;
-                    }
-
-                }
-            });
+            nearByItem.setOnClickListener(new EnterPhotoListner(photo.getId(),this));
         }
     }
 
@@ -360,7 +351,7 @@ public class PhotoView extends ActionBarActivity {
                     mPhotoDialog.show();
                 }else {
                     View.OnClickListener del = new ReportListner("photos",mPhoto.getId(),getBaseContext(),mPhotoDialog);
-                    View.OnClickListener edit = new ShareListner(getBaseContext(),"photos",mPhoto.getId(),mPhoto.getLoveCount(),mPhoto.getCommentCount(),mPhoto.getShareCount(),mSocialAction);
+                    View.OnClickListener edit = new ShareListner(getBaseContext(),"photos",mPhoto,mShareCount);
                     mPhotoDialog = new PhotoDialog(PhotoView.this, del,edit,true);
                     mPhotoDialog.show();
                 }

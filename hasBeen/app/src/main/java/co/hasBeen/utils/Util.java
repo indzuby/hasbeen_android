@@ -216,7 +216,6 @@ public class Util {
         int catgoryWith = Util.convertDpToPixel(72, mContext);
         return (width - catgoryWith) / 3 - 2;
     }
-
     Handler mHandler;
 
     public static String getMapUrl(float lat, float lon) {

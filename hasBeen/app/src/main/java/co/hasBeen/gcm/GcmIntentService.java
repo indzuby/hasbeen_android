@@ -20,6 +20,7 @@ import java.net.URL;
 import co.hasBeen.MainActivity;
 import co.hasBeen.R;
 import co.hasBeen.day.DayView;
+import co.hasBeen.model.api.Alarm;
 import co.hasBeen.model.api.PushAlarm;
 import co.hasBeen.photo.PhotoView;
 import co.hasBeen.utils.CircleTransform;
@@ -71,16 +72,16 @@ public class GcmIntentService extends IntentService {
         }
     }
     private Intent getActivity(PushAlarm push) {
-        String resource = push.getResource();
+        Alarm.Type type = push.getType();
         Intent intent = new Intent(this,MainActivity.class);
-        if(resource.equalsIgnoreCase("photo")){
+        if(type.equals(Alarm.Type.DAY_COMMENT) || type.equals(Alarm.Type.DAY_LOVE)){
             intent = new Intent(this,PhotoView.class);
             intent.putExtra("id",push.getId());
-            intent.putExtra("type","comment");
-        }else if(resource.equalsIgnoreCase("day")){
+            if(type.equals(Alarm.Type.DAY_COMMENT))intent.putExtra("type","comment");
+        }else if(type.equals(Alarm.Type.PHOTO_COMMENT) || type.equals(Alarm.Type.PHOTO_LOVE)){
             intent = new Intent(this,DayView.class);
             intent.putExtra("id",push.getId());
-            intent.putExtra("type","comment");
+            if(type.equals(Alarm.Type.PHOTO_COMMENT))intent.putExtra("type","comment");
         }
         return intent;
     }

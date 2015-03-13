@@ -5,12 +5,6 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -21,11 +15,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.lang.reflect.Type;
 import java.util.List;
 
 import co.hasBeen.model.api.Comment;
-import co.hasBeen.model.api.Photo;
+import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
 
 /**
@@ -57,27 +50,7 @@ public class CommentAsyncTask extends AsyncTask<Object,Void,List<Comment>> {
                 //Read the server response and attempt to parse it as JSON
                 Reader reader = new InputStreamReader(content);
 
-
-                GsonBuilder gsonBuilder = new GsonBuilder();
-                Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
-                    @Override
-                    public boolean shouldSkipField(FieldAttributes f) {
-                        if(f.getDeclaredClass() == Photo.class){
-                            if(f.getName().equals("day") || f.getName().equals("place"))
-                                return true;
-                        }
-                        if(f.getName().equals("coverPhoto"))
-                            return true;
-                        return false;
-                    }
-
-                    @Override
-                    public boolean shouldSkipClass(Class<?> clazz) {
-                        return false;
-                    }
-                }).create();
-                Type listType = new TypeToken<List<Comment>>(){}.getType();
-                List<Comment> comments = gson.fromJson(reader, listType);
+                List<Comment> comments = JsonConverter.convertJsonToCommentList(reader);
                 content.close();
                 return comments;
             }

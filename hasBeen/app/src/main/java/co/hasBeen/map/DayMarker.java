@@ -15,7 +15,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 
-import co.hasBeen.model.pin.DayPin;
+import co.hasBeen.map.pin.DayPin;
 import co.hasBeen.R;
 
 /**
@@ -40,21 +40,19 @@ public class DayMarker extends DefaultClusterRenderer<DayPin> {
     }
 
     @Override
-    protected void onBeforeClusterRendered(final Cluster<DayPin> cluster, final MarkerOptions markerOptions) {
+    protected void onBeforeClusterRendered(Cluster<DayPin> cluster,MarkerOptions markerOptions) {
 
         final DayPin photo = cluster.getItems().iterator().next();
-
 //        Glide.with(mContext).load(photo.getPhoto().getSmallUrl()).into(mClusterImageView);
         mClusterImageView.setImageBitmap(photo.getImage());
         mClisterCount.setVisibility(View.VISIBLE);
         mClisterCount.setText(cluster.getSize()+"");
         Bitmap icon = mClusterIconGenerator.makeIcon();
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
-
     }
 
     @Override
-    protected void onBeforeClusterItemRendered(DayPin photo, final MarkerOptions markerOptions) {
+    protected void onBeforeClusterItemRendered(DayPin photo, MarkerOptions markerOptions) {
 //        Glide.with(mContext).load(photo.getPhoto().getSmallUrl()).into(mClusterImageView);
         mClusterImageView.setImageBitmap(photo.getImage());
         mClisterCount.setVisibility(View.GONE);

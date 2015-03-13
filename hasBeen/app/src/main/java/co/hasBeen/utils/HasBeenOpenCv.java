@@ -3,6 +3,7 @@ package co.hasBeen.utils;
 import android.graphics.Bitmap;
 
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfFloat;
@@ -46,14 +47,16 @@ public class HasBeenOpenCv {
 
         Imgproc.cvtColor(hsvFrom, hsvFrom, Imgproc.COLOR_BGR2HSV);
         Imgproc.cvtColor(hsvTo, hsvTo, Imgproc.COLOR_BGR2HSV);
-        MatOfInt histSize = new MatOfInt(25);
+        MatOfInt histSize = new MatOfInt(256);
         MatOfFloat ranges = new MatOfFloat(0f, 256f);
 
         Mat histFrom = new Mat();
         Mat histTo = new Mat();
 
-        Imgproc.calcHist(Arrays.asList(hsvFrom), new MatOfInt(0), new Mat(), histFrom, histSize, ranges);
-        Imgproc.calcHist(Arrays.asList(hsvTo), new MatOfInt(0), new Mat(), histTo, histSize, ranges);
+        Imgproc.calcHist(Arrays.asList(hsvFrom), new MatOfInt(1), new Mat(), histFrom, histSize, ranges);
+        Imgproc.calcHist(Arrays.asList(hsvTo), new MatOfInt(1), new Mat(), histTo, histSize, ranges);
+        Core.normalize(histFrom,histFrom,0,1,Core.NORM_MINMAX);
+        Core.normalize(histTo,histTo,0,1,Core.NORM_MINMAX);
         return Imgproc.compareHist(histFrom, histTo, Imgproc.CV_COMP_CORREL);
 
     }

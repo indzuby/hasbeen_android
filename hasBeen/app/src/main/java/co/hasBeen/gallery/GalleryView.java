@@ -30,10 +30,10 @@ public class GalleryView extends Fragment {
     GalleryDayAdapter mDayAdapter;
     ItemModule mDayData;
     List<Day> mDayList;
-    View mLoadingView;
     View mLoading;
     DatabaseHelper database;
     boolean isLoading;
+
     class LoadThread extends Thread {
         Long date;
 
@@ -47,21 +47,23 @@ public class GalleryView extends Fragment {
                 try {
                     List<Day> days;
                     days = mDayData.bringTenDay(date);
-                    mDayList.addAll(days);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mDayAdapter.notifyDataSetChanged();
-                            stopLoading();
-                        }
-                    });
-                    if(mDayList.size()<=0) {
-                        mView.findViewById(R.id.galleryDefault).setVisibility(View.VISIBLE);
-                    }else
-                        mView.findViewById(R.id.galleryDefault).setVisibility(View.GONE);
+                    if (days != null)
+                        mDayList.addAll(days);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                if (mDayList.size() <= 0) {
+                    mView.findViewById(R.id.galleryDefault).setVisibility(View.VISIBLE);
+                } else
+                    mView.findViewById(R.id.galleryDefault).setVisibility(View.GONE);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDayAdapter.notifyDataSetChanged();
+                        stopLoading();
+                    }
+                });
             }
         }
     }
@@ -72,22 +74,20 @@ public class GalleryView extends Fragment {
         mDayList = new ArrayList<>();
         mDayAdapter = new GalleryDayAdapter(getActivity(), mDayList);
         mGalleryListView.setRefreshing(false);
-        mLoadingView = LayoutInflater.from(getActivity()).inflate(R.layout.loading_layout, null, false);
-        mLoading = mLoadingView.findViewById(R.id.refresh);
+        mLoading = mView.findViewById(R.id.refresh);
         ListView listView = mGalleryListView.getRefreshableView();
-        listView.addFooterView(mLoadingView);
         listView.setAdapter(mDayAdapter);
         startLoading();
         database = new DatabaseHelper(getActivity());
         Day day = database.selectLastDay();
         Long date = new Date().getTime();
-        if(day!=null)
-            date = day.getDate()+10000;
+        if (day != null)
+            date = day.getDate() + 10000;
         new LoadThread(date).start();
         mGalleryListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
             @Override
             public void onLastItemVisible() {
-                if(!isLoading) {
+                if (!isLoading) {
                     startLoading();
                     if (mDayList.size() > 0)
                         new LoadThread(mDayList.get(mDayList.size() - 1).getDate()).start();
@@ -95,6 +95,7 @@ public class GalleryView extends Fragment {
             }
         });
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,14 +110,14 @@ public class GalleryView extends Fragment {
 
     protected void startLoading() {
         isLoading = true;
-        mLoadingView.setVisibility(View.VISIBLE);
+        mLoading.setVisibility(View.VISIBLE);
         Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
         mLoading.startAnimation(rotate);
     }
 
     protected void stopLoading() {
         isLoading = false;
-        mLoadingView.setVisibility(View.GONE);
+        mLoading.setVisibility(View.GONE);
         mLoading.clearAnimation();
     }
 }

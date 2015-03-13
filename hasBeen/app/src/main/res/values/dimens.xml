@@ -13,5 +13,8 @@
     <dimen name="imagelayout_margin">3dp</dimen>
     <dimen name="gallery_image_height">240dp</dimen>
     <dimen name="gallery_item_height">248dp</dimen>
-
+    <dimen name="marker_height">40dp</dimen>
+    <dimen name="marker_width">40dp</dimen>
+    <dimen name="recommendation_height">216dp</dimen>
+    <dimen name="pin_day_height">168dp</dimen>
 </resources>

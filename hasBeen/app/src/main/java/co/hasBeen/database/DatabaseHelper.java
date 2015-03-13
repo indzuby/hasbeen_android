@@ -211,6 +211,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
     public List<Day> selectBeforeTenDay(Long start) throws SQLException {
         Dao<Day,Long> dayDao = getDayDao();
+        if(dayDao.countOf()==0)
+            return null;
         return dayDao.query(dayDao.queryBuilder().orderBy("date",false).limit(10L).where().lt("date", start).prepare());
     }
     public List<Position> selectPositionByDayId(Long dayId) throws SQLException{
@@ -220,10 +222,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
     public int countPhotoByDayid(Long dayId) throws SQLException{
         List<Position> positions = selectPositionByDayId(dayId);
-        int photoCnt=0;
-        for(Position position : positions)
-            photoCnt += selectPhotoByPositionId(position.getId()).size();
-        return photoCnt;
+        long photoCnt=getPhotoDao().queryBuilder().where().eq("day_id",dayId).and().eq("clearest_id", new ColumnArg("id")).countOf();
+//        for(Position position : positions)
+//            photoCnt += selectPhotoByPositionId(position.getId()).size();
+        return (int)photoCnt;
     }
     public String selectPlaceNameByPlaceId(Long placeId) throws SQLException {
         return selectPlace(placeId).getName();

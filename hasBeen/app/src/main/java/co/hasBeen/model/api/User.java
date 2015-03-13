@@ -78,4 +78,8 @@ public class User {
     public Follow getFollow() {
         return follow;
     }
+
+    public void setFollow(Follow follow) {
+        this.follow = follow;
+    }
 }

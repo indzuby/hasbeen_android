@@ -17,21 +17,21 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import co.hasBeen.R;
 import co.hasBeen.model.api.Comment;
 import co.hasBeen.profile.ProfileClickListner;
 import co.hasBeen.utils.CacheControl;
 import co.hasBeen.utils.CircleTransform;
-import co.hasBeen.utils.Session;
-import co.hasBeen.R;
 import co.hasBeen.utils.HasBeenDate;
+import co.hasBeen.utils.Session;
 import co.hasBeen.utils.Util;
 
 /**
@@ -135,7 +135,7 @@ public class CommentView extends ActionBarActivity {
                             mCommentList.remove(index);
                             mCommentCount--;
                             mCommentAdapter.notifyDataSetChanged();
-                            Toast.makeText(getBaseContext(), "Complete remove", Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getBaseContext(), "Complete remove", Toast.LENGTH_LONG).show();
                         }
                     };
                     mCommentDialog = new CommentDialog(CommentView.this, del);
@@ -153,7 +153,7 @@ public class CommentView extends ActionBarActivity {
                     flag = true;
                     String contents = mEnterComment.getText().toString();
                     mEnterComment.setText("");
-                    Toast.makeText(getBaseContext(), "Complete written", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getBaseContext(), "Complete written", Toast.LENGTH_LONG).show();
                     new WriteCommentAsyncTask(new Handler(Looper.getMainLooper()) {
                         @Override
                         public void handleMessage(Message msg) {
@@ -164,6 +164,10 @@ public class CommentView extends ActionBarActivity {
                                 mCommentList.add(comment);
                                 mCommentAdapter.notifyDataSetChanged();
                                 mListView.setSelection(mCommentList.size()-1);
+                                Session.putBoolean(getBaseContext(),"commentWrite",true);
+                                Gson gson = new Gson();
+                                String data = gson.toJson(comment);
+                                Session.putString(getBaseContext(),"comment",data);
                             }
                         }
                     }).execute(mAccessToken, mType, mId, contents);

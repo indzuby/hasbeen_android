@@ -99,10 +99,10 @@ public class ItemModule {
                     lastDayTime = dataTaken;
                 }
             } while (cursor.moveToNext());
+            day.setPhotoCount(photoCount);
+            day.setDate(lastDayTime);
+            database.updateDay(day);
         }
-        day.setPhotoCount(photoCount);
-        day.setDate(lastDayTime);
-        database.updateDay(day);
     }
 
     public List<Day> bringTenDay(Long id) throws SQLException {
@@ -204,7 +204,8 @@ public class ItemModule {
         photo.setPlaceId(placeId);
         photo.setPositionId(positionId);
         photo.setClearestId(photo.getId());
-        photo.setEdgeCount(HasBeenOpenCv.detectEdge(getThumbnail(photo.getPhotoId())));
+        if(photo.getEdgeCount()==null)
+            photo.setEdgeCount(HasBeenOpenCv.detectEdge(getThumbnail(photo.getPhotoId())));
         database.updatePhoto(photo);
 
     }
@@ -212,13 +213,11 @@ public class ItemModule {
 
     public List<Position> getPhotosByDate(Long dayId) throws Exception {
         Day day = database.selectDay(dayId);
-        if (day.getCreatedTime()==null) {
-            insertPhotos(day.getDate(), dayId);
-            insertPosition(dayId);
-            day.setCreatedTime(new Date().getTime());
-            day.setPhotoCount(database.countPhotoByDayid(dayId));
-            database.updateDay(day);
-        }
+        insertPhotos(day.getDate(), dayId);
+        insertPosition(dayId);
+        day.setCreatedTime(new Date().getTime());
+        day.setPhotoCount(database.countPhotoByDayid(dayId));
+        database.updateDay(day);
         return database.selectPositionByDayId(dayId);
     }
 
@@ -262,7 +261,6 @@ public class ItemModule {
                     database.insertPhoto(photo);
                 }
             } while (cursor.moveToNext());
-
         }
     }
 
@@ -278,9 +276,10 @@ public class ItemModule {
             if (!isRun) continue;
             final Photo photo = (Photo) iterator.next();
             if (photo.getEdgeCount() != null) {
-                if (photo.getId() == photo.getClearestId())
+                if (photo.getId() == photo.getClearestId()) {
                     bestPhoto = photo;
-                continue;
+                    continue;
+                }
             }
             Integer edge = photo.getEdgeCount();
             if (edge == null) {
@@ -334,8 +333,8 @@ public class ItemModule {
             }else
                 bestPhoto = photo;
         }
+        while(!isRun);
         updateClearestId(similaryPhotos, bestPhoto);
-
     }
     protected boolean isSamePlace(Place aPlace, Place bPlace) {
         if (aPlace.getVenueId().equals(bPlace.getVenueId()))
@@ -347,11 +346,14 @@ public class ItemModule {
     }
 
     protected boolean isSimilary(Photo beforePhoto, Photo photo) {
-        if (HasBeenDate.isTimeRangeInFive(beforePhoto.getTakenTime(), photo.getTakenTime()))
-            return true;
-
+//        if (HasBeenDate.isTimeRangeInFive(beforePhoto.getTakenTime(), photo.getTakenTime()))
+//            return true;
+//        Bitmap before = BitmapFactory.decodeFile(beforePhoto.getPhotoPath());
+//        Bitmap current = BitmapFactory.decodeFile(photo.getPhotoPath());
+//        double hist = HasBeenOpenCv.compareHistogram(before, current);
         double hist = HasBeenOpenCv.compareHistogram(getThumbnail(beforePhoto.getPhotoId()), getThumbnail(photo.getPhotoId()));
-        if (hist >= 0.9)
+
+        if (hist >= 0.85)
             return true;
         return false;
     }

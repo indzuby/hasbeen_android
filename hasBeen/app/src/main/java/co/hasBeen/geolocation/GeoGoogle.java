@@ -27,8 +27,8 @@ public class GeoGoogle {
     }
 
 
-    public LatLng getLocation(){
-        LocationManager locationManager = (LocationManager) mContext.getSystemService(mContext.LOCATION_SERVICE);
+    public static LatLng getLocation(Context context){
+        LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
         if(locationManager!=null) {
             Log.d("Location Manager", "is active");
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);

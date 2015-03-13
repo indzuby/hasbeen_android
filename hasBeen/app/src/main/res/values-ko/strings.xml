@@ -8,6 +8,8 @@
     <string name="action_bar_follow_title"> 팔로워 · 팔로잉 </string>
     <string name="action_bar_place_title"> 장소 선택 </string>
     <string name="action_bar_upload_title"> 업로드 </string>
+    <string name="action_bar_profile_title"> 프로필 </string>
+    <string name="action_bar_fbfriends_title"> Facebook 친구 </string>
     <string name="action_bar_done">확인</string>
     <!--로그인,회원가입-->
     <string name="login_email"> 로그인</string>
@@ -36,6 +38,9 @@
     <string name="report_day">여행 신고</string>
     <string name="share_day">여행 공유</string>
     <string name="social_status">%1$d 좋아요 · %2$d 댓글 · %3$d 공유</string>
+    <string name="like_count">%d 좋아요 ·&#160;</string>
+    <string name="comment_count">%d 댓글 ·&#160;</string>
+    <string name="share_count">%d 공유</string>
     <!--여행기-->
     <string name="photo_count">%d 장</string>
     <string name="total_photo_count">총 %d 장</string>
@@ -95,13 +100,18 @@
     <string name="following_alarm">&lt;b&gt;%1$s&lt;/b&gt;님이 &lt;b&gt;%2$s&lt;/b&gt;님을 팔로잉했습니다.</string>
     <string name="account_facebook_friend_alarm">페이스북 친구 &lt;b&gt;%1$d&lt;/b&gt;님이 &lt;b&gt;hasBeen&lt;/b&gt;에 가입했습니다.</string>
     <string name="you_user">회원</string>
-    <string name="your_user">회원</string>
-    <string name="possessive">님</string>
+    <string name="your_user">회원님</string>
+    <string name="possessive">님의</string>
+    <string name="commented_photo_push">%1$s님이 %2$s 사진에 댓글을 남겼습니다.</string>
+    <string name="commented_day_push">%1$s님이 %2$s 여행에 댓글을 남겼습니다.</string>
+    <string name="loved_photo_push">%1$s님이 %2$s 사진을 좋아합니다.</string>
+    <string name="loved_day_push">%1$s님이 %2$s 여행을 좋아합니다.</string>
     <!--프로필-->
     <string name="follower">팔로워</string>
     <string name="following">팔로잉</string>
     <string name="follow_status">%1$d 팔로워 · %2$d 팔로잉</string>
-
+    <string name="follower_count">팔로워 %d 명</string>
+    <string name="following_count">팔로잉 %d 명</string>
     <!--에러-->
     <string name="internet_error">인터넷 연결을 확인하세요.</string>
     <string name="common_error">오류가 발생했습니다.</string>
@@ -117,4 +127,15 @@
     <string name="description_ok">작성 완료</string>
     <string name="upload_ok">업로드 완료</string>
     <string name="cover_ok">커버 사진으로 선택했습니다.</string>
+
+    <!--설정-->
+    <string name="facebook_title">페이스북</string>
+    <string name="support_title">지원</string>
+    <string name="account_title">계정</string>
+    <string name="logout">로그아웃</string>
+    <string name="find_facebook">페이스북 친구 찾기</string>
+    <string name="about_hasbeen">헤스빈(hasBeen)</string>
+    <string name="report_problem">고객 문의</string>
+    <string name="open_source">라이센스</string>
+    <string name="friends">친구 %d명</string>
 </resources>

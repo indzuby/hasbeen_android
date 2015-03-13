@@ -32,4 +32,7 @@ public class Follow implements Serializable{
         this.followingId = followingId;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

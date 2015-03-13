@@ -65,20 +65,20 @@ public class FollowingAdapter extends BaseAdapter {
         TextView followSatus = (TextView) view.findViewById(R.id.followStatus);
         ImageView followImage = (ImageView) view.findViewById(R.id.followImage);
 
-        Glide.with(mContext).load(toUser.getImageUrl()).asBitmap().transform(new CircleTransform(mContext)).into(profileImage);
+        Glide.with(mContext).load(toUser.getImageUrl()).placeholder(R.mipmap.profile_placeholder).transform(new CircleTransform(mContext)).into(profileImage);
         profileName.setText(Util.parseName(toUser, mContext));
-        profileImage.setOnClickListener(new ProfileClickListner(mContext, toUser.getId()));
-        profileName.setOnClickListener(new ProfileClickListner(mContext, toUser.getId()));
         followSatus.setText(mContext.getString(R.string.follow_status,toUser.getFollowerCount(),toUser.getFollowingCount()));
         if(follow.getFollowingId()==null) {
             followImage.setImageResource(R.drawable.follow_gray);
         }else {
             followImage.setImageResource(R.drawable.following_selector);
         }
-        if(mType.equals("other"))
-        followImage.setOnClickListener(new DoFollowListner(mContext,mAccessToken,toUser.getId(),follow));
-        if(mType.equals("my"))
+        if(mType==null || mType.equals("other"))
+            followImage.setOnClickListener(new DoFollowListner(mContext,mAccessToken,toUser.getId(),follow));
+        if(mType!=null && mType.equals("my"))
             followImage.setOnClickListener(new DoFollowListner(mContext,mAccessToken,toUser.getId(),follow,mCount,mFollowing,this));
+
+        view.setOnClickListener(new ProfileClickListner(mContext, toUser.getId()));
         return view;
     }
 

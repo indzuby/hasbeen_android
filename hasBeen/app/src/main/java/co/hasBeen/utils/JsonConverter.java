@@ -11,6 +11,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import co.hasBeen.model.api.Alarm;
+import co.hasBeen.model.api.Comment;
 import co.hasBeen.model.api.Follow;
 import co.hasBeen.model.api.Loved;
 import co.hasBeen.model.api.PushAlarm;
@@ -215,5 +216,75 @@ public class JsonConverter {
         Gson gson = gsonBuilder.create();
         PushAlarm push = gson.fromJson(json, PushAlarm.class);
         return push;
+    }
+    public static Comment convertJsonToComment(Reader reader) {
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                if(f.getDeclaredClass() == Photo.class){
+                    if(f.getName().equals("day") || f.getName().equals("place"))
+                        return true;
+                }
+                if(f.getName().equals("coverPhoto"))
+                    return true;
+                return false;
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                return false;
+            }
+        }).create();
+        Comment comment = gson.fromJson(reader, Comment.class);
+        return comment;
+    }
+    public static Comment convertJsonToComment(String reader) {
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                if(f.getDeclaredClass() == Photo.class){
+                    if(f.getName().equals("day") || f.getName().equals("place"))
+                        return true;
+                }
+                if(f.getName().equals("coverPhoto"))
+                    return true;
+                return false;
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                return false;
+            }
+        }).create();
+        Comment comment = gson.fromJson(reader, Comment.class);
+        return comment;
+    }
+    public static List<Comment> convertJsonToCommentList(Reader reader){
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                if(f.getDeclaredClass() == Photo.class){
+                    if(f.getName().equals("day") || f.getName().equals("place"))
+                        return true;
+                }
+                if(f.getName().equals("coverPhoto"))
+                    return true;
+                return false;
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                return false;
+            }
+        }).create();
+        Type listType = new TypeToken<List<Comment>>(){}.getType();
+        List<Comment> comments = gson.fromJson(reader, listType);
+        return comments;
     }
 }

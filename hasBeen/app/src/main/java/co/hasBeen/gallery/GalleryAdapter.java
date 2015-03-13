@@ -76,13 +76,14 @@ public class GalleryAdapter extends BaseAdapter {
 
         @Override
         public void onClick(View v) {
-            flag = true;
-            Intent intent = new Intent(mContext, GalleryPhoto.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("id",photo.getId());
-            mContext.startActivity(intent);
-            flag = false;
-
+            if(!flag) {
+                flag = true;
+                Intent intent = new Intent(mContext, GalleryPhoto.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("id", photo.getId());
+                mContext.startActivity(intent);
+                flag = false;
+            }
         }
     }
     public int getHeight(){

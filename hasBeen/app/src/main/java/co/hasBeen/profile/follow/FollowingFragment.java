@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,6 +30,8 @@ public class FollowingFragment extends Fragment {
     Long mUserId;
     String mAccessToken;
     String mType;
+    View mLoading;
+    boolean isLoading;
     Handler followingHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -35,15 +39,17 @@ public class FollowingFragment extends Fragment {
             switch (msg.what) {
                 case 0:
                     mFollowing = (List) msg.obj;
-                    initFollower();
+                    if(!getActivity().isFinishing())
+                        initFollower();
                     break;
                 case -1:
                     break;
             }
+            stopLoading();
         }
     };
     protected void initFollower() {
-        mCount.setText(mFollowing.size()+" " + getString(R.string.following));
+        mCount.setText(getString(R.string.following_count,mFollowing.size()));
 
         FollowingAdapter followingAdapter = new FollowingAdapter(mFollowing, getActivity());
         mList.setAdapter(followingAdapter);
@@ -66,6 +72,20 @@ public class FollowingFragment extends Fragment {
         View mHeaderView = LayoutInflater.from(getActivity()).inflate(R.layout.follower_header, null, false);
         mCount = (TextView) mHeaderView.findViewById(R.id.count);
         mList.addHeaderView(mHeaderView);
+        mLoading = mView.findViewById(R.id.refresh);
+        startLoading();
 
+    }
+    protected void startLoading() {
+        isLoading = true;
+        mLoading.setVisibility(View.VISIBLE);
+        Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
+        mLoading.startAnimation(rotate);
+    }
+
+    protected void stopLoading() {
+        isLoading = false;
+        mLoading.setVisibility(View.GONE);
+        mLoading.clearAnimation();
     }
 }

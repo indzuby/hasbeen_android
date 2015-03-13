@@ -13,12 +13,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
@@ -51,7 +49,6 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.search, container, false);
         mAccessToken = Session.getString(getActivity(),"accessToken",null);
-        new SearchDayAsyncTask(dayHandler).execute(mAccessToken);
         init();
         return mView;
     }
@@ -70,6 +67,7 @@ public class SearchFragment extends Fragment {
                 setting.setAllGesturesEnabled(true);
                 setting.setMyLocationButtonEnabled(false);
                 map.setMyLocationEnabled(false);
+                new SearchDayAsyncTask(dayHandler).execute(mAccessToken);
             }
         });
         mDayButton = (TextView) mView.findViewById(R.id.dayButton);
@@ -167,8 +165,6 @@ public class SearchFragment extends Fragment {
     }
     protected void dayRendering(){
         try {
-            LatLng location = new LatLng(mDays.get(0).getMainPlace().getLat(), mDays.get(0).getMainPlace().getLon());
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
             mMapRoute.addMarkerCluster(mDays);
             if (isrefresh) {
                 mRefresh.clearAnimation();
@@ -181,8 +177,6 @@ public class SearchFragment extends Fragment {
     }
     protected void photoRendering (){
         try {
-            LatLng location = new LatLng(mPhotos.get(0).getLat(), mPhotos.get(0).getLon());
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
             mMapRoute.addMarkerClusterPhoto(mPhotos);
             if (isrefresh) {
                 mRefresh.clearAnimation();

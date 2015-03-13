@@ -8,6 +8,8 @@
     <string name="action_bar_follow_title"> Follower · Following </string>
     <string name="action_bar_place_title"> Choose place </string>
     <string name="action_bar_upload_title"> Upload </string>
+    <string name="action_bar_profile_title"> Profile </string>
+    <string name="action_bar_fbfriends_title"> Facebook Friends </string>
     <string name="action_bar_done">DONE</string>
     <!--로그인,회원가입-->
     <string name="login_email"> sign in</string>
@@ -36,6 +38,9 @@
     <string name="report_day">Report day trip</string>
     <string name="share_day">Share day trip</string>
     <string name="social_status">%1$d likes · %2$d comments · %3$d shares</string>
+    <string name="like_count">%d likes ·&#160;</string>
+    <string name="comment_count">%d comments ·&#160;</string>
+    <string name="share_count">%d shares</string>
     <!--여행기-->
     <string name="photo_count">%d photos</string>
     <string name="total_photo_count">total %d photos</string>
@@ -97,10 +102,16 @@
     <string name="you_user">you</string>
     <string name="your_user">your</string>
     <string name="possessive">\'s</string>
+    <string name="commented_photo_push">%1$s commented on %2$s photo.</string>
+    <string name="commented_day_push">%1$s commented on %2$s day trip.</string>
+    <string name="loved_photo_push">%1$s liked %2$s photo.</string>
+    <string name="loved_day_push">%1$s liked %2$s day trip.</string>
     <!--프로필-->
     <string name="follower">Follower</string>
     <string name="following">Following</string>
     <string name="follow_status">%1$d follower · %2$d following</string>
+    <string name="follower_count">%d follower</string>
+    <string name="following_count">%d following</string>
 
     <!--에러-->
     <string name="internet_error">Please check your nextwork connection.</string>
@@ -117,4 +128,15 @@
     <string name="description_ok">Writing done</string>
     <string name="upload_ok">Upload done</string>
     <string name="cover_ok">Your cover photo has been updated.</string>
+
+    <!--설정-->
+    <string name="facebook_title">Facebook</string>
+    <string name="support_title">Support</string>
+    <string name="account_title">Account</string>
+    <string name="logout">Log out</string>
+    <string name="find_facebook">Find facebook friends</string>
+    <string name="about_hasbeen">About hasBeen</string>
+    <string name="report_problem">Report a problem</string>
+    <string name="open_source">License</string>
+    <string name="friends">d friends</string>
 </resources>

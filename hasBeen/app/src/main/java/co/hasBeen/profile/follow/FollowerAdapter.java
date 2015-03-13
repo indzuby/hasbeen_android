@@ -65,10 +65,8 @@ public class FollowerAdapter extends BaseAdapter {
         TextView followSatus = (TextView) view.findViewById(R.id.followStatus);
         final ImageView followImage = (ImageView) view.findViewById(R.id.followImage);
 
-        Glide.with(mContext).load(fromUser.getImageUrl()).asBitmap().transform(new CircleTransform(mContext)).into(profileImage);
+        Glide.with(mContext).load(fromUser.getImageUrl()).placeholder(R.mipmap.profile_placeholder).transform(new CircleTransform(mContext)).into(profileImage);
         profileName.setText(Util.parseName(fromUser, mContext));
-        profileImage.setOnClickListener(new ProfileClickListner(mContext, fromUser.getId()));
-        profileName.setOnClickListener(new ProfileClickListner(mContext, fromUser.getId()));
         followSatus.setText(mContext.getString(R.string.follow_status,fromUser.getFollowerCount(),fromUser.getFollowingCount()));
         if(follow.getFollowingId()==null) {
             followImage.setImageResource(R.drawable.follow_gray);
@@ -76,6 +74,7 @@ public class FollowerAdapter extends BaseAdapter {
             followImage.setImageResource(R.drawable.following_selector);
         }
         followImage.setOnClickListener(new DoFollowListner(mContext,mAccessToken,fromUser.getId(),follow));
+        view.setOnClickListener(new ProfileClickListner(mContext, fromUser.getId()));
         return view;
     }
 }

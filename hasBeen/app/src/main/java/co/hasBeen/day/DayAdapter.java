@@ -26,7 +26,7 @@ import co.hasBeen.map.EnterMapLisnter;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.model.api.Position;
-import co.hasBeen.photo.PhotoView;
+import co.hasBeen.photo.EnterPhotoListner;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.RecycleUtils;
 import co.hasBeen.utils.Session;
@@ -216,26 +216,14 @@ public class DayAdapter extends BaseAdapter {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = convertView;
-            final Photo photo = getItem(position);
+            Photo photo = getItem(position);
             if (view == null) {
                 LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.day_photo, null);
             }
             ImageView imageView = (ImageView) view.findViewById(R.id.photo);
             Glide.with(mContext).load(photo.getMediumUrl()).into(imageView);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                boolean flag = false;
-                @Override
-                public void onClick(View v) {
-                    if(!flag) {
-                        flag = true;
-                        Intent intent = new Intent(mContext, PhotoView.class);
-                        intent.putExtra("id",photo.getId());
-                        mContext.startActivity(intent);
-                        flag = false;
-                    }
-                }
-            });
+            imageView.setOnClickListener(new EnterPhotoListner(photo.getId(),mContext));
             mRecycleList.add(new WeakReference<View>(imageView));
             return view;
         }

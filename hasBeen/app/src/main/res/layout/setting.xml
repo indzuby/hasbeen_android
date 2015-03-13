@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+<LinearLayout
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/theme_white"
+    android:layout_height="match_parent">
+    <TextView
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:layout_width="match_parent"
+    android:background="@color/day_background"
+    android:text="@string/facebook_title"
+    android:textSize="13sp"
+    android:textColor="@color/light_gray"
+    android:gravity="center_vertical"
+    android:layout_height="30dp" />
+    <View
+        android:layout_width="match_parent"
+        android:alpha="0.2"
+        android:background="#000"
+        android:layout_height="2px" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:src="@drawable/facebook_icon"
+            android:layout_height="match_parent" />
+    <TextView
+        android:layout_width="match_parent"
+        android:text="@string/find_facebook"
+        android:textSize="15sp"
+        android:textColor="@color/light_black"
+        android:layout_marginLeft="8dp"
+        android:id="@+id/findFacebookFriends"
+        android:gravity="center_vertical"
+        android:layout_height="48dp" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:alpha="0.2"
+        android:background="#000"
+        android:layout_height="2px" />
+    <TextView
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_width="match_parent"
+        android:background="@color/day_background"
+        android:text="@string/support_title"
+        android:textSize="13sp"
+        android:textColor="@color/light_gray"
+        android:gravity="center_vertical"
+        android:layout_height="30dp" />
+    <View
+        android:layout_width="match_parent"
+        android:alpha="0.2"
+        android:background="#000"
+        android:layout_height="2px" />
+    <TextView
+        android:layout_width="match_parent"
+        android:text="@string/about_hasbeen"
+        android:textSize="15sp"
+        android:textColor="@color/light_black"
+        android:id="@+id/abouthasBeen"
+        android:paddingLeft="16dp"
+        android:gravity="center_vertical"
+        android:layout_height="48dp" />
+    <View
+        android:layout_width="match_parent"
+        android:alpha="0.2"
+        android:background="#000"
+        android:layout_height="2px" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:id="@+id/reportProblem"
+        android:gravity="center_vertical"
+        android:layout_height="48dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:text="@string/report_problem"
+        android:textSize="15sp"
+        android:textColor="@color/light_black"
+        android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="match_parent"
+            android:text="@string/support_email"
+            android:textColor="@color/light_gray"
+            android:textSize="13sp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:alpha="0.2"
+        android:background="#000"
+        android:layout_height="2px" />
+    <TextView
+        android:layout_width="match_parent"
+        android:text="@string/open_source"
+        android:id="@+id/openSource"
+        android:textSize="15sp"
+        android:textColor="@color/light_black"
+        android:paddingLeft="16dp"
+        android:gravity="center_vertical"
+        android:layout_height="48dp" />
+    <View
+        android:layout_width="match_parent"
+        android:alpha="0.2"
+        android:background="#000"
+        android:layout_height="2px" />
+    <TextView
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_width="match_parent"
+        android:background="@color/day_background"
+        android:text="@string/account_title"
+        android:textSize="13sp"
+        android:textColor="@color/light_gray"
+        android:gravity="center_vertical"
+        android:layout_height="30dp" />
+    <View
+        android:layout_width="match_parent"
+        android:alpha="0.2"
+        android:background="#000"
+        android:layout_height="2px" />
+    <TextView
+        android:layout_width="match_parent"
+        android:text="@string/logout"
+        android:textSize="15sp"
+        android:id="@+id/logOut"
+        android:textColor="@color/light_black"
+        android:paddingLeft="16dp"
+        android:gravity="center_vertical"
+        android:layout_height="48dp" />
+    <View
+        android:layout_width="match_parent"
+        android:alpha="0.2"
+        android:background="#000"
+        android:layout_height="2px" />
+</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/actionbar_shadow"
+        android:layout_height="wrap_content"/>
+
+</FrameLayout>

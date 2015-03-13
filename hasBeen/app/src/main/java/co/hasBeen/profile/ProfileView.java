@@ -65,6 +65,8 @@ public class ProfileView extends ActionBarActivity {
     SupportMapFragment mMapFragment;
     MapRoute mMapRoute;
     GoogleMap mMap;
+    TextView titleView ;
+
     Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -171,8 +173,8 @@ public class ProfileView extends ActionBarActivity {
 
         View mCustomActionBar = mInflater.inflate(R.layout.action_bar_place,null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
-        TextView titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
-        titleView.setText("Profile");
+        titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
+        titleView.setText(getString(R.string.action_bar_profile_title));
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,7 +196,7 @@ public class ProfileView extends ActionBarActivity {
             @Override
             public void onMapReady(GoogleMap map) {
                 mMap = map;
-                mMapRoute = new MapRoute(map, getBaseContext());
+                mMapRoute = new MapRoute(map, ProfileView.this);
                 UiSettings setting = map.getUiSettings();
                 nowTabIndicator(R.id.dayButton);
                 setting.setZoomControlsEnabled(true);
@@ -267,6 +269,9 @@ public class ProfileView extends ActionBarActivity {
         ((TextView) findViewById(R.id.dayCount)).setTextColor(getResources().getColor(R.color.light_gray));
         if(mMap!=null) mMap.clear();
     }
+    protected String getProfileTitle(String name){
+        return name+getString(R.string.possessive)+" "+getString(R.string.action_bar_profile_title);
+    }
     protected void initProfile() {
         ImageView coverImage = (ImageView) findViewById(R.id.coverImage);
         ImageView profileImage = (ImageView) findViewById(R.id.profileImage);
@@ -278,8 +283,9 @@ public class ProfileView extends ActionBarActivity {
         TextView loveCount = (TextView) findViewById(R.id.loveCount);
         if(mUser.getCoverPhoto()!=null) Glide.with(this).load(mUser.getCoverPhoto().getLargeUrl()).placeholder(R.drawable.placeholder1).into(coverImage);
         else Glide.with(this).load(R.drawable.coverholder).into(coverImage);
-        Glide.with(this).load(mUser.getImageUrl()).transform(new CircleTransform(this)).into(profileImage);
+        Glide.with(this).load(mUser.getImageUrl()).placeholder(R.mipmap.profile_placeholder).transform(new CircleTransform(this)).into(profileImage);
         profileName.setText(Util.parseName(mUser, this));
+        titleView.setText(getProfileTitle(Util.parseName(mUser, this)));
         followStatus.setText(getString(R.string.follow_status,mUser.getFollowerCount(),mUser.getFollowingCount()));
         followStatus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -295,24 +301,8 @@ public class ProfileView extends ActionBarActivity {
             followImage.setImageResource(R.drawable.following);
         else {
             followImage.setImageResource(R.drawable.follow);
-            followImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new DoFollowAsyncTask(new Handler(Looper.getMainLooper()) {
-                        @Override
-                        public void handleMessage(Message msg) {
-                            super.handleMessage(msg);
-                            if(msg.what==0){
-                                followImage.setImageResource(R.drawable.following);;
-                                followImage.setOnClickListener(null);
-                            }else {
-                                new ProfileAsyncTask(handler).execute(mAccessToken,mUserId);
-                            }
-                        }
-                    }).execute(mAccessToken,mUser.getId());
-                }
-            });
         }
+        followImage.setOnClickListener(new ProfileFollowListner(mUser.getFollow(),followImage,mAccessToken,mUser.getId()));
         dayCount.setText(mUser.getDayCount() + "");
         photoCount.setText(mUser.getPhotoCount() + "");
         loveCount.setText(mUser.getLoveCount() + "");

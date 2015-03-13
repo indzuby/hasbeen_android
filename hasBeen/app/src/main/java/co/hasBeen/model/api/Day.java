@@ -11,9 +11,7 @@ import java.util.List;
  * Created by zuby on 2015-01-09.
  */
 @DatabaseTable(tableName = "day")
-public class Day {
-    @DatabaseField(generatedId = true)
-    Long id;
+public class Day extends Social{
     @DatabaseField
     String title;
     @DatabaseField
@@ -43,24 +41,6 @@ public class Day {
 
     public void setMainPhoto(Photo mainPhoto) {
         this.mainPhoto = mainPhoto;
-    }
-
-    String area;
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -122,9 +102,6 @@ public class Day {
     public Day() {
     }
     User user;
-    Integer commentCount;
-    Integer loveCount;
-    Integer shareCount;
     int itineraryIndex;
     Place mainPlace;
     User following;
@@ -148,30 +125,6 @@ public class Day {
 
     public void setCreatedTime(Long createdTime) {
         this.createdTime = createdTime;
-    }
-
-    public Integer getCommentCount() {
-        return commentCount;
-    }
-
-    public void setCommentCount(int commentCount) {
-        this.commentCount = commentCount;
-    }
-
-    public Integer getLoveCount() {
-        return loveCount;
-    }
-
-    public void setLoveCount(int loveCount) {
-        this.loveCount = loveCount;
-    }
-
-    public Integer getShareCount() {
-        return shareCount;
-    }
-
-    public void setShareCount(int shareCount) {
-        this.shareCount = shareCount;
     }
 
     public int getItineraryIndex() {
@@ -250,16 +203,6 @@ public class Day {
 
     public void setImage(Bitmap image) {
         this.image = image;
-    }
-
-    Loved love;
-
-    public Loved getLove() {
-        return love;
-    }
-
-    public void setLove(Loved love) {
-        this.love = love;
     }
    Boolean[] isCheckedPosition;
 

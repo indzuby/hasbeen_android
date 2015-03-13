@@ -31,14 +31,13 @@ import java.util.List;
 import co.hasBeen.R;
 import co.hasBeen.comment.CommentView;
 import co.hasBeen.comment.EnterCommentListner;
-import co.hasBeen.social.LoveListner;
 import co.hasBeen.map.EnterMapLisnter;
 import co.hasBeen.model.api.Comment;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Position;
-import co.hasBeen.model.api.User;
 import co.hasBeen.profile.ProfileClickListner;
 import co.hasBeen.report.ReportListner;
+import co.hasBeen.social.LoveListner;
 import co.hasBeen.social.ShareListner;
 import co.hasBeen.utils.CircleTransform;
 import co.hasBeen.utils.HasBeenDate;
@@ -62,7 +61,9 @@ public class DayView extends ActionBarActivity{
     DayAdapter mDayAdapter;
     Long mDayId;
     String mAccessToken;
-    TextView mSocialAction;
+    TextView mLikeCount;
+    TextView mCommentCount;
+    TextView mShareCount;
     LinearLayout mRecommendationLayout;
     List<Day> mRecommendationList;
     LinearLayout mSocialBar;
@@ -120,7 +121,9 @@ public class DayView extends ActionBarActivity{
 
         mDayTitle = (EditText) findViewById(R.id.title);
         mDescription = (EditText) findViewById(R.id.description);
-        mSocialAction = (TextView) findViewById(R.id.socialAction);
+        mLikeCount = (TextView) findViewById(R.id.likeCount);
+        mCommentCount = (TextView) findViewById(R.id.commentCount);
+        mShareCount = (TextView) findViewById(R.id.shareCount);
         TextView totalPhoto = (TextView) findViewById(R.id.totalPhoto);
         Glide.with(this).load(mDay.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(profileImage);
         Log.i(TAG, mDay.getMainPlace().getName());
@@ -129,7 +132,9 @@ public class DayView extends ActionBarActivity{
         date.setText(HasBeenDate.convertDate(mDay.getDate()));
         mDayTitle.setText(mDay.getTitle());
         mDescription.setText(mDay.getDescription());
-        mSocialAction.setText(getString(R.string.social_status,mDay.getLoveCount(),mDay.getCommentCount(),mDay.getShareCount()));
+        mLikeCount.setText(getString(R.string.like_count,mDay.getLoveCount()));
+        mCommentCount.setText(getString(R.string.comment_count, mDay.getCommentCount()));
+        mShareCount.setText(getString(R.string.share_count,mDay.getShareCount()));
         totalPhoto.setText(getString(R.string.total_photo_count,mDay.getPhotoCount()));
         profileImage.setOnClickListener(new ProfileClickListner(this, mDay.getUser().getId()));
         profileName.setOnClickListener(new ProfileClickListner(this, mDay.getUser().getId()));
@@ -145,7 +150,6 @@ public class DayView extends ActionBarActivity{
     protected  void initFoorteView(){
         mSocialBar = (LinearLayout) findViewById(R.id.socialBar);
         LinearLayout commentButton = (LinearLayout)findViewById(R.id.commentButton);
-        commentButton.setOnClickListener(new EnterCommentListner(getBaseContext(),"days",mDay.getId(),mDay.getCommentCount()));
         LinearLayout loveButton = (LinearLayout) findViewById(R.id.loveButton);
         LinearLayout shareButton = (LinearLayout) findViewById(R.id.shareButton);
         ImageView love = (ImageView) loveButton.findViewById(R.id.love);
@@ -158,9 +162,9 @@ public class DayView extends ActionBarActivity{
             love.setImageResource(R.drawable.photo_like);
             loveText.setTextColor(this.getResources().getColor(R.color.light_gray));
         }
-        loveButton.setOnClickListener(new LoveListner(this,mDay,"days",mSocialAction));
+        loveButton.setOnClickListener(new LoveListner(this,mDay,"days",mLikeCount));
 
-        shareButton.setOnClickListener(new ShareListner(this, "days",mDay.getId(),mDay.getLoveCount(),mDay.getPhotoCount(),mDay.getShareCount(),mSocialAction));
+        shareButton.setOnClickListener(new ShareListner(this, "days",mDay,mShareCount));
         LinearLayout commentBox = (LinearLayout) findViewById(R.id.commetBox);
         TextView moreComments = (TextView) findViewById(R.id.moreComments);
         List<Comment> comments = mDay.getCommentList();
@@ -176,7 +180,8 @@ public class DayView extends ActionBarActivity{
         EditText enterComment = (EditText) findViewById(R.id.enterComment);
         enterComment.setFocusableInTouchMode(false);
         enterComment.setFocusable(false);
-        enterComment.setOnClickListener(new EnterCommentListner(getBaseContext(),"days",mDay.getId(),mDay.getCommentCount()));
+        commentButton.setOnClickListener(new EnterCommentListner(this,"days",mDay,mCommentCount,commentBox));
+        enterComment.setOnClickListener(new EnterCommentListner(this,"days",mDay,mCommentCount,commentBox));
 
         mRecommendationLayout = (LinearLayout) findViewById(R.id.recommendationLayout);
         try {
@@ -194,7 +199,7 @@ public class DayView extends ActionBarActivity{
                 try {
                     mRecommendationList = (List) msg.obj;
                     for (Day day : mRecommendationList) {
-                        mRecommendationLayout.addView(initRecommendation(day));
+                        mRecommendationLayout.addView(Recommandation.getView(day,DayView.this,null));
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -307,7 +312,7 @@ public class DayView extends ActionBarActivity{
                     mDayDialog.show();
                 }else {
                     View.OnClickListener del = new ReportListner("days",mDay.getId(),getBaseContext(),mDayDialog);
-                    View.OnClickListener edit = new ShareListner(getBaseContext(), "days",mDay.getId(),mDay.getLoveCount(),mDay.getPhotoCount(),mDay.getShareCount(),mSocialAction);
+                    View.OnClickListener edit = new ShareListner(getBaseContext(), "days",mDay,mShareCount);
                     mDayDialog = new DayDialog(DayView.this, del,edit,true);
                     mDayDialog.show();
                 }
@@ -355,48 +360,7 @@ public class DayView extends ActionBarActivity{
             }
         });
     }
-    protected View initRecommendation(final Day day){
-        LayoutInflater mInflater = LayoutInflater.from(this);
-        View mRecommend = mInflater.inflate(R.layout.interested_in,null);
-        TextView placeName = (TextView) mRecommend.findViewById(R.id.placeName);
-        TextView profileName = (TextView) mRecommend.findViewById(R.id.profileName);
-        ImageView profileImage = (ImageView) mRecommend.findViewById(R.id.profileImage);
-        TextView date = (TextView) mRecommend.findViewById(R.id.date);
-        ImageView mainPhoto = (ImageView) mRecommend.findViewById(R.id.mainPhoto);
-        TextView loveCount = (TextView) mRecommend.findViewById(R.id.loveCount);
-        TextView commentCount = (TextView) mRecommend.findViewById(R.id.commentCount);
-        TextView shareCount = (TextView) mRecommend.findViewById(R.id.shareCount);
-        TextView dayIndex = (TextView) mRecommend.findViewById(R.id.dayIndex);
 
-        User user = day.getUser();
-        placeName.setText(day.getTitle());
-        profileName.setText(Util.parseName(user, this));
-        Glide.with(this).load(user.getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(profileImage);
-        date.setText(HasBeenDate.convertDate(day.getDate()));
-        Glide.with(this).load(day.getMainPhoto().getMediumUrl()).placeholder(Util.getPlaceHolder(day.getItineraryIndex())).into(mainPhoto);
-//        Glide.with(this).load(day.getPhotoList().get(0).getMediumUrl()).placeholder(Util.getPlaceHolder(day.getItineraryIndex())).into(mainPhoto);
-        loveCount.setText(day.getLoveCount()+"");
-        commentCount.setText(day.getCommentCount() + "");
-        shareCount.setText(day.getShareCount() + "");
-        dayIndex.setText("Day " + day.getItineraryIndex());
-        mRecommend.setOnClickListener(new View.OnClickListener() {
-            boolean flag;
-
-            @Override
-            public void onClick(View v) {
-                if (!flag) {
-                    flag = true;
-                    Intent intent = new Intent(getBaseContext(), DayView.class);
-                    intent.putExtra("id", day.getId());
-                    startActivity(intent);
-                    flag = false;
-                }
-            }
-        });
-        profileImage.setOnClickListener(new ProfileClickListner(this, day.getUser().getId()));
-        profileName.setOnClickListener(new ProfileClickListner(this, day.getUser().getId()));
-        return mRecommend;
-    }
     protected void backOnEditView(String title, String description){
         mDayTitle.setFocusable(false);
         mDayTitle.setFocusableInTouchMode(false);

@@ -25,20 +25,22 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.hasBeen.MainActivity;
+import co.hasBeen.R;
 import co.hasBeen.map.MapRoute;
-import co.hasBeen.model.api.Loved;
-import co.hasBeen.model.api.User;
 import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Loved;
 import co.hasBeen.model.api.Photo;
+import co.hasBeen.model.api.User;
 import co.hasBeen.profile.follow.FollowView;
 import co.hasBeen.profile.map.LikeDayAsyncTask;
 import co.hasBeen.profile.map.LikePhotoAsyncTask;
 import co.hasBeen.profile.map.ProfileDayAsyncTask;
 import co.hasBeen.profile.map.ProfilePhotoAsyncTask;
+import co.hasBeen.setting.SettingView;
 import co.hasBeen.utils.CircleTransform;
 import co.hasBeen.utils.Session;
 import co.hasBeen.utils.Util;
-import co.hasBeen.R;
 
 /**
  * Created by zuby on 2015-01-30.
@@ -309,13 +311,20 @@ public class ProfileFragment extends Fragment {
         else Glide.with(getActivity()).load(R.drawable.coverholder).into(coverImage);
         Glide.with(getActivity()).load(mUser.getImageUrl()).transform(new CircleTransform(getActivity())).into(profileImage);
         profileName.setText(Util.parseName(mUser, getActivity()));
-        followStatus.setText(getString(R.string.follow_status,mUser.getFollowerCount(),mUser.getFollowingCount()));
+        followStatus.setText(getString(R.string.follow_status, mUser.getFollowerCount(), mUser.getFollowingCount()));
         followStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FollowView.class);
-                intent.putExtra("userId",mUser.getId());
-                intent.putExtra("type","my");
+                intent.putExtra("userId", mUser.getId());
+                intent.putExtra("type", "my");
+                startActivity(intent);
+            }
+        });
+        setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SettingView.class);
                 startActivity(intent);
             }
         });
