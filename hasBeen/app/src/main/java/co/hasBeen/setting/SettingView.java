@@ -45,10 +45,24 @@ public class SettingView extends ActionBarActivity {
                 startActivity(intent);
             }
         });
+        abouthasBeen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), AbouthasBeen.class);
+                startActivity(intent);
+            }
+        });
         reportProblem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendReport();
+            }
+        });
+        openSource.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), License.class);
+                startActivity(intent);
             }
         });
         logOut.setOnClickListener(new View.OnClickListener() {

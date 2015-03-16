@@ -100,6 +100,7 @@ public class Day extends Social{
     }
 
     public Day() {
+        load = false;
     }
     User user;
     int itineraryIndex;
@@ -239,5 +240,14 @@ public class Day extends Social{
 
     public void setPlaceList(List<Place> placeList) {
         this.placeList = placeList;
+    }
+    boolean load;
+
+    public boolean isLoad() {
+        return load;
+    }
+
+    public void setLoad(boolean load) {
+        this.load = load;
     }
 }

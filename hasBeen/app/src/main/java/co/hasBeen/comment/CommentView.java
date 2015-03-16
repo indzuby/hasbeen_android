@@ -28,6 +28,7 @@ import java.util.List;
 import co.hasBeen.R;
 import co.hasBeen.model.api.Comment;
 import co.hasBeen.profile.ProfileClickListner;
+import co.hasBeen.report.ReportListner;
 import co.hasBeen.utils.CacheControl;
 import co.hasBeen.utils.CircleTransform;
 import co.hasBeen.utils.HasBeenDate;
@@ -126,8 +127,8 @@ public class CommentView extends ActionBarActivity {
                     index = position-1;
                 else 
                     index = position;
+                final Long commentid = mCommentList.get(index).getId();
                 if(mCommentList.get(index).getUser().getId() == mMyid) {
-                    final Long commentid = mCommentList.get(index).getId();
                     View.OnClickListener del = new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -138,7 +139,13 @@ public class CommentView extends ActionBarActivity {
 //                            Toast.makeText(getBaseContext(), "Complete remove", Toast.LENGTH_LONG).show();
                         }
                     };
-                    mCommentDialog = new CommentDialog(CommentView.this, del);
+                    mCommentDialog = new CommentDialog(CommentView.this);
+                    mCommentDialog.setListner(del);
+                    mCommentDialog.show();
+                }else {
+                    mCommentDialog = new CommentDialog(CommentView.this,true);
+                    View.OnClickListener report = new ReportListner("comments",commentid,getBaseContext(),mCommentDialog);
+                    mCommentDialog.setListner(report);
                     mCommentDialog.show();
                 }
                 return true;

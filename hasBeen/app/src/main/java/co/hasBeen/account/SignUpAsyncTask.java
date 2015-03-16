@@ -72,8 +72,6 @@ public class SignUpAsyncTask extends AsyncTask<String, Void, String> {
                 Log.i("Sign up","exist account");
                 return params[1];
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }

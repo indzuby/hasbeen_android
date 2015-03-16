@@ -141,9 +141,10 @@ public class NewsFeedAdapter extends BaseAdapter {
         moreVert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View.OnClickListener del = new ReportListner("days",feed.getId(),mContext,mDayDialog);
-                View.OnClickListener edit = new ShareListner(mContext, "days",feed,shareCount);
-                mDayDialog = new DayDialog(mContext, del,edit,true);
+                mDayDialog = new DayDialog(mContext,true);
+                View.OnClickListener report = new ReportListner("days",feed.getId(),mContext,mDayDialog);
+                View.OnClickListener share = new ShareListner(mContext, "days",feed,shareCount);
+                mDayDialog.setListner(report,share);
                 mDayDialog.show();
             }
         });

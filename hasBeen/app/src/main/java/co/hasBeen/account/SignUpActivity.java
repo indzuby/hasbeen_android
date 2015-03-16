@@ -83,12 +83,18 @@ public class SignUpActivity extends Activity {
                     String lastName = mLastName.getText().toString();
                     String email = mEmail.getText().toString();
                     String password = mPassword.getText().toString();
-                    if(firstName.length()<=0 || lastName.length()<=0 || email.length()<=0 || password.length()<=0) {
+                    if(firstName.length()<=0 || lastName.length()<=0 || firstName.length()>=20 || lastName.length()>=20) {
                         flag = false;
+                        Toast.makeText(getBaseContext(),getString(R.string.name_size_error),Toast.LENGTH_LONG).show();
                         return;
                     }
                     if(password.length()<8 || password.length()>50) {
                         Toast.makeText(getBaseContext(),getString(R.string.password_size_error),Toast.LENGTH_LONG).show();
+                        flag = false;
+                        return ;
+                    }
+                    if(email.length()>255) {
+                        Toast.makeText(getBaseContext(),getString(R.string.email_size_error),Toast.LENGTH_LONG).show();
                         flag = false;
                         return ;
                     }
@@ -104,10 +110,10 @@ public class SignUpActivity extends Activity {
                                 finish();
                             }else {
                                 flag = false;
+                                Toast.makeText(getBaseContext(),getString(R.string.dup_email),Toast.LENGTH_LONG).show();
                             }
                         }
                     }).execute(EMAIL, email, firstName, lastName, password);
-
                 }
             }
         });

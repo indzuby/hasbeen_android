@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,6 +29,8 @@ public class FollowerFragment extends Fragment {
     TextView mCount;
     Long mUserId;
     String mAccessToken;
+    View mLoading;
+    boolean isLoading;
     Handler followerHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -39,10 +43,11 @@ public class FollowerFragment extends Fragment {
                 case -1:
                     break;
             }
+            stopLoading();
         }
     };
     protected void initFollower() {
-        mCount.setText(mFollowers.size()+" " + getString(R.string.follower));
+        mCount.setText(getString(R.string.following_count,mFollowers.size()));
 
         FollowerAdapter followerAdapter = new FollowerAdapter(mFollowers, getActivity());
         mList.setAdapter(followerAdapter);
@@ -63,6 +68,20 @@ public class FollowerFragment extends Fragment {
         View mHeaderView = LayoutInflater.from(getActivity()).inflate(R.layout.follower_header, null, false);
         mCount = (TextView) mHeaderView.findViewById(R.id.count);
         mList.addHeaderView(mHeaderView);
+        mLoading = mView.findViewById(R.id.refresh);
+        startLoading();
+    }
 
+    protected void startLoading() {
+        isLoading = true;
+        mLoading.setVisibility(View.VISIBLE);
+        Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
+        mLoading.startAnimation(rotate);
+    }
+
+    protected void stopLoading() {
+        isLoading = false;
+        mLoading.setVisibility(View.GONE);
+        mLoading.clearAnimation();
     }
 }

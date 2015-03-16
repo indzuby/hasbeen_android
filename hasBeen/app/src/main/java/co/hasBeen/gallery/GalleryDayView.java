@@ -3,6 +3,9 @@ package co.hasBeen.gallery;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -26,6 +29,7 @@ import java.util.List;
 import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
 import co.hasBeen.database.ItemModule;
+import co.hasBeen.database.DeleteAsyncTask;
 import co.hasBeen.day.DayDialog;
 import co.hasBeen.map.EnterMapLisnter;
 import co.hasBeen.model.api.Day;
@@ -59,14 +63,31 @@ public class GalleryDayView extends ActionBarActivity {
         mDayId = getIntent().getLongExtra("id", 0);
         init();
     }
-
+    Handler deleteHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(msg.what==0) {
+                new LoadThread().start();
+            }
+        }
+    };
     class LoadThread extends Thread {
 
         @Override
         public void run() {
             if (isLoading) {
                 try {
-                    mPositionList =  mItemModule.getPhotosByDate(mDayId);
+                    if(!database.hasDay(mDayId)) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getBaseContext(), getString(R.string.day_deleted), Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+                        });
+                    }
+                    mPositionList = mItemModule.getPhotosByDate(mDayId);
                     initPlace(mPositionList);
                     mDay.setPositionList(mPositionList);
                     View fullScreen = findViewById(R.id.fullScreen);
@@ -104,7 +125,8 @@ public class GalleryDayView extends ActionBarActivity {
             mListView.addHeaderView(headerView);
             initActionBar();
             startLoading();
-            new LoadThread().start();
+            new DeleteAsyncTask(mDayId,database,deleteHandler).execute();
+//            new LoadThread().start();
             ImageButton shareButton = (ImageButton) findViewById(R.id.shareButton);
             shareButton.setOnClickListener(new View.OnClickListener() {
 
@@ -168,7 +190,8 @@ public class GalleryDayView extends ActionBarActivity {
                         mDayTitle.requestFocus(mBeforeTitle.length() - 1);
                     }
                 };
-                mDayDialog = new DayDialog(GalleryDayView.this, del, edit);
+                mDayDialog = new DayDialog(GalleryDayView.this);
+                mDayDialog.setListner(del,edit);
                 mDayDialog.show();
             }
         });

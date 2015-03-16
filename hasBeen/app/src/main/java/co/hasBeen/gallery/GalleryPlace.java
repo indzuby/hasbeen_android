@@ -26,7 +26,7 @@ import java.util.List;
 
 import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
-import co.hasBeen.geolocation.GeoFourSquare;
+import co.hasBeen.geolocation.PlaceFourSquare;
 import co.hasBeen.map.MapRoute;
 import co.hasBeen.model.api.Category;
 import co.hasBeen.model.api.Place;
@@ -85,7 +85,7 @@ public class GalleryPlace extends ActionBarActivity implements OnMapReadyCallbac
 
     protected void init() throws Exception{
         setContentView(R.layout.gallery_place_edit);
-        mPositionId = getIntent().getLongExtra("positionId",0);
+        mPositionId = getIntent().getLongExtra("id",0);
 
         mPlaceName = (TextView) findViewById(R.id.profileName);
         mPlaceCategory = (TextView) findViewById(R.id.placeIcon);
@@ -103,7 +103,7 @@ public class GalleryPlace extends ActionBarActivity implements OnMapReadyCallbac
         mPlaceAdapter.mIndex = getIntent().getIntExtra("index",-1);
         mListView = (ListView) findViewById(R.id.place_list);
         mListView.setAdapter(mPlaceAdapter);
-        new GeoFourSquare(new Handler(Looper.getMainLooper()){
+        new PlaceFourSquare(new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(final Message msg) {
                 try {
@@ -127,7 +127,7 @@ public class GalleryPlace extends ActionBarActivity implements OnMapReadyCallbac
                     e.printStackTrace();
                 }
             }
-        }).execute(mLat, mLon, null, 25);
+        }).execute(mLat, mLon, 25);
 
     }
     protected void initActionBar(){

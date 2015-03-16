@@ -18,6 +18,7 @@ import org.opencv.android.OpenCVLoader;
 
 import co.hasBeen.alarm.AlarmCountAsyncTask;
 import co.hasBeen.alarm.AlarmFragment;
+import co.hasBeen.gallery.GalleryFragment;
 import co.hasBeen.model.api.AlarmCount;
 import co.hasBeen.profile.ProfileFragment;
 import co.hasBeen.utils.Session;
@@ -140,6 +141,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 break;
             case 2:
                 gallery.setSelected(true);
+                GalleryFragment gallery =(GalleryFragment) mPagerAdapter.getItem(2);
+                gallery.newDaysLoad();
                 break;
             case 3:
                 alarm.setSelected(true);

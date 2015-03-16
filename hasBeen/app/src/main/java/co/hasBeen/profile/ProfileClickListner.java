@@ -18,6 +18,7 @@ public class ProfileClickListner implements View.OnClickListener {
     public void onClick(View v) {
         Intent intent = new Intent(mContext,ProfileView.class);
         intent.putExtra("userId",mId);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
     }
 }

@@ -38,12 +38,15 @@ public class PhotoDialog extends Dialog{
     public void setCover(View.OnClickListener mCover) {
         this.mCover = mCover;
     }
-    public PhotoDialog(Context context, View.OnClickListener del, View.OnClickListener edit) {
+    public PhotoDialog(Context context) {
         // Dialog 배경을 투명 처리 해준다.
         super(context , android.R.style.Theme_Translucent_NoTitleBar);
+        isReport = false;
+    }
+    public void setLisnter(View.OnClickListener del, View.OnClickListener edit){
+
         mDel = del;
         mEdit = edit;
-        isReport = false;
     }
     public PhotoDialog(Context context,View.OnClickListener cover ,View.OnClickListener del, View.OnClickListener edit) {
         // Dialog 배경을 투명 처리 해준다.
@@ -53,9 +56,9 @@ public class PhotoDialog extends Dialog{
         mEdit = edit;
         isReport = false;
     }
-    public PhotoDialog(Context context, View.OnClickListener del, View.OnClickListener edit, boolean isReport) {
+    public PhotoDialog(Context context,boolean isReport) {
         // Dialog 배경을 투명 처리 해준다.
-        this(context,del,edit);
+        this(context);
         this.isReport = isReport;
     }
     private TextView mRemoveButton;

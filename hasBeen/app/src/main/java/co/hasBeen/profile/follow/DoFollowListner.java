@@ -49,7 +49,7 @@ public class DoFollowListner implements View.OnClickListener {
                 public void handleMessage(Message msg) {
                     super.handleMessage(msg);
                     if(msg.what==0) {
-                        Toast.makeText(mContext, "Follow success", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, mContext.getString(R.string.follow_success), Toast.LENGTH_LONG).show();
                         mFollow.setFollowingId((Long)msg.obj);
                     }
                 }
@@ -61,12 +61,12 @@ public class DoFollowListner implements View.OnClickListener {
                 public void handleMessage(Message msg) {
                     super.handleMessage(msg);
                     if(msg.what==0) {
-                        Toast.makeText(mContext, "Unfollow success", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, mContext.getString(R.string.unfollow_success), Toast.LENGTH_LONG).show();
                         mFollow.setFollowingId(null);
                         if(mAdapter!=null && mAdapter.getClass().equals(FollowingAdapter.class)) {
                             mFollows.remove(mFollow);
                             mAdapter.notifyDataSetChanged();
-                            mFollowStatus.setText(mFollows.size() + " following");
+                            mFollowStatus.setText(mContext.getString(R.string.following_count,mFollows.size()));
                         }
                     }
                 }

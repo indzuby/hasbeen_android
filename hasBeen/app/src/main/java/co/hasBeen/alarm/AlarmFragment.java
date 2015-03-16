@@ -186,7 +186,7 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
             selectTab(NEWS);
             mAlarmCount.setNewsCount(0);
             redDotRefresh();
-            if(mAlarmsYou.size()<=0)
+            if(mAlarmsNews.size()<=0)
                 new AlarmListAsyncTask(alarmNewsHandler).execute(mAccessToken,AlarmListAsyncTask.CATEGORY_NEWS);
         }else {
             ((TextView)v.findViewById(R.id.you)).setTextColor(getResources().getColor(R.color.theme_color));
@@ -205,7 +205,8 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
         if(index == NEWS) {
             mNewList.setVisibility(View.VISIBLE);
             mYouList.setVisibility(View.GONE);
-            if(mAlarmsNews.size()>0)getNewAlarmNews();
+            if(mAlarmsNews.size()>0)
+                getNewAlarmNews();
             mTab = NEWS;
         }else {
             mYouList.setVisibility(View.VISIBLE);
@@ -215,17 +216,16 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
         }
     }
     public void getNewAlarmNews(){
-        startLoading();
+        if(!mNewList.isRefreshing()) startLoading();
         if(mAlarmsNews.size()>0) {
             isNewLoad = true;
             new AlarmListAsyncTask(alarmNewsHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_NEWS, "", mAlarmsNews.get(0).getId());
-
         }
         else
             new AlarmListAsyncTask(alarmNewsHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_NEWS);
     }
     public void getNewAlarmYou(){
-        startLoading();
+        if(!mYouList.isRefreshing()) startLoading();
         if(mAlarmsYou.size()>0) {
             isNewLoad = true;
             new AlarmListAsyncTask(alarmYouHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_YOU, "", mAlarmsYou.get(0).getId());

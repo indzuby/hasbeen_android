@@ -59,7 +59,6 @@ public class ItemModule {
         if (lastDay != null) {
             photoCount = day.getPhotoCount();
             lastDayTime = lastDay.getDate();
-            String date = new Date(lastDayTime).toString();
         }
         cursor = MediaStore.Images.Media.query(resolver,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -78,7 +77,7 @@ public class ItemModule {
                 String format = cursor.getString(idx[4]);
                 float lat = cursor.getFloat(idx[5]);
                 float lon = cursor.getFloat(idx[6]);
-                if (lat == 0 && lon == 0) continue;
+                if (lat == 0 || lon == 0) continue;
                 if (isNotJpg(format)) continue;
                 if (displayName != null && !HasBeenDate.isSameDate(lastDayTime, dataTaken)) {
                     Photo photo = makePhotoData(lat, lon, dataTaken, photoID, photoPath);
@@ -179,7 +178,7 @@ public class ItemModule {
                     e.printStackTrace();
                 }
             }
-        },day).execute(photo.getLat(), photo.getLon(), place, 1);
+        },day).execute(photo, place);
     }
 
     protected void insertNewPosition(Place place, Photo photo) throws SQLException {
@@ -281,6 +280,7 @@ public class ItemModule {
                     continue;
                 }
             }
+            if(photo.getPositionId()!=null ) continue;
             Integer edge = photo.getEdgeCount();
             if (edge == null) {
                 edge = HasBeenOpenCv.detectEdge(getThumbnail(photo.getPhotoId()));
@@ -329,7 +329,7 @@ public class ItemModule {
                             e.printStackTrace();
                         }
                     }
-                }). execute(photo.getLat(),photo.getLon(),place, 1);
+                }). execute(photo,place);
             }else
                 bestPhoto = photo;
         }
@@ -376,6 +376,5 @@ public class ItemModule {
                 database.updatePositionMainPhotoId(bestPhoto.getPositionId(), bestPhoto.getId());
             database.updatePositionEndTime(bestPhoto.getPositionId(), photos.get(photos.size() - 1).getTakenTime());
         }
-
     }
 }

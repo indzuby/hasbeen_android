@@ -1,5 +1,6 @@
 package co.hasBeen.gallery;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -30,7 +31,6 @@ public class GalleryDayAdapter extends BaseAdapter {
     List<Day> mGalleryList;
     DatabaseHelper database;
     ItemModule itemModule;
-
     public GalleryDayAdapter(Context context, List<Day> galleryList) throws Exception{
         mContext = context;
         mGalleryList = galleryList;
@@ -66,16 +66,31 @@ public class GalleryDayAdapter extends BaseAdapter {
         TextView placeName = (TextView) view.findViewById(R.id.placeName);
         TextView dayStatus = (TextView) view.findViewById(R.id.dayStatus);
 
-        date.setText(HasBeenDate.convertDate(day.getDate()));
         try {
+            date.setText(HasBeenDate.convertDate(day.getDate()));
+            if(!database.hasDay(day.getId())) {
+                mGalleryList.remove(position);
+                ((Activity)mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
+                return view;
+            }
             day.setMainPhoto(database.selectPhoto(day.getMainPhotoId()));
             Glide.with(mContext).load(day.getMainPhoto().getPhotoPath()).placeholder(Util.getPlaceHolder(position)).into(mainPhoto);
-            initPlaceName(placeName,day);
+            initPlaceName(placeName,day,position);
             initDayStatus(dayStatus,day);
+            mainPhoto.setOnClickListener(new EnterGalleryDayViewListner(day));
         } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                if(database.hasDay(day.getId()))
+                    day = database.selectDay(day.getId());
+            }catch (Exception e2){
+                e2.printStackTrace();
+            }
         }
-        mainPhoto.setOnClickListener(new EnterGalleryDayViewListner(day));
         return view;
     }
     class EnterGalleryDayViewListner implements View.OnClickListener {
@@ -95,10 +110,12 @@ public class GalleryDayAdapter extends BaseAdapter {
             }
         }
     }
-    protected void initPlaceName(TextView placeName ,Day day) throws Exception{
-        if (day.getMainPlaceId()==null && day.getMainPlace()==null) {
+    protected void initPlaceName(TextView placeName ,Day day,int position) throws Exception{
+        placeName.setText("Loading..");
+        if (day.getMainPlaceId()==null && day.getMainPlace()==null && !day.isLoad()) {
+            day.setLoad(true);
             itemModule.getPlace(day,placeName);
-        } else {
+        } else if(day.getMainPlaceId()!=null){
             List<Position> positions = database.selectPositionByDayId(day.getId());
             initPlace(positions);
             String name = Util.convertPlaceName(positions);

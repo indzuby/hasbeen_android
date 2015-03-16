@@ -75,11 +75,11 @@ public class GcmIntentService extends IntentService {
         Alarm.Type type = push.getType();
         Intent intent = new Intent(this,MainActivity.class);
         if(type.equals(Alarm.Type.DAY_COMMENT) || type.equals(Alarm.Type.DAY_LOVE)){
-            intent = new Intent(this,PhotoView.class);
+            intent = new Intent(this,DayView.class);
             intent.putExtra("id",push.getId());
             if(type.equals(Alarm.Type.DAY_COMMENT))intent.putExtra("type","comment");
         }else if(type.equals(Alarm.Type.PHOTO_COMMENT) || type.equals(Alarm.Type.PHOTO_LOVE)){
-            intent = new Intent(this,DayView.class);
+            intent = new Intent(this,PhotoView.class);
             intent.putExtra("id",push.getId());
             if(type.equals(Alarm.Type.PHOTO_COMMENT))intent.putExtra("type","comment");
         }

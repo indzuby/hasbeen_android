@@ -1,5 +1,6 @@
 package co.hasBeen.social;
 
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,7 +15,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -42,9 +45,7 @@ public class FbFriendsView extends ActionBarActivity{
                 if(msg.what==0) {
                     mFriends = (List) msg.obj;
                     ListView listView = (ListView) findViewById(R.id.list);
-                    View mHeaderView = LayoutInflater.from(getBaseContext()).inflate(R.layout.follower_header, null, false);
-                    TextView count = (TextView) mHeaderView.findViewById(R.id.count);
-                    count.setText(getString(R.string.friends,mFriends.size()));
+                    View mHeaderView = getHeaderView();
                     listView.addHeaderView(mHeaderView);
                     FollowingAdapter followingAdapter = new FollowingAdapter(mFriends, getBaseContext());
                     followingAdapter.mType = "other";
@@ -54,7 +55,33 @@ public class FbFriendsView extends ActionBarActivity{
             }
         }).execute(mAccessToekn);
     }
-
+    protected View getHeaderView(){
+        View mHeaderView = LayoutInflater.from(getBaseContext()).inflate(R.layout.follower_header, null, false);
+        RelativeLayout box = (RelativeLayout)mHeaderView.findViewById(R.id.followerHeader);
+        box.getLayoutParams().height = (int) getResources().getDimension(R.dimen.fb_count_height);
+        TextView count = (TextView) mHeaderView.findViewById(R.id.count);
+        count.setText(getString(R.string.friends,mFriends.size()));
+        View folowAll = mHeaderView.findViewById(R.id.followAll);
+        folowAll.setVisibility(View.VISIBLE);
+        folowAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new FbFollowAsyncTask(new Handler(Looper.getMainLooper()){
+                    @Override
+                    public void handleMessage(Message msg) {
+                        super.handleMessage(msg);
+                        if(msg.what==0) {
+                            Toast.makeText(getBaseContext(),getString(R.string.all_follow_success),Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(FbFriendsView.this,FbFriendsView.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                }).execute(mAccessToekn);
+            }
+        });
+        return mHeaderView;
+    }
     protected void init() {
         setContentView(R.layout.follower);
         initActionBar();
@@ -98,4 +125,5 @@ public class FbFriendsView extends ActionBarActivity{
         mLoading.setVisibility(View.GONE);
         mLoading.clearAnimation();
     }
+
 }

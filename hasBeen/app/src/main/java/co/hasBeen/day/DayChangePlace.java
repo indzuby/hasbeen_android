@@ -26,7 +26,7 @@ import java.util.List;
 
 import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
-import co.hasBeen.geolocation.GeoFourSquare;
+import co.hasBeen.geolocation.PlaceFourSquare;
 import co.hasBeen.map.MapRoute;
 import co.hasBeen.model.api.Category;
 import co.hasBeen.model.api.Place;
@@ -101,7 +101,7 @@ public class DayChangePlace extends ActionBarActivity implements OnMapReadyCallb
         mPlaceAdapter.mIndex = getIntent().getIntExtra("index",-1);
         mListView = (ListView) findViewById(R.id.place_list);
         mListView.setAdapter(mPlaceAdapter);
-        new GeoFourSquare(new Handler(Looper.getMainLooper()){
+        new PlaceFourSquare(new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(final Message msg) {
                 try {
@@ -125,7 +125,7 @@ public class DayChangePlace extends ActionBarActivity implements OnMapReadyCallb
                     e.printStackTrace();
                 }
             }
-        }).execute(mLat, mLon, null, 25);
+        }).execute(mLat, mLon, 25);
 
     }
     protected void initActionBar(){

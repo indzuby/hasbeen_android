@@ -18,6 +18,7 @@ import java.util.List;
 
 import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.day.PositionDialog;
 import co.hasBeen.map.EnterMapLisnter;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Photo;
@@ -76,7 +77,10 @@ public class GalleryPositionAdapter extends BaseAdapter{
         TextView photoCount = (TextView) view.findViewById(R.id.photoCount);
         GridView gridView = (GridView) view.findViewById(R.id.galleryL2GridView);
         ImageView categoryIcon = (ImageView) view.findViewById(R.id.placeIcon);
-        categoryIcon.setOnClickListener(new CategoryListner(index,position));
+        if (index == 0)
+            categoryIcon.setOnClickListener(new PlaceIconClick(index, position.getId()));
+        else if (index != 0)
+            categoryIcon.setOnClickListener(new PlaceIconClick(index, position.getId()));
         categoryIcon.setScaleType(ImageView.ScaleType.FIT_XY);
         placeTime.setText(HasBeenDate.convertTime(position.getStartTime(), position.getEndTime(),mContext));
 
@@ -100,28 +104,64 @@ public class GalleryPositionAdapter extends BaseAdapter{
         int count = (int)Math.ceil((float)photoCount/3);
         return Util.getPhotoHeight(mContext)*count;
     }
-    class CategoryListner implements View.OnClickListener{
+    class PlaceIconClick implements View.OnClickListener {
         int index;
-        Position position;
-        CategoryListner(int index, Position position) {
+        Long id;
+        Long beforeid;
+        PositionDialog dialog;
+        PlaceIconClick(int index, Long id) {
             this.index = index;
-            this.position = position;
+            this.id = id;
         }
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(mContext, GalleryPlace.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("positionId", position.getId());
-            intent.putExtra("index",index);
-            mPositionId = position.getId();
-            mIndex = index;
-            Session.putBoolean(mContext, "placeChange", false);
-            mContext.startActivity(intent);
-            startCallBack(index);
-
+            View.OnClickListener change = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, GalleryPlace.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("id", id);
+                    intent.putExtra("index",index);
+                    mIndex = index;
+                    Session.putBoolean(mContext, "placeChange", false);
+                    mContext.startActivity(intent);
+                    startCallBack(index);
+                    dialog.dismiss();
+                }
+            };
+            if(index==0) {
+                dialog = new PositionDialog(mContext,change,null,true);
+                dialog.show();
+            }else {
+                View.OnClickListener merge = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            mergePosition(index);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        dialog.dismiss();
+                    }
+                };
+                dialog = new PositionDialog(mContext, change, merge);
+                dialog.show();
+            }
         }
     }
-
+    protected void mergePosition(int from) throws Exception{
+        Position toPosition = getItem(from-1);
+        Position fromPosition = getItem(from);
+        database.mergePosition(toPosition.getId(),fromPosition.getId());
+        toPosition.getPhotoList().addAll(fromPosition.getPhotoList());
+        mPositions.remove(from);
+        ((Activity) mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
+    }
 
     void startCallBack(final int index) {
         new Thread(new Runnable() {

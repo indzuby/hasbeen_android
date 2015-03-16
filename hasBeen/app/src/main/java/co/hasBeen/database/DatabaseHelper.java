@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.ColumnArg;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -165,7 +166,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
     public List<Photo> selectPhotosByDayId(Long dayId) throws  SQLException{
         Dao<Photo,Long> photoDao = getPhotoDao();
-        return photos.queryBuilder().orderBy("taken_time", true).where().eq("day_id",dayId).query();
+        return photos.queryBuilder().orderBy("taken_time", true).where().eq("day_id", dayId).query();
+    }
+    public List<Photo> selectClearestPhotosByDayId(Long dayId) throws  SQLException{
+        Dao<Photo,Long> photoDao = getPhotoDao();
+        return photos.queryBuilder().orderBy("taken_time", true).where().eq("day_id",dayId).and().eq("clearest_id", new ColumnArg("id")).query();
     }
     public boolean hasPhotoId(Long photoId) throws SQLException{
         Dao<Photo,Long> photoDao = getPhotoDao();
@@ -200,9 +205,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         Dao<Photo,Long> photoDao = getPhotoDao();
         return photoDao.queryBuilder().orderBy("taken_time",true).where().eq("position_id", positionId).and().eq("clearest_id", new ColumnArg("id")).query();
     }
-    public List<Photo> selectPhotoClearestPhoto() throws SQLException {
+    public List<Photo> selectClearestPhoto(Long id) throws SQLException {
         Dao<Photo,Long> photoDao = getPhotoDao();
-        return photoDao.queryBuilder().orderBy("taken_time", false).where().eq("clearest_id", new ColumnArg("id")).query();
+        return photoDao.queryBuilder().orderBy("taken_time", false).where().eq("clearest_id", id).query();
     }
     public List<Day> selectBeforeFiveDay() throws SQLException {
         Dao<Day,Long> dayDao = getDayDao();
@@ -253,6 +258,56 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public int countPosition(Long dayid) throws SQLException {
         Dao<Position,Long> positionDao = getPositionDao();
         return (int) positionDao.queryBuilder().where().eq("day_id",dayid).countOf();
+    }
+    public void updateClearestId(Long id, Long newid) throws SQLException {
+        Dao<Photo,Long> photoDao = getPhotoDao();
+        UpdateBuilder<Photo,Long> updateBuilder = photoDao.updateBuilder();
+        updateBuilder.updateColumnValue("clearest_id",newid).where().eq("clearest_id",id);
+        updateBuilder.update();
+    }
+    public void removePhoto(Long id) throws SQLException{
+        DeleteBuilder<Photo,Long> deleteBuilder = getPhotoDao().deleteBuilder();
+        deleteBuilder.where().eq("id",id);
+        deleteBuilder.delete();
+    }
+    public boolean isEmptyPosition(Long id) throws SQLException {
+        Dao<Photo,Long> photoDao = getPhotoDao();
+       if(photoDao.queryBuilder().where().eq("position_id",id).countOf()==0) return true;
+        return false;
+    }
+    public boolean isEmptyDay(Long id) throws SQLException {
+        if(countPhotoByDayid(id)==0) return true;
+        return false;
+    }
+    public void removePosition(Long id) throws SQLException{
+        DeleteBuilder<Position,Long> deleteBuilder = getPositionDao().deleteBuilder();
+        deleteBuilder.where().eq("id",id);
+        deleteBuilder.delete();
+    }
+    public void removeDay(Long id) throws SQLException{
+        DeleteBuilder<Day,Long> deleteBuilder = getDayDao().deleteBuilder();
+        deleteBuilder.where().eq("id",id);
+        deleteBuilder.delete();
+    }
+    public boolean hasDay(Long id) throws SQLException {
+        Long count = getDayDao().queryBuilder().where().eq("id",id).countOf();
+        if(count==0) return false;
+        return true;
+    }
+    public void mergePosition(Long to,Long from) throws SQLException{
+        UpdateBuilder<Photo,Long>  updateBuilder = getPhotoDao().updateBuilder();
+        updateBuilder.updateColumnValue("position_id",to).where().eq("position_id",from);
+        updateBuilder.update();
+        removePosition(from);
+        updatePositionEndTime(to);
+    }
+    public void updatePositionEndTime(Long id) throws SQLException {
+        Long start = getPhotoDao().queryBuilder().orderBy("taken_time", true).where().eq("position_id",id).queryForFirst().getTakenTime();
+        Long end = getPhotoDao().queryBuilder().orderBy("taken_time", false).where().eq("position_id",id).queryForFirst().getTakenTime();
+        Position position = selectPosition(id);
+        position.setStartTime(start);
+        position.setEndTime(end);
+        updatePosition(position);
     }
 }
 //select * from photo where id = clearest_id

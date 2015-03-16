@@ -23,6 +23,9 @@
     <string name="domain">http://192.168.0.5:8080/</string>
     <string name="map_id">AIzaSyDGLVU0yTEqcNnIRk-SiLXEytDAsJ-Pi0E</string>
     <string name="support_email">support@hasbeen.co</string>
+    <string name="web_domain">http://www.hasbeen.co</string>
+    <string name="license_domain">http://www.hasbeen.co/license/android.html</string>
+
     <!--action bar-->
     <string name="action_bar_share_title"> Share </string>
     <string name="action_bar_edit_title"> Edit </string>
@@ -121,7 +124,7 @@
     <string name="loved_day_alarm">&lt;b&gt;%1$s&lt;/b&gt; liked &lt;b&gt;%2$s&lt;/b&gt; day trip.</string>
     <string name="post_day_alarm">&lt;b&gt;%1$s&lt;/b&gt; posted new day trip</string>
     <string name="following_alarm">&lt;b&gt;%1$s&lt;/b&gt; followed &lt;b&gt;%2$s&lt;/b&gt;.</string>
-    <string name="account_facebook_friend_alarm">Your Facebook Friends &lt;b&gt;%1$d&lt;/b&gt; signed up &lt;b&gt;hasBeen&lt;/b&gt;.</string>
+    <string name="account_facebook_friend_alarm">Your Facebook Friends &lt;b&gt;%1$s&lt;/b&gt; signed up &lt;b&gt;hasBeen&lt;/b&gt;.</string>
     <string name="you_user">you</string>
     <string name="your_user">your</string>
     <string name="possessive">\'s</string>
@@ -140,10 +143,14 @@
     <!--에러-->
     <string name="internet_error">Please check your nextwork connection.</string>
     <string name="common_error">Error has occurred.</string>
+    <string name="name_size_error">name must be at least 2 and most 20 letters.</string>
+    <string name="email_size_error">email must be at most 255 letters.</string>
     <string name="password_size_error">password must be at least 8 and most 50 letters.</string>
     <string name="description_size_error">memo must be at least 2 and most 255 letters.</string>
     <string name="title_size_error">title must be at least 2 and most 255 letters.</string>
     <string name="session_gone">Your session expired, please sign in again.</string>
+    <string name="dup_email">This email is exist.</string>
+    <string name="day_deleted"> This day trip was deleted.</string>
     <!--확인-->
     <string name="sign_up_ok">Sign up done, please sign in.</string>
     <string name="report_ok">Reported</string>
@@ -152,7 +159,8 @@
     <string name="description_ok">Writing done</string>
     <string name="upload_ok">Upload done</string>
     <string name="cover_ok">Your cover photo has been updated.</string>
-
+    <string name="follow_success"> Follow Success</string>
+    <string name="unfollow_success"> Unfollow Success</string>
 
     <!--설정-->
     <string name="facebook_title">Facebook</string>
@@ -164,4 +172,7 @@
     <string name="report_problem">Report a problem</string>
     <string name="open_source">License</string>
     <string name="friends">d friends</string>
+    <string name="about_text">hasBeen is a great playground for sharing travel stories and memory without any effort.</string>
+    
+
 </resources>

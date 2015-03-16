@@ -308,12 +308,14 @@ public class DayView extends ActionBarActivity{
                             mDayTitle.requestFocus(mBeforeTitle.length() - 1);
                         }
                     };
-                    mDayDialog = new DayDialog(DayView.this, del,edit);
+                    mDayDialog = new DayDialog(DayView.this);
+                    mDayDialog.setListner(del,edit);
                     mDayDialog.show();
                 }else {
-                    View.OnClickListener del = new ReportListner("days",mDay.getId(),getBaseContext(),mDayDialog);
-                    View.OnClickListener edit = new ShareListner(getBaseContext(), "days",mDay,mShareCount);
-                    mDayDialog = new DayDialog(DayView.this, del,edit,true);
+                    mDayDialog = new DayDialog(DayView.this,true);
+                    View.OnClickListener report = new ReportListner("days",mDay.getId(),getBaseContext(),mDayDialog);
+                    View.OnClickListener share = new ShareListner(getBaseContext(), "days",mDay,mShareCount);
+                    mDayDialog.setListner(report,share);
                     mDayDialog.show();
                 }
             }

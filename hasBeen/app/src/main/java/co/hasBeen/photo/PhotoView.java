@@ -30,6 +30,7 @@ import co.hasBeen.comment.CommentAsyncTask;
 import co.hasBeen.comment.CommentView;
 import co.hasBeen.comment.EnterCommentListner;
 import co.hasBeen.comment.WriteCommentAsyncTask;
+import co.hasBeen.day.EnterDayListner;
 import co.hasBeen.model.api.Comment;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.profile.ProfileClickListner;
@@ -44,7 +45,7 @@ import co.hasBeen.utils.Util;
 /**
  * Created by zuby on 2015-01-29.
  */
-public class PhotoView extends ActionBarActivity {
+public class    PhotoView extends ActionBarActivity {
     final static String TAG = "Photo view";
     Photo mPhoto;
     Long mPhotoId;
@@ -64,6 +65,7 @@ public class PhotoView extends ActionBarActivity {
     View mLoading;
     boolean isLoading;
     TextView titleView;
+    View dayButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +83,8 @@ public class PhotoView extends ActionBarActivity {
                 case 0:
                     mPhoto = (Photo) msg.obj;
                     Log.i("Photo", mPhoto.getPlaceName());
+                    dayButton.setOnClickListener(new EnterDayListner(mPhoto.getDay().getId(),getBaseContext()));
+                    titleView.setText(mPhoto.getDay().getTitle());
                     initView();
                     initComment();
                     stopLoading();
@@ -112,7 +116,7 @@ public class PhotoView extends ActionBarActivity {
         findViewById(R.id.title).setVisibility(View.GONE);
         mLikeCount.setText(getString(R.string.like_count, mPhoto.getLoveCount()));
         mCommentCount.setText(getString(R.string.comment_count, mPhoto.getCommentCount()));
-        mShareCount.setText(getString(R.string.share_count,mPhoto.getShareCount()));
+        mShareCount.setText(getString(R.string.share_count, mPhoto.getShareCount()));
 
         ImageView imageView = (ImageView) findViewById(R.id.photo);
         Glide.with(this).load(mPhoto.getLargeUrl()).placeholder(R.drawable.placeholder1).into(imageView);
@@ -131,7 +135,7 @@ public class PhotoView extends ActionBarActivity {
         }
         loveButton.setOnClickListener(new LoveListner(this, mPhoto, "photos", mLikeCount));
         LinearLayout shareButton = (LinearLayout) findViewById(R.id.shareButton);
-        shareButton.setOnClickListener(new ShareListner(this,"photos",mPhoto,mShareCount));
+        shareButton.setOnClickListener(new ShareListner(this, "photos", mPhoto, mShareCount));
 
 
     }
@@ -175,14 +179,14 @@ public class PhotoView extends ActionBarActivity {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new EnterCommentListner(PhotoView.this, "photos", mPhoto,mCommentCount);
+                    new EnterCommentListner(PhotoView.this, "photos", mPhoto, mCommentCount);
                 }
             });
             commentBox.addView(view);
         }
 
         LinearLayout commentButton = (LinearLayout) findViewById(R.id.commentButton);
-        commentButton.setOnClickListener(new EnterCommentListner(PhotoView.this, "photos", mPhoto,mCommentCount,commentBox));
+        commentButton.setOnClickListener(new EnterCommentListner(PhotoView.this, "photos", mPhoto, mCommentCount, commentBox));
         final EditText mEnterComment = (EditText) findViewById(R.id.enterComment);
         ImageView send = (ImageView) findViewById(R.id.send);
         send.setOnClickListener(new View.OnClickListener() {
@@ -215,6 +219,7 @@ public class PhotoView extends ActionBarActivity {
         });
         ;
     }
+
     protected void init() {
         setContentView(R.layout.photo);
         mLoading = findViewById(R.id.refresh);
@@ -270,7 +275,7 @@ public class PhotoView extends ActionBarActivity {
                 nearBy1.addView(nearByItem);
             else
                 nearBy2.addView(nearByItem);
-            nearByItem.setOnClickListener(new EnterPhotoListner(photo.getId(),this));
+            nearByItem.setOnClickListener(new EnterPhotoListner(photo.getId(), this));
         }
     }
 
@@ -282,10 +287,9 @@ public class PhotoView extends ActionBarActivity {
         ColorDrawable colorDrawable = new ColorDrawable(getResources().getColor(R.color.theme_color));
         actionBar.setBackgroundDrawable(colorDrawable);
 
-        View mCustomActionBar = mInflater.inflate(R.layout.action_bar_place, null);
+        View mCustomActionBar = mInflater.inflate(R.layout.action_bar_photo, null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
-        titleView.setText(getString(R.string.photo));
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -294,79 +298,19 @@ public class PhotoView extends ActionBarActivity {
         });
         actionBar.setCustomView(mCustomActionBar);
         actionBar.setDisplayShowCustomEnabled(true);
-        ImageView moreVert = (ImageView) mCustomActionBar.findViewById(R.id.moreVert);
-
-        moreVert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mPhoto.getUser().getId() == mMyid) {
-                    View.OnClickListener del = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            new PhotoDeleteAsyncTask(new Handler(Looper.getMainLooper()){
-                                @Override
-                                public void handleMessage(Message msg) {
-                                    super.handleMessage(msg);
-                                    if(msg.what==0) {
-                                        Toast.makeText(getBaseContext(),getString(R.string.remove_photo_ok),Toast.LENGTH_LONG).show();
-                                        finish();
-                                    }else {
-                                        Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            }).execute(mAccessToken,mPhoto.getId());
-                        }
-                    };
-                    View.OnClickListener edit = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mPhotoDialog.dismiss();
-                            mDescription.setFocusable(true);
-                            mDescription.setFocusableInTouchMode(true);
-                            isEdit = true;
-                            mBeforeDescription = mDescription.getText().toString();
-                            initEditActionBar();
-                            mImm.showSoftInput(mDescription, InputMethodManager.RESULT_UNCHANGED_SHOWN);
-                            mDescription.requestFocus(mBeforeDescription.length() - 1);
-                        }
-                    };
-                    View.OnClickListener cover = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            new CoverAsyncTask(new Handler(Looper.getMainLooper()) {
-                                @Override
-                                public void handleMessage(Message msg) {
-                                    super.handleMessage(msg);
-                                    if(msg.what==0) {
-                                        Toast.makeText(getBaseContext(),getString(R.string.cover_ok),Toast.LENGTH_LONG).show();
-                                        finish();
-                                    }else {
-                                        Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            }).execute(mAccessToken,mPhoto.getId());
-                        }
-                    };
-                    mPhotoDialog = new PhotoDialog(PhotoView.this,cover, del,edit);
-                    mPhotoDialog.show();
-                }else {
-                    View.OnClickListener del = new ReportListner("photos",mPhoto.getId(),getBaseContext(),mPhotoDialog);
-                    View.OnClickListener edit = new ShareListner(getBaseContext(),"photos",mPhoto,mShareCount);
-                    mPhotoDialog = new PhotoDialog(PhotoView.this, del,edit,true);
-                    mPhotoDialog.show();
-                }
-            }
-        });
+        View moreVert = mCustomActionBar.findViewById(R.id.moreVert);
+        moreVert.setOnClickListener(new EditLisnter());
+        dayButton = findViewById(R.id.dayButton);
     }
 
-    protected void initEditActionBar(){
+    protected void initEditActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(this);
         ColorDrawable colorDrawable = new ColorDrawable(getResources().getColor(R.color.theme_color));
         actionBar.setBackgroundDrawable(colorDrawable);
-        View mCustomActionBar = mInflater.inflate(R.layout.action_bar_default,null);
+        View mCustomActionBar = mInflater.inflate(R.layout.action_bar_default, null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
         titleView.setText(getString(R.string.action_bar_edit_title));
@@ -388,16 +332,17 @@ public class PhotoView extends ActionBarActivity {
                     @Override
                     public void handleMessage(Message msg) {
                         super.handleMessage(msg);
-                        if(msg.what==0)
+                        if (msg.what == 0)
                             backOnEditView(mBeforeDescription);
                         else
-                            Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
+                            Toast.makeText(getBaseContext(), getString(R.string.common_error), Toast.LENGTH_LONG).show();
 
                     }
-                }).execute(mAccessToken, mPhoto.getId(),mBeforeDescription);
+                }).execute(mAccessToken, mPhoto.getId(), mBeforeDescription);
             }
         });
     }
+
     protected void startLoading() {
         isLoading = true;
         mLoading.setVisibility(View.VISIBLE);
@@ -411,7 +356,7 @@ public class PhotoView extends ActionBarActivity {
         mLoading.clearAnimation();
     }
 
-    protected void backOnEditView(String description){
+    protected void backOnEditView(String description) {
         mDescription.setFocusable(false);
         mDescription.setFocusableInTouchMode(false);
         mDescription.setText(description);
@@ -426,5 +371,69 @@ public class PhotoView extends ActionBarActivity {
 //        RecycleUtils.recursiveRecycle(getWindow().getDecorView());
         System.gc();
         super.onDestroy();
+    }
+
+    class EditLisnter implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if (mPhoto.getUser().getId() == mMyid) {
+                View.OnClickListener del = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new PhotoDeleteAsyncTask(new Handler(Looper.getMainLooper()) {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                super.handleMessage(msg);
+                                if (msg.what == 0) {
+                                    Toast.makeText(getBaseContext(), getString(R.string.remove_photo_ok), Toast.LENGTH_LONG).show();
+                                    finish();
+                                } else {
+                                    Toast.makeText(getBaseContext(), getString(R.string.common_error), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }).execute(mAccessToken, mPhoto.getId());
+                    }
+                };
+                View.OnClickListener edit = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mPhotoDialog.dismiss();
+                        mDescription.setFocusable(true);
+                        mDescription.setFocusableInTouchMode(true);
+                        isEdit = true;
+                        mBeforeDescription = mDescription.getText().toString();
+                        initEditActionBar();
+                        mImm.showSoftInput(mDescription, InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                        mDescription.requestFocus(mBeforeDescription.length() - 1);
+                    }
+                };
+                View.OnClickListener cover = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new CoverAsyncTask(new Handler(Looper.getMainLooper()) {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                super.handleMessage(msg);
+                                if (msg.what == 0) {
+                                    Toast.makeText(getBaseContext(), getString(R.string.cover_ok), Toast.LENGTH_LONG).show();
+                                    finish();
+                                } else {
+                                    Toast.makeText(getBaseContext(), getString(R.string.common_error), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }).execute(mAccessToken, mPhoto.getId());
+                    }
+                };
+                mPhotoDialog = new PhotoDialog(PhotoView.this, cover, del, edit);
+                mPhotoDialog.show();
+            } else {
+                mPhotoDialog = new PhotoDialog(PhotoView.this, true);
+                View.OnClickListener report = new ReportListner("photos", mPhoto.getId(), getBaseContext(), mPhotoDialog);
+                View.OnClickListener share = new ShareListner(getBaseContext(), "photos", mPhoto, mShareCount);
+                mPhotoDialog.setLisnter(report,share);
+                mPhotoDialog.show();
+            }
+        }
+
     }
 }

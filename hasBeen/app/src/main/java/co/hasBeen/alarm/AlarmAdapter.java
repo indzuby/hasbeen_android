@@ -106,7 +106,9 @@ public class AlarmAdapter extends BaseAdapter {
                     mContext.startActivity(intent);
                 } else if (type == Alarm.Type.FOLLOW ) {
                     Intent intent = new Intent(mContext, ProfileView.class);
-                    intent.putExtra("userId", alarm.getToUser().getId());
+                    if(mTab == YOU)
+                        intent.putExtra("userId", alarm.getUser().getId());
+                    else intent.putExtra("userId", alarm.getToUser().getId());
                     mContext.startActivity(intent);
                 }else if(type == Alarm.Type.FB_FRIEND) {
                     Intent intent = new Intent(mContext, ProfileView.class);

@@ -32,16 +32,19 @@ public class DayDialog extends Dialog{
         mRemoveButton.setOnClickListener(mDel);
         mEditButton.setOnClickListener(mEdit);
     }
-    public DayDialog(Context context, View.OnClickListener del,View.OnClickListener edit) {
+    public DayDialog(Context context) {
         // Dialog 배경을 투명 처리 해준다.
         super(context , android.R.style.Theme_Translucent_NoTitleBar);
-        mDel = del;
-        mEdit = edit;
         isReport = false;
     }
-    public DayDialog(Context context, View.OnClickListener del,View.OnClickListener edit,boolean isReport) {
+    public void setListner(View.OnClickListener del,View.OnClickListener edit){
+        mDel = del;
+        mEdit = edit;
+
+    }
+    public DayDialog(Context context,boolean isReport) {
         // Dialog 배경을 투명 처리 해준다.
-        this(context,del,edit);
+        this(context);
         this.isReport = isReport;
     }
     private TextView mRemoveButton;

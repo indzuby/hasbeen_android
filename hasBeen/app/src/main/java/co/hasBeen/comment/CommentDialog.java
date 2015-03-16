@@ -15,7 +15,7 @@ import co.hasBeen.R;
 public class CommentDialog extends Dialog{
 
     View.OnClickListener mDel;
-
+    boolean isReport;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,9 +30,16 @@ public class CommentDialog extends Dialog{
         setLayout();
         mRemoveButton.setOnClickListener(mDel);
     }
-    public CommentDialog(Context context,View.OnClickListener del) {
+    public CommentDialog(Context context) {
         // Dialog 배경을 투명 처리 해준다.
         super(context , android.R.style.Theme_Translucent_NoTitleBar);
+    }
+    public CommentDialog(Context context,boolean isReport) {
+        // Dialog 배경을 투명 처리 해준다.
+        super(context , android.R.style.Theme_Translucent_NoTitleBar);
+        this.isReport = isReport;
+    }
+    public void setListner(View.OnClickListener del){
         mDel = del;
     }
     private TextView mRemoveButton;
@@ -43,5 +50,8 @@ public class CommentDialog extends Dialog{
     private void setLayout(){
         mRemoveButton = (TextView) findViewById(R.id.removeComment);
         mEditButton = (TextView) findViewById(R.id.editComment);
+        mEditButton.setVisibility(View.GONE);
+        if(isReport)
+            mRemoveButton.setText(getContext().getString(R.string.report_comment));
     }
 }
