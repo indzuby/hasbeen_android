@@ -68,20 +68,12 @@
                 </RelativeLayout>
             </LinearLayout>
 
-        <GridView
-            android:id="@+id/galleryL2GridView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:choiceMode="multipleChoiceModal"
-            android:numColumns="3"
-            android:scrollbars="none" />
 
-        <View
+        <it.sephiroth.android.library.widget.HListView
+            android:id="@+id/hListView"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:alpha="0.15"
-            android:background="#000000" />
+            android:layout_height="120dp"
+            android:layout_marginBottom="16dp" />
     </LinearLayout>
 
 </LinearLayout>

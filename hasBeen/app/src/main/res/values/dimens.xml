@@ -18,5 +18,5 @@
     <dimen name="recommendation_height">216dp</dimen>
     <dimen name="pin_day_height">168dp</dimen>
     <dimen name="follow_count_height">24dp</dimen>
-    <dimen name="fb_count_height">36dp</dimen>
+    <dimen name="fb_count_height">56dp</dimen>
 </resources>

@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/day_background"
     android:orientation="vertical">
     <ListView
         android:id="@+id/list"
@@ -10,6 +11,12 @@
         android:background="@color/theme_white"
         android:divider="#22000000"
         android:dividerHeight="2px"></ListView>
+    <View
+        android:layout_width="match_parent"
+        android:alpha="0.1"
+        android:layout_below="@+id/list"
+        android:background="#000"
+        android:layout_height="2px" />
     <ImageView
         android:layout_width="wrap_content"
         android:visibility="gone"

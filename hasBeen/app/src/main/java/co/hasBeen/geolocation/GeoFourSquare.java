@@ -110,11 +110,9 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
                 }
             } else {
                 place.setName("Not Found");
-                place.setVenueId("-1");
+                place.setVenueId(null);
                 place.setCategoryId("-1");
                 place.setCategoryName("");
-                place.setCategoryIconPrefix("");
-                place.setCategoryIconSuffix("");
                 place.setLon(mPhoto.getLon());
                 place.setLat(mPhoto.getLat());
             }

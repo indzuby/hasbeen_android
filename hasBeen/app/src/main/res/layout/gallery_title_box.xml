@@ -26,7 +26,7 @@
             android:id="@+id/date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="2015년 1월 1일"
+            android:text=""
             android:textStyle="bold"
             android:textColor="@color/light_black"
             android:textSize="14sp" />
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:layout_below="@+id/date"
-            android:text="Area1 - Araea7"
+            android:text=""
             android:textColor="@color/light_black"
             android:textSize="12sp" />
     </LinearLayout>

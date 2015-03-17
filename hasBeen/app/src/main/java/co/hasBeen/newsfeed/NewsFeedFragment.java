@@ -1,7 +1,6 @@
 package co.hasBeen.newsfeed;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,7 +29,6 @@ import co.hasBeen.MainActivity;
 import co.hasBeen.R;
 import co.hasBeen.account.FacebookApi;
 import co.hasBeen.account.LoginActivity;
-import co.hasBeen.day.DayView;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Follow;
 import co.hasBeen.social.FbFriendsAsyncTask;
@@ -42,7 +39,7 @@ import co.hasBeen.utils.Session;
 /**
  * Created by zuby on 2015-01-23.
  */
-public class NewsFeedFragment extends Fragment{
+public class NewsFeedFragment extends Fragment {
     final String TAG = "NewsFeed";
     View mView;
     String mAccessToken;
@@ -59,10 +56,8 @@ public class NewsFeedFragment extends Fragment{
     View mDefaultView;
     ListView mActualListView;
     ViewPager mViewPager;
-    Typeface medium,regular;
-    void init() {
-        medium = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Roboto-Medium.ttf");
-        regular = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Roboto-Regular.ttf");
+    boolean isDefault;
+    void init(){
 
         mListView = (PullToRefreshListView) mView.findViewById(R.id.list);
         mListView.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
@@ -72,31 +67,16 @@ public class NewsFeedFragment extends Fragment{
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
                 isFirst = true;
-                if(mFeeds.size()>0) {
+                if (mFeeds.size() > 0) {
                     firstUpdateTime = mFeeds.get(0).getUpdatedTime();
                     new NewsFeedAsyncTask(handler).execute(mAccessToken, "", firstUpdateTime);
-                }
-                else new NewsFeedAsyncTask(handler).execute(mAccessToken);
-            }
-        });
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (!flag) {
-                    int index = position-1;
-                    Log.i(TAG, mFeeds.get(index).getId() + "");
-                    flag = true;
-                    Intent intent = new Intent(getActivity(), DayView.class);
-                    intent.putExtra("id", mFeeds.get(index).getId());
-                    startActivity(intent);
-                    flag = false;
-                }
+                } else new NewsFeedAsyncTask(handler).execute(mAccessToken);
             }
         });
         mListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
             @Override
             public void onLastItemVisible() {
-                if(!isLoading) {
+                if (!isLoading && !isDefault) {
                     isLoading = true;
                     isFirst = false;
                     startLoading();
@@ -106,65 +86,68 @@ public class NewsFeedFragment extends Fragment{
         });
         mActualListView = mListView.getRefreshableView();
         mActualListView.setAdapter(mFeedAdapter);
-        mLoadingView =  LayoutInflater.from(getActivity()).inflate(R.layout.loading_layout, null, false);
+        mLoadingView = LayoutInflater.from(getActivity()).inflate(R.layout.loading_layout, null, false);
         mLoading = mLoadingView.findViewById(R.id.refresh);
         mActualListView.addFooterView(mLoadingView);
-        mDefaultView = LayoutInflater.from(getActivity()).inflate(R.layout.newsfeed_default,null,false);
+        mDefaultView = LayoutInflater.from(getActivity()).inflate(R.layout.newsfeed_default, null, false);
         dismissDefaultPage();
     }
-    protected void startLoading(){
+
+    protected void startLoading() {
         mLoadingView.setVisibility(View.VISIBLE);
         Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
         mLoading.startAnimation(rotate);
     }
-    protected void stopLoading(){
+
+    protected void stopLoading() {
         mLoadingView.setVisibility(View.GONE);
         mLoading.clearAnimation();
     }
-    protected void dismissDefaultPage(){
+
+    protected void dismissDefaultPage() {
+        isDefault = false;
         mDefaultView.setVisibility(View.GONE);
         mActualListView.removeHeaderView(mDefaultView);
     }
-    protected void showDefaultPage(){
+
+    protected void showDefaultPage() {
+        if(isDefault) return;
+        isDefault = true;
         mActualListView.addHeaderView(mDefaultView);
         mDefaultView.setVisibility(View.VISIBLE);
         View hasBeenBtn = mDefaultView.findViewById(R.id.hasBeenBtn);
-        ((TextView)hasBeenBtn.findViewById(R.id.searchText)).setTypeface(medium);
         hasBeenBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).changeTab(1);
+                ((MainActivity) getActivity()).changeTab(1);
             }
         });
-        new FbFriendsAsyncTask(new Handler(Looper.getMainLooper()){
+        new FbFriendsAsyncTask(new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                if(msg.what==0) {
-                    final List<Follow> users = (List)msg.obj;
+                if (msg.what == 0) {
+                    final List<Follow> users = (List) msg.obj;
                     int count = users.size();
-                    if(count<=0)  {
+                    if (count <= 0) {
                         mDefaultView.findViewById(R.id.fbFriendsContainer).setVisibility(View.GONE);
-                        return ;
+                        return;
                     }
                     TextView count1 = (TextView) mDefaultView.findViewById(R.id.fbFriendsCountFirst);
                     TextView count2 = (TextView) mDefaultView.findViewById(R.id.fbFriendsCountSecond);
-//                    당신의 페이스북 친구 183명이 \nhasBeen을 이용중입니다.
-                    count1.setText(getString(R.string.no_newsfeed,count));
-                    count1.setTypeface(medium);
-                    count2.setText(getString(R.string.your_facebook_friend_count,count));
-                    count2.setTypeface(medium);
+                    count1.setText(getString(R.string.your_facebook_friend_count, count));
+                    count2.setText(getString(R.string.show_all_facebook_friend, count));
                     LinearLayout fbFriendsThree = (LinearLayout) mDefaultView.findViewById(R.id.fbFriendsThree);
-                    List subUser = users.subList(0,(3<count ? 3 : count));
-                    FbFriendsItem items = new FbFriendsItem(subUser,getActivity());
-                    for(int i = 0; i<subUser.size();i++)
+                    List subUser = users.subList(0, (3 < count ? 3 : count));
+                    FbFriendsItem items = new FbFriendsItem(subUser, getActivity());
+                    for (int i = 0; i < subUser.size(); i++)
                         fbFriendsThree.addView(items.getView(i));
                     count2.setOnClickListener(new View.OnClickListener() {
                         boolean flag = false;
 
                         @Override
                         public void onClick(View v) {
-                            if(!flag) {
+                            if (!flag) {
                                 flag = true;
                                 Intent intent = new Intent(getActivity(), FbFriendsView.class);
                                 startActivity(intent);
@@ -172,16 +155,17 @@ public class NewsFeedFragment extends Fragment{
                             }
                         }
                     });
-                }else {
+                } else {
 
                 }
             }
         }).execute(mAccessToken);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.newsfeed, container, false);
-        mAccessToken = Session.getString(getActivity(),"accessToken",null);
+        mAccessToken = Session.getString(getActivity(), "accessToken", null);
         new NewsFeedAsyncTask(handler).execute(mAccessToken);
         init();
         return mView;
@@ -192,51 +176,48 @@ public class NewsFeedFragment extends Fragment{
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    final List<Day> feeds =  (List<Day>)msg.obj;
+                    final List<Day> feeds = (List<Day>) msg.obj;
                     Log.i(TAG, feeds.size() + "");
-                    if(isFirst)
+                    if (isFirst)
                         Collections.reverse(feeds);
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            try {
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        for(Day feed : feeds) {
-                                            if(!isFirst) {
-                                                mFeeds.add(feed);
-                                                lastUpdateTime = feed.getUpdatedTime();
-                                            }else {
-                                                mFeeds.add(0,feed);
-                                            }
-                                            mFeedAdapter.notifyDataSetChanged();
-                                        }
-                                        if(mFeeds.size()<=0)
-                                            showDefaultPage();
-                                        else {
-                                            dismissDefaultPage();
-                                        }
-                                    }
-                                });
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                            for (Day feed : feeds) {
+                                if (!isFirst) {
+                                    mFeeds.add(feed);
+                                    lastUpdateTime = feed.getUpdatedTime();
+                                } else {
+                                    mFeeds.add(0, feed);
+                                }
+
                             }
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mFeedAdapter.notifyDataSetChanged();
+                                    if (mFeeds.size() <= 0)
+                                        showDefaultPage();
+                                    else {
+                                        dismissDefaultPage();
+                                    }
+                                }
+                            });
                         }
                     }).start();
-                    if(mListView.isRefreshing()) {
+                    if (mListView.isRefreshing()) {
                         mListView.onRefreshComplete();
                     }
-                    if(isLoading) {
+                    if (isLoading) {
                         isLoading = false;
                         stopLoading();
                     }
                     break;
                 case -1:
                     int statusLine = (int) msg.obj;
-                    if(statusLine == 401) {
-                        Toast.makeText(getActivity(),getString(R.string.session_gone),Toast.LENGTH_LONG).show();
-                        Session.remove(getActivity(),"accessToken");
+                    if (statusLine == 401) {
+                        Toast.makeText(getActivity(), getString(R.string.session_gone), Toast.LENGTH_LONG).show();
+                        Session.remove(getActivity(), "accessToken");
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
                         FacebookApi.callFacebookLogout(getActivity());
                         startActivity(intent);

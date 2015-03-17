@@ -73,7 +73,6 @@
                 android:layout_height="72dp"
                 android:gravity="center"
                 android:lineSpacingExtra="4sp"
-                android:text="@string/your_facebook_friend_count"
                 android:textColor="@color/theme_color"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -103,7 +102,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:gravity="center"
-                android:text="@string/show_all_facebook_friend"
                 android:background="@drawable/description_selector"
                 android:textColor="@color/light_gray"
                 android:textSize="14sp"

@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 
@@ -55,25 +53,23 @@ public class GalleryAdapter extends BaseAdapter {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.gallery_view, null);
         }
-        LinearLayout container = (LinearLayout) view.findViewById(R.id.photoContainer);
-        container.setLayoutParams(new AbsListView.LayoutParams(height,height));
+//        LinearLayout container = (LinearLayout) view.findViewById(R.id.photoContainer);
+//        container.setLayoutParams(new AbsListView.LayoutParams(height,height));
         ImageView imageView = (ImageView) view.findViewById(R.id.photo);
-        imageView.setOnClickListener(new ImageListner(position,photo));
 
-        Glide.with(mContext).load(photo.getPhotoPath())
-                .centerCrop().placeholder(Util.getPlaceHolder(photo.getEdgeCount())).override(height, height)
+            Glide.with(mContext).load(photo.getPhotoPath())
+                .placeholder(Util.getPlaceHolder(photo.getEdgeCount()))
                 .into(imageView);
+        view.setOnClickListener(new ImageListner(position,photo));
         return view;
     }
     class ImageListner implements View.OnClickListener {
         int position;
         Photo photo;
-        boolean flag = false;
         ImageListner(int position, Photo photo) {
             this.position = position;
             this.photo = photo;
         }
-
         @Override
         public void onClick(View v) {
             if(!flag) {

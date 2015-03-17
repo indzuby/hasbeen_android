@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:orientation="vertical" android:layout_width="64dp"
+    android:layout_marginLeft="1dp"
+    android:layout_marginRight="1dp"
+    android:layout_height="64dp">
+    <ImageView
+        android:layout_width="match_parent"
+        android:scaleType="centerCrop"
+        android:id="@+id/mainPhoto"
+        android:adjustViewBounds="true"
+        android:src="@drawable/photo_sample"
+        android:layout_height="match_parent" />
+    <TextView
+        android:layout_width="match_parent"
+        android:text="Day 1"
+        android:textSize="10sp"
+        android:paddingLeft="4dp"
+        android:id="@+id/dayIndex"
+        android:gravity="center_vertical"
+        android:layout_gravity="bottom"
+        android:background="#66000000"
+        android:textColor="@color/theme_white"
+        android:layout_height="20dp" />
 </FrameLayout>

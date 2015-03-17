@@ -337,7 +337,7 @@ public class ItemModule {
         updateClearestId(similaryPhotos, bestPhoto);
     }
     protected boolean isSamePlace(Place aPlace, Place bPlace) {
-        if (aPlace.getVenueId().equals(bPlace.getVenueId()))
+        if (aPlace.getVenueId()!=null && bPlace.getVenueId()!=null && aPlace.getVenueId().equals(bPlace.getVenueId()))
             return true;
         return false;
     }
@@ -351,8 +351,8 @@ public class ItemModule {
 //        Bitmap before = BitmapFactory.decodeFile(beforePhoto.getPhotoPath());
 //        Bitmap current = BitmapFactory.decodeFile(photo.getPhotoPath());
 //        double hist = HasBeenOpenCv.compareHistogram(before, current);
-        double hist = HasBeenOpenCv.compareHistogram(getThumbnail(beforePhoto.getPhotoId()), getThumbnail(photo.getPhotoId()));
-
+//        double hist = HasBeenOpenCv.compareHistogram(getThumbnail(beforePhoto.getPhotoId()), getThumbnail(photo.getPhotoId()));
+        double hist = 0.6;
         if (hist >= 0.85)
             return true;
         return false;

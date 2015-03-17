@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -21,6 +22,7 @@ import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 
+import io.fabric.sdk.android.Fabric;
 import java.util.Arrays;
 
 import co.hasBeen.MainActivity;
@@ -49,6 +51,7 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         init();
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
     }
 
     protected void init() {

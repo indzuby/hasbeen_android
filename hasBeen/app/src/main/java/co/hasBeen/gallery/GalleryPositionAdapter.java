@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,6 +26,7 @@ import co.hasBeen.model.api.Position;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.Session;
 import co.hasBeen.utils.Util;
+import it.sephiroth.android.library.widget.HListView;
 
 /**
  * Created by zuby on 2015-01-05.
@@ -75,7 +75,7 @@ public class GalleryPositionAdapter extends BaseAdapter{
         TextView placeTime = (TextView) view.findViewById(R.id.placeTime);
         TextView placeName = (TextView) view.findViewById(R.id.placeName);
         TextView photoCount = (TextView) view.findViewById(R.id.photoCount);
-        GridView gridView = (GridView) view.findViewById(R.id.galleryL2GridView);
+        HListView gridView = (HListView) view.findViewById(R.id.hListView);
         ImageView categoryIcon = (ImageView) view.findViewById(R.id.placeIcon);
         if (index == 0)
             categoryIcon.setOnClickListener(new PlaceIconClick(index, position.getId()));
@@ -91,7 +91,7 @@ public class GalleryPositionAdapter extends BaseAdapter{
             placeName.setOnClickListener(new EnterMapLisnter(mContext, mDay, position.getId()));
             placeTime.setOnClickListener(new EnterMapLisnter(mContext, mDay, position.getId()));
             List<Photo> photos = position.getPhotoList();
-            gridView.getLayoutParams().height = getHeight(photos.size());
+//            gridView.getLayoutParams().height = getHeight(photos.size());
             GalleryAdapter galleryAdapter = new GalleryAdapter(mContext,photos);
             gridView.setAdapter(galleryAdapter);
             photoCount.setText(mContext.getString(R.string.photo_count,photos.size()));

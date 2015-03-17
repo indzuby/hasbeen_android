@@ -15,6 +15,7 @@ import co.hasBeen.model.api.Comment;
 import co.hasBeen.model.api.Follow;
 import co.hasBeen.model.api.Loved;
 import co.hasBeen.model.api.PushAlarm;
+import co.hasBeen.model.api.Trip;
 import co.hasBeen.model.api.User;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Photo;
@@ -286,5 +287,27 @@ public class JsonConverter {
         Type listType = new TypeToken<List<Comment>>(){}.getType();
         List<Comment> comments = gson.fromJson(reader, listType);
         return comments;
+    }
+    public static List<Trip> convertJsonToTripList(Reader reader){
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                if(f.getDeclaredClass() == Day.class){
+                    if(!f.getName().equals("id") && !f.getName().equals("mainPhoto"))
+                        return false;
+                    return true;
+                }
+                return false;
+            }
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                return false;
+            }
+        }).create();
+        Type listType = new TypeToken<List<Trip>>(){}.getType();
+        List<Trip> trips = gson.fromJson(reader, listType);
+        return trips;
     }
 }

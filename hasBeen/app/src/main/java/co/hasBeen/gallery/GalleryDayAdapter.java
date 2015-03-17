@@ -78,18 +78,15 @@ public class GalleryDayAdapter extends BaseAdapter {
                 });
                 return view;
             }
+            if(!database.hasPhotoId(day.getMainPhotoId()))
+                day = database.selectDay(day.getId());
             day.setMainPhoto(database.selectPhoto(day.getMainPhotoId()));
             Glide.with(mContext).load(day.getMainPhoto().getPhotoPath()).placeholder(Util.getPlaceHolder(position)).into(mainPhoto);
             initPlaceName(placeName,day,position);
             initDayStatus(dayStatus,day);
             mainPhoto.setOnClickListener(new EnterGalleryDayViewListner(day));
         } catch (Exception e) {
-            try {
-                if(database.hasDay(day.getId()))
-                    day = database.selectDay(day.getId());
-            }catch (Exception e2){
-                e2.printStackTrace();
-            }
+            e.printStackTrace();
         }
         return view;
     }

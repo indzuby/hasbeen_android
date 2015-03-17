@@ -119,7 +119,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
     public boolean hasVenueId(String venueId) throws SQLException{
         Dao<Place,Long> placeDao = getPlaceDao();
-        if(placeDao.queryForEq("venue_id",venueId).size()==0) return false;
+        if(venueId==null || placeDao.queryForEq("venue_id",venueId).size()==0) return false;
         return true;
     }
     public  void updatePhoto(Photo photo) throws SQLException{

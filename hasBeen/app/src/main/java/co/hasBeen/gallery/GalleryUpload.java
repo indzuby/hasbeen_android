@@ -1,6 +1,7 @@
 package co.hasBeen.gallery;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,6 +40,7 @@ import co.hasBeen.utils.Util;
  * Created by zuby on 2015-01-29.
  */
 public class GalleryUpload extends ActionBarActivity {
+    final static int REQUEST_CODE = 2001;
     Long mDayId;
     TextView mTextDate;
     TextView mTextArea;
@@ -51,6 +53,7 @@ public class GalleryUpload extends ActionBarActivity {
     EditText mDescription;
     String mAccessToekn;
     int mUploadCount;
+    boolean isUpload = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,12 +84,22 @@ public class GalleryUpload extends ActionBarActivity {
         Glide.with(this).load(mDayUpload.getMainPhoto().getPhotoPath()).centerCrop().into(mainPhoto);
         TextView photoCount = (TextView) findViewById(R.id.photoCount);
         photoCount.setText("+"+ (mDayUpload.getPhotoCount()-1));
+        if(mDayUpload.getPhotoCount() == 1)
+            photoCount.setVisibility(View.GONE);
         mTitle = (EditText) findViewById(R.id.title);
         mDescription = (EditText) findViewById(R.id.description);
         mTitle.setText(mDayUpload.getTitle());
         mTitle.setSelection(mDayUpload.getTitle().length());
         mDescription.setText(mDayUpload.getDescription());
         mDescription.setSelection(mDayUpload.getDescription().length());
+        View daySelectBox = findViewById(R.id.daySelectBox);
+        daySelectBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GalleryUpload.this,GallerySelectDayView.class);
+                startActivityForResult(intent,REQUEST_CODE);
+            }
+        });
     }
 
     protected void initActionBar() {
@@ -118,6 +131,8 @@ public class GalleryUpload extends ActionBarActivity {
                     Toast.makeText(getBaseContext(),getString(R.string.description_size_error),Toast.LENGTH_LONG).show();
                     return ;
                 }
+                if(isUpload) return;
+                isUpload = true;
                 showProgress();
                 mUploadCount = 0;
                 new Thread(new Runnable() {
@@ -155,6 +170,7 @@ public class GalleryUpload extends ActionBarActivity {
                 setResult(RESULT_OK);
                 finish();
             }else {
+                dialog.dismiss();
                 Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
                 setResult(RESULT_CANCELED);
                 finish();
@@ -239,8 +255,16 @@ public class GalleryUpload extends ActionBarActivity {
 
     protected void showProgress() {
         dialog = new UploadDialog(this);
-        dialog.setCancelable(false);
         dialog.setMaxCount(mDayUpload.getPhotoCount());
         dialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==REQUEST_CODE && resultCode == RESULT_OK) {
+            Long id = data.getLongExtra("id",0L);
+            mDayUpload.setTripId(id);
+        }
     }
 }

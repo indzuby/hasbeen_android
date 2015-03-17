@@ -60,7 +60,7 @@ public class FbFriendsView extends ActionBarActivity{
         RelativeLayout box = (RelativeLayout)mHeaderView.findViewById(R.id.followerHeader);
         box.getLayoutParams().height = (int) getResources().getDimension(R.dimen.fb_count_height);
         TextView count = (TextView) mHeaderView.findViewById(R.id.count);
-        count.setText(getString(R.string.friends,mFriends.size()));
+        count.setText(getString(R.string.your_facebook_friend_count,mFriends.size()));
         View folowAll = mHeaderView.findViewById(R.id.followAll);
         folowAll.setVisibility(View.VISIBLE);
         folowAll.setOnClickListener(new View.OnClickListener() {

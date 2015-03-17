@@ -18,6 +18,7 @@ import java.util.List;
 import co.hasBeen.R;
 import co.hasBeen.comment.EnterCommentListner;
 import co.hasBeen.day.DayDialog;
+import co.hasBeen.day.EnterDayListner;
 import co.hasBeen.social.LoveListner;
 import co.hasBeen.map.MapRoute;
 import co.hasBeen.model.api.Day;
@@ -151,6 +152,7 @@ public class NewsFeedAdapter extends BaseAdapter {
 
         ImageView mapThumbnail = (ImageView) view.findViewById(R.id.mapThumbnail);
         Glide.with(mContext).load(feed.getStaticMapUrl()).into(mapThumbnail);
+        view.setOnClickListener(new EnterDayListner(feed.getId(),mContext));
         return view;
     }
 

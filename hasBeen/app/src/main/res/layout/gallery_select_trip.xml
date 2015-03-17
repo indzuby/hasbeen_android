@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/day_background"
     android:layout_height="match_parent">
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
+    <ListView
         android:layout_width="match_parent"
-        android:background="@color/theme_white"
-        android:id="@+id/listVIew"
+        android:id="@+id/listView"
+        android:divider="@color/transparent"
         android:layout_height="match_parent"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:background="@drawable/actionbar_shadow"
         android:layout_height="wrap_content"/>
-
-
-
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/refresh"
+        android:layout_centerInParent="true"
+        android:src="@drawable/loading"/>
 </RelativeLayout>

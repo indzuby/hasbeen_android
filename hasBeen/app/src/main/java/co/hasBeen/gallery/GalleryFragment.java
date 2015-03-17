@@ -90,15 +90,17 @@ public class GalleryFragment extends Fragment {
             startLoading();
         Long date = new Date().getTime();
         new LoadThread(date,true).start();
-
     }
-    protected boolean hasDay(Day day){
+    protected boolean hasDay(Day day) throws Exception{
+        for(Day existDay : mDayList) {
+            if(!database.hasDay(existDay.getId()))
+                mDayList.remove(existDay);
+        }
         for(Day existDay : mDayList) {
             if(existDay.getId().equals(day.getId())) return true;
         }
         return false;
     }
-
     protected void loadDays() throws Exception{
         startLoading();
         Day day = database.selectLastDay();

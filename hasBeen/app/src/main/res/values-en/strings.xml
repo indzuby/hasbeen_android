@@ -24,6 +24,8 @@
     <string name="support_email">support@hasbeen.co</string>
     <string name="web_domain">http://www.hasbeen.co</string>
     <string name="license_domain">http://www.hasbeen.co/license/android.html</string>
+    <string name="no_place_prefix">http://hasbeen.blob.core.windows.net/common/no_place_</string>
+    <string name="no_place_suffix">.png</string>
 
     <!--action bar-->
     <string name="action_bar_share_title"> Share </string>
@@ -36,19 +38,20 @@
     <string name="action_bar_profile_title"> Profile </string>
     <string name="action_bar_fbfriends_title"> Facebook Friends </string>
     <string name="action_bar_done">DONE</string>
+    <string name="action_bar_select_day">Select Day</string>
     <!--로그인,회원가입-->
     <string name="login_email"> sign in</string>
     <string name="login_facebook"> sign in with Facebook</string>
     <string name="first_name">first name</string>
     <string name="signup_email">sign up</string>
-    <string name="dont_have_account">I do not have an account yet.</string>
-    <string name="already_account">I alread have a account.</string>
+    <string name="dont_have_account">Don\'t have an account yet?</string>
+    <string name="already_account">I already have a account.</string>
     <string name="sign_up">sign up</string>
     <string name="last_name">last name</string>
     <!--뉴스피드-->
     <string name="no_newsfeed">No post to show.\nTake a tour on hasBeen and follow your friends.</string>
     <string name="find_trip">Tour on others trips.</string>
-    <string name="your_facebook_friend_count">A total of %1$d of your Facebook friends are now with hasBeen.</string>
+    <string name="your_facebook_friend_count">A total of %1$d of your Facebook\n friends are now with hasBeen.</string>
     <string name="show_all_facebook_friend">View all of %1$d friends.</string>
     <string name="comment_day_trip">&#160;commented on your day trip.</string>
     <string name="love_day_trip">&#160;liked your day trip.</string>
@@ -114,6 +117,7 @@
     <string name="place">place</string>
     <string name="non_load_status">%1$d+ places · %2$d photos</string>
     <string name="load_status">%1$d places · %2$d photos</string>
+    <string name="day_count">%d days</string>
     <!--알람-->
     <string name="news">NEWS</string>
     <string name="you">YOU</string>
@@ -148,7 +152,7 @@
     <string name="title_size_error">title must be at least 2 and most 255 letters.</string>
     <string name="session_gone">Your session expired, please sign in again.</string>
     <string name="dup_email">This email is exist.</string>
-    <string name="day_deleted"> This day trip was deleted.</string>
+    <string name="day_deleted"> This day trip was deleted.\nPlease pull to refresh.</string>
     <!--확인-->
     <string name="sign_up_ok">Sign up done, please sign in.</string>
     <string name="report_ok">Reported</string>
@@ -169,6 +173,7 @@
     <string name="about_hasbeen">About hasBeen</string>
     <string name="report_problem">Report a problem</string>
     <string name="open_source">License</string>
-    <string name="friends">d friends</string>
+    <string name="friends">%d friends</string>
     <string name="about_text">hasBeen is a great playground for sharing travel stories and memory without any effort.</string>
+    <string name="follow_all">Follow All</string>
 </resources>

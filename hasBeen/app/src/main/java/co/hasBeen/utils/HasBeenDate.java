@@ -3,6 +3,8 @@ package co.hasBeen.utils;
 import android.content.Context;
 import android.util.Log;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -38,37 +40,41 @@ public class HasBeenDate {
         return new Date(taken_date);
     }
     public static int calculateDateRange(Long from, Long to) {
-        LocalDateTime start = new LocalDateTime(from);
-        LocalDateTime end = new LocalDateTime(to);
+        DateTime start = new DateTime(from).withZone(DateTimeZone.UTC);
+        DateTime end = new DateTime(to).withZone(DateTimeZone.UTC);
         return Days.daysBetween(start.toLocalDate(), end.toLocalDate()).getDays();
     }
-
-    public static boolean isDateRangeInThree(Photo photo, Photo standardPhoto){
-        int k = calculateDateRange(photo.getTakenTime(),standardPhoto.getTakenTime());
-        if(k<=5) return true;
-
-        return false;
-    }
-    public static Long getBefore10Day(Long currentTime){
-        return getBeforeDay(currentTime,10);
-    }
     public static Long getBeforeDay(Long currentTime, int day){
-        Date date = new LocalDateTime(currentTime).minusDays(day).toDate();
+        Date date = new DateTime(currentTime).withZone(DateTimeZone.UTC).minusDays(day).toDate();
         return date.getTime();
     }
     public static String convertDate(Date date) {
-        LocalDate newDate = new LocalDate(date);
-        return newDate.toString("MMMM dd, yyyy");
+//        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+//        LocalDate newDate = new LocalDate(date);
+//        return newDate.toString("MMMM dd, yyyy")
+        return convertDate(date.getTime());
     }
     public static String convertDate(long timeStamp) {
-        Date date = new Date();
-        date.setTime(timeStamp);
-        return new LocalDate(date).toString("MMMM dd, yyyy");
+//        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+//        Date date = new Date();
+//        date.setTime(timeStamp);
+//        return new LocalDate(date).toString("MMMM dd, yyyy");
+
+        DateTime dateTimeIndia = new DateTime(timeStamp);
+        DateTime dateTimeUtcGmt = dateTimeIndia.withZone( DateTimeZone.UTC );
+        return dateTimeUtcGmt.toString("MMMM dd, yyyy");
     }
     public static String convertTime(Long startTime, Long endTime,Context context) {
-        String start = new LocalDateTime(startTime).toString(context.getString(R.string.photo_time));
-        String end = new LocalDateTime(endTime).toString(context.getString(R.string.photo_time));
+        String start = new DateTime(startTime).withZone(DateTimeZone.UTC).toString(context.getString(R.string.photo_time));
+        String end = new DateTime(endTime).withZone(DateTimeZone.UTC).toString(context.getString(R.string.photo_time));
 
+        if(start.equals(end))
+            return start;
+        return start+" – "+end;
+    }
+    public static String convertDate(Long startTime, Long endTime) {
+        String start = convertDate(startTime);
+        String end = convertDate(endTime);
         if(start.equals(end))
             return start;
         return start+" – "+end;

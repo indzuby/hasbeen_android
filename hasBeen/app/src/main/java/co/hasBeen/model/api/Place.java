@@ -149,6 +149,8 @@ public class Place {
         name = "";
         city = "";
         country = "";
+        categoryIconPrefix = "http://hasbeen.blob.core.windows.net/common/no_place_";
+        categoryIconSuffix = ".png";
     }
     Photo mainPhoto;
 

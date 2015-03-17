@@ -1,7 +1,9 @@
 package co.hasBeen.utils;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,6 +11,7 @@ import android.graphics.Matrix;
 import android.graphics.Path;
 import android.media.ExifInterface;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 
 import org.bson.BasicBSONObject;
@@ -216,9 +219,28 @@ public class Util {
         int catgoryWith = Util.convertDpToPixel(72, mContext);
         return (width - catgoryWith) / 3 - 2;
     }
+
+    public static int getTripHeight(Context mContext) {
+        int width = mContext.getResources().getDisplayMetrics().widthPixels;
+        int catgoryWith = Util.convertDpToPixel(32, mContext);
+        return (width - catgoryWith) / 5 - 2;
+    }
     Handler mHandler;
 
     public static String getMapUrl(float lat, float lon) {
         return MAP_URL + lat + "," + lon;
     }
+
+
+    public static String getThumbnail(long id,Context context) {
+        ContentResolver resolver = context.getContentResolver();
+        Cursor cursor = MediaStore.Images.Thumbnails.queryMiniThumbnail(resolver,id, MediaStore.Images.Thumbnails.MINI_KIND,null);
+        if( cursor != null && cursor.getCount() > 0 ) {
+            cursor.moveToFirst();//**EDIT**
+            return cursor.getString( cursor.getColumnIndex( MediaStore.Images.Thumbnails.DATA ) );
+
+        }
+        return null;
+    }
+
 }

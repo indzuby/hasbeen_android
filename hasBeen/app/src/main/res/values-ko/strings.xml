@@ -24,6 +24,8 @@
     <string name="support_email">support@hasbeen.co</string>
     <string name="web_domain">http://www.hasbeen.co</string>
     <string name="license_domain">http://www.hasbeen.co/license/android.html</string>
+    <string name="no_place_prefix">http://hasbeen.blob.core.windows.net/common/no_place_</string>
+    <string name="no_place_suffix">.png</string>
 
     <!--액션바-->
     <string name="action_bar_share_title"> 공유하기 </string>
@@ -36,6 +38,7 @@
     <string name="action_bar_profile_title"> 프로필 </string>
     <string name="action_bar_fbfriends_title"> Facebook 친구 </string>
     <string name="action_bar_done">확인</string>
+    <string name="action_bar_select_day">여행일 선택</string>
     <!--로그인,회원가입-->
     <string name="login_email"> 로그인</string>
     <string name="login_facebook"> facebook으로 로그인</string>
@@ -48,7 +51,7 @@
     <!--뉴스피드-->
     <string name="no_newsfeed">뉴스피드에 표시할 게시물이 없습니다.\n여행기를 둘러보거나 친구들을 팔로우하세요.</string>
     <string name="find_trip">여행 둘러보기.</string>
-    <string name="your_facebook_friend_count">당신의 페이스북 친구 %1$d명이 \nhasBeen을 이용중입니다.</string>
+    <string name="your_facebook_friend_count">총 %1d명의 페이스북 친구들이\nhasBeen을 이용중입니다.</string>
     <string name="show_all_facebook_friend">%1$d명의 친구들 모두 보기.</string>
     <string name="comment_day_trip">님이 여행에 댓글을 남겼습니다.</string>
     <string name="love_day_trip">님이 여행을 좋아했습니다.</string>
@@ -114,6 +117,7 @@
     <string name="place">장소</string>
     <string name="non_load_status">장소 %1$d+ · 사진 %2$d </string>
     <string name="load_status">장소 %1$d · 사진 %2$d </string>
+    <string name="day_count">%d 일</string>
     <!--알람-->
     <string name="news">뉴스</string>
     <string name="you">나</string>
@@ -147,7 +151,7 @@
     <string name="title_size_error">제목은 2글자이상 255글자 이하여야합니다.</string>
     <string name="session_gone">세션이 만료되었습니다 다시 로그인 해주세요.</string>
     <string name="dup_email">중복된 이메일입니다.</string>
-    <string name="day_deleted">삭제된 여행입니다.</string>
+    <string name="day_deleted">삭제된 여행입니다.\n당겨서 새로고침 해주세요</string>
     <!--확인-->
     <string name="sign_up_ok">회원가입 완료, 로그인 해주세요.</string>
     <string name="report_ok">신고했습니다.</string>
@@ -166,10 +170,11 @@
     <string name="account_title">계정</string>
     <string name="logout">로그아웃</string>
     <string name="find_facebook">페이스북 친구 찾기</string>
-    <string name="about_hasbeen">헤스빈(hasBeen)</string>
+    <string name="about_hasbeen">About hasBeen</string>
     <string name="report_problem">고객 문의</string>
     <string name="open_source">라이센스</string>
     <string name="friends">친구 %d명</string>
 
     <string name="about_text">hasBeen은 당신의 여행기와 순간들을\n 공유할 수 있는 훌륭한 여행 커뮤니티입니다.</string>
+    <string name="follow_all">모두 팔로우</string>
 </resources>
