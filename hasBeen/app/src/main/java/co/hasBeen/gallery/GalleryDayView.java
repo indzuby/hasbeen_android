@@ -135,7 +135,7 @@ public class GalleryDayView extends ActionBarActivity {
 //                Toast.makeText(getActivity().getBaseContext(),"Floating button pressed ",Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getBaseContext(), GalleryShare.class);
                     intent.putExtra("id", mDayId);
-                    startActivity(intent);
+                    startActivityForResult(intent,GalleryShare.REQUEST_UPLOAD);
                 }
             });
             mDay.setMainPlace(database.selectPlace(mDay.getMainPlaceId()));
@@ -297,6 +297,8 @@ public class GalleryDayView extends ActionBarActivity {
             Log.i("call back index", index + "");
             if(index!=-1)
                 mListView.setSelection(index);
+        }else if(requestCode==GalleryShare.REQUEST_UPLOAD && resultCode == RESULT_OK) {
+            finish();
         }
     }
 }

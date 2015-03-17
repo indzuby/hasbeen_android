@@ -223,7 +223,7 @@ public class Util {
     public static int getTripHeight(Context mContext) {
         int width = mContext.getResources().getDisplayMetrics().widthPixels;
         int catgoryWith = Util.convertDpToPixel(32, mContext);
-        return (width - catgoryWith) / 5 - 2;
+        return (width - catgoryWith) / 5 - Util.convertDpToPixel(2, mContext);
     }
     Handler mHandler;
 

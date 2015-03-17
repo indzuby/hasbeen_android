@@ -70,7 +70,7 @@ public class GallerySelectAdapter extends BaseAdapter {
         int i = 1;
         for (Day day : trip.getDayList())
             photoBox.addView(getDayItem(day, i++, trip.getItineraryLong()));
-        view.setOnClickListener(new TripClickListner(trip.getId()));
+        view.setOnClickListener(new TripClickListner(trip.getId(),Util.convertPlaceName(startPlace, endPlace)));
         return view;
     }
     public View getDayItem(Day day, int index,int total){
@@ -90,9 +90,10 @@ public class GallerySelectAdapter extends BaseAdapter {
     }
     class TripClickListner implements View.OnClickListener{
         Long id;
-
-        TripClickListner(Long id) {
+        String placeName;
+        TripClickListner(Long id,String placeName) {
             this.id = id;
+            this.placeName = placeName;
         }
 
         @Override
@@ -100,6 +101,7 @@ public class GallerySelectAdapter extends BaseAdapter {
             Intent intent = new Intent();
             Activity activity = (Activity) mContext;
             intent.putExtra("id", id);
+            intent.putExtra("placeName", placeName);
             activity.setResult(activity.RESULT_OK, intent);
             activity.finish();
         }

@@ -28,6 +28,7 @@ import co.hasBeen.utils.Util;
  */
 public class GalleryShare extends ActionBarActivity{
     final static int REQUEST_EXIT = 2001;
+    final static int REQUEST_UPLOAD = 3001;
     Long mDayId;
     List<Position> mPositions;
     Day mDay;
@@ -135,6 +136,7 @@ public class GalleryShare extends ActionBarActivity{
 
         if (requestCode == REQUEST_EXIT) {
             if (resultCode == RESULT_OK) {
+                setResult(RESULT_OK);
                 finish();
             }
         }

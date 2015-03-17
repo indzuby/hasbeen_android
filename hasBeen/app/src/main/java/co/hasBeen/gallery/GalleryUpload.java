@@ -27,6 +27,7 @@ import java.util.Map;
 
 import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.day.DayView;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.model.api.Place;
@@ -164,9 +165,9 @@ public class GalleryUpload extends ActionBarActivity {
             if(msg.what==0) {
                 Toast.makeText(getBaseContext(),getString(R.string.upload_ok),Toast.LENGTH_LONG).show();
                 dialog.dismiss();
-//                Intent intent = new Intent(getBaseContext(), DayView.class);
-//                intent.putExtra("id", (Long)msg.obj);
-//                startActivity(intent);
+                Intent intent = new Intent(getBaseContext(), DayView.class);
+                intent.putExtra("id", (Long)msg.obj);
+                startActivity(intent);
                 setResult(RESULT_OK);
                 finish();
             }else {
@@ -258,12 +259,19 @@ public class GalleryUpload extends ActionBarActivity {
         dialog.setMaxCount(mDayUpload.getPhotoCount());
         dialog.show();
     }
-
+    protected  void selectTrip(String placeName){
+        TextView tripTitle = (TextView) findViewById(R.id.tripTitle);
+        tripTitle.setText(placeName);
+        ImageView addTrip = (ImageView) findViewById(R.id.addTrip);
+        addTrip.setImageResource(R.drawable.add_trip_pressed);
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==REQUEST_CODE && resultCode == RESULT_OK) {
             Long id = data.getLongExtra("id",0L);
+            String placeName = data.getStringExtra("placeName");
+            selectTrip(placeName);
             mDayUpload.setTripId(id);
         }
     }
