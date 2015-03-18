@@ -66,7 +66,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         profile.setOnClickListener(this);
         actionBar.setCustomView(view);
         actionBar.setDisplayShowCustomEnabled(true);
-        changeIcon(0);
         mPagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOffscreenPageLimit(4);
@@ -76,6 +75,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 changeIcon(position);
             }
         });
+        changeIcon(0);
         getAlarmCount();
     }
     public void getAlarmCount(){
@@ -142,7 +142,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             case 2:
                 gallery.setSelected(true);
                 GalleryFragment gallery =(GalleryFragment) mPagerAdapter.getItem(2);
-                gallery.newDaysLoad();
+                if(gallery.isShowTab()) gallery.newDaysLoad();
                 break;
             case 3:
                 alarm.setSelected(true);
@@ -154,9 +154,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             case 4:
                 profile.setSelected(true);
                 ProfileFragment profile = (ProfileFragment)mPagerAdapter.getItem(4);
-                profile.initAll();
+                if(profile.isShowTab()) profile.initAll();
                 break;
         }
+        mPagerAdapter.getItem(index).showTab();
     }
     public void changeTab(int position) {
         mViewPager.setCurrentItem(position,true);

@@ -10,7 +10,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -18,6 +17,7 @@ import java.io.Reader;
 import java.util.List;
 
 import co.hasBeen.model.api.Day;
+import co.hasBeen.model.network.SFSSLSocketFactory;
 import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
 
@@ -31,7 +31,7 @@ public class RecommendationAsyncTask extends AsyncTask<Object,Void,List<Day>> {
     boolean loading;
     @Override
     protected List<Day> doInBackground(Object... params) {
-        HttpClient client = new DefaultHttpClient();
+        HttpClient client = SFSSLSocketFactory.getHttpClient();
         HttpResponse response;
         Uri uri;
         try {

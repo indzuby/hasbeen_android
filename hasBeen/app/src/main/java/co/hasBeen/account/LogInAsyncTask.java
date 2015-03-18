@@ -17,7 +17,6 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.InputStream;
@@ -26,9 +25,10 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.hasBeen.model.network.LoginTokenResponse;
-import co.hasBeen.utils.Session;
 import co.hasBeen.model.network.LoginTokenRequest;
+import co.hasBeen.model.network.LoginTokenResponse;
+import co.hasBeen.model.network.SFSSLSocketFactory;
+import co.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-27.
@@ -49,7 +49,7 @@ public class LogInAsyncTask extends AsyncTask<String, Void, LoginTokenResponse> 
         Uri uri;
         try {
             uri = Uri.parse(DOMAIN + URL);
-            HttpClient httpclient = new DefaultHttpClient();
+            HttpClient httpclient = SFSSLSocketFactory.getHttpClient();
             HttpPost httppost = new HttpPost(uri.toString());
             httppost.addHeader("User-Agent","Android");
             httppost.addHeader("Content-Type","application/x-www-form-urlencoded");

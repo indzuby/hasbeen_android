@@ -10,6 +10,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -91,6 +93,7 @@ public class ProfileView extends ActionBarActivity {
                 case 0:
                     mDays = (List<Day>) msg.obj;
                     dayRendering(mDays);
+                    stopLoading();
                     break;
                 case -1:
                     break;
@@ -158,8 +161,9 @@ public class ProfileView extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         mUserId = getIntent().getLongExtra("userId",0);
         mAccessToken = Session.getString(this, "accessToken", null);
-        new ProfileAsyncTask(handler).execute(mAccessToken,mUserId);
         init();
+        startLoading();
+        new ProfileAsyncTask(handler).execute(mAccessToken,mUserId);
     }
 
     protected void initActionBar(){
@@ -189,6 +193,7 @@ public class ProfileView extends ActionBarActivity {
     protected void init(){
         setContentView(R.layout.profile);
         initActionBar();
+        mLoading = findViewById(R.id.refresh);
         mMapFragment = ((SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map));
 
@@ -407,5 +412,19 @@ public class ProfileView extends ActionBarActivity {
             mMap.clear();
             e.printStackTrace();
         }
+    }
+    View mLoading;
+    boolean isLoading;
+    protected void startLoading() {
+        isLoading = true;
+        mLoading.setVisibility(View.VISIBLE);
+        Animation rotate = AnimationUtils.loadAnimation(getBaseContext(), R.anim.rotate);
+        mLoading.startAnimation(rotate);
+    }
+
+    protected void stopLoading() {
+        isLoading = false;
+        mLoading.setVisibility(View.GONE);
+        mLoading.clearAnimation();
     }
 }

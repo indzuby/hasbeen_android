@@ -16,7 +16,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,8 +23,9 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import co.hasBeen.utils.Session;
 import co.hasBeen.model.api.Photo;
+import co.hasBeen.model.network.SFSSLSocketFactory;
+import co.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-29.
@@ -36,7 +36,7 @@ public class SearchPhotoAsyncTask extends AsyncTask<Object,Void,List<Photo>> {
     final static String URL = Session.DOMAIN+"hasBeen/photos";
     @Override
     protected List<Photo> doInBackground(Object... params) {
-        HttpClient client = new DefaultHttpClient();
+        HttpClient client = SFSSLSocketFactory.getHttpClient();
         HttpResponse response;
         Uri uri;
         try {

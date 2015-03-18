@@ -1,6 +1,5 @@
 package co.hasBeen;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
@@ -9,20 +8,21 @@ import co.hasBeen.gallery.GalleryFragment;
 import co.hasBeen.newsfeed.NewsFeedFragment;
 import co.hasBeen.profile.ProfileFragment;
 import co.hasBeen.search.SearchFragment;
+import co.hasBeen.utils.HasBeenFragment;
 
 /**
  * Created by zuby on 2015-01-20.
  */
 
 public class TabPagerAdapter extends FragmentPagerAdapter {
-    Fragment mNewsFeed = null, mSearch = null, mGallery = null, mAlarm = null, mProfile = null;
+    HasBeenFragment mNewsFeed = null, mSearch = null, mGallery = null, mAlarm = null, mProfile = null;
 
     public TabPagerAdapter(FragmentManager fm)
     {
         super(fm);
     }
 
-    public Fragment getItem(int index) {
+    public HasBeenFragment getItem(int index) {
         switch (index) {
             case 0: // index에 따라서 다른 fragment 돌려준다.
                 if (mNewsFeed == null)

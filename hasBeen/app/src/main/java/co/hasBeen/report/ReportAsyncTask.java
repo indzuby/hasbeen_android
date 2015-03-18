@@ -9,8 +9,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
+import co.hasBeen.model.network.SFSSLSocketFactory;
 import co.hasBeen.utils.Session;
 
 public class ReportAsyncTask extends AsyncTask<Object,Void,Boolean> {
@@ -20,7 +20,7 @@ public class ReportAsyncTask extends AsyncTask<Object,Void,Boolean> {
 
     @Override
     protected Boolean doInBackground(Object... params) {
-        HttpClient client = new DefaultHttpClient();
+        HttpClient client = SFSSLSocketFactory.getHttpClient();
         HttpResponse response;
         Uri uri;
         try {

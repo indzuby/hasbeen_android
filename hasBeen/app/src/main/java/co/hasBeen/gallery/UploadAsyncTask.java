@@ -13,12 +13,12 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import co.hasBeen.model.api.Day;
+import co.hasBeen.model.network.SFSSLSocketFactory;
 import co.hasBeen.utils.Session;
 
 /**
@@ -29,7 +29,7 @@ public class UploadAsyncTask extends AsyncTask<Object,Void,Long> {
     final static String URL = Session.DOMAIN+"days";
     @Override
     protected Long doInBackground(Object... params) {
-        HttpClient client = new DefaultHttpClient();
+        HttpClient client = SFSSLSocketFactory.getHttpClient();
         HttpResponse response;
         Uri uri;
         try {

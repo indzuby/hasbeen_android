@@ -12,10 +12,10 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
+import co.hasBeen.model.network.SFSSLSocketFactory;
 import co.hasBeen.utils.Session;
 
 /**
@@ -32,7 +32,7 @@ public class SignUpAsyncTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        HttpClient client = new DefaultHttpClient();
+        HttpClient client = SFSSLSocketFactory.getHttpClient();
         HttpResponse response;
         Uri uri;
         try {
@@ -41,7 +41,7 @@ public class SignUpAsyncTask extends AsyncTask<String, Void, String> {
             else
                 uri = Uri.parse(DOMAIN + SIGNUPSOCIAL);
 
-            HttpClient httpclient = new DefaultHttpClient();
+            HttpClient httpclient = SFSSLSocketFactory.getHttpClient();
             HttpPost post = new HttpPost(uri.toString());
             post.addHeader("User-Agent", "Android");
             post.addHeader("Content-Type", "application/json");

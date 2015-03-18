@@ -22,7 +22,6 @@ import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 
-import io.fabric.sdk.android.Fabric;
 import java.util.Arrays;
 
 import co.hasBeen.MainActivity;
@@ -30,6 +29,7 @@ import co.hasBeen.R;
 import co.hasBeen.error.ErrorCheck;
 import co.hasBeen.gcm.GcmRegister;
 import co.hasBeen.model.network.LoginTokenResponse;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by 주현 on 20150204.
@@ -176,7 +176,7 @@ public class LoginActivity extends Activity {
             super.handleMessage(msg);
             if (msg.what == 0) {
                 String regid = gcm.getRegistrationId();
-                final LoginTokenResponse loginToken = (LoginTokenResponse) msg.obj;
+                LoginTokenResponse loginToken = (LoginTokenResponse) msg.obj;
                 co.hasBeen.utils.Session.putString(getBaseContext(), "accessToken", loginToken.getAccess_token());
                 gcm.registerGcm(registHandler);
             }else

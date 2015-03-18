@@ -8,7 +8,6 @@ import android.os.Message;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,6 +19,7 @@ import co.hasBeen.model.api.Category;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.model.api.Place;
+import co.hasBeen.model.network.SFSSLSocketFactory;
 
 public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
     private Handler mHandler;
@@ -54,7 +54,7 @@ public class GeoFourSquare extends AsyncTask<Object, Void, JSONObject> {
         mPhoto = (Photo) params[0];
         ll = mPhoto.getLat() + "," + mPhoto.getLon();
         place = (Place) params[1];
-        HttpClient client = new DefaultHttpClient();
+        HttpClient client = SFSSLSocketFactory.getHttpClient();
         HttpResponse response;
         Uri uri;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");

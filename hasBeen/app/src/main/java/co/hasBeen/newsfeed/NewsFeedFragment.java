@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,14 +33,14 @@ import co.hasBeen.model.api.Follow;
 import co.hasBeen.social.FbFriendsAsyncTask;
 import co.hasBeen.social.FbFriendsItem;
 import co.hasBeen.social.FbFriendsView;
+import co.hasBeen.utils.HasBeenFragment;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-23.
  */
-public class NewsFeedFragment extends Fragment {
+public class NewsFeedFragment extends HasBeenFragment {
     final String TAG = "NewsFeed";
-    View mView;
     String mAccessToken;
     private NewsFeedAdapter mFeedAdapter;
     List<Day> mFeeds;

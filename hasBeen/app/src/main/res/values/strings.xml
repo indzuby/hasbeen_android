@@ -24,7 +24,7 @@
     <string name="map_id">AIzaSyDGLVU0yTEqcNnIRk-SiLXEytDAsJ-Pi0E</string>
     <string name="support_email">support@hasbeen.co</string>
     <string name="web_domain">http://www.hasbeen.co</string>
-    <string name="license_domain">http://www.hasbeen.co/license/android.html</string>
+    <string name="license_domain">http://common.hasbeen.co/license/android.html</string>
     <string name="no_place_prefix">http://hasbeen.blob.core.windows.net/common/no_place_</string>
     <string name="no_place_suffix">.png</string>
 

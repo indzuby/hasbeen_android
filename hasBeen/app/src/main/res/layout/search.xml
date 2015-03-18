@@ -98,8 +98,14 @@
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:layout_marginBottom="8dp"
-            android:id="@+id/refresh"
+            android:id="@+id/reload"
             android:layout_gravity="bottom|center_horizontal"
             android:src="@drawable/refresh"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/refresh"
+            android:layout_gravity="center"
+            android:src="@drawable/loading"/>
     </FrameLayout>
 </LinearLayout>

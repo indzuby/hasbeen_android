@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,26 +23,26 @@ import co.hasBeen.R;
 import co.hasBeen.map.MapRoute;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Photo;
+import co.hasBeen.utils.HasBeenFragment;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-30.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends HasBeenFragment {
     final static int DAY = 1;
     final static int PHOTO = 2;
     List<Day> mDays;
     List<Photo> mPhotos;
-    View mView;
     GoogleMap mMap;
     SupportMapFragment mMapFragment;
     TextView mDayButton;
     TextView mPhotoButton;
-    ImageView mRefresh;
+    ImageView mReload;
     MapRoute mMapRoute;
     int nowTab = DAY;
     String mAccessToken;
-    boolean isrefresh = false;
+    boolean isReload = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,30 +66,37 @@ public class SearchFragment extends Fragment {
                 setting.setAllGesturesEnabled(true);
                 setting.setMyLocationButtonEnabled(false);
                 map.setMyLocationEnabled(false);
-                new SearchDayAsyncTask(dayHandler).execute(mAccessToken);
             }
         });
         mDayButton = (TextView) mView.findViewById(R.id.dayButton);
         mPhotoButton = (TextView) mView.findViewById(R.id.photoButton);
-        mRefresh = (ImageView) mView.findViewById(R.id.refresh);
+        mReload = (ImageView) mView.findViewById(R.id.reload);
 
         mDayButton.setOnClickListener(new ButtonClickListner());
         mPhotoButton.setOnClickListener(new ButtonClickListner());
-        mRefresh.setOnClickListener(new View.OnClickListener() {
+        mReload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isrefresh) {
+                if (!isReload) {
                     Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
-                    mRefresh.setImageResource(R.drawable.loading);
-                    isrefresh = true;
-                    mRefresh.startAnimation(rotate);
-                    if(nowTab == DAY)
+                    mReload.setImageResource(R.drawable.loading);
+                    isReload = true;
+                    mReload.startAnimation(rotate);
+                    if (nowTab == DAY)
                         new SearchDayAsyncTask(dayHandler).execute(mAccessToken);
                     else
                         new SearchPhotoAsyncTask(photoHandler).execute(mAccessToken);
                 }
             }
         });
+    }
+
+    @Override
+    public void showTab() {
+        startLoading();
+        if(!isShowTab())
+            new SearchDayAsyncTask(dayHandler).execute(mAccessToken);
+        setShowTab();
     }
 
     Handler dayHandler = new Handler(Looper.getMainLooper()) {
@@ -101,6 +107,7 @@ public class SearchFragment extends Fragment {
                 case 0:
                     mDays = (List<Day>) msg.obj;
                     dayRendering();
+                    stopLoading();
                     break;
                 case -1:
                     break;
@@ -166,10 +173,10 @@ public class SearchFragment extends Fragment {
     protected void dayRendering(){
         try {
             mMapRoute.addMarkerCluster(mDays);
-            if (isrefresh) {
-                mRefresh.clearAnimation();
-                mRefresh.setImageResource(R.drawable.refresh);
-                isrefresh = false;
+            if (isReload) {
+                mReload.clearAnimation();
+                mReload.setImageResource(R.drawable.refresh);
+                isReload = false;
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -178,10 +185,10 @@ public class SearchFragment extends Fragment {
     protected void photoRendering (){
         try {
             mMapRoute.addMarkerClusterPhoto(mPhotos);
-            if (isrefresh) {
-                mRefresh.clearAnimation();
-                mRefresh.setImageResource(R.drawable.refresh);
-                isrefresh = false;
+            if (isReload) {
+                mReload.clearAnimation();
+                mReload.setImageResource(R.drawable.refresh);
+                isReload = false;
             }
         }catch (Exception e) {
             e.printStackTrace();

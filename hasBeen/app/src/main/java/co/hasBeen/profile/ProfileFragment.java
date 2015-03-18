@@ -5,10 +5,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -25,7 +26,6 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.hasBeen.MainActivity;
 import co.hasBeen.R;
 import co.hasBeen.map.MapRoute;
 import co.hasBeen.model.api.Day;
@@ -39,17 +39,17 @@ import co.hasBeen.profile.map.ProfileDayAsyncTask;
 import co.hasBeen.profile.map.ProfilePhotoAsyncTask;
 import co.hasBeen.setting.SettingView;
 import co.hasBeen.utils.CircleTransform;
+import co.hasBeen.utils.HasBeenFragment;
 import co.hasBeen.utils.Session;
 import co.hasBeen.utils.Util;
 
 /**
  * Created by zuby on 2015-01-30.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends HasBeenFragment {
     final static int DAY = 1;
     final static int PHOTO = 2;
     final static int LOVE = 3;
-    View mView;
     User mUser;
     int nowTab = DAY;
     int subTab = DAY;
@@ -72,10 +72,10 @@ public class ProfileFragment extends Fragment {
         mView = inflater.inflate(R.layout.profile, container, false);
         mAccessToken = Session.getString(getActivity(), "accessToken", null);
         init();
-        initAll();
         return mView;
     }
     public void initAll(){
+        startLoading();
         mDays = null;
         mPhotos = null;
         mLikeDays = null;
@@ -83,6 +83,15 @@ public class ProfileFragment extends Fragment {
         new ProfileAsyncTask(handler).execute(mAccessToken);
         nowTabIndicator(R.id.dayButton);
     }
+
+    @Override
+    public void showTab() {
+        super.showTab();
+        if(!isShowTab())
+            initAll();
+        setShowTab();
+    }
+
     Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -107,6 +116,7 @@ public class ProfileFragment extends Fragment {
                 case 0:
                     mDays = (List<Day>) msg.obj;
                     dayRendering(mDays);
+                    stopLoading();
                     break;
                 case -1:
                     break;

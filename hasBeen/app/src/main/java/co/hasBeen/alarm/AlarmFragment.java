@@ -4,12 +4,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,16 +21,16 @@ import java.util.List;
 import co.hasBeen.R;
 import co.hasBeen.model.api.Alarm;
 import co.hasBeen.model.api.AlarmCount;
+import co.hasBeen.utils.HasBeenFragment;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by 주현 on 2015-02-03.
  */
-public class AlarmFragment extends Fragment implements View.OnClickListener{
+public class AlarmFragment extends HasBeenFragment implements View.OnClickListener{
     final static int NEWS = 0;
     final static int YOU = 1;
     int mTab = NEWS;
-    View mView;
     PullToRefreshListView mNewList,mYouList;
     List<Alarm> mAlarmsNews;
     List<Alarm> mAlarmsYou;
@@ -112,6 +109,7 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
         }
     };
     protected void init(){
+
         mNewList = (PullToRefreshListView) mView.findViewById(R.id.alarmNewList);
         mYouList = (PullToRefreshListView) mView.findViewById(R.id.alarmYouList);
         mNewLoadingView =  LayoutInflater.from(getActivity()).inflate(R.layout.loading_layout, null, false);
@@ -164,19 +162,6 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
             }
         });
     }
-    protected void startLoading(){
-        isLoad = true;
-        View loading;
-        loading = mView.findViewById(R.id.refresh);
-        Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
-        loading.startAnimation(rotate);
-    }
-    protected void stopLoading(){
-        isLoad = false;
-        View loading = mView.findViewById(R.id.refresh);
-        loading.setVisibility(View.GONE);
-        loading.clearAnimation();
-    }
     @Override
     public void onClick(View v) {
         clearSelect();
@@ -211,27 +196,30 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
         }else {
             mYouList.setVisibility(View.VISIBLE);
             mNewList.setVisibility(View.GONE);
-            if(mAlarmsYou.size()>0) getNewAlarmYou();
+            if(mAlarmsYou.size()>0)
+                getNewAlarmYou();
             mTab = YOU;
         }
     }
     public void getNewAlarmNews(){
-        if(!mNewList.isRefreshing()) startLoading();
         if(mAlarmsNews.size()>0) {
             isNewLoad = true;
             new AlarmListAsyncTask(alarmNewsHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_NEWS, "", mAlarmsNews.get(0).getId());
         }
-        else
+        else {
+            if(!mNewList.isRefreshing()) startLoading();
             new AlarmListAsyncTask(alarmNewsHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_NEWS);
+        }
     }
     public void getNewAlarmYou(){
-        if(!mYouList.isRefreshing()) startLoading();
         if(mAlarmsYou.size()>0) {
             isNewLoad = true;
             new AlarmListAsyncTask(alarmYouHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_YOU, "", mAlarmsYou.get(0).getId());
         }
-        else
+        else {
+            if(!mYouList.isRefreshing()) startLoading();
             new AlarmListAsyncTask(alarmYouHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_YOU);
+        }
     }
     public void getOldAlarmNews(){
         startLoading();

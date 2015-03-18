@@ -12,11 +12,11 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
 import co.hasBeen.model.api.Place;
+import co.hasBeen.model.network.SFSSLSocketFactory;
 import co.hasBeen.utils.Session;
 
 /**
@@ -29,7 +29,7 @@ public class DayChangePlaceAsyncTask extends AsyncTask<Object,Void,Boolean> {
 
     @Override
     protected Boolean doInBackground(Object... params) {
-        HttpClient client = new DefaultHttpClient();
+        HttpClient client = SFSSLSocketFactory.getHttpClient();
         HttpResponse response;
         Uri uri;
         try {
