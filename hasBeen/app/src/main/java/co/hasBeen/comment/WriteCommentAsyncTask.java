@@ -1,14 +1,11 @@
 package co.hasBeen.comment;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HTTP;
@@ -19,20 +16,17 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 import co.hasBeen.model.api.Comment;
-import co.hasBeen.model.network.SFSSLSocketFactory;
+import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by 주현 on 2015-02-06.
  */
-public class WriteCommentAsyncTask extends AsyncTask<Object,Void,Comment> {
+public class WriteCommentAsyncTask extends HasBeenAsyncTask<Object,Void,Comment> {
     final static String URL = Session.DOMAIN;
     @Override
     protected Comment doInBackground(Object... params) {
-        HttpClient client = SFSSLSocketFactory.getHttpClient();
-        HttpResponse response;
-        Uri uri;
         try {
             uri = Uri.parse(URL+params[1]+"/"+params[2]+"/comments");
             HttpPost post = new HttpPost(uri.toString());
@@ -74,9 +68,8 @@ public class WriteCommentAsyncTask extends AsyncTask<Object,Void,Comment> {
         mHandler.sendMessage(msg);
 
     }
-    Handler mHandler;
 
     public WriteCommentAsyncTask(Handler mHandler) {
-        this.mHandler = mHandler;
+        super(mHandler);
     }
 }

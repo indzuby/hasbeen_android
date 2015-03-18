@@ -1,7 +1,6 @@
 package co.hasBeen.social;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
@@ -12,9 +11,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 
 import java.io.InputStream;
@@ -24,20 +21,16 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import co.hasBeen.model.api.Follow;
-import co.hasBeen.model.network.SFSSLSocketFactory;
+import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by 주현 on 2015-02-24.
  */
-public class FbFriendsAsyncTask extends AsyncTask<String,Void,List<Follow>> {
-    Handler mHandler;
+public class FbFriendsAsyncTask extends HasBeenAsyncTask<String,Void,List<Follow>> {
     final static String URL = Session.DOMAIN+"account/facebookFriends";
     @Override
     protected List<Follow> doInBackground(String... params) {
-        HttpClient client = SFSSLSocketFactory.getHttpClient();
-        HttpResponse response;
-        Uri uri;
         try {
             uri = Uri.parse(URL);
             HttpGet get = new HttpGet(uri.toString());
@@ -92,7 +85,7 @@ public class FbFriendsAsyncTask extends AsyncTask<String,Void,List<Follow>> {
         mHandler.sendMessage(msg);
     }
 
-    public FbFriendsAsyncTask(Handler handler) {
-        mHandler = handler;
+    public FbFriendsAsyncTask(Handler mHandler) {
+        super(mHandler);
     }
 }

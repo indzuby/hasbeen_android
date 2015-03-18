@@ -1,31 +1,24 @@
 package co.hasBeen.photo;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 
-import co.hasBeen.model.network.SFSSLSocketFactory;
+import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by 주현 on 2015-02-26.
  */
-public class PhotoDeleteAsyncTask extends AsyncTask<Object,Void,Boolean> {
-    Handler mHandler;
+public class PhotoDeleteAsyncTask extends HasBeenAsyncTask<Object,Void,Boolean> {
     //    final static String URL = "https://gist.githubusercontent.com/indzuby/a22f8ae73de9c3e3339c/raw/7f07e297c50961151fe4b8a4839a65d7d176fa91/DayView";
     final static String URL = Session.DOMAIN+"photos/";
 
     @Override
     protected Boolean doInBackground(Object... params) {
-        HttpClient client =  SFSSLSocketFactory.getHttpClient();
-        HttpResponse response;
-        Uri uri;
         try {
             uri = Uri.parse(URL+params[1]);
             HttpDelete del = new HttpDelete(uri.toString());
@@ -58,6 +51,6 @@ public class PhotoDeleteAsyncTask extends AsyncTask<Object,Void,Boolean> {
     }
 
     public PhotoDeleteAsyncTask(Handler handler) {
-        mHandler = handler;
+        super(handler);
     }
 }

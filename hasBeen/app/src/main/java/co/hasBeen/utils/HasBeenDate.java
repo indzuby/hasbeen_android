@@ -42,7 +42,8 @@ public class HasBeenDate {
     public static int calculateDateRange(Long from, Long to) {
         DateTime start = new DateTime(from).withZone(DateTimeZone.UTC);
         DateTime end = new DateTime(to).withZone(DateTimeZone.UTC);
-        return Days.daysBetween(start.toLocalDate(), end.toLocalDate()).getDays();
+
+        return Days.daysBetween(new LocalDate(start), new LocalDate(end)).getDays();
     }
     public static Long getBeforeDay(Long currentTime, int day){
         Date date = new DateTime(currentTime).withZone(DateTimeZone.UTC).minusDays(day).toDate();
@@ -60,9 +61,8 @@ public class HasBeenDate {
 //        date.setTime(timeStamp);
 //        return new LocalDate(date).toString("MMMM dd, yyyy");
 
-        DateTime dateTimeIndia = new DateTime(timeStamp);
-        DateTime dateTimeUtcGmt = dateTimeIndia.withZone( DateTimeZone.UTC );
-        return dateTimeUtcGmt.toString("MMMM dd, yyyy");
+        DateTime date = new DateTime(timeStamp).withZone(DateTimeZone.UTC);
+        return date.toString("MMMM dd, yyyy");
     }
     public static String convertTime(Long startTime, Long endTime,Context context) {
         String start = new DateTime(startTime).withZone(DateTimeZone.UTC).toString(context.getString(R.string.photo_time));
@@ -88,7 +88,7 @@ public class HasBeenDate {
         Date commentTime = new Date(time);
         Log.i("TIME", new Date().getTime() + "");
         Long gap = currentTime.getTime() - commentTime.getTime();
-        int dayGap = Days.daysBetween(new LocalDate(commentTime),new LocalDate(currentTime)).getDays();
+        int dayGap = Days.daysBetween(new DateTime(commentTime),new DateTime(currentTime)).getDays();
         if(dayGap<7) {
             if(dayGap<1) {
                 gap = gap/1000;

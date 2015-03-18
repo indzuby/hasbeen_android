@@ -1,7 +1,6 @@
 package co.hasBeen.profile;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
@@ -11,9 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 
 import java.io.InputStream;
@@ -23,21 +20,18 @@ import java.io.Reader;
 import co.hasBeen.model.api.Follow;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.model.api.User;
-import co.hasBeen.model.network.SFSSLSocketFactory;
+import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-29.
  */
-public class ProfileAsyncTask extends AsyncTask<Object, Void, User> {
-    Handler mHandler;
+public class ProfileAsyncTask extends HasBeenAsyncTask<Object, Void, User> {
+
     final static String URL2 = "https://gist.githubusercontent.com/indzuby/de7426b596733baa9ed1/raw/205b50195800f1669786b65fee82986a36b061f0/Profile";
     final static String URL = Session.DOMAIN+"users/";
     @Override
     protected User doInBackground(Object... params) {
-        HttpClient client =  SFSSLSocketFactory.getHttpClient();
-        HttpResponse response;
-        Uri uri;
         try {
             if(params.length<2)
                 uri = Uri.parse(URL);
@@ -102,7 +96,7 @@ public class ProfileAsyncTask extends AsyncTask<Object, Void, User> {
         mHandler.sendMessage(msg);
     }
 
-    public ProfileAsyncTask(Handler handler) {
-        mHandler = handler;
+    public ProfileAsyncTask(Handler mHandler) {
+        super(mHandler);
     }
 }

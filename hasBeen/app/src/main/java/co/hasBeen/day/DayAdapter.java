@@ -30,6 +30,7 @@ import co.hasBeen.photo.EnterPhotoListner;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.RecycleUtils;
 import co.hasBeen.utils.Session;
+import co.hasBeen.utils.Util;
 import it.sephiroth.android.library.widget.HListView;
 
 /**
@@ -222,7 +223,7 @@ public class DayAdapter extends BaseAdapter {
                 view = inflater.inflate(R.layout.day_photo, null);
             }
             ImageView imageView = (ImageView) view.findViewById(R.id.photo);
-            Glide.with(mContext).load(photo.getMediumUrl()).into(imageView);
+            Glide.with(mContext).load(photo.getMediumUrl()).placeholder(Util.getPlaceHolder(photo.getId().intValue())).into(imageView);
             imageView.setOnClickListener(new EnterPhotoListner(photo.getId(),mContext));
             mRecycleList.add(new WeakReference<View>(imageView));
             return view;

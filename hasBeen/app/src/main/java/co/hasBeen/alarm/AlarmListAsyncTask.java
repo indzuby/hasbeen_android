@@ -1,14 +1,11 @@
 package co.hasBeen.alarm;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 
 import java.io.InputStream;
@@ -17,23 +14,20 @@ import java.io.Reader;
 import java.util.List;
 
 import co.hasBeen.model.api.Alarm;
-import co.hasBeen.model.network.SFSSLSocketFactory;
+import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by 주현 on 2015-02-26.
  */
-public class AlarmListAsyncTask extends AsyncTask<Object, Void, List<Alarm>> {
+public class AlarmListAsyncTask extends HasBeenAsyncTask<Object, Void, List<Alarm>> {
     final static String URL = Session.DOMAIN+"/alarms";
     final static String CATEGORY_PARAMS="category";
     public final static String CATEGORY_YOU = "YOU";
     public final static String CATEGORY_NEWS="NEWS";
     @Override
     protected List<Alarm> doInBackground(Object... params) {
-        HttpClient client = SFSSLSocketFactory.getHttpClient();
-        HttpResponse response;
-        Uri uri;
         try {
             String url = URL+"?"+CATEGORY_PARAMS+"="+params[1];
             if(params.length>3)
@@ -80,9 +74,8 @@ public class AlarmListAsyncTask extends AsyncTask<Object, Void, List<Alarm>> {
 
     }
 
-    Handler mHandler;
 
     public AlarmListAsyncTask(Handler mHandler) {
-        this.mHandler = mHandler;
+        super(mHandler);
     }
 }

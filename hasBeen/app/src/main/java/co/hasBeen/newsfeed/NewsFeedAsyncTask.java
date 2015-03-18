@@ -1,14 +1,11 @@
 package co.hasBeen.newsfeed;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 
 import java.io.InputStream;
@@ -17,24 +14,19 @@ import java.io.Reader;
 import java.util.List;
 
 import co.hasBeen.model.api.Day;
-import co.hasBeen.model.network.SFSSLSocketFactory;
+import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-27.
  */
-public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<Day>> {
-    Handler mHandler;
+public class NewsFeedAsyncTask extends HasBeenAsyncTask<Object,Void,List<Day>> {
 //    final static String URL = "https://gist.githubusercontent.com/indzuby/c9e87b33ca65eac93065/raw/4000d9c125b1e56c60f77523dc806e4a9cdb303d/NewsFeed";
     final static String URL = Session.DOMAIN+"newsFeed";
     int status;
     @Override
     protected List<Day> doInBackground(Object... params) {
-//        HttpClient client = new DefaultHttpClient();
-        HttpClient client = SFSSLSocketFactory.getHttpClient();
-        HttpResponse response = null;
-        Uri uri;
         try {
             uri = Uri.parse(URL);
             if(params.length>2) {
@@ -86,6 +78,6 @@ public class NewsFeedAsyncTask extends AsyncTask<Object,Void,List<Day>> {
     }
 
     public NewsFeedAsyncTask(Handler handler) {
-        mHandler = handler;
+        super(handler);
     }
 }

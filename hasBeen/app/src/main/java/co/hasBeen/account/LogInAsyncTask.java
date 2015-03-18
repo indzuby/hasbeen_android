@@ -35,7 +35,7 @@ import co.hasBeen.utils.Session;
  */
 public class LogInAsyncTask extends AsyncTask<String, Void, LoginTokenResponse> {
     Handler mHandler;
-    final static String DOMAIN = Session.DOMAIN;
+    final static String DOMAIN = Session.SSL_DOMAIN;
     final static String URL="oauth/token";
     public final static String BASIC_FB = "hasBeenFacebookClientId";
     public final static String BASIC = "hasBeenClientId";

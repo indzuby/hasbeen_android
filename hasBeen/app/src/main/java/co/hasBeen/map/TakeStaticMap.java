@@ -8,11 +8,11 @@ import android.os.Message;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.InputStream;
 import java.net.URL;
 
-import co.hasBeen.model.network.SFSSLSocketFactory;
 import co.hasBeen.utils.Util;
 
 /**
@@ -29,7 +29,7 @@ public class TakeStaticMap extends AsyncTask<Object, Void, Bitmap> {
         try {
             float lat = (float) params[0];
             float lon = (float) params[1];
-            HttpClient client = SFSSLSocketFactory.getHttpClient();
+            HttpClient client = new DefaultHttpClient();
             URL url = new URL(MAP_URL + lat + "," + lon);
             HttpGet request = new HttpGet(url.toString());
             InputStream in = client.execute(request).getEntity().getContent();

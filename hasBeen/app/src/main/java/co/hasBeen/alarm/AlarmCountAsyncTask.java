@@ -1,33 +1,27 @@
 package co.hasBeen.alarm;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import co.hasBeen.model.api.AlarmCount;
-import co.hasBeen.model.network.SFSSLSocketFactory;
+import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by 주현 on 2015-02-26.
  */
-public class AlarmCountAsyncTask extends AsyncTask<Object, Void, AlarmCount> {
+public class AlarmCountAsyncTask extends HasBeenAsyncTask<Object, Void, AlarmCount> {
     final static String URL = Session.DOMAIN+"/alarmCount";
 
     @Override
     protected AlarmCount doInBackground(Object... params) {
-        HttpClient client = SFSSLSocketFactory.getHttpClient();
-        HttpResponse response;
-        Uri uri;
         try {
             uri = Uri.parse(URL);
             HttpGet get = new HttpGet(uri.toString());
@@ -66,9 +60,8 @@ public class AlarmCountAsyncTask extends AsyncTask<Object, Void, AlarmCount> {
 
     }
 
-    Handler mHandler;
 
     public AlarmCountAsyncTask(Handler mHandler) {
-        this.mHandler = mHandler;
+        super(mHandler);
     }
 }

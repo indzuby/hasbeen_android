@@ -15,15 +15,19 @@ import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 
 import org.bson.BasicBSONObject;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import co.hasBeen.R;
-import co.hasBeen.model.api.User;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.model.api.Position;
+import co.hasBeen.model.api.User;
 
 /**
  * Created by zuby on 2015-01-16.
@@ -242,5 +246,12 @@ public class Util {
         }
         return null;
     }
-
+    public static long getDateTime(String path) throws Exception{
+        ExifInterface exif = new ExifInterface(path);
+        String time = exif.getAttribute(ExifInterface.TAG_DATETIME);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+        Date date =  simpleDateFormat.parse(time);
+        long offset = date.getTimezoneOffset()*60000;
+        return new DateTime(simpleDateFormat.parse(time).getTime()-offset).withZone(DateTimeZone.UTC).getMillis();
+    }
 }

@@ -15,6 +15,7 @@
 
     <application
         android:allowBackup="true"
+        android:name=".HasBeenApplicaiton"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:largeHeap="true"
@@ -69,6 +70,7 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="f4eda658152616f3f3f8fdff1b4fe9ba8099ea35" />
+        <meta-data android:name="LOCALYTICS_APP_KEY" android:value="3939e64fca693f74fbe7389-b9fc27e4-cd4b-11e4-aef3-009c5fda0a25"/>
     </application>
 
 </manifest>

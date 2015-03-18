@@ -9,6 +9,7 @@ import android.util.Log;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,7 +20,6 @@ import java.util.Date;
 import java.util.List;
 
 import co.hasBeen.model.api.Category;
-import co.hasBeen.model.network.SFSSLSocketFactory;
 
 public class PlaceFourSquare extends AsyncTask<Object, Void, JSONObject> {
     private Handler mHandler;
@@ -45,7 +45,7 @@ public class PlaceFourSquare extends AsyncTask<Object, Void, JSONObject> {
 //            LatLng location = getLocation();
         ll = params[0] + "," + params[1];
         placeCount = (int) params[2];
-        HttpClient client = SFSSLSocketFactory.getHttpClient();
+        HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         Uri uri;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");

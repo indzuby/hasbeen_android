@@ -108,10 +108,10 @@ public class GalleryDayAdapter extends BaseAdapter {
         }
     }
     protected void initPlaceName(TextView placeName ,Day day,int position) throws Exception{
-        placeName.setText("Loading..");
-        if (day.getMainPlaceId()==null && day.getMainPlace()==null && !day.isLoad()) {
-            day.setLoad(true);
-            itemModule.getPlace(day,placeName);
+        if (day.getMainPlaceId()==null && day.getMainPlace()==null) {
+            placeName.setText("Loading..");
+//            day.setLoad(true);
+//            itemModule.getPlace(day,placeName);
         } else if(day.getMainPlaceId()!=null){
             List<Position> positions = database.selectPositionByDayId(day.getId());
             initPlace(positions);

@@ -1,34 +1,27 @@
 package co.hasBeen.social;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import co.hasBeen.model.network.SFSSLSocketFactory;
+import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-27.
  */
-public class LoveAsyncTask extends AsyncTask<Object,Void,Long> {
-    Handler mHandler;
+public class LoveAsyncTask extends HasBeenAsyncTask<Object,Void,Long> {
     final static String daysURL = Session.DOMAIN+"days/";
     final static String photosURL = Session.DOMAIN+"photos/";
 
     @Override
     protected Long doInBackground(Object... params) {
-        HttpClient client = SFSSLSocketFactory.getHttpClient();
-        HttpResponse response;
-        Uri uri;
         try {
             if(params[1].equals("days"))
                 uri = Uri.parse(daysURL + params[2]+"/loves");
@@ -66,7 +59,7 @@ public class LoveAsyncTask extends AsyncTask<Object,Void,Long> {
         mHandler.sendMessage(msg);
     }
 
-    public LoveAsyncTask(Handler handler) {
-        mHandler = handler;
+    public LoveAsyncTask(Handler mHandler) {
+        super(mHandler);
     }
 }

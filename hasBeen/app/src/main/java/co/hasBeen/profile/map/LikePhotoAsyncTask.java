@@ -1,14 +1,11 @@
 package co.hasBeen.profile.map;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 
 import java.io.InputStream;
@@ -17,22 +14,18 @@ import java.io.Reader;
 import java.util.List;
 
 import co.hasBeen.model.api.Loved;
-import co.hasBeen.model.network.SFSSLSocketFactory;
+import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-29.
  */
-public class LikePhotoAsyncTask extends AsyncTask<Object,Void,List<Loved>> {
-    Handler mHandler;
+public class LikePhotoAsyncTask extends HasBeenAsyncTask<Object,Void,List<Loved>> {
 //    final static String URL = "https://gist.githubusercontent.com/indzuby/01dd9766562e90d0af7e/raw/d4aca1859f83a9599dbe15541624b1499aae8ea2/photoNearBy";
     final static String URL = Session.DOMAIN+"users/";
     @Override
     protected List<Loved> doInBackground(Object... params) {
-        HttpClient client = SFSSLSocketFactory.getHttpClient();
-        HttpResponse response;
-        Uri uri;
         try {
                 uri = Uri.parse(URL+params[1]+"/lovedPhotos");
                 HttpGet get = new HttpGet(uri.toString());
@@ -71,7 +64,7 @@ public class LikePhotoAsyncTask extends AsyncTask<Object,Void,List<Loved>> {
         mHandler.sendMessage(msg);
     }
 
-    public LikePhotoAsyncTask(Handler handler) {
-        mHandler = handler;
+    public LikePhotoAsyncTask(Handler mHandler) {
+        super(mHandler);
     }
 }

@@ -23,7 +23,7 @@ import co.hasBeen.utils.Session;
  */
 public class SignUpAsyncTask extends AsyncTask<String, Void, String> {
     Handler mHandler;
-    final static String DOMAIN = Session.DOMAIN;
+    final static String DOMAIN = Session.SSL_DOMAIN;
     final static String SIGNUPEMAIL = "signUpWithEmail";
     final static String SIGNUPSOCIAL = "signUpWithSocial";
     final static String AUTHORIZATION = "hasBeenClientId:hasBeenSecret";

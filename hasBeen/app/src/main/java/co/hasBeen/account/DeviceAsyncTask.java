@@ -21,7 +21,7 @@ import co.hasBeen.utils.Session;
  * Created by 주현 on 2015-03-09.
  */
 public class DeviceAsyncTask extends AsyncTask<Object,Void ,Boolean> {
-    final static String URL = Session.DOMAIN+"account/updateDeviceId/";
+    final static String URL = Session.SSL_DOMAIN+"account/updateDeviceId/";
     Handler mHandler;
 
     public DeviceAsyncTask(Handler mHandler) {

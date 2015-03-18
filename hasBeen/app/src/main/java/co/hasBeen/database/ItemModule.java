@@ -25,6 +25,7 @@ import co.hasBeen.model.api.Place;
 import co.hasBeen.model.api.Position;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.HasBeenOpenCv;
+import co.hasBeen.utils.Util;
 
 /**
  * Created by zuby on 2015-01-26.
@@ -50,7 +51,7 @@ public class ItemModule {
         resolver = context.getContentResolver();
     }
 
-    public void insertDay() throws SQLException {
+    public void insertDay() throws Exception {
         int[] idx = new int[proj.length];
         Day lastDay = database.selectLastDay();
         Long lastDayTime = 0L;
@@ -73,12 +74,12 @@ public class ItemModule {
                 long photoID = cursor.getInt(idx[0]);
                 String photoPath = cursor.getString(idx[1]);
                 String displayName = cursor.getString(idx[2]);
-                long dataTaken = cursor.getLong(idx[3]);
                 String format = cursor.getString(idx[4]);
                 float lat = cursor.getFloat(idx[5]);
                 float lon = cursor.getFloat(idx[6]);
                 if (lat == 0 || lon == 0) continue;
                 if (isNotJpg(format)) continue;
+                long dataTaken = Util.getDateTime(photoPath);
                 if (displayName != null && !HasBeenDate.isSameDate(lastDayTime, dataTaken)) {
                     Photo photo = makePhotoData(lat, lon, dataTaken, photoID, photoPath);
                     Long photoId = database.insertPhoto(photo);
@@ -104,11 +105,35 @@ public class ItemModule {
         }
     }
 
-    public List<Day> bringTenDay(Long id) throws SQLException {
+    public List<Day> bringTenDay(Long id) throws Exception {
         insertDay();
-        return database.selectBeforeTenDay(id);
+        List<Day> days = database.selectBeforeTenDay(id);
+        for(Day day : days)
+            if(day.getMainPlaceId()==null)
+                insertNewPlace(day);
+        return days;
     }
-
+    protected void insertNewPlace(final Day day) throws Exception{
+        final Place place = new Place();
+        final Photo photo = database.selectPhoto(day.getMainPhotoId());
+        new GeoFourSquare(new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                try {
+                    if (msg.what == 0) {
+                        Place newPlace = (Place) msg.obj;
+                        insertNewPosition(newPlace,photo);
+                        day.setMainPlaceId(newPlace.getId());
+                        database.updateDayMainPlaceId(day.getId(),newPlace.getId());
+                    }else {
+                        throw new NullPointerException();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }). execute(photo,place);
+    }
     public Day makeDayData(Photo photo) {
         Day day = new Day();
         day.setTitle("");
@@ -121,7 +146,7 @@ public class ItemModule {
         return day;
     }
 
-    public Photo makePhotoData(float lat, float lon, Long dataTaken, Long photoId, String photoPath) {
+    public Photo makePhotoData(float lat, float lon, Long dataTaken, Long photoId, String photoPath) throws Exception{
         Photo photo = new Photo();
         photo.setTitle("");
         photo.setCity("");
@@ -158,6 +183,7 @@ public class ItemModule {
                 placeName.setVisibility(View.VISIBLE);
         }
     }
+
     public void getPlace(Day day ,final TextView placeName) throws Exception {
         Photo photo = database.selectPhoto(day.getMainPhotoId());
         day.setMainPhoto(photo);
@@ -237,12 +263,12 @@ public class ItemModule {
                 long photoID = cursor.getInt(idx[0]);
                 String photoPath = cursor.getString(idx[1]);
                 String displayName = cursor.getString(idx[2]);
-                long dataTaken = cursor.getLong(idx[3]);
                 String format = cursor.getString(idx[4]);
                 float lat = cursor.getFloat(idx[5]);
                 float lon = cursor.getFloat(idx[6]);
                 if (lat == 0 && lon == 0) continue;
                 if (isNotJpg(format)) continue;
+                long dataTaken = Util.getDateTime(photoPath);
                 if (displayName != null && HasBeenDate.isSameDate(date, dataTaken)) {
                     if (database.hasPhotoId(photoID)) continue;
                     Photo photo = new Photo();

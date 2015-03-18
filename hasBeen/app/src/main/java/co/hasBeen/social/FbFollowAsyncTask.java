@@ -1,31 +1,25 @@
 package co.hasBeen.social;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 
-import co.hasBeen.model.network.SFSSLSocketFactory;
+import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by 주현 on 2015-02-02.
  */
-public class FbFollowAsyncTask extends AsyncTask<Object,Void,Boolean> {
-    Handler mHandler;
+public class FbFollowAsyncTask extends HasBeenAsyncTask<Object,Void,Boolean> {
+
     //    final static String URL = "https://gist.githubusercontent.com/indzuby/43da0aae3a9e9875d670/raw/16c0c339eea735923c7d8a495403a5e543936757/FollowerList";
     final static String URL = Session.DOMAIN+"follows/facebookFriends";
     @Override
     protected Boolean doInBackground(Object... params) {
-        HttpClient client = SFSSLSocketFactory.getHttpClient();
-        HttpResponse response;
-        Uri uri;
         try {
             uri = Uri.parse(URL);
             HttpPost post = new HttpPost(uri.toString());
@@ -58,7 +52,7 @@ public class FbFollowAsyncTask extends AsyncTask<Object,Void,Boolean> {
         mHandler.sendMessage(msg);
     }
 
-    public FbFollowAsyncTask(Handler handler) {
-        mHandler = handler;
+    public FbFollowAsyncTask(Handler mHandler) {
+        super(mHandler);
     }
 }

@@ -1,30 +1,23 @@
 package co.hasBeen.profile.follow;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 
-import co.hasBeen.model.network.SFSSLSocketFactory;
+import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-27.
  */
-public class UnFollowAsyncTask extends AsyncTask<Object,Void,Boolean> {
-    Handler mHandler;
+public class UnFollowAsyncTask extends HasBeenAsyncTask<Object,Void,Boolean> {
     final static String URL = Session.DOMAIN+"follows/";
 
     @Override
     protected Boolean doInBackground(Object... params) {
-        HttpClient client = SFSSLSocketFactory.getHttpClient();
-        HttpResponse response;
-        Uri uri;
         try {
             uri = Uri.parse(URL + params[1]);
             HttpDelete del = new HttpDelete(uri.toString());
@@ -57,6 +50,6 @@ public class UnFollowAsyncTask extends AsyncTask<Object,Void,Boolean> {
     }
 
     public UnFollowAsyncTask(Handler handler) {
-        mHandler = handler;
+        super(handler);
     }
 }

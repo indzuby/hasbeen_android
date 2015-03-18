@@ -1,7 +1,6 @@
 package co.hasBeen.photo;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
@@ -11,9 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 
 import java.io.InputStream;
@@ -23,21 +20,17 @@ import java.io.Reader;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.model.api.Place;
-import co.hasBeen.model.network.SFSSLSocketFactory;
+import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-29.
  */
-public class PhotoAsyncTask extends AsyncTask<Object,Void,Photo> {
-    Handler mHandler;
+public class PhotoAsyncTask extends HasBeenAsyncTask<Object,Void,Photo> {
 //    final static String URL = "https://gist.githubusercontent.com/indzuby/ca980f3c37f79d0156be/raw/548b25ee536bb5ec5f1941a0cb05bdb9ba845ed1/PhotoView";
     final static String URL = Session.DOMAIN+"photos/";
     @Override
     protected Photo doInBackground(Object... params) {
-        HttpClient client =  SFSSLSocketFactory.getHttpClient();
-        HttpResponse response;
-        Uri uri;
         try {
             uri = Uri.parse(URL+params[1]);
             HttpGet get = new HttpGet(uri.toString());
@@ -97,6 +90,6 @@ public class PhotoAsyncTask extends AsyncTask<Object,Void,Photo> {
     }
 
     public PhotoAsyncTask(Handler handler) {
-        mHandler = handler;
+        super(handler);
     }
 }

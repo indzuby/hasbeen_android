@@ -1,16 +1,13 @@
 package co.hasBeen.gallery;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
 import com.google.gson.Gson;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HTTP;
@@ -18,20 +15,16 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import co.hasBeen.model.api.Day;
-import co.hasBeen.model.network.SFSSLSocketFactory;
+import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by 주현 on 2015-02-24.
  */
-public class UploadAsyncTask extends AsyncTask<Object,Void,Long> {
-    Handler mHandler;
+public class UploadAsyncTask extends HasBeenAsyncTask<Object,Void,Long> {
     final static String URL = Session.DOMAIN+"days";
     @Override
     protected Long doInBackground(Object... params) {
-        HttpClient client = SFSSLSocketFactory.getHttpClient();
-        HttpResponse response;
-        Uri uri;
         try {
             Day dayUpload = (Day) params[1];
             uri = Uri.parse(URL);
@@ -73,6 +66,6 @@ public class UploadAsyncTask extends AsyncTask<Object,Void,Long> {
     }
 
     public UploadAsyncTask(Handler handler) {
-        mHandler = handler;
+        super(handler);
     }
 }
