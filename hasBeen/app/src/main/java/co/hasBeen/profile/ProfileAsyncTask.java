@@ -85,7 +85,7 @@ public class ProfileAsyncTask extends HasBeenAsyncTask<Object, Void, User> {
 
     @Override
     protected void onPostExecute(User user) {
-
+        super.onPostExecute(user);
         Message msg = mHandler.obtainMessage();
         if (user != null) {
             msg.obj = user;

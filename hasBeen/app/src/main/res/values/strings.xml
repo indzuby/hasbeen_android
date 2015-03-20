@@ -79,8 +79,12 @@
     <string name="edit_day">Edit day trip</string>
     <string name="change_place">Change place</string>
     <string name="merge_place">Merge to above place</string>
+    <string name="remove_place">Remove this place</string>
     <string name="choose_trip">Choose your trip</string>
-    <string name="uploading">uploading..</string>
+    <string name="remove_cofirm">Are you sure you want delete this?</string>
+    <string name="delete">Delete</string>
+    <string name="cancle">Cancle</string>
+    <string name="uploading">Uploading..\nYou will be noticed when it\'s done.</string>
     <string name="uploading_count">%1$d/%2$d photos</string>
     <!--사진-->
     <string name="near_by">Near by</string>
@@ -136,6 +140,7 @@
     <string name="commented_day_push">%1$s commented on %2$s day trip.</string>
     <string name="loved_photo_push">%1$s liked %2$s photo.</string>
     <string name="loved_day_push">%1$s liked %2$s day trip.</string>
+    <string name="day_post_done">%1$s day trip hasBeen uploaded.</string>
 
     <!--프로필-->
     <string name="follower">Follower</string>
@@ -153,7 +158,7 @@
     <string name="description_size_error">memo must be at least 2 and most 255 letters.</string>
     <string name="title_size_error">title must be at least 2 and most 255 letters.</string>
     <string name="session_gone">Your session expired, please sign in again.</string>
-    <string name="dup_email">This email is exist.</string>
+    <string name="dup_email">That email is being used.</string>
     <string name="day_deleted"> This day trip was deleted.\nPlease pull to refresh.</string>
     <!--확인-->
     <string name="sign_up_ok">Sign up done, please sign in.</string>

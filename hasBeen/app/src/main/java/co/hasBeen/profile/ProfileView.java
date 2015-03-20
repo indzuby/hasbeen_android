@@ -73,14 +73,16 @@ public class ProfileView extends ActionBarActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what) {
-                case 0:
-                    mUser = (User) msg.obj;
-                    initProfile();
-                    mapRendering(DAY);
-                    break;
-                case -1:
-                    break;
+            if (ProfileView.this != null) {
+                switch (msg.what) {
+                    case 0:
+                        mUser = (User) msg.obj;
+                        initProfile();
+                        mapRendering(DAY);
+                        break;
+                    case -1:
+                        break;
+                }
             }
         }
     };
@@ -155,7 +157,7 @@ public class ProfileView extends ActionBarActivity {
             }
         }
     };
-
+    ProfileAsyncTask asyncTask;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -163,7 +165,8 @@ public class ProfileView extends ActionBarActivity {
         mAccessToken = Session.getString(this, "accessToken", null);
         init();
         startLoading();
-        new ProfileAsyncTask(handler).execute(mAccessToken,mUserId);
+        asyncTask = new ProfileAsyncTask(handler);
+        asyncTask.execute(mAccessToken,mUserId);
     }
 
     protected void initActionBar(){
@@ -426,5 +429,10 @@ public class ProfileView extends ActionBarActivity {
         isLoading = false;
         mLoading.setVisibility(View.GONE);
         mLoading.clearAnimation();
+    }
+    @Override
+    protected void onDestroy() {
+        asyncTask.cancel(true);
+        super.onDestroy();
     }
 }

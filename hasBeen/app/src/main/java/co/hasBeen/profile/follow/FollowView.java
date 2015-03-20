@@ -70,7 +70,7 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
         mViewPager = (ViewPager) findViewById(R.id.pager);
         FollowPagerAdapter pagerAdapter = new FollowPagerAdapter(getSupportFragmentManager(),mUserId,mType);
         mViewPager.setAdapter(pagerAdapter);
-        mViewPager.setOffscreenPageLimit(0);
+        mViewPager.setOffscreenPageLimit(2);
 
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override

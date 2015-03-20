@@ -10,7 +10,6 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -44,6 +43,12 @@ public class ClusterPhotoDialog extends Dialog {
         setLayout();
         PhotoAdapter adapter= new PhotoAdapter();
         gridView.setAdapter(adapter);
+        findViewById(R.id.box).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     public ClusterPhotoDialog(Context context, Collection<PhotoPin> photoPins) {

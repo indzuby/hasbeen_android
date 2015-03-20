@@ -6,6 +6,12 @@ package co.hasBeen.model.api;
 public class AlarmCount {
     int newsCount;
     int youCount;
+
+    public AlarmCount() {
+        newsCount = 0;
+        youCount = 0;
+    }
+
     public int getNewsCount() {
         return newsCount;
     }

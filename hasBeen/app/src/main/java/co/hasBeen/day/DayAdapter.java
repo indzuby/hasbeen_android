@@ -145,32 +145,52 @@ public class DayAdapter extends BaseAdapter {
                     dialog.dismiss();
                 }
             };
-            if(index==0) {
-                dialog = new PositionDialog(mContext,change,null,true);
-                dialog.show();
-            }else {
-                View.OnClickListener merge = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new DayMergeAsyncTask(new Handler(Looper.getMainLooper()) {
-                            @Override
-                            public void handleMessage(Message msg) {
-                                super.handleMessage(msg);
-                                if(msg.what==0) {
-                                   mergePosition(index);
-                                   notifyDataSetChanged();
-                                }else {
-                                    Toast.makeText(mContext,mContext.getString(R.string.common_error),Toast.LENGTH_LONG).show();
-                                }
+
+            View.OnClickListener merge = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new DayMergeAsyncTask(new Handler(Looper.getMainLooper()) {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            super.handleMessage(msg);
+                            if(msg.what==0) {
+                                mergePosition(index);
+                                notifyDataSetChanged();
+                            }else {
+                                Toast.makeText(mContext,mContext.getString(R.string.common_error),Toast.LENGTH_LONG).show();
+                            }
+                            dialog.dismiss();
+                        }
+                    }).execute(mAccessToken,id);
+                }
+            };
+            View.OnClickListener remove = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new PositionDeleteAsyncTask(new Handler(Looper.getMainLooper()){
+                        @Override
+                        public void handleMessage(Message msg) {
+                            super.handleMessage(msg);
+                            if(msg.what==0) {
+                                removePosition(index);
+                                notifyDataSetChanged();
                                 dialog.dismiss();
                             }
-                        }).execute(mAccessToken,id);
-                    }
-                };
-                dialog = new PositionDialog(mContext, change, merge);
+                        }
+                    }).execute(mAccessToken,id);
+                }
+            };
+            if(index==0) {
+                dialog = new PositionDialog(mContext,change,null,remove,true);
+                dialog.show();
+            }else {
+                dialog = new PositionDialog(mContext, change, merge,remove);
                 dialog.show();
             }
         }
+    }
+    protected void removePosition(int index){
+        mPositionList.remove(index);
     }
     protected void mergePosition(int from) {
         Position toPosition = getItem(from-1);

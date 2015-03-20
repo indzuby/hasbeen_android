@@ -50,27 +50,28 @@ public class GalleryFragment extends HasBeenFragment {
             try {
                 List<Day> days;
                 days = mDayData.bringTenDay(date);
-                if (!autoRefresh) {
-                    if (days != null)
+                if (days != null) {
+                    if (!autoRefresh) {
                         mDayList.addAll(days);
-                } else {
-                    Collections.reverse(days);
-                    for (Day day : days) {
-                        if (hasDay(day)) continue;
-                        Log.i("newDays", day.getId() + "");
-                        mDayList.add(0, day);
+                    } else {
+                        Collections.reverse(days);
+                        for (Day day : days) {
+                            if (hasDay(day)) continue;
+                            Log.i("newDays", day.getId() + "");
+                            mDayList.add(0, day);
+                        }
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (mDayList.size() <= 0) {
-                mView.findViewById(R.id.galleryDefault).setVisibility(View.VISIBLE);
-            } else
-                mView.findViewById(R.id.galleryDefault).setVisibility(View.GONE);
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if (mDayList.size() <= 0) {
+                        mView.findViewById(R.id.galleryDefault).setVisibility(View.VISIBLE);
+                    } else
+                        mView.findViewById(R.id.galleryDefault).setVisibility(View.GONE);
                     mDayAdapter.notifyDataSetChanged();
                     stopLoading();
                     if (mGalleryListView.isRefreshing())
@@ -83,8 +84,9 @@ public class GalleryFragment extends HasBeenFragment {
     public void newDaysLoad() {
         if (!mGalleryListView.isRefreshing())
             startLoading();
-        Long date = new Date().getTime();
-        new LoadThread(date, true).start();
+        Date date = new Date();
+        long offset = date.getTimezoneOffset()*60000;
+        new LoadThread(date.getTime()-offset, true).start();
     }
 
     protected boolean hasDay(Day day) throws Exception {
@@ -102,7 +104,8 @@ public class GalleryFragment extends HasBeenFragment {
         startLoading();
         try {
             Day day = database.selectLastDay();
-            Long date = new Date().getTime();
+            long offset = new Date().getTimezoneOffset()*60000;
+            Long date = new Date().getTime() - offset;
             if (day != null)
                 date = day.getDate() + 10000;
             new LoadThread(date).start();
@@ -142,6 +145,7 @@ public class GalleryFragment extends HasBeenFragment {
     public void showTab() {
         if (!isShowTab())
             loadDays();
+        setShowTab();
     }
 
     @Override

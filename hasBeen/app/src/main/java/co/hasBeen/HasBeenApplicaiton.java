@@ -14,4 +14,5 @@ public class HasBeenApplicaiton extends Application {
         registerActivityLifecycleCallbacks(
                 new LocalyticsActivityLifecycleCallbacks(this));
     }
+
 }

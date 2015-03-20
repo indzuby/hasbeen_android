@@ -36,16 +36,17 @@ public class FollowingFragment extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what) {
-                case 0:
-                    mFollowing = (List) msg.obj;
-                    if(!getActivity().isFinishing())
+            if(getActivity()!=null) {
+                switch (msg.what) {
+                    case 0:
+                        mFollowing = (List) msg.obj;
                         initFollower();
-                    break;
-                case -1:
-                    break;
+                        break;
+                    case -1:
+                        break;
+                }
+                stopLoading();
             }
-            stopLoading();
         }
     };
     protected void initFollower() {

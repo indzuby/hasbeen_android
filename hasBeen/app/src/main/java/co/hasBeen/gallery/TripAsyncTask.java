@@ -53,6 +53,7 @@ public class TripAsyncTask extends HasBeenAsyncTask<Object,Void,List<Trip>> {
 
     @Override
     protected void onPostExecute(List<Trip> trips) {
+        super.onPostExecute(trips);
         Message msg = mHandler.obtainMessage();
         if(trips !=null) {
             msg.obj = trips;

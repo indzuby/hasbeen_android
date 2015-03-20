@@ -19,42 +19,52 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:screenOrientation="portrait"
         android:theme="@style/AppTheme">
 
         <activity
             android:name="co.hasBeen.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/hasBeenShare">
         </activity>
-        <activity android:name=".map.MapActivity"  android:theme="@style/hasBeenShare" />
-        <activity android:name="co.hasBeen.gallery.GalleryPhoto" android:theme="@style/NoActionBar" android:label="@string/app_name" />
-        <activity android:name="co.hasBeen.gallery.GalleryPhotoEdit" android:theme="@style/NoActionBar" android:label="@string/app_name" android:windowSoftInputMode="adjustResize" />
-        <activity android:name="co.hasBeen.gallery.GalleryShare"  android:theme="@style/hasBeenShare" />
-        <activity android:name="co.hasBeen.gallery.GallerySelectDayView"  android:theme="@style/hasBeenShare" />
-        <activity android:name="co.hasBeen.gallery.GalleryUpload"  android:theme="@style/hasBeenShare"
+        <activity android:name=".map.MapActivity"
+            android:screenOrientation="portrait" android:theme="@style/hasBeenShare" />
+        <activity android:name="co.hasBeen.gallery.GalleryPhoto"
+            android:screenOrientation="portrait" android:theme="@style/NoActionBar" android:label="@string/app_name" />
+        <activity android:name="co.hasBeen.gallery.GalleryPhotoEdit"
+            android:screenOrientation="portrait" android:theme="@style/NoActionBar" android:label="@string/app_name" android:windowSoftInputMode="adjustResize" />
+        <activity android:name="co.hasBeen.gallery.GalleryShare"
+            android:screenOrientation="portrait" android:theme="@style/hasBeenShare" />
+        <activity android:name=".gallery.GallerySelectTripView"
+            android:screenOrientation="portrait" android:theme="@style/hasBeenShare" />
+        <activity android:name="co.hasBeen.gallery.GalleryUpload"
+            android:screenOrientation="portrait" android:theme="@style/hasBeenShare"
                   android:windowSoftInputMode="adjustResize"/>
-        <activity android:name="co.hasBeen.gallery.GalleryPlace"  android:theme="@style/hasBeenShare" />
-        <activity android:name="co.hasBeen.account.LoginActivity"  android:theme="@style/NoActionBar" android:windowSoftInputMode="adjustPan|adjustResize">
+        <activity android:name="co.hasBeen.gallery.GalleryPlace"
+            android:screenOrientation="portrait" android:theme="@style/hasBeenShare" />
+        <activity android:name="co.hasBeen.account.LoginActivity"
+            android:screenOrientation="portrait" android:theme="@style/NoActionBar" android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".setting.License"  android:theme="@style/hasBeenShare" />
-        <activity android:name=".setting.AbouthasBeen"  android:theme="@style/NoActionBar" />
-        <activity android:name="co.hasBeen.setting.SettingView"  android:theme="@style/hasBeenShare" />
-        <activity android:name="co.hasBeen.account.SignUpActivity"  android:theme="@style/NoActionBar" android:windowSoftInputMode="adjustPan|adjustResize"/>
-        <activity android:name="co.hasBeen.day.DayView" android:theme="@style/hasBeenShare" android:label="@string/app_name" android:windowSoftInputMode="adjustResize" />
-        <activity android:name="co.hasBeen.gallery.GalleryDayView" android:theme="@style/hasBeenShare" android:label="@string/app_name" android:windowSoftInputMode="adjustResize" />
-        <activity android:name="co.hasBeen.day.DayChangePlace" android:theme="@style/hasBeenShare" android:label="@string/app_name"/>
-        <activity android:name="co.hasBeen.comment.CommentView" android:theme="@style/hasBeenShare" android:label="@string/app_name" />
-        <activity android:name="co.hasBeen.photo.PhotoView" android:theme="@style/hasBeenShare" android:label="@string/app_name" />
-        <activity android:name="co.hasBeen.profile.follow.FollowView" android:theme="@style/hasBeenShare" android:label="@string/app_name" />
-        <activity android:name="co.hasBeen.social.FbFriendsView" android:theme="@style/hasBeenShare" android:label="@string/app_name" />
-        <activity android:name="co.hasBeen.profile.ProfileView" android:theme="@style/hasBeenShare" android:label="@string/app_name" />
+        <activity android:name=".setting.License"
+            android:screenOrientation="portrait" android:theme="@style/hasBeenShare" />
+        <activity android:name=".setting.AbouthasBeen"
+            android:screenOrientation="portrait" android:theme="@style/NoActionBar" />
+        <activity android:screenOrientation="portrait" android:name="co.hasBeen.setting.SettingView"  android:theme="@style/hasBeenShare" />
+        <activity android:screenOrientation="portrait" android:name="co.hasBeen.account.SignUpActivity"  android:theme="@style/NoActionBar" android:windowSoftInputMode="adjustResize"/>
+        <activity android:screenOrientation="portrait" android:name="co.hasBeen.day.DayView" android:theme="@style/hasBeenShare" android:label="@string/app_name" android:windowSoftInputMode="adjustResize" />
+        <activity android:screenOrientation="portrait" android:name="co.hasBeen.gallery.GalleryDayView" android:theme="@style/hasBeenShare" android:label="@string/app_name" android:windowSoftInputMode="adjustResize" />
+        <activity android:screenOrientation="portrait" android:name="co.hasBeen.day.DayChangePlace" android:theme="@style/hasBeenShare" android:label="@string/app_name"/>
+        <activity android:screenOrientation="portrait" android:name="co.hasBeen.comment.CommentView" android:theme="@style/hasBeenShare" android:label="@string/app_name" />
+        <activity android:screenOrientation="portrait" android:name="co.hasBeen.photo.PhotoView" android:theme="@style/hasBeenShare" android:label="@string/app_name" />
+        <activity android:screenOrientation="portrait" android:name="co.hasBeen.profile.follow.FollowView" android:theme="@style/hasBeenShare" android:label="@string/app_name" />
+        <activity android:screenOrientation="portrait" android:name="co.hasBeen.social.FbFriendsView" android:theme="@style/hasBeenShare" android:label="@string/app_name" />
+        <activity android:screenOrientation="portrait" android:name="co.hasBeen.profile.ProfileView" android:theme="@style/hasBeenShare" android:label="@string/app_name" />
         <meta-data android:name="com.facebook.sdk.ApplicationId"   android:value="@string/app_id" />
-        <activity android:name="com.facebook.LoginActivity" />
+        <activity android:screenOrientation="portrait" android:name="com.facebook.LoginActivity" android:windowSoftInputMode="adjustResize"/>
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"></meta-data>
         <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="@string/map_id"/>
         <receiver

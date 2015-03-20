@@ -8,15 +8,17 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import co.hasBeen.R;
+import co.hasBeen.utils.ConfirmDialog;
 
 /**
  * Created by 주현 on 2015-02-11.
  */
-public class DayDialog extends Dialog{
+public class DayDialog extends Dialog {
 
-    View.OnClickListener mDel;
+    View.OnClickListener mRemove;
     View.OnClickListener mEdit;
     boolean isReport;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,33 +31,51 @@ public class DayDialog extends Dialog{
         setContentView(R.layout.day_dialog);
 
         setLayout();
-        mRemoveButton.setOnClickListener(mDel);
+        mRemoveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ConfirmDialog dialog = new ConfirmDialog(getContext(), mRemove);
+                dialog.show();
+                dismiss();
+            }
+        });
         mEditButton.setOnClickListener(mEdit);
+        findViewById(R.id.box).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
+
     public DayDialog(Context context) {
         // Dialog 배경을 투명 처리 해준다.
-        super(context , android.R.style.Theme_Translucent_NoTitleBar);
+        super(context, android.R.style.Theme_Translucent_NoTitleBar);
         isReport = false;
     }
-    public void setListner(View.OnClickListener del,View.OnClickListener edit){
-        mDel = del;
+
+    public void setListner(View.OnClickListener del, View.OnClickListener edit) {
+        mRemove = del;
         mEdit = edit;
 
     }
-    public DayDialog(Context context,boolean isReport) {
+
+    public DayDialog(Context context, boolean isReport) {
         // Dialog 배경을 투명 처리 해준다.
         this(context);
         this.isReport = isReport;
     }
+
     private TextView mRemoveButton;
     private TextView mEditButton;
-        /*
-     * Layout
-     */
-    private void setLayout(){
+
+    /*
+ * Layout
+ */
+    private void setLayout() {
         mRemoveButton = (TextView) findViewById(R.id.removeDay);
         mEditButton = (TextView) findViewById(R.id.editDay);
-        if(isReport) {
+        if (isReport) {
             mRemoveButton.setText(getContext().getString(R.string.report_day));
             mEditButton.setText(getContext().getString(R.string.share_day));
         }

@@ -41,7 +41,6 @@ public class LoginActivity extends Activity {
     EditText mEmail;
     EditText mPassword;
     String mAccessToken;
-    String regid;
     GcmRegister gcm;
     View mLoading;
     boolean isLoading;
@@ -166,7 +165,7 @@ public class LoginActivity extends Activity {
                 String token = (String) msg.obj;
                 new LogInAsyncTask(loginHandler).execute(token, "", "password", "read write delete", LogInAsyncTask.BASIC);
             } else {
-
+                Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
             }
         }
     };
@@ -175,8 +174,7 @@ public class LoginActivity extends Activity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 0) {
-                String regid = gcm.getRegistrationId();
-                LoginTokenResponse loginToken = (LoginTokenResponse) msg.obj;
+                LoginTokenResponse loginToken   = (LoginTokenResponse) msg.obj;
                 co.hasBeen.utils.Session.putString(getBaseContext(), "accessToken", loginToken.getAccess_token());
                 gcm.registerGcm(registHandler);
             }else

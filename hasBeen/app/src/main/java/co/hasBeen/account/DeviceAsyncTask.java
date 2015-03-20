@@ -14,7 +14,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
-import co.hasBeen.model.network.SFSSLSocketFactory;
+import co.hasBeen.utils.SFSSLSocketFactory;
 import co.hasBeen.utils.Session;
 
 /**

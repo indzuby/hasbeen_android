@@ -5,7 +5,7 @@ package co.hasBeen.model.api;
  */
 public class Alarm {
     public enum Type {
-        DAY_POST, DAY_COMMENT, DAY_LOVE, PHOTO_COMMENT, PHOTO_LOVE, FOLLOW, FB_FRIEND;
+        DAY_POST,DAY_POST_DONE, DAY_COMMENT, DAY_LOVE, PHOTO_COMMENT, PHOTO_LOVE, FOLLOW, FB_FRIEND;
     }
     Long id;
     User user;

@@ -54,12 +54,12 @@ public class DayAsyncTask extends HasBeenAsyncTask<Object,Void,Day> {
 
     @Override
     protected void onPostExecute(Day day) {
-
+        super.onPostExecute(day);
         Message msg = mHandler.obtainMessage();
-        if(day !=null) {
+        if (day != null) {
             msg.obj = day;
             msg.what = 0;
-        }else {
+        } else {
             msg.what = -1;
         }
         mHandler.sendMessage(msg);

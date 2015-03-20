@@ -40,7 +40,6 @@ public class AlarmFragment extends HasBeenFragment implements View.OnClickListen
     String mAccessToken;
     View mNewLoadingView;
     View mYouLoadingView;
-    boolean isLoad = true;
     boolean isNewLoad = false;
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
@@ -89,7 +88,7 @@ public class AlarmFragment extends HasBeenFragment implements View.OnClickListen
                     Collections.reverse(alarms);
                 }
                 new RefreshThread(alarms,mAlarmsNews,mNewAdapter).start();
-                if(isLoad)
+                if(isLoading)
                     stopLoading();
             }
         }
@@ -103,7 +102,7 @@ public class AlarmFragment extends HasBeenFragment implements View.OnClickListen
                     Collections.reverse(alarms);
                 }
                 new RefreshThread(alarms,mAlarmsYou,mYouAdapter).start();
-                if(isLoad)
+                if(isLoading)
                     stopLoading();
             }
         }
@@ -144,8 +143,7 @@ public class AlarmFragment extends HasBeenFragment implements View.OnClickListen
         mNewList.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
             @Override
             public void onLastItemVisible() {
-                if(!isLoad) {
-                    isLoad = true;
+                if(!isLoading) {
                     startLoading();
                     getOldAlarmNews();
                 }
@@ -154,8 +152,7 @@ public class AlarmFragment extends HasBeenFragment implements View.OnClickListen
         mYouList.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
             @Override
             public void onLastItemVisible() {
-                if(!isLoad) {
-                    isLoad = true;
+                if(!isLoading) {
                     startLoading();
                     getOldAlarmYou();
                 }
@@ -165,21 +162,17 @@ public class AlarmFragment extends HasBeenFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         clearSelect();
-
+        stopLoading();
         if(v.getId()==R.id.alarmNews){
             ((TextView)v.findViewById(R.id.news)).setTextColor(getResources().getColor(R.color.theme_color));
             selectTab(NEWS);
             mAlarmCount.setNewsCount(0);
             redDotRefresh();
-            if(mAlarmsNews.size()<=0)
-                new AlarmListAsyncTask(alarmNewsHandler).execute(mAccessToken,AlarmListAsyncTask.CATEGORY_NEWS);
         }else {
             ((TextView)v.findViewById(R.id.you)).setTextColor(getResources().getColor(R.color.theme_color));
             selectTab(YOU);
             mAlarmCount.setYouCount(0);
             redDotRefresh();
-            if(mAlarmsYou.size()<=0)
-                new AlarmListAsyncTask(alarmYouHandler).execute(mAccessToken,AlarmListAsyncTask.CATEGORY_YOU);
         }
     }
     protected void clearSelect(){
@@ -190,34 +183,32 @@ public class AlarmFragment extends HasBeenFragment implements View.OnClickListen
         if(index == NEWS) {
             mNewList.setVisibility(View.VISIBLE);
             mYouList.setVisibility(View.GONE);
-            if(mAlarmsNews.size()>0)
-                getNewAlarmNews();
+            getNewAlarmNews();
             mTab = NEWS;
         }else {
             mYouList.setVisibility(View.VISIBLE);
             mNewList.setVisibility(View.GONE);
-            if(mAlarmsYou.size()>0)
-                getNewAlarmYou();
+            getNewAlarmYou();
             mTab = YOU;
         }
     }
     public void getNewAlarmNews(){
+        if(!mNewList.isRefreshing()) startLoading();
         if(mAlarmsNews.size()>0) {
             isNewLoad = true;
             new AlarmListAsyncTask(alarmNewsHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_NEWS, "", mAlarmsNews.get(0).getId());
         }
         else {
-            if(!mNewList.isRefreshing()) startLoading();
             new AlarmListAsyncTask(alarmNewsHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_NEWS);
         }
     }
     public void getNewAlarmYou(){
+        if(!mYouList.isRefreshing()) startLoading();
         if(mAlarmsYou.size()>0) {
             isNewLoad = true;
             new AlarmListAsyncTask(alarmYouHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_YOU, "", mAlarmsYou.get(0).getId());
         }
         else {
-            if(!mYouList.isRefreshing()) startLoading();
             new AlarmListAsyncTask(alarmYouHandler).execute(mAccessToken, AlarmListAsyncTask.CATEGORY_YOU);
         }
     }

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import org.opencv.android.OpenCVLoader;
 
+import co.hasBeen.account.LoginActivity;
 import co.hasBeen.alarm.AlarmCountAsyncTask;
 import co.hasBeen.alarm.AlarmFragment;
 import co.hasBeen.gallery.GalleryFragment;
@@ -25,6 +26,7 @@ import co.hasBeen.utils.Session;
 
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener{
+    public final static int REQUEST_LOGOUT =2020;
     View newsfeed,search,gallery,alarm,profile;
     boolean isAlarmRead = false;
     int tabIcon[] = {R.drawable.newsfeed_pressed,R.drawable.search_pressed,R.drawable.gallery_pressed,R.drawable.alarm_pressed,R.drawable.profile_pressed};
@@ -80,6 +82,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     }
     public void getAlarmCount(){
         String accessToken = Session.getString(this,"accessToken",null);
+        mAlarmCount = new AlarmCount();
         new AlarmCountAsyncTask(new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(Message msg) {
@@ -173,11 +176,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("MyAdapter", "onActivityResult");
-        if(resultCode == RESULT) {
-            try {
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
+        if(resultCode == RESULT_OK && requestCode == REQUEST_LOGOUT) {
+            finish();
+            Intent intent = new Intent(this,LoginActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -186,7 +188,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     protected void onDestroy() {
         System.gc();
         Log.i("Destory","yes");
-        System.exit(0);
         super.onDestroy();
     }
 

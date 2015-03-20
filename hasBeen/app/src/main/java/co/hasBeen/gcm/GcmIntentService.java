@@ -82,6 +82,9 @@ public class GcmIntentService extends IntentService {
             intent = new Intent(this,PhotoView.class);
             intent.putExtra("id",push.getId());
             if(type.equals(Alarm.Type.PHOTO_COMMENT))intent.putExtra("type","comment");
+        }else if(type.equals(Alarm.Type.DAY_POST)) {
+            intent = new Intent(this,DayView.class);
+            intent.putExtra("id",push.getId());
         }
         return intent;
     }

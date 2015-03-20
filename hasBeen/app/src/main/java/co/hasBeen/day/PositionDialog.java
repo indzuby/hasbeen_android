@@ -8,57 +8,77 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import co.hasBeen.R;
+import co.hasBeen.utils.ConfirmDialog;
 
 /**
  * Created by 주현 on 2015-02-11.
  */
 public class PositionDialog extends Dialog {
 
-    View.OnClickListener mDel;
-    View.OnClickListener mEdit;
+    View.OnClickListener mChange;
+    View.OnClickListener mMerge;
+    View.OnClickListener mRemove;
     boolean isFirst;
-
+    Long mid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WindowManager.LayoutParams lpWindow = new WindowManager.LayoutParams();
-        lpWindow.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-        lpWindow.dimAmount = 0.5f;
-        getWindow().setAttributes(lpWindow);
+            WindowManager.LayoutParams lpWindow = new WindowManager.LayoutParams();
+            lpWindow.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+            lpWindow.dimAmount = 0.5f;
+            getWindow().setAttributes(lpWindow);
 
-        setContentView(R.layout.day_dialog);
+            setContentView(R.layout.position_dialog);
 
         setLayout();
-        mRemoveButton.setOnClickListener(mDel);
-        mEditButton.setOnClickListener(mEdit);
+        mChangeButton.setOnClickListener(mChange);
+        mMergeButton.setOnClickListener(mMerge);
+        if(mRemove!=null) {
+            mRemoveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ConfirmDialog dialog = new ConfirmDialog(getContext(),mRemove);
+                    dialog.show();
+                    dismiss();
+                }
+            });
+        }
+        findViewById(R.id.box).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
-    public PositionDialog(Context context, View.OnClickListener del, View.OnClickListener edit) {
+    public PositionDialog(Context context, View.OnClickListener change, View.OnClickListener merge,View.OnClickListener remove) {
         // Dialog 배경을 투명 처리 해준다.
         super(context, android.R.style.Theme_Translucent_NoTitleBar);
-        mDel = del;
-        mEdit = edit;
+        mChange = change;
+        mMerge = merge;
         isFirst = false;
+        mRemove = remove;
     }
 
-    public PositionDialog(Context context, View.OnClickListener del, View.OnClickListener edit, boolean isFirst) {
+    public PositionDialog(Context context, View.OnClickListener change, View.OnClickListener merge,View.OnClickListener remove, boolean isFirst) {
         // Dialog 배경을 투명 처리 해준다.
-        this(context, del, edit);
+        this(context, change, merge,remove);
         this.isFirst = isFirst;
     }
+    private TextView mChangeButton;
+    private TextView mMergeButton;
     private TextView mRemoveButton;
-    private TextView mEditButton;
-
     /*
  * Layout
  */
     private void setLayout() {
-        mRemoveButton = (TextView) findViewById(R.id.removeDay);
-        mEditButton = (TextView) findViewById(R.id.editDay);
-        mRemoveButton.setText(getContext().getString(R.string.change_place));
-        mEditButton.setText(getContext().getString(R.string.merge_place));
+        mChangeButton = (TextView) findViewById(R.id.chagePlace);
+        mMergeButton = (TextView) findViewById(R.id.mergePlace);
+        mRemoveButton = (TextView) findViewById(R.id.removePlace);
         if (isFirst)
-            mEditButton.setVisibility(View.GONE);
+            mMergeButton.setVisibility(View.GONE);
+        if(mRemove==null)
+            mRemoveButton.setVisibility(View.GONE);
     }
 }

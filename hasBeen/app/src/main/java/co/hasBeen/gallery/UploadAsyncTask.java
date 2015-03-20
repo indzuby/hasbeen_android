@@ -15,25 +15,31 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Photo;
+import co.hasBeen.model.api.Position;
 import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.Session;
+import co.hasBeen.utils.Util;
 
 /**
  * Created by 주현 on 2015-02-24.
  */
 public class UploadAsyncTask extends HasBeenAsyncTask<Object,Void,Long> {
     final static String URL = Session.DOMAIN+"days";
+    Day mDayUpload;
+    public int photoCount = 0 ;
     @Override
     protected Long doInBackground(Object... params) {
         try {
-            Day dayUpload = (Day) params[1];
+            mDayUpload = (Day) params[1];
+            uploadStorage();
             uri = Uri.parse(URL);
             HttpPost post = new HttpPost(uri.toString());
             post.addHeader("User-Agent","Android");
             post.addHeader("Content-Type","application/json");
             post.addHeader("Authorization","Bearer " +params[0]);
             Gson gson = new Gson();
-            String jsonString = gson.toJson(dayUpload);
+            String jsonString = gson.toJson(mDayUpload);
             JSONObject param = new JSONObject(jsonString);
             post.setEntity(new StringEntity(param.toString(), HTTP.UTF_8));
             response = client.execute(post);
@@ -52,9 +58,25 @@ public class UploadAsyncTask extends HasBeenAsyncTask<Object,Void,Long> {
         return null;
     }
 
+    protected void uploadStorage() {
+        try {
+            for (Position position : mDayUpload.getPositionList()) {
+                for (Photo photo : position.getPhotoList()) {
+                    try {
+                        photo.setBinary(Util.getLargeImage(photo));
+                        photoCount ++;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     protected void onPostExecute(Long id) {
-
+        super.onPostExecute(id);
         Message msg = mHandler.obtainMessage();
         if(id!=null) {
             msg.what = 0;

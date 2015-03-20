@@ -219,14 +219,17 @@ public class    PhotoView extends ActionBarActivity {
         });
         ;
     }
-
+    PhotoAsyncTask photoAsyncTask;
+    NearByPhotoAsyncTask nearByPhotoAsyncTask;
     protected void init() {
         setContentView(R.layout.photo);
         mLoading = findViewById(R.id.refresh);
         startLoading();
-        new PhotoAsyncTask(handler).execute(mAccessToken, mPhotoId);
+        photoAsyncTask= new PhotoAsyncTask(handler);
+        photoAsyncTask.execute(mAccessToken, mPhotoId);
         initActionBar();
-        new NearByPhotoAsyncTask(nearByHandler).execute(mAccessToken, mPhotoId);
+        nearByPhotoAsyncTask = new NearByPhotoAsyncTask(nearByHandler);
+        nearByPhotoAsyncTask.execute(mAccessToken, mPhotoId);
     }
 
     List<Photo> mNearByPhotos;
@@ -369,6 +372,8 @@ public class    PhotoView extends ActionBarActivity {
     @Override
     public void onDestroy() {
 //        RecycleUtils.recursiveRecycle(getWindow().getDecorView());
+        nearByPhotoAsyncTask.cancel(true);
+        photoAsyncTask.cancel(true);
         System.gc();
         super.onDestroy();
     }
@@ -383,6 +388,7 @@ public class    PhotoView extends ActionBarActivity {
                         new PhotoDeleteAsyncTask(new Handler(Looper.getMainLooper()) {
                             @Override
                             public void handleMessage(Message msg) {
+                                mPhotoDialog.dismiss();
                                 super.handleMessage(msg);
                                 if (msg.what == 0) {
                                     Toast.makeText(getBaseContext(), getString(R.string.remove_photo_ok), Toast.LENGTH_LONG).show();
@@ -437,3 +443,4 @@ public class    PhotoView extends ActionBarActivity {
 
     }
 }
+

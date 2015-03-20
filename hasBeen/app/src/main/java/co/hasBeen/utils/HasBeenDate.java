@@ -6,7 +6,6 @@ import android.util.Log;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Days;
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 import java.util.Date;
@@ -20,13 +19,12 @@ import co.hasBeen.model.api.Photo;
 public class HasBeenDate {
     String[] month = {"","Jan.","Feb.","Mar.","April.","May","Jun.","Jul.","Aug.","Sep.","Oct.","Nov.","Dec."};
 
-    public static boolean isSameDate(Photo beforePhoto,Photo photo) {
-        int k = calculateDateRange(beforePhoto.getTakenTime(),photo.getTakenTime());
-        return (k==0);
-    }
     public static boolean isSameDate(Long aDate, Long bDate) {
-        int k = calculateDateRange(aDate,bDate);
-        return (k==0);
+        String from = new DateTime(aDate).withZone(DateTimeZone.UTC).toString("MMMM dd, yyyy");
+        String to = new DateTime(bDate).withZone(DateTimeZone.UTC).toString("MMMM dd, yyyy");
+        if(from.equals(to))
+            return true;
+        return false;
     }
     public static boolean isBeforeThatDate(Photo lastPhoto , Photo currentPhoto){
         if(lastPhoto==null) return false;
@@ -42,8 +40,7 @@ public class HasBeenDate {
     public static int calculateDateRange(Long from, Long to) {
         DateTime start = new DateTime(from).withZone(DateTimeZone.UTC);
         DateTime end = new DateTime(to).withZone(DateTimeZone.UTC);
-
-        return Days.daysBetween(new LocalDate(start), new LocalDate(end)).getDays();
+        return Days.daysBetween(start,end).getDays();
     }
     public static Long getBeforeDay(Long currentTime, int day){
         Date date = new DateTime(currentTime).withZone(DateTimeZone.UTC).minusDays(day).toDate();

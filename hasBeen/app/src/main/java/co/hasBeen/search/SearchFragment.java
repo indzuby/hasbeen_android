@@ -93,9 +93,10 @@ public class SearchFragment extends HasBeenFragment {
 
     @Override
     public void showTab() {
-        startLoading();
-        if(!isShowTab())
+        if(!isShowTab()) {
+            startLoading();
             new SearchDayAsyncTask(dayHandler).execute(mAccessToken);
+        }
         setShowTab();
     }
 
@@ -124,6 +125,7 @@ public class SearchFragment extends HasBeenFragment {
                 case 0:
                     mPhotos = (List<Photo>) msg.obj;
                     photoRendering();
+                    stopLoading();
                     break;
                 case -1:
                     break;
@@ -134,7 +136,6 @@ public class SearchFragment extends HasBeenFragment {
         @Override
         public void onClick(View v) {
             TextView button = (TextView) v;
-
             if (nowTab!=DAY && button.equals(mDayButton)) {
                 mapRendering(DAY);
                 swapButtonColor();
@@ -161,13 +162,17 @@ public class SearchFragment extends HasBeenFragment {
         if(flag==DAY) {
             if(mDays!=null)
                 dayRendering();
-            else
+            else {
+                startLoading();
                 new SearchDayAsyncTask(dayHandler).execute(mAccessToken);
+            }
         }else {
             if(mPhotos!=null)
                 photoRendering();
-            else
+            else {
+                startLoading();
                 new SearchPhotoAsyncTask(photoHandler).execute(mAccessToken);
+            }
         }
     }
     protected void dayRendering(){

@@ -147,6 +147,7 @@ public class DayView extends ActionBarActivity{
         mDayAdapter = new DayAdapter(this,mPositions,userId == mDay.getUser().getId(),mDay);
         mListView.setAdapter(mDayAdapter);
     }
+    RecommendationAsyncTask recommendationAsyncTask;
     protected  void initFoorteView(){
         mSocialBar = (LinearLayout) findViewById(R.id.socialBar);
         LinearLayout commentButton = (LinearLayout)findViewById(R.id.commentButton);
@@ -185,7 +186,8 @@ public class DayView extends ActionBarActivity{
 
         mRecommendationLayout = (LinearLayout) findViewById(R.id.recommendationLayout);
         try {
-            new RecommendationAsyncTask(recommendationHandler).execute(mAccessToken, mDayId);
+           recommendationAsyncTask = new RecommendationAsyncTask(recommendationHandler);
+            recommendationAsyncTask.execute(mAccessToken, mDayId);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -207,12 +209,14 @@ public class DayView extends ActionBarActivity{
             }
         }
     };
+    DayAsyncTask asyncTask ;
     protected void init(){
         setContentView(R.layout.day);
         initActionBar();
         mLoading = findViewById(R.id.refresh);
         startLoading();
-        new DayAsyncTask(handler).execute(mAccessToken, mDayId);
+        asyncTask = new DayAsyncTask(handler);
+        asyncTask.execute(mAccessToken, mDayId);
         mHeaderView =  LayoutInflater.from(this).inflate(R.layout.gallery_header, null, false);
         mFooterView =  LayoutInflater.from(this).inflate(R.layout.day_footer, null, false);
         mListView = (ListView) findViewById(R.id.listPhotos);
@@ -281,6 +285,7 @@ public class DayView extends ActionBarActivity{
                             new DayDeleteAsyncTask(new Handler(Looper.getMainLooper()){
                                 @Override
                                 public void handleMessage(Message msg) {
+                                    mDayDialog.dismiss();
                                     super.handleMessage(msg);
                                     if(msg.what==0) {
                                         Toast.makeText(getBaseContext(),getString(R.string.remove_day_ok),Toast.LENGTH_LONG).show();
@@ -398,13 +403,12 @@ public class DayView extends ActionBarActivity{
 
     @Override
     public void onDestroy() {
+        asyncTask.cancel(true);
+        if(recommendationAsyncTask!=null) recommendationAsyncTask.cancel(true);
         if(mDayAdapter!=null)
             mDayAdapter.recycle();
-        mRecommendationLayout.removeAllViews();
-//        RecycleUtils.recursiveRecycle(getWindow().getDecorView());
         System.gc();
         super.onDestroy();
-//        unbindDrawables(findViewById(R.id.listPhotos));
     }
     @Override
     public void onLowMemory() {

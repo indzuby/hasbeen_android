@@ -39,6 +39,12 @@ public class ClusterDayDialog extends Dialog {
         setLayout();
         PhotoAdapter adapter= new PhotoAdapter();
         listView.setAdapter(adapter);
+        findViewById(R.id.box).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     public ClusterDayDialog(Context context, Collection<DayPin> dayPins) {

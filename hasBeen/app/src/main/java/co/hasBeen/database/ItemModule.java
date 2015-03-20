@@ -66,7 +66,7 @@ public class ItemModule {
                 proj,
                 MediaStore.Images.Media.DATE_TAKEN + ">?",
                 new String[]{"" + lastDayTime},
-                MediaStore.MediaColumns.DATE_ADDED);
+                MediaStore.Images.Media.DATE_TAKEN);
         if (cursor != null && cursor.moveToFirst()) {
             for (int i = 0; i < idx.length; i++)
                 idx[i] = cursor.getColumnIndex(proj[i]);
@@ -105,12 +105,13 @@ public class ItemModule {
         }
     }
 
-    public List<Day> bringTenDay(Long id) throws Exception {
+    public List<Day> bringTenDay(Long date) throws Exception {
         insertDay();
-        List<Day> days = database.selectBeforeTenDay(id);
-        for(Day day : days)
-            if(day.getMainPlaceId()==null)
-                insertNewPlace(day);
+        List<Day> days = database.selectBeforeTenDay(date);
+        if(days!=null)
+            for(Day day : days)
+                if(day.getMainPlaceId()==null)
+                    insertNewPlace(day);
         return days;
     }
     protected void insertNewPlace(final Day day) throws Exception{
@@ -255,7 +256,7 @@ public class ItemModule {
                 proj,
                 MediaStore.Images.Media.DATE_TAKEN + ">? AND " + MediaStore.Images.Media.DATE_TAKEN + "<?",
                 new String[]{"" + startDayTime, "" + endDayTime},
-                MediaStore.MediaColumns.DATE_ADDED);
+                MediaStore.Images.Media.DATE_TAKEN);
         if (cursor != null && cursor.moveToFirst()) {
             for (int i = 0; i < idx.length; i++)
                 idx[i] = cursor.getColumnIndex(proj[i]);
@@ -266,7 +267,7 @@ public class ItemModule {
                 String format = cursor.getString(idx[4]);
                 float lat = cursor.getFloat(idx[5]);
                 float lon = cursor.getFloat(idx[6]);
-                if (lat == 0 && lon == 0) continue;
+                if (lat == 0 || lon == 0) continue;
                 if (isNotJpg(format)) continue;
                 long dataTaken = Util.getDateTime(photoPath);
                 if (displayName != null && HasBeenDate.isSameDate(date, dataTaken)) {

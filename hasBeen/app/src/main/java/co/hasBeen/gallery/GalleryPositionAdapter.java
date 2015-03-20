@@ -91,9 +91,11 @@ public class GalleryPositionAdapter extends BaseAdapter{
             placeName.setOnClickListener(new EnterMapLisnter(mContext, mDay, position.getId()));
             placeTime.setOnClickListener(new EnterMapLisnter(mContext, mDay, position.getId()));
             List<Photo> photos = position.getPhotoList();
+            if(photos!=null) {
 //            gridView.getLayoutParams().height = getHeight(photos.size());
-            GalleryAdapter galleryAdapter = new GalleryAdapter(mContext,photos);
-            gridView.setAdapter(galleryAdapter);
+                GalleryAdapter galleryAdapter = new GalleryAdapter(mContext, photos);
+                gridView.setAdapter(galleryAdapter);
+            }
             photoCount.setText(mContext.getString(R.string.photo_count,photos.size()));
         }catch (Exception e) {
             e.printStackTrace();
@@ -130,7 +132,7 @@ public class GalleryPositionAdapter extends BaseAdapter{
                 }
             };
             if(index==0) {
-                dialog = new PositionDialog(mContext,change,null,true);
+                dialog = new PositionDialog(mContext,change,null,null,true);
                 dialog.show();
             }else {
                 View.OnClickListener merge = new View.OnClickListener() {
@@ -144,7 +146,7 @@ public class GalleryPositionAdapter extends BaseAdapter{
                         dialog.dismiss();
                     }
                 };
-                dialog = new PositionDialog(mContext, change, merge);
+                dialog = new PositionDialog(mContext, change, merge,null);
                 dialog.show();
             }
         }

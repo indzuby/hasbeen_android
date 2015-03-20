@@ -27,7 +27,7 @@ import java.util.List;
 
 import co.hasBeen.model.network.LoginTokenRequest;
 import co.hasBeen.model.network.LoginTokenResponse;
-import co.hasBeen.model.network.SFSSLSocketFactory;
+import co.hasBeen.utils.SFSSLSocketFactory;
 import co.hasBeen.utils.Session;
 
 /**

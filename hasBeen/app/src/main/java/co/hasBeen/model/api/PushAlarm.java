@@ -46,6 +46,9 @@ public class PushAlarm {
             msg=context.getString(R.string.loved_photo_push,Util.parseName(firstName, lastName, context),context.getString(R.string.your_user));
         }else if(getType().equals(Alarm.Type.DAY_LOVE)) {
             msg=context.getString(R.string.loved_day_push,Util.parseName(firstName, lastName, context),context.getString(R.string.your_user));
+        }else if(getType().equals(Alarm.Type.DAY_POST)) {
+            String you = context.getString(R.string.your_user);
+            msg=context.getString(R.string.day_post_done,you);
         }
         return msg;
     }

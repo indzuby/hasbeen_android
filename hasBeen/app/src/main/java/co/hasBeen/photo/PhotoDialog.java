@@ -8,13 +8,14 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import co.hasBeen.R;
+import co.hasBeen.utils.ConfirmDialog;
 
 /**
  * Created by 주현 on 2015-02-11.
  */
 public class PhotoDialog extends Dialog{
 
-    View.OnClickListener mDel;
+    View.OnClickListener mRemove;
     View.OnClickListener mEdit;
     View.OnClickListener mCover;
     boolean isReport;
@@ -30,9 +31,22 @@ public class PhotoDialog extends Dialog{
         setContentView(R.layout.photo_dialog);
 
         setLayout();
-        mRemoveButton.setOnClickListener(mDel);
+        mRemoveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ConfirmDialog dialog = new ConfirmDialog(getContext(), mRemove);
+                dialog.show();
+                dismiss();
+            }
+        });
         mEditButton.setOnClickListener(mEdit);
         mCoverPhoto.setOnClickListener(mCover);
+        findViewById(R.id.box).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     public void setCover(View.OnClickListener mCover) {
@@ -45,14 +59,14 @@ public class PhotoDialog extends Dialog{
     }
     public void setLisnter(View.OnClickListener del, View.OnClickListener edit){
 
-        mDel = del;
+        mRemove = del;
         mEdit = edit;
     }
     public PhotoDialog(Context context,View.OnClickListener cover ,View.OnClickListener del, View.OnClickListener edit) {
         // Dialog 배경을 투명 처리 해준다.
         super(context , android.R.style.Theme_Translucent_NoTitleBar);
         mCover = cover;
-        mDel = del;
+        mRemove = del;
         mEdit = edit;
         isReport = false;
     }

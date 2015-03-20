@@ -35,18 +35,20 @@ public class FollowerFragment extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what) {
-                case 0:
-                    mFollowers = (List) msg.obj;
-                    initFollower();
-                    break;
-                case -1:
-                    break;
+            if(getActivity()!=null) {
+                switch (msg.what) {
+                    case 0:
+                        mFollowers = (List) msg.obj;
+                        initFollower();
+                        break;
+                    case -1:
+                        break;
+                }
+                stopLoading();
             }
-            stopLoading();
         }
     };
-    protected void initFollower() {
+    protected void initFollower(){
         mCount.setText(getString(R.string.following_count,mFollowers.size()));
 
         FollowerAdapter followerAdapter = new FollowerAdapter(mFollowers, getActivity());
@@ -83,5 +85,11 @@ public class FollowerFragment extends Fragment {
         isLoading = false;
         mLoading.setVisibility(View.GONE);
         mLoading.clearAnimation();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
     }
 }

@@ -8,8 +8,6 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -26,6 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.hasBeen.MainActivity;
 import co.hasBeen.R;
 import co.hasBeen.map.MapRoute;
 import co.hasBeen.model.api.Day;
@@ -335,7 +334,7 @@ public class ProfileFragment extends HasBeenFragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), SettingView.class);
-                startActivity(intent);
+                getActivity().startActivityForResult(intent, MainActivity.REQUEST_LOGOUT);
             }
         });
         dayCount.setText(mUser.getDayCount() + "");

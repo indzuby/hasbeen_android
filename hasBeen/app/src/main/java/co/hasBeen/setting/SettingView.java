@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import co.hasBeen.R;
 import co.hasBeen.account.FacebookApi;
+import co.hasBeen.account.LogOutAsyncTask;
 import co.hasBeen.account.LoginActivity;
 import co.hasBeen.social.FbFriendsView;
 import co.hasBeen.utils.Session;
@@ -73,10 +74,10 @@ public class SettingView extends ActionBarActivity {
         });
     }
     protected void logOut(){
-        Session.remove(this,"accessToken");
-        Intent intent = new Intent(this,LoginActivity.class);
+        new LogOutAsyncTask().execute(mAccessToken);
         FacebookApi.callFacebookLogout(this);
-        startActivity(intent);
+        Session.remove(this,"accessToken");
+        setResult(RESULT_OK);
         finish();
     }
     protected void sendReport(){

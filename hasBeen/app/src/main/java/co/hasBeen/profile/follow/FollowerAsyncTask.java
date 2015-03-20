@@ -56,7 +56,6 @@ public class FollowerAsyncTask extends HasBeenAsyncTask<Object,Void,List<Follow>
 
     @Override
     protected void onPostExecute(List<Follow> Followers) {
-
         Message msg = mHandler.obtainMessage();
         if(Followers !=null) {
             msg.obj = Followers;

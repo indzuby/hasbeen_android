@@ -8,6 +8,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +26,7 @@ import java.util.Arrays;
 import co.hasBeen.MainActivity;
 import co.hasBeen.R;
 import co.hasBeen.error.ErrorCheck;
+import co.hasBeen.gcm.GcmRegister;
 import co.hasBeen.model.network.LoginTokenResponse;
 
 /**
@@ -38,7 +41,10 @@ public class SignUpActivity extends Activity {
     String mAccessToken;
     final static String EMAIL = "1";
     final static String SOCIAL = "2";
-    String mRegId;
+    View mLoading;
+    boolean isLoading;
+    View mLoadingBg;
+    GcmRegister gcm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +55,7 @@ public class SignUpActivity extends Activity {
     protected  void init()
     {
         setContentView(R.layout.signup);
+        gcm = new GcmRegister(this);
         TextView goSignIn = (TextView) findViewById(R.id.goSignIn);
         goSignIn.setOnClickListener(new View.OnClickListener() {
             boolean flag = false;
@@ -64,6 +71,8 @@ public class SignUpActivity extends Activity {
                 }
             }
         });
+        mLoading = findViewById(R.id.refresh);
+        mLoadingBg = findViewById(R.id.loadingBG);
         mFirstName = (EditText) findViewById(R.id.firstName);
         mLastName = (EditText) findViewById(R.id.lastName);
         mEmail = (EditText) findViewById(R.id.email);
@@ -98,15 +107,18 @@ public class SignUpActivity extends Activity {
                         flag = false;
                         return ;
                     }
+                    startLoading();
                     new SignUpAsyncTask(new Handler(Looper.getMainLooper()){
                         @Override
                         public void handleMessage(Message msg) {
                             super.handleMessage(msg);
+                            stopLoading();
                             if(msg.what==0) {
                                 flag = false;
                                 Toast.makeText(getBaseContext(),getString(R.string.sign_up_ok),Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(getBaseContext(), LoginActivity.class);
                                 startActivity(intent);
+
                                 finish();
                             }else {
                                 flag = false;
@@ -139,6 +151,7 @@ public class SignUpActivity extends Activity {
                                         Log.i(TAG, "User ID " + user.getId());
                                         Log.i(TAG, "Email " + user.asMap().get("email"));
                                         Toast.makeText(getBaseContext(), user.asMap().get("email").toString(), Toast.LENGTH_LONG).show();
+                                        startLoading();
                                         new SignUpAsyncTask(socialHandler).execute(SOCIAL, session.getAccessToken());
 
                                     }
@@ -147,6 +160,21 @@ public class SignUpActivity extends Activity {
                 }
             }
         });
+    }
+
+    protected void startLoading() {
+        isLoading = true;
+        mLoading.setVisibility(View.VISIBLE);
+        mLoadingBg.setVisibility(View.VISIBLE);
+        Animation rotate = AnimationUtils.loadAnimation(getBaseContext(), R.anim.rotate);
+        mLoading.startAnimation(rotate);
+    }
+
+    protected void stopLoading() {
+        isLoading = false;
+        mLoading.setVisibility(View.GONE);
+        mLoadingBg.setVisibility(View.GONE);
+        mLoading.clearAnimation();
     }
     Handler socialHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -167,11 +195,34 @@ public class SignUpActivity extends Activity {
             if (msg.what == 0) {
                 LoginTokenResponse loginToken = (LoginTokenResponse) msg.obj;
                 co.hasBeen.utils.Session.putString(getBaseContext(), "accessToken", loginToken.getAccess_token());
+                gcm.registerGcm(registHandler);
+            }else
+                Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
+        }
+    };
+    Handler registHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0) {
+                String regid = (String) msg.obj;
+                String accessToken = co.hasBeen.utils.Session.getString(getBaseContext(), "accessToken", null);
+                new DeviceAsyncTask(deviceHandler).execute(accessToken, regid);
+            }else
+                Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
+        }
+    };
+    Handler deviceHandler = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(Message msg) {
+            if(msg.what==0) {
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 startActivity(intent);
+                stopLoading();
                 finish();
             }else
                 Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
+            super.handleMessage(msg);
         }
     };
 }

@@ -9,7 +9,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -27,7 +26,6 @@ import java.util.Map;
 
 import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
-import co.hasBeen.day.DayView;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.model.api.Place;
@@ -53,8 +51,8 @@ public class GalleryUpload extends ActionBarActivity {
     EditText mTitle;
     EditText mDescription;
     String mAccessToekn;
-    int mUploadCount;
     boolean isUpload = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,14 +60,14 @@ public class GalleryUpload extends ActionBarActivity {
         resolver = getContentResolver();
         try {
             init();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    protected void init() throws Exception{
+    protected void init() throws Exception {
         setContentView(R.layout.gallery_upload);
-        mAccessToekn = Session.getString(this,"accessToken",null);
+        mAccessToekn = Session.getString(this, "accessToken", null);
         initActionBar();
         mData = getIntent().getStringExtra("data");
         mDayUpload = JsonConverter.convertJsonToDay(mData);
@@ -84,8 +82,8 @@ public class GalleryUpload extends ActionBarActivity {
         ImageView mainPhoto = (ImageView) findViewById(R.id.mainPhoto);
         Glide.with(this).load(mDayUpload.getMainPhoto().getPhotoPath()).centerCrop().into(mainPhoto);
         TextView photoCount = (TextView) findViewById(R.id.photoCount);
-        photoCount.setText("+"+ (mDayUpload.getPhotoCount()-1));
-        if(mDayUpload.getPhotoCount() == 1)
+        photoCount.setText("+" + (mDayUpload.getPhotoCount() - 1));
+        if (mDayUpload.getPhotoCount() == 1)
             photoCount.setVisibility(View.GONE);
         mTitle = (EditText) findViewById(R.id.title);
         mDescription = (EditText) findViewById(R.id.description);
@@ -97,11 +95,13 @@ public class GalleryUpload extends ActionBarActivity {
         daySelectBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(GalleryUpload.this,GallerySelectDayView.class);
-                startActivityForResult(intent,REQUEST_CODE);
+                Intent intent = new Intent(GalleryUpload.this, GallerySelectTripView.class);
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
     }
+
+    UploadAsyncTask uploadAsyncTask;
 
     protected void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
@@ -125,59 +125,58 @@ public class GalleryUpload extends ActionBarActivity {
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mTitle.getText().toString().length()<2 || mTitle.getText().toString().length()>30){
-                    Toast.makeText(getBaseContext(),getString(R.string.title_size_error),Toast.LENGTH_LONG).show();
+                if (mTitle.getText().toString().length() < 2 || mTitle.getText().toString().length() > 30) {
+                    Toast.makeText(getBaseContext(), getString(R.string.title_size_error), Toast.LENGTH_LONG).show();
                     return;
-                }if(mDescription.getText().toString().length()<2 || mDescription.getText().toString().length()>255) {
-                    Toast.makeText(getBaseContext(),getString(R.string.description_size_error),Toast.LENGTH_LONG).show();
-                    return ;
                 }
-                if(isUpload) return;
+                if (mDescription.getText().toString().length() < 2 || mDescription.getText().toString().length() > 255) {
+                    Toast.makeText(getBaseContext(), getString(R.string.description_size_error), Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (isUpload) return;
                 isUpload = true;
-                showProgress();
-                mUploadCount = 0;
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while(mUploadCount != mDayUpload.getPhotoCount())  {
-                            dialog.setPhotoCount(mUploadCount);
-                        }
-                        String title = mTitle.getText().toString();
-                        String description = mDescription.getText().toString();
-                        if(title.length()==0)
-                            title = Util.convertPlaceName(mDayUpload.getPositionList());
-                        mDayUpload.setTitle(title);
-                        mDayUpload.setDescription(description);
-                        Log.i("done", "pressed");
-                        new UploadAsyncTask(mUploadHandler).execute(mAccessToekn, mDayUpload);
-                    }
-                }).start();
-                uploadStorage();
+//                showProgress();
+                String title = mTitle.getText().toString();
+                String description = mDescription.getText().toString();
+                if (title.length() == 0)
+                    title = Util.convertPlaceName(mDayUpload.getPositionList());
+                mDayUpload.setTitle(title);
+                mDayUpload.setDescription(description);
+                uploadAsyncTask = new UploadAsyncTask(mUploadHandler);
+                uploadAsyncTask.execute(mAccessToekn, mDayUpload);
+//                        while(uploadAsyncTask.photoCount != mDayUpload.getPhotoCount())  {
+//                            dialog.setPhotoCount(uploadAsyncTask.photoCount);
+//                        }
+                Toast.makeText(getBaseContext(), getString(R.string.uploading), Toast.LENGTH_LONG).show();
+                setResult(RESULT_OK);
+                finish();
             }
         });
         actionBar.setCustomView(mCustomActionBar);
         actionBar.setDisplayShowCustomEnabled(true);
     }
-    Handler mUploadHandler = new Handler(Looper.getMainLooper()){
+
+    Handler mUploadHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(msg.what==0) {
-                Toast.makeText(getBaseContext(),getString(R.string.upload_ok),Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-                Intent intent = new Intent(getBaseContext(), DayView.class);
-                intent.putExtra("id", (Long)msg.obj);
-                startActivity(intent);
-                setResult(RESULT_OK);
-                finish();
-            }else {
-                dialog.dismiss();
-                Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
-                setResult(RESULT_CANCELED);
-                finish();
+            if (msg.what == 0) {
+//                Toast.makeText(getBaseContext(),getString(R.string.upload_ok),Toast.LENGTH_LONG).show();
+//                dialog.dismiss();
+//                Intent intent = new Intent(getBaseContext(), DayView.class);
+//                intent.putExtra("id", (Long)msg.obj);
+//                startActivity(intent);
+//                setResult(RESULT_OK);
+//                finish();
+            } else {
+//                dialog.dismiss();
+//                Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
+//                setResult(RESULT_CANCELED);
+//                finish();
             }
         }
     };
+
     protected List<Place> makePlaceList(Day day) {
         Map<Long, Place> placeList = new HashMap<>();
         List<Position> positionList = day.getPositionList();
@@ -205,7 +204,7 @@ public class GalleryUpload extends ActionBarActivity {
     }
 
     protected void notifyDayChanged(Day day) {
-        int count = 0 ;
+        int count = 0;
         List<Position> positionList = day.getPositionList();
         List<Position> newPositionList = new ArrayList<>();
         for (int i = 0; i < positionList.size(); i++) {
@@ -223,7 +222,7 @@ public class GalleryUpload extends ActionBarActivity {
     protected int notifyPhotoChanged(Position position) {
         List<Photo> photoList = position.getPhotoList();
         List<Photo> newPhotoList = new ArrayList<>();
-        int count = 0 ;
+        int count = 0;
         for (int i = 0; i < photoList.size(); i++) {
             Photo photo = photoList.get(i);
             if (position.getIsCheckedPhoto()[i]) {
@@ -236,43 +235,38 @@ public class GalleryUpload extends ActionBarActivity {
         return count;
     }
 
-    protected void uploadStorage() {
-        try {
-            for (Position position : mDayUpload.getPositionList()) {
-                for (Photo photo : position.getPhotoList()) {
-                    try {
-                        photo.setBinary(Util.getLargeImage(photo));
-                        mUploadCount++;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     UploadDialog dialog;
 
     protected void showProgress() {
         dialog = new UploadDialog(this);
+        dialog.setCancelable(false);
         dialog.setMaxCount(mDayUpload.getPhotoCount());
         dialog.show();
     }
-    protected  void selectTrip(String placeName){
+
+    protected void selectTrip(String placeName) {
         TextView tripTitle = (TextView) findViewById(R.id.tripTitle);
         tripTitle.setText(placeName);
         ImageView addTrip = (ImageView) findViewById(R.id.addTrip);
         addTrip.setImageResource(R.drawable.add_trip_pressed);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_CODE && resultCode == RESULT_OK) {
-            Long id = data.getLongExtra("id",0L);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            Long id = data.getLongExtra("id", 0L);
             String placeName = data.getStringExtra("placeName");
             selectTrip(placeName);
             mDayUpload.setTripId(id);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (uploadAsyncTask != null) {
+            uploadAsyncTask.cancel(true);
+        }
+        super.onDestroy();
     }
 }
