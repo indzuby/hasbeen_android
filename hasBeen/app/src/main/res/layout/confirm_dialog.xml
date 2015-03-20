@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:id="@+id/box"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_margin="36dp"
+        android:layout_width="match_parent"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:background="@drawable/white_bg"
+        android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="match_parent"
+        android:text="@string/remove_cofirm"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:padding="16dp"
+        android:textColor="@color/light_black"
+        android:layout_height="wrap_content" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.10"
+        android:background="#000000" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:weightSum="2"
+        android:padding="1dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:id="@+id/cancle"
+            android:gravity="center"
+            android:background="@drawable/description_selector"
+            android:textColor="@color/light_black"
+            android:text="@string/cancle"
+            android:layout_height="47dp" />
+        <View
+            android:layout_width="1dp"
+            android:alpha="0.1"
+            android:layout_height="match_parent" android:background="@color/theme_black"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:id="@+id/delete"
+            android:background="@drawable/description_selector"
+            android:textColor="@color/theme_color"
+            android:textStyle="bold"
+            android:text="@string/delete"
+            android:layout_height="47dp" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
