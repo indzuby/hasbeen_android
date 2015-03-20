@@ -31,14 +31,17 @@ public class DayDialog extends Dialog {
         setContentView(R.layout.day_dialog);
 
         setLayout();
-        mRemoveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ConfirmDialog dialog = new ConfirmDialog(getContext(), mRemove);
-                dialog.show();
-                dismiss();
-            }
-        });
+        if (mRemove == null)
+            mRemoveButton.setVisibility(View.GONE);
+        else
+            mRemoveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ConfirmDialog dialog = new ConfirmDialog(getContext(), mRemove);
+                    dialog.show();
+                    dismiss();
+                }
+            });
         mEditButton.setOnClickListener(mEdit);
         findViewById(R.id.box).setOnClickListener(new View.OnClickListener() {
             @Override

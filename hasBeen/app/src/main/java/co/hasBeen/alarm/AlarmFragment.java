@@ -21,6 +21,7 @@ import java.util.List;
 import co.hasBeen.R;
 import co.hasBeen.model.api.Alarm;
 import co.hasBeen.model.api.AlarmCount;
+import co.hasBeen.utils.GlideRequest;
 import co.hasBeen.utils.HasBeenFragment;
 import co.hasBeen.utils.Session;
 
@@ -158,6 +159,8 @@ public class AlarmFragment extends HasBeenFragment implements View.OnClickListen
                 }
             }
         });
+        mNewList.setOnDragListener(new GlideRequest(getActivity()));
+        mYouList.setOnDragListener(new GlideRequest(getActivity()));
     }
     @Override
     public void onClick(View v) {

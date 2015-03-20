@@ -68,7 +68,6 @@ public class GalleryUpload extends ActionBarActivity {
     protected void init() throws Exception {
         setContentView(R.layout.gallery_upload);
         mAccessToekn = Session.getString(this, "accessToken", null);
-        initActionBar();
         mData = getIntent().getStringExtra("data");
         mDayUpload = JsonConverter.convertJsonToDay(mData);
         notifyDayChanged(mDayUpload);
@@ -99,6 +98,7 @@ public class GalleryUpload extends ActionBarActivity {
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
+        initActionBar();
     }
 
     UploadAsyncTask uploadAsyncTask;

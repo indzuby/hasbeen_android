@@ -19,6 +19,7 @@ import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
 import co.hasBeen.database.ItemModule;
 import co.hasBeen.model.api.Day;
+import co.hasBeen.utils.GlideRequest;
 import co.hasBeen.utils.HasBeenFragment;
 
 /**
@@ -139,6 +140,7 @@ public class GalleryFragment extends HasBeenFragment {
                 newDaysLoad();
             }
         });
+        mGalleryListView.setOnDragListener(new GlideRequest(getActivity()));
     }
 
     @Override

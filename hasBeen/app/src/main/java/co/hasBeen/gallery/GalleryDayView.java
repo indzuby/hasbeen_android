@@ -168,12 +168,6 @@ public class GalleryDayView extends ActionBarActivity {
         moreVert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View.OnClickListener del = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getBaseContext(), "Coming soon...", Toast.LENGTH_LONG).show();
-                    }
-                };
                 View.OnClickListener edit = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -191,7 +185,7 @@ public class GalleryDayView extends ActionBarActivity {
                     }
                 };
                 mDayDialog = new DayDialog(GalleryDayView.this);
-                mDayDialog.setListner(del,edit);
+                mDayDialog.setListner(null,edit);
                 mDayDialog.show();
             }
         });

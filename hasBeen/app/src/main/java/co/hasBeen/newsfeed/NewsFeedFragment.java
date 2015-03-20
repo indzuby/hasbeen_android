@@ -33,6 +33,7 @@ import co.hasBeen.model.api.Follow;
 import co.hasBeen.social.FbFriendsAsyncTask;
 import co.hasBeen.social.FbFriendsItem;
 import co.hasBeen.social.FbFriendsView;
+import co.hasBeen.utils.GlideRequest;
 import co.hasBeen.utils.HasBeenFragment;
 import co.hasBeen.utils.Session;
 
@@ -83,6 +84,7 @@ public class NewsFeedFragment extends HasBeenFragment {
                 }
             }
         });
+        mListView.setOnDragListener(new GlideRequest(getActivity()));
         mActualListView = mListView.getRefreshableView();
         mActualListView.setAdapter(mFeedAdapter);
         mLoadingView = LayoutInflater.from(getActivity()).inflate(R.layout.loading_layout, null, false);

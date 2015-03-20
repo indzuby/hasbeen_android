@@ -174,7 +174,8 @@ public class DayAdapter extends BaseAdapter {
                             if(msg.what==0) {
                                 removePosition(index);
                                 notifyDataSetChanged();
-                                dialog.dismiss();
+                            }else {
+                                Toast.makeText(mContext,mContext.getString(R.string.remove_place_error),Toast.LENGTH_LONG).show();
                             }
                         }
                     }).execute(mAccessToken,id);

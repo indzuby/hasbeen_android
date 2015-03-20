@@ -103,25 +103,24 @@ public class GalleryDayAdapter extends BaseAdapter {
                 intent.putExtra("id", day.getId());
                 mContext.startActivity(intent);
             }else {
-                Toast.makeText(mContext,"지역 정보를 가져오는 중입니다.\n잠시만 기다려주세요.",Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext,mContext.getString(R.string.location_loading_text),Toast.LENGTH_LONG).show();
             }
         }
     }
     protected void initPlaceName(TextView placeName ,Day day,int position) throws Exception{
+        String name="";
         if (day.getMainPlaceId()==null && day.getMainPlace()==null) {
-            placeName.setText("Loading..");
-//            day.setLoad(true);
-//            itemModule.getPlace(day,placeName);
+            name = "Loading...";
         } else if(day.getMainPlaceId()!=null){
             List<Position> positions = database.selectPositionByDayId(day.getId());
             initPlace(positions);
-            String name = Util.convertPlaceName(positions);
-            placeName.setText(name);
+            name = Util.convertPlaceName(positions);
             if(name.length()<=0)
                 placeName.setVisibility(View.GONE);
             else
                 placeName.setVisibility(View.VISIBLE);
         }
+        placeName.setText(name);
     }
     protected void initPlace(List<Position> positions) throws Exception{
         for(Position position : positions)

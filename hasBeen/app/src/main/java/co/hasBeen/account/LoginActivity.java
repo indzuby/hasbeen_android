@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +46,7 @@ public class LoginActivity extends Activity {
     View mLoading;
     boolean isLoading;
     View mLoadingBg;
+    InputMethodManager mImm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,8 @@ public class LoginActivity extends Activity {
     protected void init() {
         setContentView(R.layout.login);
         gcm = new GcmRegister(this);
+        mImm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+
         mAccessToken = co.hasBeen.utils.Session.getString(getBaseContext(), "accessToken", null);
         if(mAccessToken!=null) {
             if(!ErrorCheck.NetworkOnline(LoginActivity.this)) {
@@ -119,6 +123,7 @@ public class LoginActivity extends Activity {
         mEmail = (EditText) findViewById(R.id.email);
         mPassword = (EditText) findViewById(R.id.password);
         TextView loginBtn = (TextView) findViewById(R.id.emailLoginBtn);
+        mImm.hideSoftInputFromWindow(mEmail.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         loginBtn.setOnClickListener(new View.OnClickListener() {
             boolean flag = false;
 
@@ -166,6 +171,7 @@ public class LoginActivity extends Activity {
                 new LogInAsyncTask(loginHandler).execute(token, "", "password", "read write delete", LogInAsyncTask.BASIC);
             } else {
                 Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
+                stopLoading();
             }
         }
     };
@@ -177,8 +183,10 @@ public class LoginActivity extends Activity {
                 LoginTokenResponse loginToken   = (LoginTokenResponse) msg.obj;
                 co.hasBeen.utils.Session.putString(getBaseContext(), "accessToken", loginToken.getAccess_token());
                 gcm.registerGcm(registHandler);
-            }else
-                Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
+            }else {
+                Toast.makeText(getBaseContext(), getString(R.string.login_error), Toast.LENGTH_LONG).show();
+                stopLoading();
+            }
         }
     };
     Handler registHandler = new Handler(Looper.getMainLooper()) {
@@ -189,8 +197,10 @@ public class LoginActivity extends Activity {
                 String regid = (String) msg.obj;
                 String accessToken = co.hasBeen.utils.Session.getString(getBaseContext(), "accessToken", null);
                 new DeviceAsyncTask(deviceHandler).execute(accessToken, regid);
-            }else
-                Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
+            }else {
+                Toast.makeText(getBaseContext(), getString(R.string.common_error), Toast.LENGTH_LONG).show();
+                stopLoading();
+            }
         }
     };
     Handler deviceHandler = new Handler(Looper.getMainLooper()){
@@ -201,8 +211,10 @@ public class LoginActivity extends Activity {
                 startActivity(intent);
                 stopLoading();
                 finish();
-            }else
-                Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
+            }else {
+                Toast.makeText(getBaseContext(), getString(R.string.common_error), Toast.LENGTH_LONG).show();
+                stopLoading();
+            }
             super.handleMessage(msg);
         }
     };

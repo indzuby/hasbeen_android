@@ -394,7 +394,7 @@ public class    PhotoView extends ActionBarActivity {
                                     Toast.makeText(getBaseContext(), getString(R.string.remove_photo_ok), Toast.LENGTH_LONG).show();
                                     finish();
                                 } else {
-                                    Toast.makeText(getBaseContext(), getString(R.string.common_error), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getBaseContext(), getString(R.string.remove_photo_error), Toast.LENGTH_LONG).show();
                                 }
                             }
                         }).execute(mAccessToken, mPhoto.getId());
@@ -422,7 +422,7 @@ public class    PhotoView extends ActionBarActivity {
                                 super.handleMessage(msg);
                                 if (msg.what == 0) {
                                     Toast.makeText(getBaseContext(), getString(R.string.cover_ok), Toast.LENGTH_LONG).show();
-                                    finish();
+                                    mPhotoDialog.dismiss();
                                 } else {
                                     Toast.makeText(getBaseContext(), getString(R.string.common_error), Toast.LENGTH_LONG).show();
                                 }

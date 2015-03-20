@@ -104,7 +104,7 @@
     <!--시간-->
     <string name="hour_ago">%1$dhours ago</string>
     <string name="miniutes_ago">%1$dminutes ago</string>
-    <string name="just_now">just</string>
+    <string name="just_now">Just now</string>
     <string name="day_ago">E, a h:mm</string>
     <string name="week_ago">%1$d weeks ago</string>
     <string name="month_ago">MMMM dd, yyyy</string>
@@ -116,13 +116,14 @@
     <string name="day">Days</string>
     <string name="photo">Photos</string>
     <string name="search_hint">Search days, photos and people.</string>
-    <!--겔러리-->
+    <!--갤러리-->
     <string name="gallery_default_1">Location information (or GPS tag) is off or no photo with location information on your device.</string>
     <string name="gallery_default_2">Take new photos after switching on location tagging on camera setting.</string>
     <string name="place">place</string>
     <string name="non_load_status">%1$d+ places · %2$d photos</string>
     <string name="load_status">%1$d places · %2$d photos</string>
     <string name="day_count">%d days</string>
+    <string name="location_loading_text">Organizing photos in process.</string>
     <!--알람-->
     <string name="news">NEWS</string>
     <string name="you">YOU</string>
@@ -152,7 +153,8 @@
     <!--에러-->
     <string name="internet_error">Please check your nextwork connection.</string>
     <string name="common_error">Error has occurred.</string>
-    <string name="name_size_error">name must be at least 2 and most 20 letters.</string>
+    <string name="login_error">Incorrect login information.</string>
+    <string name="name_size_error">name must be at least 1 and most 20 letters.</string>
     <string name="email_size_error">email must be at most 255 letters.</string>
     <string name="password_size_error">password must be at least 8 and most 50 letters.</string>
     <string name="description_size_error">memo must be at least 2 and most 255 letters.</string>
@@ -160,6 +162,8 @@
     <string name="session_gone">Your session expired, please sign in again.</string>
     <string name="dup_email">That email is being used.</string>
     <string name="day_deleted"> This day trip was deleted.\nPlease pull to refresh.</string>
+    <string name="remove_photo_error">Last photo on place, Please delete place.</string>
+    <string name="remove_place_error">Last place on day trip, Please delete day trip.</string>
     <!--확인-->
     <string name="sign_up_ok">Sign up done, please sign in.</string>
     <string name="report_ok">Reported</string>

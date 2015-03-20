@@ -40,6 +40,7 @@ import co.hasBeen.report.ReportListner;
 import co.hasBeen.social.LoveListner;
 import co.hasBeen.social.ShareListner;
 import co.hasBeen.utils.CircleTransform;
+import co.hasBeen.utils.GlideRequest;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.Session;
 import co.hasBeen.utils.Util;
@@ -247,9 +248,9 @@ public class DayView extends ActionBarActivity{
                         hasSocialBar = true;
                     }
                 }
-
             }
         });
+        mListView.setOnDragListener(new GlideRequest(getBaseContext()));
 
     }
 
@@ -278,7 +279,7 @@ public class DayView extends ActionBarActivity{
         moreVert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mDay.getUser().getId() == userId) {
+                if(mDay!=null && mDay.getUser().getId() == userId) {
                     View.OnClickListener del = new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

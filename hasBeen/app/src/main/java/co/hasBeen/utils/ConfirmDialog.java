@@ -42,6 +42,13 @@ public class ConfirmDialog extends Dialog {
             }
         });
         mDelete.setOnClickListener(delete);
+        mDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                delete.onClick(v);
+                dismiss();
+            }
+        });
     }
     View mCancle;
     View mDelete;
