@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 
+import com.localytics.android.Localytics;
+
 import co.hasBeen.R;
 
 /**
@@ -45,5 +47,14 @@ public class AbouthasBeen extends  ActionBarActivity {
         Uri uri = Uri.parse("mailto:"+getString(R.string.support_email));
         Intent intent = new Intent(Intent.ACTION_SENDTO,uri);
         startActivity(intent.createChooser(intent, getString(R.string.report_problem)));
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("About hasBeen");
+        Localytics.upload();
     }
 }

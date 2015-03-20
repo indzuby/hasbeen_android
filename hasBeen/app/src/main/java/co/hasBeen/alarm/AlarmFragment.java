@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.localytics.android.Localytics;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -240,5 +241,14 @@ public class AlarmFragment extends HasBeenFragment implements View.OnClickListen
             mNewsRedDot.setVisibility(View.GONE);
         if(mAlarmCount.getYouCount()==0)
             mYouRedDot.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("AlarmFragment");
+        Localytics.upload();
     }
 }

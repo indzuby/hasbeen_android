@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.localytics.android.Localytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -294,5 +295,14 @@ public class GalleryDayView extends ActionBarActivity {
         }else if(requestCode==GalleryShare.REQUEST_UPLOAD && resultCode == RESULT_OK) {
             finish();
         }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("Gallery Day View");
+        Localytics.upload();
     }
 }

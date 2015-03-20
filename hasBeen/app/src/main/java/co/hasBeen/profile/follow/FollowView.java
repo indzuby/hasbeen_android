@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.localytics.android.Localytics;
+
 import co.hasBeen.R;
 
 /**
@@ -94,5 +96,14 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
             mViewPager.setCurrentItem(FOLLOWER);
         }else
             mViewPager.setCurrentItem(FOLLOWING);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("Follow View");
+        Localytics.upload();
     }
 }

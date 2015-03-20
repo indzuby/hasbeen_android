@@ -42,7 +42,7 @@
         <activity android:name="co.hasBeen.gallery.GalleryPlace"
             android:screenOrientation="portrait" android:theme="@style/hasBeenShare" />
         <activity android:name="co.hasBeen.account.LoginActivity"
-            android:screenOrientation="portrait" android:theme="@style/NoActionBar" android:windowSoftInputMode="adjustResize">
+            android:screenOrientation="portrait" android:theme="@style/NoActionBar" android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -81,6 +81,11 @@
             android:name="io.fabric.ApiKey"
             android:value="f4eda658152616f3f3f8fdff1b4fe9ba8099ea35" />
         <meta-data android:name="LOCALYTICS_APP_KEY" android:value="3939e64fca693f74fbe7389-b9fc27e4-cd4b-11e4-aef3-009c5fda0a25"/>
+        <receiver android:name="com.localytics.android.ReferralReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

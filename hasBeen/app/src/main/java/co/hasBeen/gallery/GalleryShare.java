@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.localytics.android.Localytics;
 
 import java.util.Arrays;
 import java.util.List;
@@ -149,5 +150,14 @@ public class GalleryShare extends ActionBarActivity{
     protected String convertObjectToJson(){
         Gson gson = new Gson();
         return gson.toJson(mDay);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("Gallery Share View");
+        Localytics.upload();
     }
 }

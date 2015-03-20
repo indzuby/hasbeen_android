@@ -20,6 +20,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.localytics.android.Localytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -392,5 +393,14 @@ public class ProfileFragment extends HasBeenFragment {
             mMap.clear();
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("Profile Framgent");
+        Localytics.upload();
     }
 }

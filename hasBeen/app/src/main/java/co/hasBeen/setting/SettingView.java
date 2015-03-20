@@ -11,10 +11,11 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.localytics.android.Localytics;
+
 import co.hasBeen.R;
 import co.hasBeen.account.FacebookApi;
 import co.hasBeen.account.LogOutAsyncTask;
-import co.hasBeen.account.LoginActivity;
 import co.hasBeen.social.FbFriendsView;
 import co.hasBeen.utils.Session;
 
@@ -107,5 +108,14 @@ public class SettingView extends ActionBarActivity {
         actionBar.setCustomView(mCustomActionBar);
         actionBar.setDisplayShowCustomEnabled(true);
         mCustomActionBar.findViewById(R.id.moreVert).setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("Setting View");
+        Localytics.upload();
     }
 }

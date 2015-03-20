@@ -22,6 +22,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
+import com.localytics.android.Localytics;
 
 import java.util.Arrays;
 
@@ -58,7 +59,6 @@ public class LoginActivity extends Activity {
     protected void init() {
         setContentView(R.layout.login);
         gcm = new GcmRegister(this);
-        mImm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
         mAccessToken = co.hasBeen.utils.Session.getString(getBaseContext(), "accessToken", null);
         if(mAccessToken!=null) {
@@ -123,7 +123,6 @@ public class LoginActivity extends Activity {
         mEmail = (EditText) findViewById(R.id.email);
         mPassword = (EditText) findViewById(R.id.password);
         TextView loginBtn = (TextView) findViewById(R.id.emailLoginBtn);
-        mImm.hideSoftInputFromWindow(mEmail.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         loginBtn.setOnClickListener(new View.OnClickListener() {
             boolean flag = false;
 
@@ -218,4 +217,12 @@ public class LoginActivity extends Activity {
             super.handleMessage(msg);
         }
     };
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("LoginActivity");
+        Localytics.upload();
+    }
 }

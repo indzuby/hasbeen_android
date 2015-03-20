@@ -12,6 +12,8 @@ import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.localytics.android.Localytics;
+
 import co.hasBeen.R;
 
 /**
@@ -59,5 +61,14 @@ public class License extends ActionBarActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("license");
+        Localytics.upload();
     }
 }

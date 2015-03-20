@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.localytics.android.Localytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -433,5 +434,14 @@ public class DayView extends ActionBarActivity{
                 mListView.setScrollY(mListView.getScrollY()-Util.convertDpToPixel(56,this));
             }
         }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("DayView");
+        Localytics.upload();
     }
 }

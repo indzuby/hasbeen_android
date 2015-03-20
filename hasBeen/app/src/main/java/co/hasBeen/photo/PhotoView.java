@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.localytics.android.Localytics;
 
 import java.util.Collections;
 import java.util.List;
@@ -441,6 +442,15 @@ public class    PhotoView extends ActionBarActivity {
             }
         }
 
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("Photo View");
+        Localytics.upload();
     }
 }
 

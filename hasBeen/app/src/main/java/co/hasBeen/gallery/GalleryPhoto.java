@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.localytics.android.Localytics;
 
 import co.hasBeen.R;
 import co.hasBeen.database.DatabaseHelper;
@@ -127,5 +128,14 @@ public class GalleryPhoto extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("Gallery Photo View");
+        Localytics.upload();
     }
 }

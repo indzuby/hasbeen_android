@@ -19,6 +19,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.localytics.android.Localytics;
+
 import java.util.List;
 
 import co.hasBeen.R;
@@ -126,4 +128,12 @@ public class FbFriendsView extends ActionBarActivity{
         mLoading.clearAnimation();
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("Facebook friend list View");
+        Localytics.upload();
+    }
 }

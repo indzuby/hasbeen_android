@@ -363,6 +363,18 @@ ADDED from AndroidManifest.xml:83:9
 		ADDED from AndroidManifest.xml:83:54
 	android:name
 		ADDED from AndroidManifest.xml:83:20
+receiver#com.localytics.android.ReferralReceiver
+ADDED from AndroidManifest.xml:84:9
+	android:exported
+		ADDED from AndroidManifest.xml:84:74
+	android:name
+		ADDED from AndroidManifest.xml:84:19
+intent-filter#com.android.vending.INSTALL_REFERRER
+ADDED from AndroidManifest.xml:85:13
+action#com.android.vending.INSTALL_REFERRER
+ADDED from AndroidManifest.xml:86:17
+	android:name
+		ADDED from AndroidManifest.xml:86:25
 uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
 MERGED from com.android.support:appcompat-v7:21.0.3:15:5

@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.localytics.android.Localytics;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -162,4 +163,12 @@ public class GalleryFragment extends HasBeenFragment {
         return mView;
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("Gallery Fragment");
+        Localytics.upload();
+    }
 }

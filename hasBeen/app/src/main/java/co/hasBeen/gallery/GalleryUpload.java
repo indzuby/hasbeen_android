@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.localytics.android.Localytics;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -268,5 +269,14 @@ public class GalleryUpload extends ActionBarActivity {
             uploadAsyncTask.cancel(true);
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("Gallery Upload View");
+        Localytics.upload();
     }
 }

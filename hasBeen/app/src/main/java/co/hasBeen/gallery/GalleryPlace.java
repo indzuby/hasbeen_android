@@ -20,6 +20,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
+import com.localytics.android.Localytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,5 +161,14 @@ public class GalleryPlace extends ActionBarActivity implements OnMapReadyCallbac
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("Gallery Place");
+        Localytics.upload();
     }
 }

@@ -25,24 +25,24 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.localytics.android.Localytics;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import co.hasBeen.model.api.User;
-import co.hasBeen.model.api.Day;
-import co.hasBeen.profile.follow.DoFollowAsyncTask;
-import co.hasBeen.profile.follow.FollowView;
-import co.hasBeen.profile.map.LikeDayAsyncTask;
-import co.hasBeen.utils.CircleTransform;
-import co.hasBeen.utils.Session;
 import co.hasBeen.R;
 import co.hasBeen.map.MapRoute;
+import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Loved;
 import co.hasBeen.model.api.Photo;
+import co.hasBeen.model.api.User;
+import co.hasBeen.profile.follow.FollowView;
+import co.hasBeen.profile.map.LikeDayAsyncTask;
 import co.hasBeen.profile.map.LikePhotoAsyncTask;
 import co.hasBeen.profile.map.ProfileDayAsyncTask;
 import co.hasBeen.profile.map.ProfilePhotoAsyncTask;
+import co.hasBeen.utils.CircleTransform;
+import co.hasBeen.utils.Session;
 import co.hasBeen.utils.Util;
 
 /**
@@ -434,5 +434,14 @@ public class ProfileView extends ActionBarActivity {
     protected void onDestroy() {
         asyncTask.cancel(true);
         super.onDestroy();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("ProFile View");
+        Localytics.upload();
     }
 }

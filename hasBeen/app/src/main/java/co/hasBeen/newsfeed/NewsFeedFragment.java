@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.localytics.android.Localytics;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -228,4 +229,13 @@ public class NewsFeedFragment extends HasBeenFragment {
             }
         }
     };
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("NewsFeed Fragment");
+        Localytics.upload();
+    }
 }

@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.localytics.android.Localytics;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -223,5 +224,14 @@ public class CommentView extends ActionBarActivity {
         profileName.setOnClickListener(new ProfileClickListner(context, comment.getUser().getId()));
         profileName.setText(Util.parseName(comment.getUser(),context));
         return commentView;
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("CommentView");
+        Localytics.upload();
     }
 }

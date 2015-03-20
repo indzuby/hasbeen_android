@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.localytics.android.Localytics;
+
 import java.util.List;
 
 import co.hasBeen.R;
@@ -102,5 +104,14 @@ public class GallerySelectTripView extends ActionBarActivity {
     protected void onDestroy() {
         asyncTask.cancel(true);
         super.onDestroy();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("Gallery Select Trip View");
+        Localytics.upload();
     }
 }

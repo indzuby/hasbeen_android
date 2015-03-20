@@ -20,6 +20,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
+import com.localytics.android.Localytics;
 
 import java.util.Arrays;
 
@@ -225,4 +226,11 @@ public class SignUpActivity extends Activity {
             super.handleMessage(msg);
         }
     };
-}
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("SignUpActivity");
+        Localytics.upload();
+    }}

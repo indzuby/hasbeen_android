@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.localytics.android.Localytics;
+
 import org.opencv.android.OpenCVLoader;
 
 import co.hasBeen.account.LoginActivity;
@@ -191,4 +193,12 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         super.onDestroy();
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("Main Acivity");
+        Localytics.upload();
+    }
 }
