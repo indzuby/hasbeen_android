@@ -1,4 +1,4 @@
-package co.hasBeen.model.network;
+package co.hasBeen.utils;
 
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;

@@ -25,7 +25,7 @@ import co.hasBeen.utils.Session;
 /**
  * Created by 주현 on 2015-03-17.
  */
-public class GallerySelectDayView extends ActionBarActivity {
+public class GallerySelectTripView extends ActionBarActivity {
     String mAccessToekn;
     View mLoading;
     boolean isLoading;
@@ -45,19 +45,21 @@ public class GallerySelectDayView extends ActionBarActivity {
             super.handleMessage(msg);
             if(msg.what==0) {
                 mTrip = (List) msg.obj;
-                GallerySelectAdapter adapter = new GallerySelectAdapter(mTrip,GallerySelectDayView.this);
+                GallerySelectAdapter adapter = new GallerySelectAdapter(mTrip,GallerySelectTripView.this);
                 mListView.setAdapter(adapter);
                 stopLoading();
             }
         }
     };
+    TripAsyncTask asyncTask;
     protected void init(){
         setContentView(R.layout.gallery_select_trip);
         initActionBar();
         mLoading = findViewById(R.id.refresh);
         startLoading();
         mListView = (ListView)findViewById(R.id.listView);
-        new TripAsyncTask(tripHandler).execute(mAccessToekn,mUserId);
+        asyncTask = new TripAsyncTask(tripHandler);
+        asyncTask.execute(mAccessToekn,mUserId);
     }
     protected void initActionBar() {
         final ActionBar actionBar = getSupportActionBar();
@@ -94,5 +96,11 @@ public class GallerySelectDayView extends ActionBarActivity {
         isLoading = false;
         mLoading.setVisibility(View.GONE);
         mLoading.clearAnimation();
+    }
+
+    @Override
+    protected void onDestroy() {
+        asyncTask.cancel(true);
+        super.onDestroy();
     }
 }
