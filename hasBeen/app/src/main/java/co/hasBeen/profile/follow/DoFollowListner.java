@@ -12,8 +12,9 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import co.hasBeen.model.api.Follow;
 import co.hasBeen.R;
+import co.hasBeen.model.api.Follow;
+import co.hasBeen.utils.Session;
 
 /**
  * Created by 주현 on 2015-02-10.
@@ -44,6 +45,7 @@ public class DoFollowListner implements View.OnClickListener {
         ImageView icon = (ImageView) v;
         if(mFollow.getFollowingId()==null) {
             icon.setImageResource(R.drawable.following_selector);
+            Session.putBoolean(mContext,"following",true);
             new DoFollowAsyncTask(new Handler(Looper.getMainLooper()){
                 @Override
                 public void handleMessage(Message msg) {

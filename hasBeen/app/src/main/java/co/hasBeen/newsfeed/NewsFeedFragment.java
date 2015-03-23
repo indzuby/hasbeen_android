@@ -94,6 +94,17 @@ public class NewsFeedFragment extends HasBeenFragment {
         mDefaultView = LayoutInflater.from(getActivity()).inflate(R.layout.newsfeed_default, null, false);
         dismissDefaultPage();
     }
+    public void autoRefresh() {
+        boolean following = Session.getBoolean(getActivity(),"following",false);
+        if(following) {
+            if (mFeeds.size() > 0) {
+                startLoading();
+                firstUpdateTime = mFeeds.get(0).getUpdatedTime();
+                new NewsFeedAsyncTask(handler).execute(mAccessToken, "", firstUpdateTime);
+            } else new NewsFeedAsyncTask(handler).execute(mAccessToken);
+        }
+        Session.putBoolean(getActivity(),"following",false);
+    }
 
     protected void startLoading() {
         mLoadingView.setVisibility(View.VISIBLE);
