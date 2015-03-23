@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import co.hasBeen.R;
+import co.hasBeen.TutorialDialog;
 import co.hasBeen.database.DatabaseHelper;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Photo;
@@ -68,6 +69,15 @@ public class GalleryUpload extends ActionBarActivity {
 
     protected void init() throws Exception {
         setContentView(R.layout.gallery_upload);
+
+
+        boolean tutorial = Session.getBoolean(this,"uploadTutorial",false);
+        if(!tutorial) {
+            TutorialDialog dialog = new TutorialDialog(this,R.drawable.upload_tutorial);
+            dialog.show();
+            Session.putBoolean(this,"uploadTutorial",true);
+        }
+
         mAccessToekn = Session.getString(this, "accessToken", null);
         mData = getIntent().getStringExtra("data");
         mDayUpload = JsonConverter.convertJsonToDay(mData);

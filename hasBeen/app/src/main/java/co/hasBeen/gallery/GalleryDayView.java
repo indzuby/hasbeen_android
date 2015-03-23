@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.hasBeen.R;
+import co.hasBeen.TutorialDialog;
 import co.hasBeen.database.DatabaseHelper;
 import co.hasBeen.database.ItemModule;
 import co.hasBeen.database.DeleteAsyncTask;
@@ -36,6 +37,7 @@ import co.hasBeen.map.EnterMapLisnter;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Position;
 import co.hasBeen.utils.HasBeenDate;
+import co.hasBeen.utils.Session;
 import co.hasBeen.utils.Util;
 
 /**
@@ -115,6 +117,14 @@ public class GalleryDayView extends ActionBarActivity {
     }
     protected void init(){
         setContentView(R.layout.gallery_list);
+
+        boolean tutorial = Session.getBoolean(this,"galleryTutorial",false);
+        if(!tutorial) {
+            TutorialDialog dialog = new TutorialDialog(this,R.drawable.gallery_tutorial);
+            dialog.show();
+            Session.putBoolean(this,"galleryTutorial",true);
+        }
+
         try {
             database = new DatabaseHelper(getBaseContext());
             mDay = database.selectDay(mDayId);
@@ -173,16 +183,7 @@ public class GalleryDayView extends ActionBarActivity {
                     @Override
                     public void onClick(View v) {
                         mDayDialog.dismiss();
-                        mDayTitle.setFocusable(true);
-                        mDayTitle.setFocusableInTouchMode(true);
-                        mDescription.setFocusable(true);
-                        mDescription.setFocusableInTouchMode(true);
-                        isEdit = true;
-                        mBeforeTitle = mDayTitle.getText().toString();
-                        mBeforeDescription = mDescription.getText().toString();
-                        initEditActionBar();
-                        mImm.showSoftInput(mDayTitle, InputMethodManager.RESULT_UNCHANGED_SHOWN);
-                        mDayTitle.requestFocus(mBeforeTitle.length() - 1);
+                        setEdit();
                     }
                 };
                 mDayDialog = new DayDialog(GalleryDayView.this);
@@ -209,6 +210,31 @@ public class GalleryDayView extends ActionBarActivity {
         mDescription.setText(mDay.getDescription());
         totalPhoto.setText(getString(R.string.total_photo_count,mDay.getPhotoCount()));
         findViewById(R.id.socialAction).setVisibility(View.GONE);
+
+        mDayTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setEdit();
+            }
+        });
+        mDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setEdit();
+            }
+        });
+    }
+    protected void setEdit(){
+        mDayTitle.setFocusable(true);
+        mDayTitle.setFocusableInTouchMode(true);
+        mDescription.setFocusable(true);
+        mDescription.setFocusableInTouchMode(true);
+        isEdit = true;
+        mBeforeTitle = mDayTitle.getText().toString();
+        mBeforeDescription = mDescription.getText().toString();
+        mDayTitle.requestFocus(mBeforeTitle.length() - 1);
+        initEditActionBar();
+        mImm.showSoftInput(mDayTitle, InputMethodManager.RESULT_UNCHANGED_SHOWN);
     }
     protected void initEditActionBar(){
         findViewById(R.id.shareButton).setVisibility(View.GONE);
@@ -287,16 +313,28 @@ public class GalleryDayView extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==EnterMapLisnter.REQUEST_CODE && resultCode == RESULT_OK) {
-            int index = data.getIntExtra("index",-1);
+        if (requestCode == EnterMapLisnter.REQUEST_CODE && resultCode == RESULT_OK) {
+            int index = data.getIntExtra("index", -1);
             Log.i("call back index", index + "");
-            if(index!=-1)
+            if (index != -1)
                 mListView.setSelection(index);
-        }else if(requestCode==GalleryShare.REQUEST_UPLOAD && resultCode == RESULT_OK) {
+        } else if (requestCode == GalleryShare.REQUEST_UPLOAD && resultCode == RESULT_OK) {
             finish();
         }
     }
+    @Override
+    public void onBackPressed() {
+        if(!isEdit)
+            super.onBackPressed();
+        else {
+            try {
+                backOnEditView(mBeforeTitle, mBeforeDescription);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
 
+    }
     @Override
     public void onResume()
     {
