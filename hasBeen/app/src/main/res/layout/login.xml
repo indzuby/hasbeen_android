@@ -46,12 +46,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:background="@color/theme_white"/>
-
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <EditText
                 style="@style/Signup.TextView"
                 android:hint="Password"
                 android:id="@+id/password"
                 android:inputType="textPassword" />
+                <TextView
+                    android:id="@+id/forgotPassword"
+                    style="@style/Signup.TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textSize="14sp"
+                    android:textColor="@color/theme_color"
+                    android:text="@string/forgot_password" />
+            </RelativeLayout>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2px"

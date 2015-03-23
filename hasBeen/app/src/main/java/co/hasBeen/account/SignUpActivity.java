@@ -183,7 +183,7 @@ public class SignUpActivity extends Activity {
             super.handleMessage(msg);
             if (msg.what == 0) {
                 String token = (String) msg.obj;
-                new LogInAsyncTask(loginHandler).execute(token, "", "password", "read write delete", LogInAsyncTask.BASIC);
+                new LogInAsyncTask(loginHandler).execute(token, "", "password", "read write delete");
             } else {
                 Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
             }

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -133,8 +135,30 @@ public class LoginActivity extends Activity {
                     String password = mPassword.getText().toString();
                     flag = true;
                     startLoading();
-                    new LogInAsyncTask(loginHandler).execute(email, password, "password", "read write delete", LogInAsyncTask.BASIC);
+                    new LogInAsyncTask(loginHandler).execute(email, password, "password", "read write delete");
                 }
+            }
+        });
+        final View forgotPassword = findViewById(R.id.forgotPassword);
+        mPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length()!=0) forgotPassword.setVisibility(View.GONE);
+                else forgotPassword.setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), ForgotPassword.class);
+                startActivity(intent);
             }
         });
     }
@@ -167,7 +191,7 @@ public class LoginActivity extends Activity {
             super.handleMessage(msg);
             if (msg.what == 0) {
                 String token = (String) msg.obj;
-                new LogInAsyncTask(loginHandler).execute(token, "", "password", "read write delete", LogInAsyncTask.BASIC);
+                new LogInAsyncTask(loginHandler).execute(token, "", "password", "read write delete");
             } else {
                 Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
                 stopLoading();

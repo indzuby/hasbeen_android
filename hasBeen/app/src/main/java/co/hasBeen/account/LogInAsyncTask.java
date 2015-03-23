@@ -35,25 +35,21 @@ import co.hasBeen.utils.Session;
  */
 public class LogInAsyncTask extends AsyncTask<String, Void, LoginTokenResponse> {
     Handler mHandler;
-    final static String DOMAIN = Session.SSL_DOMAIN;
-    final static String URL="oauth/token";
-    public final static String BASIC_FB = "hasBeenFacebookClientId";
-    public final static String BASIC = "hasBeenClientId";
+    final static String URL=  Session.SSL_DOMAIN+"oauth/token";
+    public final static String CLIENT = "hasBeenClientId";
     final static String SECRET="hasBeenSecret";
-    final static String EMAIL = "1";
-    final static String SOCIAL = "2";
 
     @Override
     protected LoginTokenResponse doInBackground(String... params) {
         HttpResponse response;
         Uri uri;
         try {
-            uri = Uri.parse(DOMAIN + URL);
+            uri = Uri.parse(URL);
             HttpClient httpclient = SFSSLSocketFactory.getHttpClient();
             HttpPost httppost = new HttpPost(uri.toString());
             httppost.addHeader("User-Agent","Android");
             httppost.addHeader("Content-Type","application/x-www-form-urlencoded");
-            String authorization = params[4] + ":"+SECRET;
+            String authorization =CLIENT + ":"+SECRET;
             httppost.addHeader("Authorization","Basic "+ Base64.encodeToString(authorization.getBytes(), Base64.NO_WRAP));
             // Add your data
 
@@ -63,14 +59,14 @@ public class LogInAsyncTask extends AsyncTask<String, Void, LoginTokenResponse> 
             request.setPassword(params[1]);
             request.setGrant_type(params[2]);
             request.setScope(params[3]);
-            request.setClient_id(params[4]);
+            request.setClient_id(CLIENT);
             request.setClient_secret(SECRET);
             List<NameValuePair> data = new ArrayList<>();
             data.add(new BasicNameValuePair("username",params[0]));
             data.add(new BasicNameValuePair("password",params[1]));
             data.add(new BasicNameValuePair("grant_type",params[2]));
             data.add(new BasicNameValuePair("scope",params[3]));
-            data.add(new BasicNameValuePair("client_id",params[4]));
+            data.add(new BasicNameValuePair("client_id",CLIENT));
             data.add(new BasicNameValuePair("client_secret",SECRET));
 //            JSONObject param = new JSONObject();
 //            param.put("username", params[0]);
