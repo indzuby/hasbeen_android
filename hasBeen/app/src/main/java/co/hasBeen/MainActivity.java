@@ -23,6 +23,7 @@ import co.hasBeen.alarm.AlarmCountAsyncTask;
 import co.hasBeen.alarm.AlarmFragment;
 import co.hasBeen.gallery.GalleryFragment;
 import co.hasBeen.model.api.AlarmCount;
+import co.hasBeen.newsfeed.NewsFeedFragment;
 import co.hasBeen.profile.ProfileFragment;
 import co.hasBeen.utils.Session;
 
@@ -79,7 +80,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 changeIcon(position);
             }
         });
-        changeIcon(0);
+        clearSelect();
+        newsfeed.setSelected(true);
         getAlarmCount();
     }
     public void getAlarmCount(){
@@ -140,6 +142,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         switch (index) {
             case 0:
                 newsfeed.setSelected(true);
+                NewsFeedFragment newsFeed =(NewsFeedFragment) mPagerAdapter.getItem(0);
+                newsFeed.autoRefresh();
                 break;
             case 1:
                 search.setSelected(true);

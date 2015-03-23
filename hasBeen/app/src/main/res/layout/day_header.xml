@@ -1,44 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/slidingLayout"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:background="@color/day_background"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
+    android:background="@color/day_background"
+    android:orientation="vertical">
     <View
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="#ffffff"/>
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-              android:name="com.google.android.gms.maps.MapFragment"
-              android:id="@+id/map"
-              android:layout_width="match_parent"
-              android:layout_height="160dp"/>
+        android:background="@color/theme_white"
+        android:layout_height="36dp" />
+    <include
+        layout="@layout/day_title_box" android:id="@+id/dayTitleBox"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:alpha="0.1"
+        android:background="#000000" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="160dp">
+        <ImageView
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:scaleType="centerCrop" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:src="@drawable/route"
+            android:padding="16dp"
+            android:id="@+id/fullScreen"
+            android:layout_gravity="right|bottom"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 
     <include layout="@layout/description_layout" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:background="#000000"
         android:alpha="0.1"
-        />
+        android:background="#000000" />
+
     <TextView
+        android:id="@+id/totalPhoto"
         android:layout_width="match_parent"
         android:layout_height="24dp"
-        android:textColor="@color/light_gray"
-        android:paddingLeft="16dp"
         android:background="@color/day_background"
-        android:paddingTop="4dp"
-        android:id="@+id/totalPhoto"
         android:paddingBottom="4dp"
-        android:textSize="12sp"
-        android:text="@string/photo_count"/>
+        android:paddingLeft="16dp"
+        android:paddingTop="4dp"
+        android:text="@string/photo_count"
+        android:textColor="@color/light_gray"
+        android:textSize="12sp" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:background="#000000"
         android:alpha="0.1"
-        />
+        android:background="#000000" />
 </LinearLayout>

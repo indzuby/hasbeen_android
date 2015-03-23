@@ -3,9 +3,7 @@
              android:layout_width="match_parent"
              android:background="@color/theme_white"
              android:layout_height="match_parent">
-
     <include layout="@layout/day_gallery" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_gravity="bottom"
@@ -100,10 +98,63 @@
         android:id="@+id/refresh"
         android:layout_gravity="center"
         android:src="@drawable/loading"/>
-    <include
-        layout="@layout/day_title_box" android:id="@+id/dayTitleBox"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:background="@drawable/actionbar_shadow"
-        android:layout_height="wrap_content"/>
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/dayIndicator"
+        android:layout_width="match_parent"
+        android:background="@color/theme_color"
+        android:layout_height="36dp">
+        <TextView
+            android:id="@+id/previus"
+            android:visibility="gone"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="@color/theme_white"
+            android:background="@drawable/tab_bar_selector"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:text="Day 1"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/current"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="@color/theme_white"
+            android:background="@drawable/tab_bar_selector"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:text=""
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/next"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:textColor="@color/theme_white"
+            android:background="@drawable/tab_bar_selector"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:text="Day 3"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:background="@drawable/actionbar_shadow"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+    </LinearLayout>
 </FrameLayout>

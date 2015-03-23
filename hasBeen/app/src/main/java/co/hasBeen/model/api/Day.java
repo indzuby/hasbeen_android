@@ -250,4 +250,15 @@ public class Day extends Social{
     public void setLoad(boolean load) {
         this.load = load;
     }
+
+    Long prevDayId;
+    Long nextDayId;
+
+    public Long getNextDayId() {
+        return nextDayId;
+    }
+
+    public Long getPrevDayId() {
+        return prevDayId;
+    }
 }

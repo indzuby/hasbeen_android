@@ -9,16 +9,11 @@ import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.client.methods.HttpGet;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import co.hasBeen.utils.SFSSLSocketFactory;
 import co.hasBeen.utils.Session;
@@ -36,18 +31,15 @@ public class ResetPasswordAsyncTask extends AsyncTask<String, Void, Boolean> {
         HttpResponse response;
         Uri uri;
         try {
-            uri = Uri.parse(URL);
+            uri = Uri.parse(URL+"?email="+params[0]);
             HttpClient httpclient = SFSSLSocketFactory.getHttpClient();
-            HttpPost httppost = new HttpPost(uri.toString());
-            httppost.addHeader("User-Agent", "Android");
-            httppost.addHeader("Content-Type", "application/json");
+            HttpGet httpGet = new HttpGet(uri.toString());
+            httpGet.addHeader("User-Agent", "Android");
+            httpGet.addHeader("Content-Type", "application/json");
             String authorization = CLIENT + ":" + SECRET;
-            httppost.addHeader("Authorization", "Basic " + Base64.encodeToString(authorization.getBytes(), Base64.NO_WRAP));
+            httpGet.addHeader("Authorization", "Basic " + Base64.encodeToString(authorization.getBytes(), Base64.NO_WRAP));
             // Add your data
-            List<NameValuePair> data = new ArrayList<>();
-            data.add(new BasicNameValuePair("email", params[0]));
-            httppost.setEntity(new UrlEncodedFormEntity(data));
-            response = httpclient.execute(httppost);
+            response = httpclient.execute(httpGet);
             StatusLine statusLine = response.getStatusLine();
 
             if (statusLine.getStatusCode() == 200) {

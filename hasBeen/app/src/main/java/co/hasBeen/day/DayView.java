@@ -78,6 +78,7 @@ public class DayView extends ActionBarActivity{
     InputMethodManager mImm;
     Long userId;
     List<Position> mPositions;
+    View mDayIndicator;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +102,7 @@ public class DayView extends ActionBarActivity{
                     mPositions = positions;
                     mDay = day;
                     Log.i(TAG,mDay.getId()+"");
-                    titleView.setText(mDay.getTitle());
+                    titleView.setText("Day " + mDay.getItineraryIndex() + " — " + mDay.getTitle());
                     initHeaderView();
                     initBodyView();
                     initFoorteView();
@@ -144,6 +145,36 @@ public class DayView extends ActionBarActivity{
         Glide.with(this).load(mDay.getStaticMapUrl()).centerCrop().placeholder(Util.getPlaceHolder(1)).into(map);
         View fullScreen = findViewById(R.id.fullScreen);
         fullScreen.setOnClickListener(new EnterMapLisnter(this,mDay,mDay.getPositionList().get(0).getId()));
+
+        if(mDay!=null && mDay.getUser().getId() == userId) {
+            mDayTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setEdit();
+                }
+            });
+            mDescription.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setEdit();
+                }
+            });
+        }
+        TextView previus = (TextView)findViewById(R.id.previus);
+        TextView current = (TextView)findViewById(R.id.current);
+        TextView next = (TextView)findViewById(R.id.next);
+        current.setText("DAY "+ mDay.getItineraryIndex());
+        previus.setText("DAY "+(mDay.getItineraryIndex()-1));
+        next.setText("DAY " + (mDay.getItineraryIndex() + 1));
+        if(mDay.getPrevDayId()!=0) {
+            previus.setVisibility(View.VISIBLE);
+            previus.setOnClickListener(new EnterDayListner(mDay.getPrevDayId(),this));
+        }
+        if(mDay.getNextDayId()!=0) {
+            next.setVisibility(View.VISIBLE);
+            next.setOnClickListener(new EnterDayListner(mDay.getNextDayId(), this));
+        }
+        current.setSelected(true);
     }
     protected void initBodyView (){
         mDayAdapter = new DayAdapter(this,mPositions,userId == mDay.getUser().getId(),mDay);
@@ -185,7 +216,7 @@ public class DayView extends ActionBarActivity{
         enterComment.setFocusable(false);
         commentButton.setOnClickListener(new EnterCommentListner(this,"days",mDay,mCommentCount,commentBox));
         enterComment.setOnClickListener(new EnterCommentListner(this,"days",mDay,mCommentCount,commentBox));
-
+        commentBox.setOnClickListener(new EnterCommentListner(this,"days",mDay,mCommentCount,commentBox));
         mRecommendationLayout = (LinearLayout) findViewById(R.id.recommendationLayout);
         try {
            recommendationAsyncTask = new RecommendationAsyncTask(recommendationHandler);
@@ -219,7 +250,7 @@ public class DayView extends ActionBarActivity{
         startLoading();
         asyncTask = new DayAsyncTask(handler);
         asyncTask.execute(mAccessToken, mDayId);
-        mHeaderView =  LayoutInflater.from(this).inflate(R.layout.gallery_header, null, false);
+        mHeaderView =  LayoutInflater.from(this).inflate(R.layout.day_header, null, false);
         mFooterView =  LayoutInflater.from(this).inflate(R.layout.day_footer, null, false);
         mListView = (ListView) findViewById(R.id.listPhotos);
         mListView.addHeaderView(mHeaderView);
@@ -231,7 +262,6 @@ public class DayView extends ActionBarActivity{
             public void onScrollStateChanged(AbsListView view, int scrollState) {
 
             }
-
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if(firstVisibleItem+1 == totalItemCount) {
@@ -248,6 +278,11 @@ public class DayView extends ActionBarActivity{
                         mSocialBar.setVisibility(View.VISIBLE);
                         hasSocialBar = true;
                     }
+//                    if(firstVisibleItem==1) {
+//                        mDayIndicator.setVisibility(View.GONE);
+//                    }else if(firstVisibleItem==0) {
+//                        mDayIndicator.setVisibility(View.VISIBLE);
+//                    }
                 }
             }
         });
@@ -262,7 +297,6 @@ public class DayView extends ActionBarActivity{
         LayoutInflater mInflater = LayoutInflater.from(this);
         ColorDrawable colorDrawable = new ColorDrawable(getResources().getColor(R.color.theme_color));
         actionBar.setBackgroundDrawable(colorDrawable);
-
         View mCustomActionBar = mInflater.inflate(R.layout.action_bar_place,null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
@@ -303,16 +337,7 @@ public class DayView extends ActionBarActivity{
                         @Override
                         public void onClick(View v) {
                             mDayDialog.dismiss();
-                            mDayTitle.setFocusable(true);
-                            mDayTitle.setFocusableInTouchMode(true);
-                            mDescription.setFocusable(true);
-                            mDescription.setFocusableInTouchMode(true);
-                            isEdit = true;
-                            mBeforeTitle = mDayTitle.getText().toString();
-                            mBeforeDescription = mDescription.getText().toString();
-                            initEditActionBar();
-                            mImm.showSoftInput(mDayTitle, InputMethodManager.RESULT_UNCHANGED_SHOWN);
-                            mDayTitle.requestFocus(mBeforeTitle.length() - 1);
+                            setEdit();
                         }
                     };
                     mDayDialog = new DayDialog(DayView.this);
@@ -327,6 +352,7 @@ public class DayView extends ActionBarActivity{
                 }
             }
         });
+        mDayIndicator = findViewById(R.id.dayIndicator);
     }
 
     protected void initEditActionBar(){
@@ -368,6 +394,21 @@ public class DayView extends ActionBarActivity{
                 }).execute(mAccessToken, mDay.getId(),mBeforeTitle,mBeforeDescription);
             }
         });
+    }
+    protected void setEdit(){
+        mDayTitle.setFocusable(true);
+        mDayTitle.setFocusableInTouchMode(true);
+        mDescription.setFocusable(true);
+        mDescription.setFocusableInTouchMode(true);
+        isEdit = true;
+        mBeforeTitle = mDayTitle.getText().toString();
+        mBeforeDescription = mDescription.getText().toString();
+        mDayTitle.requestFocus(mBeforeTitle.length() - 1);
+        initEditActionBar();
+        mImm.showSoftInput(mDayTitle, InputMethodManager.SHOW_FORCED);
+        mImm.showSoftInput(mDayTitle, InputMethodManager.SHOW_IMPLICIT);
+        mImm.showSoftInput(mDayTitle, InputMethodManager.RESULT_UNCHANGED_SHOWN);
+        mImm.showSoftInput(mDayTitle, InputMethodManager.RESULT_SHOWN);
     }
 
     protected void backOnEditView(String title, String description){

@@ -61,7 +61,6 @@
 
 
         <LinearLayout
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:background="@drawable/white_bg"
             android:layout_marginLeft="12dp"

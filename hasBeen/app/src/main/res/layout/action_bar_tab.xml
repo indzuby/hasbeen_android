@@ -10,91 +10,151 @@
         android:orientation="horizontal"
         android:weightSum="5">
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/newsfeed"
             android:layout_width="0dp"
-            android:background="@drawable/tab_bar_selector"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_marginTop="-2dp"
+            android:layout_weight="1"
+            android:background="@drawable/tab_bar_selector"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:src="@drawable/newsfeed_selector" />
 
-        </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-6dp"
+                android:text="@string/tab_newsfeed"
+                android:textColor="@color/theme_white"
+                android:textSize="10dp"
+                android:textStyle="normal" />
 
-        <RelativeLayout
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/search"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@drawable/tab_bar_selector"
-            android:layout_weight="1">
+            android:orientation="vertical"
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-2dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/search_selector" />
 
-        </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-6dp"
+                android:text="@string/tab_search"
+                android:textColor="@color/theme_white"
+                android:textSize="10dp"
+                android:textStyle="normal" />
+        </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/gallery"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@drawable/tab_bar_selector"
-            android:layout_weight="1">
+            android:orientation="vertical"
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-2dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/gallery_selector" />
 
-        </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-6dp"
+                android:text="@string/tab_gallery"
+                android:textColor="@color/theme_white"
+                android:textSize="10dp"
+                android:textStyle="normal" />
+        </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/alarm"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@drawable/tab_bar_selector"
-            android:layout_weight="1">
+            android:orientation="vertical"
+            android:gravity="center">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/alarm_selector" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="-2dp"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/alarm_selector" />
+
+                <TextView
+                    android:id="@+id/count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="16dp"
+                    android:visibility="gone"
+                    android:background="@drawable/badge"
+                    android:gravity="center"
+                    android:textColor="@color/theme_white"
+                    android:textSize="10dp" />
+            </RelativeLayout>
 
             <TextView
-                android:id="@+id/count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/badge"
-                android:gravity="center"
-                android:visibility="gone"
+                android:layout_marginTop="-6dp"
+                android:text="@string/tab_alarm"
                 android:textColor="@color/theme_white"
-                android:textSize="10dp"/>
-        </RelativeLayout>
+                android:textSize="10dp"
+                android:textStyle="normal" />
+        </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/profile"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1"
             android:background="@drawable/tab_bar_selector"
-            android:layout_weight="1">
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-2dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/profile_selector" />
 
-        </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-6dp"
+                android:text="@string/tab_profile"
+                android:textColor="@color/theme_white"
+                android:textSize="10dp"
+                android:textStyle="normal" />
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

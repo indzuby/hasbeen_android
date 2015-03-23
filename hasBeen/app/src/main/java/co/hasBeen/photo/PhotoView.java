@@ -137,8 +137,14 @@ public class    PhotoView extends ActionBarActivity {
         loveButton.setOnClickListener(new LoveListner(this, mPhoto, "photos", mLikeCount));
         LinearLayout shareButton = (LinearLayout) findViewById(R.id.shareButton);
         shareButton.setOnClickListener(new ShareListner(this, "photos", mPhoto, mShareCount));
-
-
+        if (mPhoto.getUser().getId() == mMyid) {
+            mDescription.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setEdit();
+                }
+            });
+        }
     }
 
     protected void initComment() {
@@ -367,7 +373,7 @@ public class    PhotoView extends ActionBarActivity {
         isEdit = false;
         initActionBar();
         mImm.hideSoftInputFromWindow(mDescription.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-
+        titleView.setText(mPhoto.getDay().getTitle());
     }
 
     @Override
@@ -405,13 +411,7 @@ public class    PhotoView extends ActionBarActivity {
                     @Override
                     public void onClick(View v) {
                         mPhotoDialog.dismiss();
-                        mDescription.setFocusable(true);
-                        mDescription.setFocusableInTouchMode(true);
-                        isEdit = true;
-                        mBeforeDescription = mDescription.getText().toString();
-                        initEditActionBar();
-                        mImm.showSoftInput(mDescription, InputMethodManager.RESULT_UNCHANGED_SHOWN);
-                        mDescription.requestFocus(mBeforeDescription.length() - 1);
+                        setEdit();
                     }
                 };
                 View.OnClickListener cover = new View.OnClickListener() {
@@ -443,7 +443,26 @@ public class    PhotoView extends ActionBarActivity {
         }
 
     }
+    @Override
+    public void onBackPressed() {
+        if(!isEdit)
+            super.onBackPressed();
+        else
+            backOnEditView(mBeforeDescription);
 
+    }
+    protected void setEdit(){
+        mDescription.setFocusable(true);
+        mDescription.setFocusableInTouchMode(true);
+        isEdit = true;
+        mBeforeDescription = mDescription.getText().toString();
+        mDescription.requestFocus(mBeforeDescription.length() - 1);
+        initEditActionBar();
+        mImm.showSoftInput(mDescription, InputMethodManager.RESULT_UNCHANGED_SHOWN);
+        mImm.showSoftInput(mDescription, InputMethodManager.SHOW_FORCED);
+        mImm.showSoftInput(mDescription, InputMethodManager.SHOW_IMPLICIT);
+        mImm.showSoftInput(mDescription, InputMethodManager.RESULT_SHOWN);
+    }
     @Override
     public void onResume()
     {
