@@ -34,6 +34,7 @@ public class SettingView extends ActionBarActivity {
         setContentView(R.layout.setting);
         initActionBar();
         View findFacebookFriends = findViewById(R.id.findFacebookFriends);
+//        View fbProfileImage = findViewById(R.id.fbProfileImage);
         View abouthasBeen = findViewById(R.id.abouthasBeen);
         View reportProblem = findViewById(R.id.reportProblem);
         View openSource = findViewById(R.id.openSource);
@@ -47,6 +48,21 @@ public class SettingView extends ActionBarActivity {
                 startActivity(intent);
             }
         });
+//        fbProfileImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                new TakeFbProfileAsyncTask(new Handler(Looper.getMainLooper()) {
+//                    @Override
+//                    public void handleMessage(Message msg) {
+//                        super.handleMessage(msg);
+//                        if(msg.what==0) {
+//                            Toast.makeText(getBaseContext(),getString(R.string.fb_profile_image_success),Toast.LENGTH_LONG).show();
+//                        }else
+//                            Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
+//                    }
+//                }).execute(mAccessToken);
+//            }
+//        });
         abouthasBeen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

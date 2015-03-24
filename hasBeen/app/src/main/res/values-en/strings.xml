@@ -123,7 +123,9 @@
     <!--검색-->
     <string name="day">Days</string>
     <string name="photo">Photos</string>
-    <string name="search_hint">Search days, photos and people.</string>
+    <string name="search_hint">Search trips and people.</string>
+    <string name="trip">Trip</string>
+    <string name="people">People</string>
     <!--갤러리-->
     <string name="gallery_default_1">Location information (or GPS tag) is off or no photo with location information on your device.</string>
     <string name="gallery_default_2">Take new photos after switching on location tagging on camera setting.</string>
@@ -182,13 +184,16 @@
     <string name="follow_success"> Follow Success</string>
     <string name="unfollow_success"> Unfollow Success</string>
     <string name="all_follow_success"> Follow all Success</string>
+    <string name="fb_profile_image_success">Change profile image to facebook profile image.</string>
     <!--설정-->
     <string name="facebook_title">Facebook</string>
     <string name="support_title">Support</string>
     <string name="account_title">Account</string>
     <string name="logout">Log out</string>
+    <string name="chage_account">Change account</string>
     <string name="find_facebook">Find facebook friends</string>
     <string name="about_hasbeen">About hasBeen</string>
+    <string name="fb_profile_image">Take facebook profile image</string>
     <string name="report_problem">Report a problem</string>
     <string name="open_source">License</string>
     <string name="friends">%d friends</string>

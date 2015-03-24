@@ -4,11 +4,16 @@ package co.hasBeen.model.api;
  * Created by zuby on 2015-01-26.
  */
 public class User {
+    public enum Gender {
+        MALE,FEMALE;
+    }
     Long id;
     String firstName;
     String lastName;
     String imageUrl;
-
+    Gender gender;
+    String country;
+    String city;
     public Long getId() {
         return id;
     }
@@ -81,5 +86,29 @@ public class User {
 
     public void setFollow(Follow follow) {
         this.follow = follow;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

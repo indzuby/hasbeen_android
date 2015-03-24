@@ -123,7 +123,9 @@
     <!--검색-->
     <string name="day">여행</string>
     <string name="photo">사진</string>
-    <string name="search_hint">여행,사진,사람을 검색할 수 있습니다.</string>
+    <string name="search_hint">여행,사람을 검색할 수 있습니다.</string>
+    <string name="trip">여행</string>
+    <string name="people">사람</string>
     <!--갤러리-->
     <string name="gallery_default_1">위치정보(또는 GPS 태그 등)기능이 해제되어 있거나\n기기내에 위치정보를 포함한 사진이 없습니다.</string>
     <string name="gallery_default_2">카메라 설정에서 위치정보(또는 GPS 태그 등)를\n설정한 후 새로운 사진을 촬영해주세요.</string>
@@ -181,13 +183,16 @@
     <string name="follow_success"> 팔로우 했습니다.</string>
     <string name="unfollow_success"> 팔로우를 해제했습니다</string>
     <string name="all_follow_success"> 모두 팔로우 했습니다.</string>
+    <string name="fb_profile_image_success">프로필 이미지가 페이스북 프로필 이미지로 변경되었습니다.</string>
 
     <!--설정-->
     <string name="facebook_title">페이스북</string>
     <string name="support_title">지원</string>
     <string name="account_title">계정</string>
     <string name="logout">로그아웃</string>
+    <string name="chage_account">기본 정보 변경</string>
     <string name="find_facebook">페이스북 친구 찾기</string>
+    <string name="fb_profile_image">페이스북 프로필 이미지 가져오기</string>
     <string name="about_hasbeen">About hasBeen</string>
     <string name="report_problem">고객 문의</string>
     <string name="open_source">라이센스</string>

@@ -37,6 +37,7 @@ import co.hasBeen.profile.map.LikeDayAsyncTask;
 import co.hasBeen.profile.map.LikePhotoAsyncTask;
 import co.hasBeen.profile.map.ProfileDayAsyncTask;
 import co.hasBeen.profile.map.ProfilePhotoAsyncTask;
+import co.hasBeen.setting.ProfileImageListner;
 import co.hasBeen.setting.SettingView;
 import co.hasBeen.utils.CircleTransform;
 import co.hasBeen.utils.HasBeenFragment;
@@ -192,21 +193,9 @@ public class ProfileFragment extends HasBeenFragment {
                 mMap = map;
                 mMapRoute = new MapRoute(map, getActivity());
                 UiSettings setting = map.getUiSettings();
-                setting.setZoomControlsEnabled(true);
+                setting.setZoomControlsEnabled(false);
                 setting.setRotateGesturesEnabled(false);
                 setting.setMyLocationButtonEnabled(false);
-                View zoomControls = mMapFragment.getView().findViewById(0x1);
-                if (zoomControls != null && zoomControls.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
-                    // ZoomControl is inside of RelativeLayout
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) zoomControls.getLayoutParams();
-
-                    // Align it to - parent top|left
-                    params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    int margin = Util.convertDpToPixel(16, getActivity());
-                    params.setMargins(0, margin, margin, 0);
-                    // Update margins, set to 10dp
-                }
             }
         });
     }
@@ -322,6 +311,7 @@ public class ProfileFragment extends HasBeenFragment {
         Glide.with(getActivity()).load(mUser.getImageUrl()).transform(new CircleTransform(getActivity())).into(profileImage);
         profileName.setText(Util.parseName(mUser, getActivity()));
         followStatus.setText(getString(R.string.follow_status, mUser.getFollowerCount(), mUser.getFollowingCount()));
+        profileImage.setOnClickListener(new ProfileImageListner(getActivity(),profileImage));
         followStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

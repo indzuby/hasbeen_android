@@ -19,7 +19,8 @@
             android:layout_gravity="center"
             android:textStyle="bold"
             android:text="@string/day"
-            android:textColor="@color/theme_color"
+            android:background="@drawable/description_selector"
+            android:textColor="@drawable/search_text_selector"
             android:layout_height="match_parent"/>
         <View
             android:layout_width="2px"
@@ -38,7 +39,8 @@
             android:textStyle="bold"
             android:layout_gravity="center"
             android:text="@string/photo"
-            android:textColor="@color/light_gray"
+            android:background="@drawable/description_selector"
+            android:textColor="@drawable/search_text_selector"
             android:layout_height="match_parent"/>
 
     </LinearLayout>
@@ -63,6 +65,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:background="@drawable/white_bg"
+            android:id="@+id/searchBox"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
             android:layout_marginTop="13dp"
@@ -73,7 +76,7 @@
                 android:layout_marginLeft="12dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/searchbar"/>
-            <EditText
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -83,7 +86,7 @@
                 android:singleLine="true"
                 android:layout_gravity="center_vertical"
                 android:background="@color/theme_white"
-                android:hint="@string/search_hint"
+                android:text="@string/search_hint"
                 />
             </LinearLayout>
         <ImageView

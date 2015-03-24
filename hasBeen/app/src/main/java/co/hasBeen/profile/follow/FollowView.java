@@ -19,12 +19,11 @@ import co.hasBeen.R;
  * Created by 주현 on 2015-02-02.
  */
 public class FollowView extends ActionBarActivity implements View.OnClickListener{
-
     final static int FOLLOWER = 0;
     final static int FOLLOWING = 1;
-    int mNowTab = FOLLOWER;
-    TextView mFollowerButton;
-    TextView mFollowingButton;
+
+    View mFollowerButton;
+    View mFollowingButton;
     ViewPager mViewPager;
     Long mUserId;
     String mType;
@@ -64,11 +63,12 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
         actionBar.setCustomView(mCustomActionBar);
         actionBar.setDisplayShowCustomEnabled(true);
 
-        mFollowerButton = (TextView) findViewById(R.id.follower);
-        mFollowingButton = (TextView) findViewById(R.id.following);
+        mFollowerButton =  findViewById(R.id.follower);
+        mFollowingButton =  findViewById(R.id.following);
 
         mFollowerButton.setOnClickListener(this);
         mFollowingButton.setOnClickListener(this);
+        mFollowerButton.setSelected(true);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         FollowPagerAdapter pagerAdapter = new FollowPagerAdapter(getSupportFragmentManager(),mUserId,mType);
         mViewPager.setAdapter(pagerAdapter);
@@ -77,17 +77,17 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                if (mNowTab != FOLLOWER) {
-                    mFollowerButton.setTextColor(getResources().getColor(R.color.theme_color));
-                    mFollowingButton.setTextColor(getResources().getColor(R.color.light_gray));
-                    mNowTab = FOLLOWER;
-                }else if (mNowTab != FOLLOWING) {
-                    mFollowerButton.setTextColor(getResources().getColor(R.color.light_gray));
-                    mFollowingButton.setTextColor(getResources().getColor(R.color.theme_color));
-                    mNowTab = FOLLOWING;
-                }
+                changeTab(position);
             }
         });
+    }
+    protected void changeTab(int position){
+        mFollowerButton.setSelected(false);
+        mFollowingButton.setSelected(false);
+        if (position==0)
+            mFollowerButton.setSelected(true);
+        else if (position==1)
+            mFollowingButton.setSelected(true);
     }
 
     @Override

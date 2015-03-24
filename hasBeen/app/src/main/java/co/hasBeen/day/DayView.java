@@ -343,7 +343,7 @@ public class DayView extends ActionBarActivity{
                     mDayDialog = new DayDialog(DayView.this);
                     mDayDialog.setListner(del,edit);
                     mDayDialog.show();
-                }else {
+                }else if(mDay!=null){
                     mDayDialog = new DayDialog(DayView.this,true);
                     View.OnClickListener report = new ReportListner("days",mDay.getId(),getBaseContext(),mDayDialog);
                     View.OnClickListener share = new ShareListner(getBaseContext(), "days",mDay,mShareCount);

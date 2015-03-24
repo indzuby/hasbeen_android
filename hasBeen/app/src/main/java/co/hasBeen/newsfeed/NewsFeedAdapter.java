@@ -114,7 +114,7 @@ public class NewsFeedAdapter extends BaseAdapter {
         commentCount.setText(mContext.getString(R.string.comment_count, feed.getCommentCount()));
         shareCount.setText(mContext.getString(R.string.share_count,feed.getShareCount()));
 //        socialAction.setText(mContext.getString(R.string.social_status,feed.getLoveCount(),feed.getCommentCount(),feed.getShareCount()));
-        Glide.with(mContext).load(feed.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(mContext)).into(profileImage);
+        Glide.with(mContext).load(feed.getUser().getImageUrl()).transform(new CircleTransform(mContext)).into(profileImage);
 //        Glide.with(mContext).load(feed.getMainPhoto().getMediumUrl()).centerCrop().into(mainImage);
         imageBox.addView(imageLayout);
 

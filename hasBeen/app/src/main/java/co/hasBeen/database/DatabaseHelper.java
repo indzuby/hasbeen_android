@@ -21,6 +21,7 @@ import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.model.api.Place;
 import co.hasBeen.model.api.Position;
+import co.hasBeen.model.api.RecentSearch;
 
 /**
  * Created by zuby on 2015-01-13.
@@ -33,6 +34,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<Place,Long> place;
     private Dao<Day,Long> day;
     private Dao<Position,Long> position;
+    private Dao<RecentSearch,Long> recent;
     private Context mContext;
     public DatabaseHelper(Context context) {
         super(context,DATABASE_NAME, null  , DATABASE_VERSION);
@@ -46,6 +48,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Place.class);
             TableUtils.createTable(connectionSource, Position.class);
             TableUtils.createTable(connectionSource, Day.class);
+            TableUtils.createTable(connectionSource, RecentSearch.class);
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -58,6 +61,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, Place.class, true);
             TableUtils.dropTable(connectionSource, Position.class, true);
             TableUtils.dropTable(connectionSource, Day.class, true);
+            TableUtils.dropTable(connectionSource, RecentSearch.class, true);
             onCreate(database,connectionSource);
         }catch (Exception e) {
             e.printStackTrace();
@@ -89,6 +93,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         if(position==null)
             position = getDao(Position.class);
         return position;
+    }
+    public Dao<RecentSearch,Long> getRecentDao() throws SQLException{
+        if(recent==null)
+            recent = getDao(RecentSearch.class);
+        return recent;
     }
     public Photo getLastPhoto() throws SQLException{
         if(photos==null)

@@ -1,5 +1,6 @@
 package co.hasBeen.search;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -30,15 +31,15 @@ import co.hasBeen.utils.Session;
 /**
  * Created by zuby on 2015-01-30.
  */
-public class SearchFragment extends HasBeenFragment {
+public class SearchFragment extends HasBeenFragment implements View.OnClickListener {
     final static int DAY = 1;
     final static int PHOTO = 2;
     List<Day> mDays;
     List<Photo> mPhotos;
     GoogleMap mMap;
     SupportMapFragment mMapFragment;
-    TextView mDayButton;
-    TextView mPhotoButton;
+    View mDayButton;
+    View mPhotoButton;
     ImageView mReload;
     MapRoute mMapRoute;
     int nowTab = DAY;
@@ -48,7 +49,7 @@ public class SearchFragment extends HasBeenFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.search, container, false);
-        mAccessToken = Session.getString(getActivity(),"accessToken",null);
+        mAccessToken = Session.getString(getActivity(), "accessToken", null);
         init();
         return mView;
     }
@@ -69,12 +70,12 @@ public class SearchFragment extends HasBeenFragment {
                 map.setMyLocationEnabled(false);
             }
         });
-        mDayButton = (TextView) mView.findViewById(R.id.dayButton);
-        mPhotoButton = (TextView) mView.findViewById(R.id.photoButton);
+        mDayButton =  mView.findViewById(R.id.dayButton);
+        mPhotoButton = mView.findViewById(R.id.photoButton);
         mReload = (ImageView) mView.findViewById(R.id.reload);
 
-        mDayButton.setOnClickListener(new ButtonClickListner());
-        mPhotoButton.setOnClickListener(new ButtonClickListner());
+        mDayButton.setOnClickListener(this);
+        mPhotoButton.setOnClickListener(this);
         mReload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,11 +91,26 @@ public class SearchFragment extends HasBeenFragment {
                 }
             }
         });
+        mDayButton.setSelected(true);
+        View searchBox = mView.findViewById(R.id.searchBox);
+        searchBox.setOnClickListener(new View.OnClickListener() {
+            boolean flag = false;
+
+            @Override
+            public void onClick(View v) {
+                if (!flag) {
+                    flag = true;
+                    Intent intent = new Intent(getActivity(), SearchDetailView.class);
+                    startActivity(intent);
+                    flag = false;
+                }
+            }
+        });
     }
 
     @Override
     public void showTab() {
-        if(!isShowTab()) {
+        if (!isShowTab()) {
             startLoading();
             new SearchDayAsyncTask(dayHandler).execute(mAccessToken);
         }
@@ -133,17 +149,16 @@ public class SearchFragment extends HasBeenFragment {
             }
         }
     };
-    class ButtonClickListner implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            TextView button = (TextView) v;
-            if (nowTab!=DAY && button.equals(mDayButton)) {
-                mapRendering(DAY);
-                swapButtonColor();
-            } else if (nowTab!=PHOTO && button.equals(mPhotoButton)) {
-                mapRendering(PHOTO);
-                swapButtonColor();
-            }
+
+    @Override
+    public void onClick(View v) {
+        TextView button = (TextView) v;
+        if (nowTab != DAY && button.equals(mDayButton)) {
+            mapRendering(DAY);
+            swapButtonColor();
+        } else if (nowTab != PHOTO && button.equals(mPhotoButton)) {
+            mapRendering(PHOTO);
+            swapButtonColor();
         }
     }
 
@@ -151,24 +166,25 @@ public class SearchFragment extends HasBeenFragment {
 
         if (nowTab != DAY) {
             nowTab = DAY;
-            mDayButton.setTextColor(getResources().getColor(R.color.theme_color));
-            mPhotoButton.setTextColor(getResources().getColor(R.color.light_black));
+            mDayButton.setSelected(true);
+            mPhotoButton.setSelected(false);
         } else {
             nowTab = PHOTO;
-            mDayButton.setTextColor(getResources().getColor(R.color.light_black));
-            mPhotoButton.setTextColor(getResources().getColor(R.color.theme_color));
+            mDayButton.setSelected(false);
+            mPhotoButton.setSelected(true);
         }
     }
-    protected void mapRendering(int flag){
-        if(flag==DAY) {
-            if(mDays!=null)
+
+    protected void mapRendering(int flag) {
+        if (flag == DAY) {
+            if (mDays != null)
                 dayRendering();
             else {
                 startLoading();
                 new SearchDayAsyncTask(dayHandler).execute(mAccessToken);
             }
-        }else {
-            if(mPhotos!=null)
+        } else {
+            if (mPhotos != null)
                 photoRendering();
             else {
                 startLoading();
@@ -176,7 +192,8 @@ public class SearchFragment extends HasBeenFragment {
             }
         }
     }
-    protected void dayRendering(){
+
+    protected void dayRendering() {
         try {
             mMapRoute.addMarkerCluster(mDays);
             if (isReload) {
@@ -184,11 +201,12 @@ public class SearchFragment extends HasBeenFragment {
                 mReload.setImageResource(R.drawable.refresh);
                 isReload = false;
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    protected void photoRendering (){
+
+    protected void photoRendering() {
         try {
             mMapRoute.addMarkerClusterPhoto(mPhotos);
             if (isReload) {
@@ -196,14 +214,13 @@ public class SearchFragment extends HasBeenFragment {
                 mReload.setImageResource(R.drawable.refresh);
                 isReload = false;
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         Localytics.openSession();
         Localytics.tagScreen("Search Fragment");

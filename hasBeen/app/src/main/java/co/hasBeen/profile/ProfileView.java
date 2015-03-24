@@ -207,21 +207,9 @@ public class ProfileView extends ActionBarActivity {
                 mMapRoute = new MapRoute(map, ProfileView.this);
                 UiSettings setting = map.getUiSettings();
                 nowTabIndicator(R.id.dayButton);
-                setting.setZoomControlsEnabled(true);
+                setting.setZoomControlsEnabled(false);
                 setting.setRotateGesturesEnabled(false);
                 setting.setMyLocationButtonEnabled(false);
-                View zoomControls = mMapFragment.getView().findViewById(0x1);
-                if (zoomControls != null && zoomControls.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
-                    // ZoomControl is inside of RelativeLayout
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) zoomControls.getLayoutParams();
-
-                    // Align it to - parent top|left
-                    params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    int margin = Util.convertDpToPixel(16,getBaseContext());
-                    params.setMargins(0,margin,margin,0);
-                    // Update margins, set to 10dp
-                }
             }
         });
         RelativeLayout dayButton = (RelativeLayout) findViewById(R.id.dayButton);

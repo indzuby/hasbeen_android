@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.localytics.android.Localytics;
 
 import org.opencv.android.OpenCVLoader;
@@ -194,6 +195,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     protected void onDestroy() {
         System.gc();
         Log.i("Destory","yes");
+        Glide.get(getBaseContext()).clearMemory();
         super.onDestroy();
     }
 
