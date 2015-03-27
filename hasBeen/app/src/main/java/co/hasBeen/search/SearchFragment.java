@@ -22,6 +22,7 @@ import com.localytics.android.Localytics;
 import java.util.List;
 
 import co.hasBeen.R;
+import co.hasBeen.TutorialDialog;
 import co.hasBeen.map.MapRoute;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Photo;
@@ -111,6 +112,12 @@ public class SearchFragment extends HasBeenFragment implements View.OnClickListe
 
     @Override
     public void showTab() {
+        boolean tutorial = Session.getBoolean(getActivity(),"searchTutorial",false);
+        if(!tutorial) {
+            TutorialDialog dialog = new TutorialDialog(getActivity(),R.drawable.search_tutorial);
+            dialog.show();
+            Session.putBoolean(getActivity(),"searchTutorial",true);
+        }
         if (!isShowTab()) {
             startLoading();
             new SearchDayAsyncTask(dayHandler).execute(mAccessToken);
