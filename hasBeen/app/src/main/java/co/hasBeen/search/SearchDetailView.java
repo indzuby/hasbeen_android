@@ -3,7 +3,11 @@ package co.hasBeen.search;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.localytics.android.Localytics;
 
@@ -22,7 +26,8 @@ public class SearchDetailView extends ActionBarActivity implements View.OnClickL
     View mPeopleButton;
     int mNowTab = TRIP;
     ViewPager mViewPager;
-
+    public EditText mSearchText;
+    SearchPagerAdapter pagerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +42,7 @@ public class SearchDetailView extends ActionBarActivity implements View.OnClickL
         mTripButton.setOnClickListener(this);
         mPeopleButton.setOnClickListener(this);
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        SearchPagerAdapter pagerAdapter = new SearchPagerAdapter(getSupportFragmentManager());
+        pagerAdapter = new SearchPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(pagerAdapter);
         mViewPager.setOffscreenPageLimit(2);
 
@@ -45,6 +50,24 @@ public class SearchDetailView extends ActionBarActivity implements View.OnClickL
             @Override
             public void onPageSelected(int position) {
                 changeTab(position);
+            }
+        });
+        mSearchText = (EditText) findViewById(R.id.searchText);
+        mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    String serach = mSearchText.getText().toString();
+                    doSearch(serach);
+                }
+                return false;
+            }
+        });
+        View cancel = findViewById(R.id.cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSearchText.setText("");
             }
         });
     }
@@ -56,6 +79,14 @@ public class SearchDetailView extends ActionBarActivity implements View.OnClickL
         else if (position==1)
             mPeopleButton.setSelected(true);
     }
+    protected void doSearch(String keyword){
+        if(mViewPager.getCurrentItem()==TRIP) {
+
+        }else {
+            ((PeopleFragment)pagerAdapter.getItem(PEOPLE)).doSearch(keyword);
+        }
+    }
+
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.tripButton) {

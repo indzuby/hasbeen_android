@@ -318,5 +318,26 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         position.setEndTime(end);
         updatePosition(position);
     }
+    public Long insertRecent(RecentSearch recent) throws SQLException{
+
+        RecentSearch search = getRecentDao().queryBuilder().where().eq("keyword",recent.getKeyword()).and().eq("type",recent.getType()).queryForFirst();
+        if(search!=null) {
+            getRecentDao().updateBuilder().updateColumnValue("create_date",new Date().getTime()).
+                        where().eq("keyword",recent.getKeyword()).and().eq("type",recent.getType());
+            getRecentDao().updateBuilder().update();
+        }else
+            getRecentDao().create(recent);
+        return getRecentDao().extractId(recent);
+    }
+    public List<RecentSearch> getRecentSearch(String type) throws SQLException {
+        if(getRecentDao().queryBuilder().where().eq("type",type).countOf()==0)
+            return null;
+        return getRecentDao().queryBuilder().limit(10L).orderBy("create_date",false).where().eq("type",type).query();
+    }
+    public void removeRecent(Long id ) throws SQLException {
+        DeleteBuilder<RecentSearch,Long> deleteBuilder = getRecentDao().deleteBuilder();
+        deleteBuilder.where().eq("id",id);
+        deleteBuilder.delete();
+    }
 }
 //select * from photo where id = clearest_id

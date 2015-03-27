@@ -93,6 +93,7 @@ public class SearchFragment extends HasBeenFragment implements View.OnClickListe
         });
         mDayButton.setSelected(true);
         View searchBox = mView.findViewById(R.id.searchBox);
+        searchBox.setVisibility(View.GONE);
         searchBox.setOnClickListener(new View.OnClickListener() {
             boolean flag = false;
 

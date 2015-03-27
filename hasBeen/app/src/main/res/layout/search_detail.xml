@@ -21,11 +21,12 @@
        android:layout_width="wrap_content"
        android:layout_centerVertical="true"
        android:id="@+id/searchIcon"
-       android:src="@drawable/search_selector"
+       android:src="@drawable/searchbar_white"
        android:layout_height="wrap_content" />
     <EditText
         android:layout_width="match_parent"
         android:textColorHint="#99ffffff"
+        android:singleLine="true"
         android:textColor="@color/theme_white"
         android:layout_toRightOf="@+id/searchIcon"
         android:background="@color/transparent"
@@ -34,14 +35,14 @@
         android:layout_centerVertical="true"
         android:layout_marginBottom="8dp"
         android:id="@+id/searchText"
-        android:layout_toLeftOf="@+id/cancle"
+        android:layout_toLeftOf="@+id/cancel"
         android:layout_height="match_parent" />
     <ImageView
-        android:id="@+id/cancle"
+        android:id="@+id/cancel"
         android:layout_width="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/com_facebook_tooltip_black_xout"
+        android:src="@drawable/delete"
         android:layout_height="wrap_content" />
     </RelativeLayout>
     <LinearLayout
@@ -104,6 +105,7 @@
 
         <android.support.v4.view.ViewPager xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/pager"
+            android:background="@color/day_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".SearchDetailView">

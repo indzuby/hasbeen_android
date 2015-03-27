@@ -94,7 +94,7 @@
     <string name="choose_trip">Choose your trip</string>
     <string name="remove_cofirm">Are you sure you want delete this?</string>
     <string name="delete">Delete</string>
-    <string name="cancle">Cancle</string>
+    <string name="cancel">Cancel</string>
     <string name="uploading">Uploading..\nYou will be noticed when it\'s done.</string>
     <string name="uploading_count">%1$d/%2$d photos</string>
     <!--사진-->

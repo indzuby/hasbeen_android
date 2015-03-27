@@ -14,6 +14,8 @@ public class RecentSearch {
     String keyword;
     @DatabaseField(columnName = "create_date")
     Long createDate;
+    @DatabaseField
+    String type;
 
     public Long getId() {
         return id;
@@ -32,5 +34,17 @@ public class RecentSearch {
 
     public void setCreateDate(Long createDate) {
         this.createDate = createDate;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

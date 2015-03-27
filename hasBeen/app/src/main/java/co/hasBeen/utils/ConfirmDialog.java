@@ -53,7 +53,7 @@ public class ConfirmDialog extends Dialog {
     View mCancle;
     View mDelete;
     private void setLayout() {
-        mCancle = findViewById(R.id.cancle);
+        mCancle = findViewById(R.id.cancel);
         mDelete = findViewById(R.id.delete);
     }
 }

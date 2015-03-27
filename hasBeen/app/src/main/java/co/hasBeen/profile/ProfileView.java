@@ -311,7 +311,7 @@ public class ProfileView extends ActionBarActivity {
         else {
             followImage.setImageResource(R.drawable.follow);
         }
-        followImage.setOnClickListener(new ProfileFollowListner(mUser.getFollow(),followImage,mAccessToken,mUser.getId()));
+        followImage.setOnClickListener(new ProfileFollowListner(mUser.getFollow(),mAccessToken,mUser.getId()));
         dayCount.setText(mUser.getDayCount() + "");
         photoCount.setText(mUser.getPhotoCount() + "");
         loveCount.setText(mUser.getLoveCount() + "");

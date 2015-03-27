@@ -31,11 +31,11 @@
         <TextView
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:id="@+id/cancle"
+            android:id="@+id/cancel"
             android:gravity="center"
             android:background="@drawable/description_selector"
             android:textColor="@color/light_black"
-            android:text="@string/cancle"
+            android:text="@string/cancel"
             android:layout_height="47dp" />
         <View
             android:layout_width="1dp"
