@@ -18,6 +18,7 @@ import co.hasBeen.account.FacebookApi;
 import co.hasBeen.account.LogOutAsyncTask;
 import co.hasBeen.social.FbFriendsView;
 import co.hasBeen.utils.Session;
+import co.hasBeen.utils.Util;
 
 /**
  * Created by 주현 on 2015-03-11.
@@ -34,13 +35,12 @@ public class SettingView extends ActionBarActivity {
         setContentView(R.layout.setting);
         initActionBar();
         View findFacebookFriends = findViewById(R.id.findFacebookFriends);
-//        View fbProfileImage = findViewById(R.id.fbProfileImage);
         View abouthasBeen = findViewById(R.id.abouthasBeen);
+        View version = findViewById(R.id.version);
         View reportProblem = findViewById(R.id.reportProblem);
         View openSource = findViewById(R.id.openSource);
         View logOut = findViewById(R.id.logOut);
-//        fbDialog = new FbFriendDialog(SettingView.this,mAccessToken);
-
+        View settingAccount = findViewById(R.id.settingAccount);
         findFacebookFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,25 +48,17 @@ public class SettingView extends ActionBarActivity {
                 startActivity(intent);
             }
         });
-//        fbProfileImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                new TakeFbProfileAsyncTask(new Handler(Looper.getMainLooper()) {
-//                    @Override
-//                    public void handleMessage(Message msg) {
-//                        super.handleMessage(msg);
-//                        if(msg.what==0) {
-//                            Toast.makeText(getBaseContext(),getString(R.string.fb_profile_image_success),Toast.LENGTH_LONG).show();
-//                        }else
-//                            Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
-//                    }
-//                }).execute(mAccessToken);
-//            }
-//        });
         abouthasBeen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), AbouthasBeen.class);
+                startActivity(intent);
+            }
+        });
+        version.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), Version.class);
                 startActivity(intent);
             }
         });
@@ -83,12 +75,28 @@ public class SettingView extends ActionBarActivity {
                 startActivity(intent);
             }
         });
+        settingAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), SettingAccount.class);
+                startActivity(intent);
+            }
+        });
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 logOut();
             }
         });
+
+        TextView currentVersion = (TextView) findViewById(R.id.currentVersion);
+
+        try {
+            String v = Util.getVersion(this);
+            currentVersion.setText("v"+v);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
     protected void logOut(){
         new LogOutAsyncTask().execute(mAccessToken);

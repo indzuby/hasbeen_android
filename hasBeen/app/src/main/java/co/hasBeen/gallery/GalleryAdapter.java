@@ -57,7 +57,7 @@ public class GalleryAdapter extends BaseAdapter {
 //        container.setLayoutParams(new AbsListView.LayoutParams(height,height));
         ImageView imageView = (ImageView) view.findViewById(R.id.photo);
 
-            Glide.with(mContext).load(photo.getPhotoPath())
+            Glide.with(mContext).load(photo.getPhotoPath()).centerCrop()
                 .placeholder(Util.getPlaceHolder(photo.getEdgeCount()))
                 .into(imageView);
         view.setOnClickListener(new ImageListner(position,photo));
@@ -74,9 +74,14 @@ public class GalleryAdapter extends BaseAdapter {
         public void onClick(View v) {
             if(!flag) {
                 flag = true;
-                Intent intent = new Intent(mContext, GalleryPhoto.class);
+//                Intent intent = new Intent(mContext, GalleryPhoto.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                intent.putExtra("id", photo.getId());
+                Intent intent = new Intent(mContext, GalleryPhotoView.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("id", photo.getId());
+                intent.putExtra("photo_id", photo.getId());
+                intent.putExtra("position_id", photo.getPositionId());
+                intent.putExtra("index",position);
                 mContext.startActivity(intent);
                 flag = false;
             }

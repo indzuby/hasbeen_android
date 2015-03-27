@@ -33,22 +33,13 @@
         android:weightSum="2"
         android:layout_height="wrap_content">
     <TextView
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:text="@string/first_name"
-        android:textSize="15sp"
-        android:textColor="@color/light_gray"
-        android:gravity="center_vertical"
-        android:layout_height="48dp" />
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="Jun Young"
-            android:singleLine="true"
-            android:textSize="15sp"
-            android:textColor="@color/light_black"
-            android:gravity="center_vertical|right"
-            android:layout_height="48dp" />
+        style="@style/Setting.Account.TextView"
+        android:text="@string/first_name"/>
+        <EditText
+            style="@style/Setting.Account.EditText"
+            android:id="@+id/firstName">
+            <requestFocus/>
+            </EditText>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
@@ -64,23 +55,11 @@
         android:weightSum="2"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="@string/last_name"
-            android:textSize="15sp"
-
-            android:textColor="@color/light_gray"
-            android:gravity="center_vertical"
-            android:layout_height="48dp" />
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:singleLine="true"
-            android:text="Lee"
-            android:textSize="15sp"
-            android:textColor="@color/light_black"
-            android:gravity="center_vertical|right"
-            android:layout_height="48dp" />
+            style="@style/Setting.Account.TextView"
+            android:text="@string/last_name"/>
+        <EditText
+            style="@style/Setting.Account.EditText"
+            android:id="@+id/lastName"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
@@ -142,7 +121,8 @@
         <TextView
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="Male"
+            android:text="@string/male"
+            android:id="@+id/male"
             android:background="@drawable/description_selector"
             android:textSize="15sp"
             android:textColor="@drawable/search_text_selector"
@@ -159,8 +139,9 @@
         <TextView
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="Female"
+            android:text="@string/female"
             android:singleLine="true"
+            android:id="@+id/female"
             android:textSize="15sp"
             android:background="@drawable/description_selector"
             android:textColor="@drawable/search_text_selector"
@@ -181,22 +162,20 @@
         android:weightSum="2"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="Birthday"
-            android:textSize="15sp"
-            android:textColor="@color/light_gray"
-            android:gravity="center_vertical"
-            android:layout_height="48dp" />
+            style="@style/Setting.Account.TextView"
+            android:text="@string/birthday" />
         <TextView
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="1987.11.04"
-            android:singleLine="true"
+            android:layout_height="48dp"
+            android:gravity="center_vertical|right"
             android:textSize="15sp"
             android:textColor="@color/light_black"
-            android:gravity="center_vertical|right"
-            android:layout_height="48dp" />
+            android:singleLine="true"
+            android:background="@drawable/description_selector"
+            android:inputType="date"
+            android:text="@string/enter_birthday"
+            android:id="@+id/birthday"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
@@ -212,22 +191,11 @@
         android:weightSum="2"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="City"
-            android:textSize="15sp"
-            android:textColor="@color/light_gray"
-            android:gravity="center_vertical"
-            android:layout_height="48dp" />
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="Seoul"
-            android:singleLine="true"
-            android:textSize="15sp"
-            android:textColor="@color/light_black"
-            android:gravity="center_vertical|right"
-            android:layout_height="48dp" />
+            style="@style/Setting.Account.TextView"
+            android:text="@string/city"/>
+        <EditText
+            style="@style/Setting.Account.EditText"
+            android:id="@+id/city"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
@@ -243,22 +211,11 @@
         android:weightSum="2"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="Country"
-            android:textSize="15sp"
-            android:textColor="@color/light_gray"
-            android:gravity="center_vertical"
-            android:layout_height="48dp" />
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="Korea"
-            android:singleLine="true"
-            android:textSize="15sp"
-            android:textColor="@color/light_black"
-            android:gravity="center_vertical|right"
-            android:layout_height="48dp" />
+            style="@style/Setting.Account.TextView"
+            android:text="@string/country" />
+        <EditText
+            android:id="@+id/country"
+            style="@style/Setting.Account.EditText"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
@@ -269,7 +226,9 @@
         android:layout_width="match_parent"
         android:background="@drawable/description_selector"
         android:paddingLeft="16dp"
-        android:text="Change password"
+        android:visibility="gone"
+        android:id="@+id/changePassword"
+        android:text="@string/change_password"
         android:textSize="15sp"
         android:textColor="@color/light_black"
         android:gravity="center_vertical"
@@ -284,5 +243,10 @@
         android:layout_width="match_parent"
         android:background="@drawable/actionbar_shadow"
         android:layout_height="wrap_content"/>
-
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/refresh"
+        android:layout_gravity="center"
+        android:src="@drawable/loading"/>
 </FrameLayout>

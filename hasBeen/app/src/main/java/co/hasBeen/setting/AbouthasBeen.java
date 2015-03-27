@@ -14,7 +14,6 @@ import co.hasBeen.R;
  * Created by 주현 on 2015-03-16.
  */
 public class AbouthasBeen extends  ActionBarActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +47,6 @@ public class AbouthasBeen extends  ActionBarActivity {
         Intent intent = new Intent(Intent.ACTION_SENDTO,uri);
         startActivity(intent.createChooser(intent, getString(R.string.report_problem)));
     }
-
     @Override
     public void onResume()
     {

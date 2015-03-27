@@ -83,7 +83,6 @@ public class    PhotoView extends ActionBarActivity {
             switch (msg.what) {
                 case 0:
                     mPhoto = (Photo) msg.obj;
-                    Log.i("Photo", mPhoto.getPlaceName());
                     dayButton.setOnClickListener(new EnterDayListner(mPhoto.getDay().getId(),getBaseContext()));
                     titleView.setText(mPhoto.getDay().getTitle());
                     initView();

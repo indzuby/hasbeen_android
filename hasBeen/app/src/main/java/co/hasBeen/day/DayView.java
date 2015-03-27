@@ -168,11 +168,23 @@ public class DayView extends ActionBarActivity{
         next.setText("DAY " + (mDay.getItineraryIndex() + 1));
         if(mDay.getPrevDayId()!=0) {
             previus.setVisibility(View.VISIBLE);
-            previus.setOnClickListener(new EnterDayListner(mDay.getPrevDayId(),this));
+            previus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new EnterDayListner(mDay.getPrevDayId(),getBaseContext()).onClick(v);
+                    finish();
+                }
+            });
         }
         if(mDay.getNextDayId()!=0) {
             next.setVisibility(View.VISIBLE);
-            next.setOnClickListener(new EnterDayListner(mDay.getNextDayId(), this));
+            next.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new EnterDayListner(mDay.getNextDayId(),getBaseContext()).onClick(v);
+                    finish();
+                }
+            });
         }
         current.setSelected(true);
     }

@@ -26,11 +26,12 @@
     <string name="license_domain">http://common.hasbeen.co/license/android.html</string>
     <string name="no_place_prefix">http://hasbeen.blob.core.windows.net/common/no_place_</string>
     <string name="no_place_suffix">.png</string>
-
+    <string name="store_domain">https://play.google.com/store/apps/details?id=co.hasBeen</string>
     <!--액션바-->
     <string name="action_bar_share_title"> 공유하기 </string>
     <string name="action_bar_edit_title"> 수정하기 </string>
     <string name="action_bar_setting_title"> 설정 </string>
+    <string name="action_bar_account_title"> 계정 설정</string>
     <string name="action_bar_comment_title"> 댓글 </string>
     <string name="action_bar_follow_title"> 팔로워 · 팔로잉 </string>
     <string name="action_bar_place_title"> 장소 선택 </string>
@@ -164,6 +165,7 @@
     <string name="name_size_error">>이름은 1글자이상 20글자 이하여야합니다.</string>
     <string name="email_size_error">이메일은 255글자 이하여야합니다.</string>
     <string name="password_size_error">비밀번호는 8글자이상 50글자 이하여아합니다.</string>
+    <string name="password_confirm_error">새 비밀번호가 일치하지 않습니다.</string>
     <string name="description_size_error">메모는 2글자이상 255글자 이하여야합니다.</string>
     <string name="title_size_error">제목은 2글자이상 255글자 이하여야합니다.</string>
     <string name="session_gone">세션이 만료되었습니다 다시 로그인 해주세요.</string>
@@ -172,6 +174,7 @@
     <string name="remove_photo_error">마지막 사진이네요. 장소를 삭제해주세요.</string>
     <string name="remove_place_error">마지막 장소네요. 여행을 삭제해주세요.</string>
     <string name="login_error">이메일,패스워드를 확인해주세요.</string>
+    <string name="password_error">패스워드를 확인해주세요.</string>
     <!--확인-->
     <string name="sign_up_ok">회원가입 완료, 로그인 해주세요.</string>
     <string name="report_ok">신고했습니다.</string>
@@ -184,13 +187,15 @@
     <string name="unfollow_success"> 팔로우를 해제했습니다</string>
     <string name="all_follow_success"> 모두 팔로우 했습니다.</string>
     <string name="fb_profile_image_success">프로필 이미지가 페이스북 프로필 이미지로 변경되었습니다.</string>
-
+    <string name="account_update_success"> 계정 정보가 변경되었습니다.</string>
+    <string name="password_update_success"> 비밀번호가 변경되었습니다.</string>
     <!--설정-->
     <string name="facebook_title">페이스북</string>
     <string name="support_title">지원</string>
     <string name="account_title">계정</string>
     <string name="logout">로그아웃</string>
-    <string name="chage_account">기본 정보 변경</string>
+    <string name="version">버전 정보</string>
+    <string name="setting_account">기본 정보 변경</string>
     <string name="find_facebook">페이스북 친구 찾기</string>
     <string name="fb_profile_image">페이스북 프로필 이미지 가져오기</string>
     <string name="about_hasbeen">About hasBeen</string>
@@ -198,6 +203,20 @@
     <string name="open_source">라이센스</string>
     <string name="friends">친구 %d명</string>
 
+    <string name="current_version">현재 버전 v%s</string>
+    <string name="latest_version">최신 버전 v%s</string>
+    <string name="update_verstion">최신 버전으로 업데이트</string>
+    <string name="islatest_version">최신 버전입니다.</string>
     <string name="about_text">hasBeen은 당신의 여행기와 순간들을\n 공유할 수 있는 훌륭한 여행 커뮤니티입니다.</string>
     <string name="follow_all">모두 팔로우</string>
+    <string name="male">남자</string>
+    <string name="female">여자</string>
+    <string name="birthday">생일</string>
+    <string name="enter_birthday">생일을 입력하세요</string>
+    <string name="city">도시</string>
+    <string name="country">국가</string>
+    <string name="change_password">비밀번호 변경</string>
+    <string name="current_password">현재 비밀번호</string>
+    <string name="new_password" >새로운 비밀번호</string>
+    <string name="password_confirm" >비밀번호 확인</string>
 </resources>

@@ -63,10 +63,10 @@ public class LoginActivity extends Activity {
         gcm = new GcmRegister(this);
 
         mAccessToken = co.hasBeen.utils.Session.getString(getBaseContext(), "accessToken", null);
-        if(mAccessToken!=null) {
-            if(!ErrorCheck.NetworkOnline(LoginActivity.this)) {
-                Toast.makeText(getBaseContext(),getString(R.string.internet_error),Toast.LENGTH_LONG).show();
-            }else {
+        if (mAccessToken != null) {
+            if (!ErrorCheck.NetworkOnline(LoginActivity.this)) {
+                Toast.makeText(getBaseContext(), getString(R.string.internet_error), Toast.LENGTH_LONG).show();
+            } else {
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -81,8 +81,8 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (!flag) {
-                    if(!ErrorCheck.NetworkOnline(LoginActivity.this)) {
-                        Toast.makeText(getBaseContext(),getString(R.string.internet_error),Toast.LENGTH_LONG).show();
+                    if (!ErrorCheck.NetworkOnline(LoginActivity.this)) {
+                        Toast.makeText(getBaseContext(), getString(R.string.internet_error), Toast.LENGTH_LONG).show();
                         return;
                     }
                     flag = true;
@@ -101,8 +101,8 @@ public class LoginActivity extends Activity {
 
             @Override
             public void call(final Session session, SessionState state, Exception exception) {
-                if(!ErrorCheck.NetworkOnline(LoginActivity.this)) {
-                    Toast.makeText(getBaseContext(),getString(R.string.internet_error),Toast.LENGTH_LONG).show();
+                if (!ErrorCheck.NetworkOnline(LoginActivity.this)) {
+                    Toast.makeText(getBaseContext(), getString(R.string.internet_error), Toast.LENGTH_LONG).show();
                     return;
                 }
                 if (session.isOpened()) {
@@ -125,18 +125,17 @@ public class LoginActivity extends Activity {
         mEmail = (EditText) findViewById(R.id.email);
         mPassword = (EditText) findViewById(R.id.password);
         TextView loginBtn = (TextView) findViewById(R.id.emailLoginBtn);
+        String email = co.hasBeen.utils.Session.getString(this,"email","");
+        mEmail.setText(email);
         loginBtn.setOnClickListener(new View.OnClickListener() {
-            boolean flag = false;
 
             @Override
             public void onClick(View v) {
-                if (!flag) {
-                    String email = mEmail.getText().toString();
-                    String password = mPassword.getText().toString();
-                    flag = true;
-                    startLoading();
-                    new LogInAsyncTask(loginHandler).execute(email, password, "password", "read write delete");
-                }
+                String email = mEmail.getText().toString();
+                String password = mPassword.getText().toString();
+                co.hasBeen.utils.Session.putString(getBaseContext(),"email",email);
+                startLoading();
+                new LogInAsyncTask(loginHandler).execute(email, password, "password", "read write delete");
             }
         });
         final View forgotPassword = findViewById(R.id.forgotPassword);
@@ -144,11 +143,13 @@ public class LoginActivity extends Activity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.length()!=0) forgotPassword.setVisibility(View.GONE);
+                if (s.length() != 0) forgotPassword.setVisibility(View.GONE);
                 else forgotPassword.setVisibility(View.VISIBLE);
             }
+
             @Override
             public void afterTextChanged(Editable s) {
 
@@ -193,7 +194,7 @@ public class LoginActivity extends Activity {
                 String token = (String) msg.obj;
                 new LogInAsyncTask(loginHandler).execute(token, "", "password", "read write delete");
             } else {
-                Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), getString(R.string.common_error), Toast.LENGTH_LONG).show();
                 stopLoading();
             }
         }
@@ -203,10 +204,10 @@ public class LoginActivity extends Activity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 0) {
-                LoginTokenResponse loginToken   = (LoginTokenResponse) msg.obj;
+                LoginTokenResponse loginToken = (LoginTokenResponse) msg.obj;
                 co.hasBeen.utils.Session.putString(getBaseContext(), "accessToken", loginToken.getAccess_token());
                 gcm.registerGcm(registHandler);
-            }else {
+            } else {
                 Toast.makeText(getBaseContext(), getString(R.string.login_error), Toast.LENGTH_LONG).show();
                 stopLoading();
             }
@@ -220,30 +221,30 @@ public class LoginActivity extends Activity {
                 String regid = (String) msg.obj;
                 String accessToken = co.hasBeen.utils.Session.getString(getBaseContext(), "accessToken", null);
                 new DeviceAsyncTask(deviceHandler).execute(accessToken, regid);
-            }else {
+            } else {
                 Toast.makeText(getBaseContext(), getString(R.string.common_error), Toast.LENGTH_LONG).show();
                 stopLoading();
             }
         }
     };
-    Handler deviceHandler = new Handler(Looper.getMainLooper()){
+    Handler deviceHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
-            if(msg.what==0) {
+            if (msg.what == 0) {
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 startActivity(intent);
                 stopLoading();
                 finish();
-            }else {
+            } else {
                 Toast.makeText(getBaseContext(), getString(R.string.common_error), Toast.LENGTH_LONG).show();
                 stopLoading();
             }
             super.handleMessage(msg);
         }
     };
+
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         Localytics.openSession();
         Localytics.tagScreen("LoginActivity");

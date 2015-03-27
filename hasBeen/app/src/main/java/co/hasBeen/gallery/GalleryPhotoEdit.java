@@ -1,6 +1,7 @@
 package co.hasBeen.gallery;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -66,8 +67,10 @@ public class GalleryPhotoEdit extends Activity {
                         mPhoto.setDescription(des);
                         try {
                             database.updatePhoto(mPhoto);
-                            setResult(RESULT_OK);
                             Toast.makeText(getBaseContext(), getString(R.string.description_ok), Toast.LENGTH_LONG).show();
+                            Intent intent = getIntent();
+                            intent.putExtra("id",mPhotoId);
+                            setResult(RESULT_OK,intent);
                             finish();
                         } catch (Exception e) {
                             e.printStackTrace();

@@ -12,6 +12,7 @@
     <dimen name="newsfeed_image_height_large">354dp</dimen>
     <dimen name="imagelayout_margin">3dp</dimen>
     <dimen name="gallery_image_height">240dp</dimen>
+    <dimen name="day_view_photo_height">240dp</dimen>
     <dimen name="gallery_item_height">248dp</dimen>
     <dimen name="marker_height">40dp</dimen>
     <dimen name="marker_width">40dp</dimen>

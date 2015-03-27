@@ -27,10 +27,12 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
     ViewPager mViewPager;
     Long mUserId;
     String mType;
+    int mPage;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mUserId = getIntent().getLongExtra("userId",0);
         mType = getIntent().getStringExtra("type");
+        mPage = getIntent().getIntExtra("page",0);
         init();
     }
 
@@ -80,6 +82,7 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
                 changeTab(position);
             }
         });
+        mViewPager.setCurrentItem(mPage);
     }
     protected void changeTab(int position){
         mFollowerButton.setSelected(false);

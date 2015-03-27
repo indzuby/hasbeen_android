@@ -272,7 +272,8 @@ public class ProfileView extends ActionBarActivity {
         ImageView coverImage = (ImageView) findViewById(R.id.coverImage);
         ImageView profileImage = (ImageView) findViewById(R.id.profileImage);
         TextView profileName = (TextView) findViewById(R.id.profileName);
-        TextView followStatus = (TextView) findViewById(R.id.followStatus);
+        TextView followerStatus = (TextView) findViewById(R.id.followerStatus);
+        TextView followingStatus = (TextView) findViewById(R.id.followingStatus);
         final ImageView followImage = (ImageView) findViewById(R.id.setting_follow);
         TextView dayCount = (TextView) findViewById(R.id.dayCount);
         TextView photoCount = (TextView) findViewById(R.id.photoCount);
@@ -282,13 +283,25 @@ public class ProfileView extends ActionBarActivity {
         Glide.with(this).load(mUser.getImageUrl()).placeholder(R.mipmap.profile_placeholder).transform(new CircleTransform(this)).into(profileImage);
         profileName.setText(Util.parseName(mUser, this));
         titleView.setText(getProfileTitle(Util.parseName(mUser, this)));
-        followStatus.setText(getString(R.string.follow_status,mUser.getFollowerCount(),mUser.getFollowingCount()));
-        followStatus.setOnClickListener(new View.OnClickListener() {
+        followerStatus.setText(getString(R.string.follower_count, mUser.getFollowerCount()));
+        followingStatus.setText(getString(R.string.following_count, mUser.getFollowingCount()));
+        followerStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), FollowView.class);
-                intent.putExtra("userId",mUser.getId());
-                intent.putExtra("type","other");
+                intent.putExtra("userId", mUser.getId());
+                intent.putExtra("type", "other");
+                intent.putExtra("page",0);
+                startActivity(intent);
+            }
+        });
+        followingStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), FollowView.class);
+                intent.putExtra("userId", mUser.getId());
+                intent.putExtra("type", "my");
+                intent.putExtra("page",1);
                 startActivity(intent);
             }
         });

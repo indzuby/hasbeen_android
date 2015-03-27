@@ -90,6 +90,7 @@
         android:alpha="0.2"
         android:background="#000"
         android:layout_height="2px" />
+
     <TextView
         android:layout_width="match_parent"
         android:text="@string/about_hasbeen"
@@ -100,6 +101,41 @@
         android:paddingLeft="16dp"
         android:gravity="center_vertical"
         android:layout_height="48dp" />
+    <View
+        android:layout_width="match_parent"
+        android:alpha="0.2"
+        android:background="#000"
+        android:layout_height="2px" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:paddingLeft="16dp"
+        android:background="@drawable/description_selector"
+        android:paddingRight="16dp"
+        android:orientation="horizontal"
+        android:id="@+id/version"
+        android:weightSum="2"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/description_selector"
+            android:text="@string/version"
+            android:textSize="15sp"
+            android:textColor="@color/light_black"
+            android:gravity="center_vertical"
+            android:layout_height="48dp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="48dp"
+            android:gravity="center_vertical|right"
+            android:textSize="15sp"
+            android:textColor="@color/light_gray"
+            android:singleLine="true"
+            android:background="@drawable/description_selector"
+            android:text="v1.1"
+            android:id="@+id/currentVersion"/>
+    </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:alpha="0.2"
@@ -163,9 +199,9 @@
         android:layout_height="2px" />
     <TextView
         android:layout_width="match_parent"
-        android:text="@string/chage_account"
+        android:text="@string/setting_account"
         android:textSize="15sp"
-        android:id="@+id/chagePassword"
+        android:id="@+id/settingAccount"
         android:background="@drawable/description_selector"
         android:textColor="@color/light_black"
         android:paddingLeft="16dp"

@@ -7,11 +7,16 @@ public class User {
     public enum Gender {
         MALE,FEMALE;
     }
+    public enum SignUpType {
+        EMAIL,FACEBOOK;
+    }
     Long id;
     String firstName;
     String lastName;
     String imageUrl;
+    Long birthDay;
     Gender gender;
+    SignUpType signUpType;
     String country;
     String city;
     public Long getId() {
@@ -110,5 +115,17 @@ public class User {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public Long getBirthDay() {
+        return birthDay;
+    }
+
+    public void setBirthDay(Long birthDay) {
+        this.birthDay = birthDay;
+    }
+
+    public SignUpType getSignUpType() {
+        return signUpType;
     }
 }

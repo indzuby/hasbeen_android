@@ -2,6 +2,8 @@ package co.hasBeen.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -253,5 +255,9 @@ public class Util {
         Date date =  simpleDateFormat.parse(time);
         long offset = date.getTimezoneOffset()*60000;
         return new DateTime(simpleDateFormat.parse(time).getTime()-offset).withZone(DateTimeZone.UTC).getMillis();
+    }
+    public static String getVersion(Context context) throws Exception{
+        PackageInfo i = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+        return i.versionName;
     }
 }

@@ -244,7 +244,7 @@ public class DayAdapter extends BaseAdapter {
                 view = inflater.inflate(R.layout.day_photo, null);
             }
             ImageView imageView = (ImageView) view.findViewById(R.id.photo);
-            Glide.with(mContext).load(photo.getMediumUrl()).placeholder(Util.getPlaceHolder(photo.getId().intValue())).into(imageView);
+            Glide.with(mContext).load(photo.getMediumUrl()).centerCrop().placeholder(Util.getPlaceHolder(photo.getId().intValue())).into(imageView);
             imageView.setOnClickListener(new EnterPhotoListner(photo.getId(),mContext));
             mRecycleList.add(new WeakReference<View>(imageView));
             return view;

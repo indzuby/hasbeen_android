@@ -310,4 +310,28 @@ public class JsonConverter {
         List<Trip> trips = gson.fromJson(reader, listType);
         return trips;
     }
+    public static User convertJsonToUser(Reader reader) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                if (f.getDeclaringClass() == Photo.class)
+                    if (f.getName().equals("day") || f.getName().equals("place"))
+                        return true;
+
+                if(f.getDeclaredClass() == Follow.class) {
+                    if(f.getName().equals("toUser") || f.getName().equals("fromUser"))
+                        return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                return false;
+            }
+        }).create();
+        User user = gson.fromJson(reader, User.class);
+        return user;
+    }
 }

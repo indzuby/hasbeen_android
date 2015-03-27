@@ -5,8 +5,8 @@
     android:paddingRight="3dp"
     android:layout_height="match_parent">
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="120dp"
+        android:layout_width="@dimen/day_view_photo_height"
+        android:layout_height="@dimen/day_view_photo_height"
         android:scaleType="fitStart"
         android:adjustViewBounds="true"
         android:id="@+id/photo"/>

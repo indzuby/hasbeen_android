@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/theme_white"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/actionbar_shadow"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:paddingTop="32dp"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:src="@drawable/icon"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="16dp"
+            android:weightSum="2"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/currentVersion"
+                android:layout_width="wrap_content"
+                android:text="@string/current_version"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:layout_height="0dp" />
+            <TextView
+                android:id="@+id/latestVersion"
+                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/latest_version"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:weightSum="2"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/updateVersion"
+        android:visibility="gone"
+        android:layout_width="0dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/white_bg_selector"
+        android:text="@string/update_verstion"
+        android:textColor="@color/theme_color"
+        android:textStyle="bold"
+        android:textSize="13sp"
+        android:layout_weight="1"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:gravity="center"
+        android:layout_height="48dp" />
+    <TextView
+        android:id="@+id/isLatestVersion"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/radius_layout"
+        android:text="@string/islatest_version"
+        android:textColor="@color/light_gray"
+        android:textStyle="bold"
+        android:textSize="13sp"
+        android:visibility="gone"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:gravity="center"
+        android:layout_height="40dp" />
+    </LinearLayout>
+</LinearLayout>
