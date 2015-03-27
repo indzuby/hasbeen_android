@@ -97,7 +97,6 @@ public class SearchFragment extends HasBeenFragment implements View.OnClickListe
         searchBox.setVisibility(View.GONE);
         searchBox.setOnClickListener(new View.OnClickListener() {
             boolean flag = false;
-
             @Override
             public void onClick(View v) {
                 if (!flag) {
