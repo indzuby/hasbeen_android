@@ -24,10 +24,15 @@ public class HasBeenFragment extends Fragment {
     public boolean isLoading;
     protected void startLoading() {
         isLoading = true;
-        View loading = mView.findViewById(R.id.refresh);
-        loading.setVisibility(View.VISIBLE);
-        Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
-        loading.startAnimation(rotate);
+        try {
+            View loading = mView.findViewById(R.id.refresh);
+            loading.setVisibility(View.VISIBLE);
+            Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
+            loading.startAnimation(rotate);
+        }catch (Exception e){
+            e.printStackTrace();
+            System.exit(0);
+        }
     }
 
     protected void stopLoading() {

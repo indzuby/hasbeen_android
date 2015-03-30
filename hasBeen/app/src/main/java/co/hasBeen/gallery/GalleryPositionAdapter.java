@@ -75,7 +75,7 @@ public class GalleryPositionAdapter extends BaseAdapter{
         TextView placeTime = (TextView) view.findViewById(R.id.placeTime);
         TextView placeName = (TextView) view.findViewById(R.id.placeName);
         TextView photoCount = (TextView) view.findViewById(R.id.photoCount);
-        HListView gridView = (HListView) view.findViewById(R.id.hListView);
+        HListView hListView = (HListView) view.findViewById(R.id.hListView);
         ImageView categoryIcon = (ImageView) view.findViewById(R.id.placeIcon);
         if (index == 0)
             categoryIcon.setOnClickListener(new PlaceIconClick(index, position.getId()));
@@ -94,7 +94,11 @@ public class GalleryPositionAdapter extends BaseAdapter{
             if(photos!=null) {
 //            gridView.getLayoutParams().height = getHeight(photos.size());
                 GalleryAdapter galleryAdapter = new GalleryAdapter(mContext, photos);
-                gridView.setAdapter(galleryAdapter);
+                if(hListView.getHeaderViewsCount()==0) {
+                    View transparendView = LayoutInflater.from(mContext).inflate(R.layout.transparent_header_view, null, false);
+                    hListView.addHeaderView(transparendView);
+                }
+                hListView.setAdapter(galleryAdapter);
             }
             photoCount.setText(mContext.getString(R.string.photo_count,photos.size()));
         }catch (Exception e) {

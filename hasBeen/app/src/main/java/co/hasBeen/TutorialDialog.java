@@ -7,13 +7,15 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
 /**
  * Created by 주현 on 2015-03-23.
  */
 public class TutorialDialog extends Dialog {
 
 
-    int drawable;
+    String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,14 +36,14 @@ public class TutorialDialog extends Dialog {
             }
         });
     }
-    public TutorialDialog(Context context,int drawable) {
+    public TutorialDialog(Context context,String url) {
         // Dialog 배경을 투명 처리 해준다.
         super(context , android.R.style.Theme_Translucent_NoTitleBar);
-        this.drawable = drawable;
+        this.url = url;
     }
     ImageView image;
     private void setLayout(){
         image = (ImageView) findViewById(R.id.tutorialImage);
-        image.setImageResource(drawable);
+        Glide.with(getContext()).load(url).fitCenter().into(image);
     }
 }

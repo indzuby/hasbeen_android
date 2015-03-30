@@ -28,12 +28,6 @@
         android:layout_height="wrap_content">
     </ListView>
     <include layout="@layout/gallery_title_box" android:id="@+id/galleryTitleBox" />
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/refresh"
-        android:layout_gravity="center"
-        android:src="@drawable/loading"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

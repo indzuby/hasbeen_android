@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -44,7 +43,7 @@ public class ItemModule {
             MediaStore.Images.Media.LATITUDE,
             MediaStore.Images.Media.LONGITUDE,
     };
-
+    public int photoCount;
     public ItemModule(Context context) throws SQLException {
         mContext = context;
         database = new DatabaseHelper(context);
@@ -208,7 +207,7 @@ public class ItemModule {
         },day).execute(photo, place);
     }
 
-    protected void insertNewPosition(Place place, Photo photo) throws SQLException {
+    public void insertNewPosition(Place place, Photo photo) throws SQLException {
         Position position = new Position();
         Long placeId;
         Long positionId;
@@ -239,6 +238,7 @@ public class ItemModule {
 
     public List<Position> getPhotosByDate(Long dayId) throws Exception {
         Day day = database.selectDay(dayId);
+        photoCount = 0 ;
         insertPhotos(day.getDate(), dayId);
         insertPosition(dayId);
         day.setCreatedTime(new Date().getTime());
@@ -292,42 +292,18 @@ public class ItemModule {
 
     boolean isRun=true;
     Photo bestPhoto = null;
-    List<Photo> similaryPhotos ;
     public void insertPosition(Long dayId) throws Exception {
         List<Photo> photoList = database.selectPhotosByDayId(dayId);
-        similaryPhotos = new ArrayList<>();
-        int photoCount = 0;
         Iterator iterator = photoList.iterator();
         while (iterator.hasNext()) {
             if (!isRun) continue;
             final Photo photo = (Photo) iterator.next();
-            if (photo.getEdgeCount() != null) {
-                if (photo.getId() == photo.getClearestId()) {
-                    bestPhoto = photo;
-                    continue;
-                }
+            if (photo.getPositionId() != null) {
+                photoCount++;
+                bestPhoto = photo;
+                continue;
             }
-            if(photo.getPositionId()!=null ) continue;
-            Integer edge = photo.getEdgeCount();
-            if (edge == null) {
-                edge = HasBeenOpenCv.detectEdge(getThumbnail(photo.getPhotoId()));
-                photo.setEdgeCount(edge);
-            }
-            if (bestPhoto != null && isSimilary(bestPhoto, photo)) {
-                if (isMaxEdge(edge, bestPhoto.getEdgeCount())) {
-                    similaryPhotos.add(bestPhoto);
-                    photo.setPlaceName(bestPhoto.getPlaceName());
-                    photo.setPositionId(bestPhoto.getPositionId());
-                    photo.setPlaceId(bestPhoto.getPlaceId());
-                    photo.setFourSquare(bestPhoto.getVenueId(), bestPhoto.getCategoryId(), bestPhoto.getCategryName(), bestPhoto.getCategoryIconPrefix(), bestPhoto.getCategoryIconSuffix());
-                    bestPhoto = photo;
-                    similaryPhotos.add(photo);
-                } else {
-                    similaryPhotos.add(photo);
-                }
-            } else if(bestPhoto!=null){
-                updateClearestId(similaryPhotos, bestPhoto);
-                similaryPhotos = new ArrayList<Photo>();
+            if(bestPhoto!=null){
                 isRun = false;
                 Place place = new Place();
                 new GeoFourSquare(new Handler(Looper.getMainLooper()) {
@@ -347,8 +323,8 @@ public class ItemModule {
                                     insertNewPosition(newPlace,photo);
                                 }
                                 bestPhoto = photo;
-                                similaryPhotos.add(photo);
                                 isRun = true;
+                                photoCount++;
                             }else {
                                 throw new NullPointerException();
                             }
@@ -357,51 +333,16 @@ public class ItemModule {
                         }
                     }
                 }). execute(photo,place);
-            }else
-                bestPhoto = photo;
+            }
         }
         while(!isRun);
-        updateClearestId(similaryPhotos, bestPhoto);
     }
-    protected boolean isSamePlace(Place aPlace, Place bPlace) {
+    public boolean isSamePlace(Place aPlace, Place bPlace) {
         if (aPlace.getVenueId()!=null && bPlace.getVenueId()!=null && aPlace.getVenueId().equals(bPlace.getVenueId()))
             return true;
         return false;
     }
-    protected Bitmap getThumbnail(long id) {
+    public Bitmap getThumbnail(long id) {
         return MediaStore.Images.Thumbnails.getThumbnail(resolver, id, MediaStore.Images.Thumbnails.MINI_KIND, null);
-    }
-
-    protected boolean isSimilary(Photo beforePhoto, Photo photo) {
-//        if (HasBeenDate.isTimeRangeInFive(beforePhoto.getTakenTime(), photo.getTakenTime()))
-//            return true;
-//        Bitmap before = BitmapFactory.decodeFile(beforePhoto.getPhotoPath());
-//        Bitmap current = BitmapFactory.decodeFile(photo.getPhotoPath());
-//        double hist = HasBeenOpenCv.compareHistogram(before, current);
-//        double hist = HasBeenOpenCv.compareHistogram(getThumbnail(beforePhoto.getPhotoId()), getThumbnail(photo.getPhotoId()));
-        double hist = 0.6;
-        if (hist >= 0.85)
-            return true;
-        return false;
-    }
-
-    protected boolean isMaxEdge(int edge, int compareEdge) {
-        if (edge > compareEdge) return true;
-        return false;
-    }
-
-    protected void updateClearestId(List<Photo> photos, Photo bestPhoto) throws SQLException {
-        if (photos.size() > 0) {
-            for(Photo badPhoto : photos){
-                badPhoto.setClearestId(bestPhoto.getId());
-                badPhoto.setPlaceName(bestPhoto.getPlaceName());
-                badPhoto.setPositionId(bestPhoto.getPositionId());
-                badPhoto.setPlaceId(bestPhoto.getPlaceId());
-                database.updatePhoto(badPhoto);
-            }
-            if (database.hasMainPhotoIdInPosition(bestPhoto.getPositionId()))
-                database.updatePositionMainPhotoId(bestPhoto.getPositionId(), bestPhoto.getId());
-            database.updatePositionEndTime(bestPhoto.getPositionId(), photos.get(photos.size() - 1).getTakenTime());
-        }
     }
 }

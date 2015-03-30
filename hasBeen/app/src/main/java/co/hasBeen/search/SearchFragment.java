@@ -28,6 +28,7 @@ import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.utils.HasBeenFragment;
 import co.hasBeen.utils.Session;
+import co.hasBeen.utils.Util;
 
 /**
  * Created by zuby on 2015-01-30.
@@ -113,9 +114,13 @@ public class SearchFragment extends HasBeenFragment implements View.OnClickListe
     public void showTab() {
         boolean tutorial = Session.getBoolean(getActivity(),"searchTutorial",false);
         if(!tutorial) {
-            TutorialDialog dialog = new TutorialDialog(getActivity(),R.drawable.search_tutorial);
-            dialog.show();
-            Session.putBoolean(getActivity(),"searchTutorial",true);
+            try {
+                TutorialDialog dialog = new TutorialDialog(getActivity(), getString(R.string.search_day_tutorial, Util.getVersion(getActivity())));
+                dialog.show();
+                Session.putBoolean(getActivity(), "searchTutorial", true);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
         if (!isShowTab()) {
             startLoading();

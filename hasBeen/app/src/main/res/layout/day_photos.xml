@@ -66,18 +66,9 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <it.sephiroth.android.library.widget.HListView
+        android:id="@+id/hListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <View
-            android:layout_width="72dp"
-            android:layout_height="120dp"
-            android:background="@color/transparent" />
-
-        <it.sephiroth.android.library.widget.HListView
-            android:id="@+id/hListView"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/day_view_photo_height"
-            android:layout_marginBottom="16dp" />
-    </LinearLayout>
+        android:layout_height="@dimen/day_view_photo_height"
+        android:layout_marginBottom="16dp" />
 </LinearLayout>

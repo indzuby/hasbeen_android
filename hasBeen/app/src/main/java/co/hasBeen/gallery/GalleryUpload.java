@@ -73,9 +73,13 @@ public class GalleryUpload extends ActionBarActivity {
 
         boolean tutorial = Session.getBoolean(this,"uploadTutorial",false);
         if(!tutorial) {
-            TutorialDialog dialog = new TutorialDialog(this,R.drawable.upload_tutorial);
-            dialog.show();
-            Session.putBoolean(this,"uploadTutorial",true);
+            try {
+                TutorialDialog dialog = new TutorialDialog(this, getString(R.string.upload_tutorial, Util.getVersion(this)));
+                dialog.show();
+                Session.putBoolean(this, "uploadTutorial", true);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         mAccessToekn = Session.getString(this, "accessToken", null);

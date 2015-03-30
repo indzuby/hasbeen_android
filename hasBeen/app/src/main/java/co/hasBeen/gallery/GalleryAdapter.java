@@ -58,7 +58,7 @@ public class GalleryAdapter extends BaseAdapter {
         ImageView imageView = (ImageView) view.findViewById(R.id.photo);
 
             Glide.with(mContext).load(photo.getPhotoPath()).centerCrop()
-                .placeholder(Util.getPlaceHolder(photo.getEdgeCount()))
+                .placeholder(Util.getPlaceHolder((int)(photo.getId()%10)))
                 .into(imageView);
         view.setOnClickListener(new ImageListner(position,photo));
         return view;

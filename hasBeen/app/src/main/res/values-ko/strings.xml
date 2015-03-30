@@ -27,6 +27,12 @@
     <string name="no_place_prefix">http://hasbeen.blob.core.windows.net/common/no_place_</string>
     <string name="no_place_suffix">.png</string>
     <string name="store_domain">https://play.google.com/store/apps/details?id=co.hasBeen</string>
+
+    <!--tutorial-->
+    <string name="search_day_tutorial">http://hasbeen.blob.core.windows.net/common/v%s/search_day_ko.jpg</string>
+    <string name="gallery_tutorial">http://hasbeen.blob.core.windows.net/common/v%s/gallery_ko.jpg</string>
+    <string name="upload_tutorial">http://hasbeen.blob.core.windows.net/common/v%s/upload_ko.jpg</string>
+
     <!--액션바-->
     <string name="action_bar_share_title"> 공유하기 </string>
     <string name="action_bar_edit_title"> 수정하기 </string>
@@ -95,6 +101,7 @@
     <string name="cancel">취소</string>
     <string name="uploading">업로드 중..\n업로드가 완료되면 알려드릴게요.</string>
     <string name="uploading_count">%1$d/%2$d 장</string>
+    <string name="loading">로딩 중..</string>
     <!--사진-->
     <string name="near_by">근처 사진</string>
     <string name="remove_photo">사진 삭제</string>
@@ -111,8 +118,8 @@
     <string name="load_comment">댓글 더보기</string>
 
     <!--시간-->
-    <string name="hour_ago">%1$d시간 전</string>
-    <string name="miniutes_ago">%1$d분 전</string>
+    <string name="hour_ago">%1$d 시간 전</string>
+    <string name="miniutes_ago">%1$d 분 전</string>
     <string name="just_now">방금 전</string>
     <string name="day_ago">E, a h:mm</string>
     <string name="week_ago">%1$d 주 전</string>

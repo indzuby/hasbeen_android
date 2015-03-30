@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -8,7 +8,7 @@
     <View
         android:id="@+id/space"
         android:background="@android:color/transparent"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_width="72dp"
+        android:layout_height="@dimen/day_view_photo_height"
         android:minHeight="160dp"/>
 </FrameLayout>

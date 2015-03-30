@@ -29,6 +29,10 @@
     <string name="no_place_suffix">.png</string>
     <string name="store_domain">https://play.google.com/store/apps/details?id=co.hasBeen</string>
 
+    <!--tutorial-->
+    <string name="search_day_tutorial">http://hasbeen.blob.core.windows.net/common/v%s/search_day.jpg</string>
+    <string name="gallery_tutorial">http://hasbeen.blob.core.windows.net/common/v%s/gallery.jpg</string>
+    <string name="upload_tutorial">http://hasbeen.blob.core.windows.net/common/v%s/upload.jpg</string>
     <!--action bar-->
     <string name="action_bar_share_title"> Share </string>
     <string name="action_bar_edit_title"> Edit </string>
@@ -97,6 +101,7 @@
     <string name="cancel">Cancel</string>
     <string name="uploading">Uploading..\nYou will be noticed when it\'s done.</string>
     <string name="uploading_count">%1$d/%2$d photos</string>
+    <string name="loading">Loading..</string>
     <!--사진-->
     <string name="near_by">Near by</string>
     <string name="remove_photo">Delete photo</string>
@@ -113,8 +118,8 @@
     <string name="load_comment">read more</string>
 
     <!--시간-->
-    <string name="hour_ago">%1$dhours ago</string>
-    <string name="miniutes_ago">%1$dminutes ago</string>
+    <string name="hour_ago">%1$d hours ago</string>
+    <string name="miniutes_ago">%1$d minutes ago</string>
     <string name="just_now">Just now</string>
     <string name="day_ago">E, a h:mm</string>
     <string name="week_ago">%1$d weeks ago</string>

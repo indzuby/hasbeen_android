@@ -3,13 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/transparent"
-    android:orientation="horizontal">
-
+    android:orientation="vertical">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content">
     <LinearLayout
         android:id="@+id/searchView"
         android:layout_width="72dp"
 
-        android:layout_height="match_parent"
+        android:layout_height="48dp"
         android:background="@color/transparent"
         android:orientation="vertical"
         android:padding="8dp">
@@ -68,13 +71,14 @@
                 </RelativeLayout>
             </LinearLayout>
 
-
-        <it.sephiroth.android.library.widget.HListView
-            android:id="@+id/hListView"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/day_view_photo_height"
-            android:layout_marginBottom="16dp" />
     </LinearLayout>
+</LinearLayout>
 
+
+    <it.sephiroth.android.library.widget.HListView
+        android:id="@+id/hListView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/day_view_photo_height"
+        android:layout_marginBottom="16dp" />
 </LinearLayout>
 

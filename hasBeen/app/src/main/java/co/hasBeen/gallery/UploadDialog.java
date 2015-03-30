@@ -3,6 +3,7 @@ package co.hasBeen.gallery;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -46,7 +47,8 @@ public class UploadDialog extends Dialog {
     }
 
     public void setPhotoCount(int count) {
-        int percent = (int) (((float) (count+1) / maxCount) * 100)-1;
+        Log.i("count",count+"");
+        int percent = (int) (((float) (count+1) / maxCount) * 100);
         progress.setText(percent + "%");
         photoCount.setText(getContext().getString(R.string.uploading_count,count+1,maxCount));
         this.count = count;

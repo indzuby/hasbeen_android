@@ -104,11 +104,12 @@ public class DayAdapter extends BaseAdapter {
         }
         HListView hListView = (HListView) view.findViewById(R.id.hListView);
         if (position.getPhotoList() != null && position.getPhotoList().size() > 0) {
-            View transparentHeaderView = LayoutInflater.from(mContext).inflate(R.layout.day_hlist_header, null, false);
-            hListView.addHeaderView(transparentHeaderView);
-
             PhotoAdapter photoAdapter = new PhotoAdapter(position.getPhotoList());
             recycleAdapter.add(photoAdapter);
+            if(hListView.getHeaderViewsCount()==0) {
+                View transparendView = LayoutInflater.from(mContext).inflate(R.layout.transparent_header_view, null, false);
+                hListView.addHeaderView(transparendView);
+            }
             hListView.setAdapter(photoAdapter);
         }else {
             if(position.getType().equals("WALK")) {

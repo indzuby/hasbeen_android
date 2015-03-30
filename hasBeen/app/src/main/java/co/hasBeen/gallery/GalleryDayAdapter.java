@@ -82,7 +82,7 @@ public class GalleryDayAdapter extends BaseAdapter {
                 day = database.selectDay(day.getId());
             day.setMainPhoto(database.selectPhoto(day.getMainPhotoId()));
             Glide.with(mContext).load(day.getMainPhoto().getPhotoPath()).placeholder(Util.getPlaceHolder(position)).into(mainPhoto);
-            initPlaceName(placeName,day,position);
+            initPlaceName(placeName,day);
             initDayStatus(dayStatus,day);
             mainPhoto.setOnClickListener(new EnterGalleryDayViewListner(day));
         } catch (Exception e) {
@@ -107,20 +107,45 @@ public class GalleryDayAdapter extends BaseAdapter {
             }
         }
     }
-    protected void initPlaceName(TextView placeName ,Day day,int position) throws Exception{
-        String name="";
+    protected void initPlaceName(TextView placeName ,Day day) throws Exception{
         if (day.getMainPlaceId()==null && day.getMainPlace()==null) {
-            name = "Loading...";
+            placeName.setText("Loading...");
+            new PlaceNameThread(placeName,day).start();
         } else if(day.getMainPlaceId()!=null){
             List<Position> positions = database.selectPositionByDayId(day.getId());
             initPlace(positions);
-            name = Util.convertPlaceName(positions);
-            if(name.length()<=0)
-                placeName.setVisibility(View.GONE);
-            else
-                placeName.setVisibility(View.VISIBLE);
+            String name = Util.convertPlaceName(positions);
+            placeName.setText(name);
         }
-        placeName.setText(name);
+    }
+    class PlaceNameThread extends Thread {
+        TextView textView;
+        Day day;
+        PlaceNameThread(TextView textView, Day day) {
+            this.textView = textView;
+            this.day = day;
+        }
+
+        @Override
+        public void run() {
+            try {
+                while (!database.hasMainPlace(day.getId()))
+                    Thread.sleep(500);
+                day.setMainPlaceId(database.selectDay(day.getId()).getMainPlaceId());
+                List<Position> positions = database.selectPositionByDayId(day.getId());
+                initPlace(positions);
+                final String name = Util.convertPlaceName(positions);
+                ((Activity) mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        textView.setText(name);
+                    }
+                });
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
     protected void initPlace(List<Position> positions) throws Exception{
         for(Position position : positions)

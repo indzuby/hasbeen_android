@@ -11,8 +11,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -31,7 +29,8 @@ import co.hasBeen.R;
 import co.hasBeen.TutorialDialog;
 import co.hasBeen.database.DatabaseHelper;
 import co.hasBeen.database.ItemModule;
-import co.hasBeen.database.DeleteAsyncTask;
+import co.hasBeen.database.Photo.AddAsyncTask;
+import co.hasBeen.database.Photo.DeleteAsyncTask;
 import co.hasBeen.day.DayDialog;
 import co.hasBeen.map.EnterMapLisnter;
 import co.hasBeen.model.api.Day;
@@ -47,7 +46,7 @@ public class GalleryDayView extends ActionBarActivity {
     Long mDayId;
     ItemModule mItemModule;
     ListView mListView;
-    GalleryPositionAdapter mPositionAdapter ;
+    GalleryPositionAdapter mPositionAdapter;
     List<Position> mPositionList;
     View mLoading;
     Day mDay;
@@ -58,72 +57,101 @@ public class GalleryDayView extends ActionBarActivity {
     EditText mDayTitle;
     EditText mDescription;
     boolean isEdit = false;
-    String mBeforeTitle="",mBeforeDescription;
+    String mBeforeTitle = "", mBeforeDescription;
     InputMethodManager mImm;
+    int totalCount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDayId = getIntent().getLongExtra("id", 0);
         init();
     }
+
+    AddAsyncTask addAsyncTask;
     Handler deleteHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(msg.what==0) {
-                new LoadThread().start();
-            }
-        }
-    };
-    class LoadThread extends Thread {
-
-        @Override
-        public void run() {
-            if (isLoading) {
+            if (msg.what == 0) {
                 try {
-                    if(!database.hasDay(mDayId)) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getBaseContext(), getString(R.string.day_deleted), Toast.LENGTH_LONG).show();
-                                finish();
-                            }
-                        });
-                    }
-                    mPositionList = mItemModule.getPhotosByDate(mDayId);
-                    initPlace(mPositionList);
-                    mDay.setPositionList(mPositionList);
-                    View fullScreen = findViewById(R.id.fullScreen);
-                    fullScreen.setOnClickListener(new EnterMapLisnter(GalleryDayView.this, mDay, mDay.getPositionList().get(0).getId()));
-                    Thread.sleep(500);
-                    runOnUiThread(new Runnable() {
+                    mItemModule.photoCount = 0 ;
+                    new LoadThread().start();
+                    new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            mPositionAdapter = new GalleryPositionAdapter(GalleryDayView.this,mPositionList,mDay);
-                            mListView.setAdapter(mPositionAdapter);
-                            try {
-                                initHeader();
-                            }catch (Exception e){
-                                e.printStackTrace();
+                           int before = mItemModule.photoCount;
+                            while (before < totalCount) {
+                                if (before != mItemModule.photoCount) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            dialog.setPhotoCount(mItemModule.photoCount);
+                                        }
+                                    });
+                                    before = mItemModule.photoCount;
+                                }
                             }
-                            stopLoading();
+                            dialog.dismiss();
                         }
-                    });
+                    }).start();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
+    };
+    class LoadThread extends Thread {
+        @Override
+        public void run() {
+            try {
+                if (!database.hasDay(mDayId)) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getBaseContext(), getString(R.string.day_deleted), Toast.LENGTH_LONG).show();
+                            finish();
+                        }
+                    });
+                }
+                mPositionList = mItemModule.getPhotosByDate(mDayId);
+                initPlace(mPositionList);
+                mDay.setPositionList(mPositionList);
+                View fullScreen = findViewById(R.id.fullScreen);
+                fullScreen.setOnClickListener(new EnterMapLisnter(GalleryDayView.this, mDay, mDay.getPositionList().get(0).getId()));
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPositionAdapter = new GalleryPositionAdapter(GalleryDayView.this, mPositionList, mDay);
+                        mListView.setAdapter(mPositionAdapter);
+                        showTutorial();
+                        try {
+                            initHeader();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
-    protected void init(){
+    protected void showTutorial(){
+        boolean tutorial = Session.getBoolean(this, "galleryTutorial", false);
+        if (!tutorial) {
+            try {
+                TutorialDialog dialog = new TutorialDialog(this, getString(R.string.gallery_tutorial, Util.getVersion(this)));
+                dialog.show();
+                Session.putBoolean(this, "galleryTutorial", true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    protected void init() {
         setContentView(R.layout.gallery_list);
 
-        boolean tutorial = Session.getBoolean(this,"galleryTutorial",false);
-        if(!tutorial) {
-            TutorialDialog dialog = new TutorialDialog(this,R.drawable.gallery_tutorial);
-            dialog.show();
-            Session.putBoolean(this,"galleryTutorial",true);
-        }
 
         try {
             database = new DatabaseHelper(getBaseContext());
@@ -132,31 +160,32 @@ public class GalleryDayView extends ActionBarActivity {
             mPositionList = new ArrayList<>();
             mListView = (ListView) findViewById(R.id.listPhotos);
             mLoading = findViewById(R.id.refresh);
-            View headerView =  LayoutInflater.from(this).inflate(R.layout.gallery_header, null, false);
+            View headerView = LayoutInflater.from(this).inflate(R.layout.gallery_header, null, false);
             mListView.addHeaderView(headerView);
             initActionBar();
-            startLoading();
-            new DeleteAsyncTask(mDayId,database,deleteHandler).execute();
-//            new LoadThread().start();
+            totalCount = mDay.getPhotoCount();
+            Log.i("totalCount",totalCount+"");
+            showProgress();
+            new DeleteAsyncTask(mDayId, database, deleteHandler).execute();
             ImageButton shareButton = (ImageButton) findViewById(R.id.shareButton);
             shareButton.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-//                Toast.makeText(getActivity().getBaseContext(),"Floating button pressed ",Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getBaseContext(), GalleryShare.class);
                     intent.putExtra("id", mDayId);
-                    startActivityForResult(intent,GalleryShare.REQUEST_UPLOAD);
+                    startActivityForResult(intent, GalleryShare.REQUEST_UPLOAD);
                 }
             });
             mDay.setMainPlace(database.selectPlace(mDay.getMainPlaceId()));
             ImageView map = (ImageView) findViewById(R.id.map);
-            Glide.with(this).load(Util.getMapUrl(mDay.getMainPlace().getLat(),mDay.getMainPlace().getLon())).centerCrop().placeholder(Util.getPlaceHolder(1)).into(map);
-        }catch (Exception e){
+            Glide.with(this).load(Util.getMapUrl(mDay.getMainPlace().getLat(), mDay.getMainPlace().getLon())).centerCrop().placeholder(Util.getPlaceHolder(1)).into(map);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    protected void initActionBar() throws Exception{
+
+    protected void initActionBar() throws Exception {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(false);
@@ -164,7 +193,7 @@ public class GalleryDayView extends ActionBarActivity {
         ColorDrawable colorDrawable = new ColorDrawable(getResources().getColor(R.color.theme_color));
         actionBar.setBackgroundDrawable(colorDrawable);
         mImm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        View mCustomActionBar = mInflater.inflate(R.layout.action_bar_place,null);
+        View mCustomActionBar = mInflater.inflate(R.layout.action_bar_place, null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
         back.setOnClickListener(new View.OnClickListener() {
@@ -187,19 +216,20 @@ public class GalleryDayView extends ActionBarActivity {
                     }
                 };
                 mDayDialog = new DayDialog(GalleryDayView.this);
-                mDayDialog.setListner(null,edit);
+                mDayDialog.setListner(null, edit);
                 mDayDialog.show();
             }
         });
     }
-    protected void initHeader() throws Exception{
+
+    protected void initHeader() throws Exception {
         View headView = findViewById(R.id.galleryTitleBox);
         TextView date = (TextView) headView.findViewById(R.id.date);
         TextView placeName = (TextView) headView.findViewById(R.id.placeName);
         date.setText(HasBeenDate.convertDate(mDay.getDate()));
         initPlace(mPositionList);
         placeName.setText(Util.convertPlaceName(mPositionList));
-        if(mDay.getTitle().length()>0)
+        if (mDay.getTitle().length() > 0)
             titleView.setText(mDay.getTitle());
         else
             titleView.setText(Util.convertPlaceName(mPositionList));
@@ -208,7 +238,7 @@ public class GalleryDayView extends ActionBarActivity {
         TextView totalPhoto = (TextView) findViewById(R.id.totalPhoto);
         mDayTitle.setText(mDay.getTitle());
         mDescription.setText(mDay.getDescription());
-        totalPhoto.setText(getString(R.string.total_photo_count,mDay.getPhotoCount()));
+        totalPhoto.setText(getString(R.string.total_photo_count, mDay.getPhotoCount()));
         findViewById(R.id.socialAction).setVisibility(View.GONE);
 
         mDayTitle.setOnClickListener(new View.OnClickListener() {
@@ -224,7 +254,8 @@ public class GalleryDayView extends ActionBarActivity {
             }
         });
     }
-    protected void setEdit(){
+
+    protected void setEdit() {
         mDayTitle.setFocusable(true);
         mDayTitle.setFocusableInTouchMode(true);
         mDescription.setFocusable(true);
@@ -236,7 +267,8 @@ public class GalleryDayView extends ActionBarActivity {
         initEditActionBar();
         mImm.showSoftInput(mDayTitle, InputMethodManager.RESULT_UNCHANGED_SHOWN);
     }
-    protected void initEditActionBar(){
+
+    protected void initEditActionBar() {
         findViewById(R.id.shareButton).setVisibility(View.GONE);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(false);
@@ -244,7 +276,7 @@ public class GalleryDayView extends ActionBarActivity {
         LayoutInflater mInflater = LayoutInflater.from(this);
         ColorDrawable colorDrawable = new ColorDrawable(getResources().getColor(R.color.theme_color));
         actionBar.setBackgroundDrawable(colorDrawable);
-        View mCustomActionBar = mInflater.inflate(R.layout.action_bar_default,null);
+        View mCustomActionBar = mInflater.inflate(R.layout.action_bar_default, null);
         ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
         titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
         titleView.setText(getString(R.string.edit_day));
@@ -253,7 +285,7 @@ public class GalleryDayView extends ActionBarActivity {
             public void onClick(View v) {
                 try {
                     backOnEditView(mBeforeTitle, mBeforeDescription);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -265,38 +297,28 @@ public class GalleryDayView extends ActionBarActivity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBeforeTitle  = mDayTitle.getText().toString();
+                mBeforeTitle = mDayTitle.getText().toString();
                 mBeforeDescription = mDescription.getText().toString();
                 mDay.setDescription(mBeforeDescription);
                 mDay.setTitle(mBeforeTitle);
-                try{
+                try {
                     database.updateDay(mDay);
-                    backOnEditView(mBeforeTitle,mBeforeDescription);
-                }catch (Exception e){
+                    backOnEditView(mBeforeTitle, mBeforeDescription);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
     }
-    protected void initPlace(List<Position> positions) throws Exception{
-        for(Position position : positions) {
+
+    protected void initPlace(List<Position> positions) throws Exception {
+        for (Position position : positions) {
             position.setPlace(database.selectPlace(position.getPlaceId()));
             position.setPhotoList(database.selectPhotoByPositionId(position.getId()));
         }
     }
-    protected void startLoading() {
-        isLoading = true;
-        mLoading.setVisibility(View.VISIBLE);
-        Animation rotate = AnimationUtils.loadAnimation(getBaseContext(), R.anim.rotate);
-        mLoading.startAnimation(rotate);
-    }
 
-    protected void stopLoading() {
-        isLoading = false;
-        mLoading.setVisibility(View.GONE);
-        mLoading.clearAnimation();
-    }
-    protected void backOnEditView(String title, String description) throws Exception{
+    protected void backOnEditView(String title, String description) throws Exception {
         mDayTitle.setFocusable(false);
         mDayTitle.setFocusableInTouchMode(false);
         mDescription.setFocusable(false);
@@ -322,25 +344,35 @@ public class GalleryDayView extends ActionBarActivity {
             finish();
         }
     }
+
     @Override
     public void onBackPressed() {
-        if(!isEdit)
+        if (!isEdit)
             super.onBackPressed();
         else {
             try {
                 backOnEditView(mBeforeTitle, mBeforeDescription);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
     }
+
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         Localytics.openSession();
         Localytics.tagScreen("Gallery Day View");
         Localytics.upload();
+    }
+
+    UploadDialog dialog;
+
+    protected void showProgress() {
+        dialog = new UploadDialog(this);
+        dialog.setCancelable(false);
+        dialog.setMaxCount(totalCount);
+        dialog.show();
     }
 }

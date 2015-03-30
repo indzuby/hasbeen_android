@@ -200,6 +200,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         if(day.getMainPhotoId()==null) return false;
         return true;
     }
+    public boolean hasMainPlace(Long dayId) throws SQLException {
+        Day day = selectDay(dayId);
+        if(day.getMainPlaceId()==null) return false;
+        return true;
+    }
     public boolean hasMainPhotoIdInPosition(Long positionId) throws  SQLException{
         Position position= selectPosition(positionId);
         if(position.getMainPhotoId()==null) return false;
@@ -207,7 +212,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
     public List<Photo> selectPhotoByPositionId(Long positionId) throws  SQLException{
         Dao<Photo,Long> photoDao = getPhotoDao();
-        return photoDao.queryBuilder().orderBy("taken_time",true).where().eq("position_id", positionId).and().eq("clearest_id", new ColumnArg("id")).query();
+        return photoDao.queryBuilder().orderBy("taken_time",true).where().eq("position_id", positionId).query();
     }
     public List<Photo> selectClearestPhoto(Long id) throws SQLException {
         Dao<Photo,Long> photoDao = getPhotoDao();
@@ -231,7 +236,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
     public int countPhotoByDayid(Long dayId) throws SQLException{
         List<Position> positions = selectPositionByDayId(dayId);
-        long photoCnt=getPhotoDao().queryBuilder().where().eq("day_id",dayId).and().eq("clearest_id", new ColumnArg("id")).countOf();
+        long photoCnt=getPhotoDao().queryBuilder().where().eq("day_id",dayId).countOf();
 //        for(Position position : positions)
 //            photoCnt += selectPhotoByPositionId(position.getId()).size();
         return (int)photoCnt;
