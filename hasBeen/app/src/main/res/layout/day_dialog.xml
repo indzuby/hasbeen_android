@@ -16,7 +16,9 @@
         <TextView
             android:id="@+id/removeDay"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
             android:background="@drawable/long_pressed_selector"
@@ -33,7 +35,9 @@
         <TextView
             android:id="@+id/editDay"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
             android:gravity="center_vertical"
             android:background="@drawable/long_pressed_selector"
             android:paddingLeft="16dp"

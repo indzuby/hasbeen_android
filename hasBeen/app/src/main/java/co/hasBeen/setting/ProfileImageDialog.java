@@ -26,9 +26,13 @@ public class ProfileImageDialog extends Dialog {
         lpWindow.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         lpWindow.dimAmount = 0.5f;
         getWindow().setAttributes(lpWindow);
-
         setContentView(R.layout.profile_image_dialog);
-        setCanceledOnTouchOutside(true);
+        findViewById(R.id.box).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         setLayout();
         takeFbImage.setOnClickListener(fbImageListner);
     }

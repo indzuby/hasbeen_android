@@ -15,7 +15,6 @@ import java.util.List;
 import co.hasBeen.R;
 import co.hasBeen.model.api.User;
 import co.hasBeen.profile.ProfileClickListner;
-import co.hasBeen.profile.ProfileFollowListner;
 import co.hasBeen.utils.CircleTransform;
 import co.hasBeen.utils.Session;
 import co.hasBeen.utils.Util;
@@ -61,17 +60,17 @@ public class UserAdapter extends BaseAdapter {
         ImageView profileImage = (ImageView) view.findViewById(R.id.profileImage);
         TextView profileName = (TextView) view.findViewById(R.id.profileName);
         TextView followSatus = (TextView) view.findViewById(R.id.followStatus);
-        final ImageView followImage = (ImageView) view.findViewById(R.id.followImage);
-
+        ImageView followImage = (ImageView) view.findViewById(R.id.followImage);
+        followImage.setVisibility(View.GONE);
         Glide.with(mContext).load(user.getImageUrl()).placeholder(R.mipmap.profile_placeholder).transform(new CircleTransform(mContext)).into(profileImage);
         profileName.setText(Util.parseName(user, mContext));
         followSatus.setText(mContext.getString(R.string.follow_status,user.getFollowerCount(),user.getFollowingCount()));
-        if(user.getFollow()==null || user.getFollow().getId()==null) {
-            followImage.setImageResource(R.drawable.follow_gray);
-        }else {
-            followImage.setImageResource(R.drawable.following_selector);
-        }
-        followImage.setOnClickListener(new ProfileFollowListner(user.getFollow(),mAccessToken,user.getId()));
+//        if(user.getFollow()==null || user.getFollow().getId()==null) {
+//            followImage.setImageResource(R.drawable.follow_gray);
+//        }else {
+//            followImage.setImageResource(R.drawable.following_selector);
+//        }
+//        followImage.setOnClickListener(new ProfileFollowListner(user.getFollow(),mAccessToken,user.getId()));
         view.setOnClickListener(new ProfileClickListner(mContext, user.getId()));
         return view;
     }

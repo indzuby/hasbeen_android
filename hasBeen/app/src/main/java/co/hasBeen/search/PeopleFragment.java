@@ -111,7 +111,8 @@ public class PeopleFragment extends HasBeenFragment{
 
     @Override
     public void onDestroy() {
-        searchPeopleAsyncTask.cancel(true);
+        if(searchPeopleAsyncTask!=null)
+            searchPeopleAsyncTask.cancel(true);
         System.gc();
         super.onDestroy();
     }

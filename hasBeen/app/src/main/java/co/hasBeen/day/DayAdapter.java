@@ -87,7 +87,6 @@ public class DayAdapter extends BaseAdapter {
         TextView photoCount = (TextView) view.findViewById(R.id.photoCount);
         ImageView placeIcon = (ImageView) view.findViewById(R.id.placeIcon);
         placeTime.setText(HasBeenDate.convertTime(position.getStartTime(), position.getEndTime(),mContext));
-        photoCount.setText(mContext.getString(R.string.photo_count,position.getPhotoList().size()));
         if(isMine) {
             if (index == 0)
                 placeIcon.setOnClickListener(new PlaceIconClick(index, position.getId()));
@@ -104,6 +103,7 @@ public class DayAdapter extends BaseAdapter {
         }
         HListView hListView = (HListView) view.findViewById(R.id.hListView);
         if (position.getPhotoList() != null && position.getPhotoList().size() > 0) {
+            photoCount.setText(mContext.getString(R.string.photo_count,position.getPhotoList().size()));
             PhotoAdapter photoAdapter = new PhotoAdapter(position.getPhotoList());
             recycleAdapter.add(photoAdapter);
             if(hListView.getHeaderViewsCount()==0) {

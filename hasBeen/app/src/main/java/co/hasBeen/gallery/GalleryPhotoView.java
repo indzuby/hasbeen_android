@@ -40,13 +40,12 @@ public class GalleryPhotoView extends ActionBarActivity {
         mAdapter = new GalleryPhotoPagerAdapter(getSupportFragmentManager(),photoList);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(1);
-
         mViewPager.setCurrentItem(getIndex(mPhotoId));
     }
     protected int getIndex(Long id) {
         int i=0;
         for(Photo photo : photoList) {
-            if(photo.getId() == id) return i;
+            if(photo.getId().equals(id)) return i;
             i++;
         }
         return 0;

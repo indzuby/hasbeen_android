@@ -61,6 +61,8 @@
     <string name="already_account">계정이 이미 있으신가요? </string>
     <string name="sign_up">가입하기</string>
     <string name="last_name">성</string>
+    <string name="user_name">사용자 이름</string>
+    <string name="gender">성별</string>
     <string name="forgot_email_text">Email을 입력하세요</string>
     <string name="reset_ok">새로운 비밀번호가 이메일로 전송되었습니다.</string>
     <string name="forgot_password">비밀번호 찾기</string>
@@ -118,11 +120,11 @@
     <string name="load_comment">댓글 더보기</string>
 
     <!--시간-->
-    <string name="hour_ago">%1$d 시간 전</string>
-    <string name="miniutes_ago">%1$d 분 전</string>
-    <string name="just_now">방금 전</string>
+    <string name="hour_ago">%1$d 시간</string>
+    <string name="miniutes_ago">%1$d 분</string>
+    <string name="just_now">방금</string>
     <string name="day_ago">E, a h:mm</string>
-    <string name="week_ago">%1$d 주 전</string>
+    <string name="week_ago">%1$d 주</string>
     <string name="month_ago">MMMM dd, yyyy</string>
     <string name="photo_time">a hh:mm</string>
 
@@ -220,6 +222,7 @@
     <string name="female">여자</string>
     <string name="birthday">생일</string>
     <string name="enter_birthday">생일을 입력하세요</string>
+    <string name="enter_gender">성별을 고르세요</string>
     <string name="city">도시</string>
     <string name="country">국가</string>
     <string name="change_password">비밀번호 변경</string>

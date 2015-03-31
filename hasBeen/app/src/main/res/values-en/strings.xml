@@ -55,12 +55,14 @@
     <!--로그인,회원가입-->
     <string name="login_email"> sign in</string>
     <string name="login_facebook"> sign in with Facebook</string>
-    <string name="first_name">first name</string>
+    <string name="first_name">First name</string>
     <string name="signup_email">sign up</string>
     <string name="dont_have_account">Don\'t have an account yet?</string>
     <string name="already_account">I already have a account.</string>
     <string name="sign_up">sign up</string>
-    <string name="last_name">last name</string>
+    <string name="last_name">Last name</string>
+    <string name="user_name">User name</string>
+    <string name="gender">Gender</string>
     <string name="forgot_email_text">Please write your Email</string>
     <string name="reset_ok">New password was send by email.</string>
     <string name="forgot_password">Forgot password?</string>
@@ -118,11 +120,11 @@
     <string name="load_comment">read more</string>
 
     <!--시간-->
-    <string name="hour_ago">%1$dhours ago</string>
-    <string name="miniutes_ago">%1$dminutes ago</string>
+    <string name="hour_ago">%1$dhours</string>
+    <string name="miniutes_ago">%1$dminutes</string>
     <string name="just_now">Just now</string>
     <string name="day_ago">E, a h:mm</string>
-    <string name="week_ago">%1$d weeks ago</string>
+    <string name="week_ago">%1$d weeks</string>
     <string name="month_ago">MMMM dd, yyyy</string>
     <string name="photo_time">hh:mma</string>
 
@@ -216,9 +218,10 @@
     <string name="female">Female</string>
     <string name="birthday">Birthday</string>
     <string name="enter_birthday">Enter Birthday</string>
+    <string name="enter_gender">Enter Gender</string>
     <string name="city">City</string>
     <string name="country">Country</string>
-    <string name="change_password">Change password</string>
+    <string name="change_password">CHANGE PASSWORD</string>
     
     <string name="current_version">Current Version v%s</string>
     <string name="latest_version">Latest Version v%s</string>

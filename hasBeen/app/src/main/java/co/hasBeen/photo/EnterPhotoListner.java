@@ -21,7 +21,8 @@ public class EnterPhotoListner implements View.OnClickListener {
     public void onClick(View v) {
         if(!flag) {
             flag = true;
-            Intent intent = new Intent(mContext, PhotoView.class);
+//            Intent intent = new Intent(mContext, PhotoView.class);
+            Intent intent = new Intent(mContext, PhotoActivity.class);
             intent.putExtra("id",id);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mContext.startActivity(intent);

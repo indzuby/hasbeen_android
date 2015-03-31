@@ -120,6 +120,7 @@
     <orderEntry type="library" exported="" name="ormlite-core-4.48" level="project" />
     <orderEntry type="library" exported="" name="fabric-1.2.0" level="project" />
     <orderEntry type="library" exported="" name="joda-time-2.7" level="project" />
+    <orderEntry type="library" exported="" name="multidex-1.0.0" level="project" />
     <orderEntry type="library" exported="" name="android-maps-utils-0.3.4" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="glide-3.4.0" level="project" />

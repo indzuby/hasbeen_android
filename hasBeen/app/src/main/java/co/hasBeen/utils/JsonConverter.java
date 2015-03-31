@@ -133,6 +133,27 @@ public class JsonConverter {
         Type listType = new TypeToken<List<Photo>>(){}.getType();
         return gson.fromJson(reader, listType);
     }
+    public static List<Photo> convertJsonPhotoList(String reader) throws Exception{
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                if(f.getName().equals("day") || f.getName().equals("place") ){
+                    return true;
+                }
+                if(f.getName().equals("coverPhoto"))
+                    return true;
+                return false;
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                return false;
+            }
+        }).create();
+        Type listType = new TypeToken<List<Photo>>(){}.getType();
+        return gson.fromJson(reader, listType);
+    }
     public static List<Loved> convertJsonLovedList(Reader reader) throws Exception{
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {

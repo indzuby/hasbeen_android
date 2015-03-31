@@ -15,7 +15,7 @@ import co.hasBeen.R;
 /**
  * Created by 주현 on 2015-02-11.
  */
-public class UploadDialog extends Dialog {
+public class LoadDialog extends Dialog {
 
     TextView progress;
     TextView photoCount;
@@ -31,12 +31,12 @@ public class UploadDialog extends Dialog {
         lpWindow.dimAmount = 0.5f;
         getWindow().setAttributes(lpWindow);
 
-        setContentView(R.layout.upload_dialog);
+        setContentView(R.layout.load_dialog);
 
         setLayout();
     }
 
-    public UploadDialog(Context context) {
+    public LoadDialog(Context context) {
         // Dialog 배경을 투명 처리 해준다.
         super(context, android.R.style.Theme_Translucent_NoTitleBar);
         count = 0;

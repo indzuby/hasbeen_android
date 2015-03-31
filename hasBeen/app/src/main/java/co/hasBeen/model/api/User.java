@@ -19,6 +19,16 @@ public class User {
     SignUpType signUpType;
     String country;
     String city;
+    String userName;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public Long getId() {
         return id;
     }

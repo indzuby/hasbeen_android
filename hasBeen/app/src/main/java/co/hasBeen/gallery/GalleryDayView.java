@@ -367,10 +367,10 @@ public class GalleryDayView extends ActionBarActivity {
         Localytics.upload();
     }
 
-    UploadDialog dialog;
+    LoadDialog dialog;
 
     protected void showProgress() {
-        dialog = new UploadDialog(this);
+        dialog = new LoadDialog(this);
         dialog.setCancelable(false);
         dialog.setMaxCount(totalCount);
         dialog.show();

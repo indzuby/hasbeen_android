@@ -158,6 +158,7 @@ public class GalleryPositionAdapter extends BaseAdapter{
     protected void mergePosition(int from) throws Exception{
         Position toPosition = getItem(from-1);
         Position fromPosition = getItem(from);
+        database.updatePhotosPlaceId(fromPosition.getId(),toPosition.getPlaceId());
         database.mergePosition(toPosition.getId(),fromPosition.getId());
         toPosition.getPhotoList().addAll(fromPosition.getPhotoList());
         mPositions.remove(from);

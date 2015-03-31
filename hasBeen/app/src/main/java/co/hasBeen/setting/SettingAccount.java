@@ -38,9 +38,9 @@ public class SettingAccount extends ActionBarActivity implements View.OnClickLis
     final static long DEFAULT_BIRTHDAY = 1000;
     User mUser;
     String mAccessToken;
-    EditText firstName,lastName,city,country;
-    TextView birthDay;
-    View male,female,changePassword;
+    EditText firstName,lastName,city,country,userName;
+    TextView birthDay,gender;
+    View changePassword;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,16 +68,18 @@ public class SettingAccount extends ActionBarActivity implements View.OnClickLis
     protected void init(){
         firstName = (EditText) findViewById(R.id.firstName);
         lastName = (EditText) findViewById(R.id.lastName);
+        userName = (EditText) findViewById(R.id.userName);
         birthDay = (TextView) findViewById(R.id.birthday);
+        gender = (TextView) findViewById(R.id.gender);
         city = (EditText) findViewById(R.id.city);
         country = (EditText) findViewById(R.id.country);
-        male = findViewById(R.id.male);
-        female = findViewById(R.id.female);
         changePassword = findViewById(R.id.changePassword);
 
         firstName.setText(mUser.getFirstName());
         firstName.setSelection(mUser.getFirstName().length());
         lastName.setText(mUser.getLastName());
+        if(mUser.getUserName()!=null)
+            userName.setText(mUser.getUserName());
         Calendar calendar = new GregorianCalendar();
         calendar.setTimeInMillis(mUser.getBirthDay());
         if(calendar.get(Calendar.YEAR)!=DEFAULT_BIRTHDAY)
@@ -86,14 +88,13 @@ public class SettingAccount extends ActionBarActivity implements View.OnClickLis
         country.setText(mUser.getCountry());
         if(mUser.getGender()!=null) {
             if(mUser.getGender()==User.Gender.MALE)
-                male.setSelected(true);
+                gender.setText(getString(R.string.male));
             else
-                female.setSelected(true);
+                gender.setText(getString(R.string.female));
         }
         if(mUser.getSignUpType() != User.SignUpType.FACEBOOK)
             changePassword.setVisibility(View.VISIBLE);
-        male.setOnClickListener(this);
-        female.setOnClickListener(this);
+        gender.setOnClickListener(this);
         changePassword.setOnClickListener(this);
         birthDay.setOnClickListener(this);
         stopLoading();
@@ -111,12 +112,10 @@ public class SettingAccount extends ActionBarActivity implements View.OnClickLis
     };
     @Override
     public void onClick(View v) {
-        if(v.getId()==R.id.male) {
-            male.setSelected(true);
-            female.setSelected(false);
-        }else if(v.getId()==R.id.female) {
-            female.setSelected(true);
-            male.setSelected(false);
+        if(v.getId()==R.id.gender) {
+            GenderDialog genderDialog = new GenderDialog(SettingAccount.this,mUser.getGender());
+            genderDialog.setListner(maleListner,femaleListner);
+            genderDialog.show();
         }else if(v.getId()==R.id.changePassword) {
             Intent intent = new Intent(getBaseContext(), ChangePassword.class);
             startActivity(intent);
@@ -181,10 +180,7 @@ public class SettingAccount extends ActionBarActivity implements View.OnClickLis
         mUser.setLastName(lastName.getText().toString());
         mUser.setCity(city.getText().toString());
         mUser.setCountry(country.getText().toString());
-        if(male.isSelected())
-            mUser.setGender(User.Gender.MALE);
-        else
-            mUser.setGender(User.Gender.FEMALE);
+        mUser.setUserName(userName.getText().toString());
     }
     @Override
     public void onResume()
@@ -208,6 +204,19 @@ public class SettingAccount extends ActionBarActivity implements View.OnClickLis
         mLoading.setVisibility(View.GONE);
         mLoading.clearAnimation();
     }
-
+    View.OnClickListener maleListner = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            gender.setText(getString(R.string.male));
+            mUser.setGender(User.Gender.MALE);
+        }
+    };
+    View.OnClickListener femaleListner = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            gender.setText(getString(R.string.female));
+            mUser.setGender(User.Gender.FEMALE);
+        }
+    };
 
 }

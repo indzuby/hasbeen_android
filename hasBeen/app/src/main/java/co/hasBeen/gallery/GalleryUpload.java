@@ -250,10 +250,10 @@ public class GalleryUpload extends ActionBarActivity {
         return count;
     }
 
-    UploadDialog dialog;
+    LoadDialog dialog;
 
     protected void showProgress() {
-        dialog = new UploadDialog(this);
+        dialog = new LoadDialog(this);
         dialog.setCancelable(false);
         dialog.setMaxCount(mDayUpload.getPhotoCount());
         dialog.show();
