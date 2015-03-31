@@ -1,12 +1,11 @@
 package co.hasBeen.photo;
 
-import android.graphics.drawable.ColorDrawable;
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -39,7 +37,6 @@ import co.hasBeen.day.EnterDayListner;
 import co.hasBeen.model.api.Comment;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.profile.ProfileClickListner;
-import co.hasBeen.report.ReportListner;
 import co.hasBeen.social.LoveListner;
 import co.hasBeen.social.ShareListner;
 import co.hasBeen.utils.CircleTransform;
@@ -50,7 +47,7 @@ import co.hasBeen.utils.Util;
 /**
  * Created by zuby on 2015-01-29.
  */
-public class PhotoView extends ActionBarActivity {
+public class PhotoFragment extends Fragment {
     final static String TAG = "Photo view";
     Photo mPhoto;
     Long mPhotoId;
@@ -61,11 +58,8 @@ public class PhotoView extends ActionBarActivity {
     TextView mShareCount;
     int mViewCommentCount;
     Long lastCommentId;
-    PhotoDialog mPhotoDialog;
     Long mMyid;
     EditText mDescription;
-    String mBeforeDescription;
-    boolean isEdit;
     InputMethodManager mImm;
     View mLoading;
     boolean isLoading;
@@ -73,15 +67,18 @@ public class PhotoView extends ActionBarActivity {
     View dayButton;
     ListView listView;
     boolean isNearBy=false;
+    View mView;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mPhotoId = getIntent().getLongExtra("id", 0);
-        mAccessToken = Session.getString(this, "accessToken", null);
-        mMyid = Session.getLong(this, "myUserid", 0);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mView = inflater.inflate(R.layout.photo, container, false);
+        mAccessToken = Session.getString(getActivity(), "accessToken", null);
+        mMyid = Session.getLong(getActivity(), "myUserid", 0);
+        mPhotoId = getArguments().getLong("id");
+        titleView  = ((PhotoActivity)getActivity()).titleView;
+        dayButton = ((PhotoActivity)getActivity()).dayButton;
         init();
+        return mView;
     }
-
     Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -89,7 +86,7 @@ public class PhotoView extends ActionBarActivity {
             switch (msg.what) {
                 case 0:
                     mPhoto = (Photo) msg.obj;
-                    dayButton.setOnClickListener(new EnterDayListner(mPhoto.getDay().getId(),getBaseContext()));
+                    dayButton.setOnClickListener(new EnterDayListner(mPhoto.getDay().getId(),getActivity()));
                     titleView.setText(mPhoto.getDay().getTitle());
                     intHeaderView();
                     initComment();
@@ -108,26 +105,26 @@ public class PhotoView extends ActionBarActivity {
         TextView placeName = (TextView) titleBox.findViewById(R.id.placeName);
         TextView date = (TextView) titleBox.findViewById(R.id.date);
 
-        mImm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        mImm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         mDescription = (EditText) mHeaderView.findViewById(R.id.description);
         mLikeCount = (TextView) mHeaderView.findViewById(R.id.likeCount);
         mCommentCount = (TextView) mHeaderView.findViewById(R.id.commentCount);
         mShareCount = (TextView) mHeaderView.findViewById(R.id.shareCount);
-        Glide.with(this).load(mPhoto.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).placeholder(R.drawable.placeholder1).into(profileImage);
+        Glide.with(this).load(mPhoto.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(getActivity())).placeholder(R.drawable.placeholder1).into(profileImage);
         Log.i(TAG, mPhoto.getPlaceName());
-        profileName.setText(Util.parseName(mPhoto.getUser(), this));
+        profileName.setText(Util.parseName(mPhoto.getUser(), getActivity()));
         placeName.setText(mPhoto.getPlaceName());
         date.setText(HasBeenDate.convertDate(mPhoto.getTakenTime()));
         mDescription.setText(mPhoto.getDescription());
-        findViewById(R.id.title).setVisibility(View.GONE);
+        mView.findViewById(R.id.title).setVisibility(View.GONE);
         mLikeCount.setText(getString(R.string.like_count, mPhoto.getLoveCount()));
         mCommentCount.setText(getString(R.string.comment_count, mPhoto.getCommentCount()));
         mShareCount.setText(getString(R.string.share_count, mPhoto.getShareCount()));
 
         ImageView imageView = (ImageView) mHeaderView.findViewById(R.id.photo);
         Glide.with(this).load(mPhoto.getLargeUrl()).placeholder(R.drawable.placeholder1).into(imageView);
-        profileImage.setOnClickListener(new ProfileClickListner(this, mPhoto.getUser().getId()));
-        profileName.setOnClickListener(new ProfileClickListner(this, mPhoto.getUser().getId()));
+        profileImage.setOnClickListener(new ProfileClickListner(getActivity(), mPhoto.getUser().getId()));
+        profileName.setOnClickListener(new ProfileClickListner(getActivity(), mPhoto.getUser().getId()));
 
         LinearLayout loveButton = (LinearLayout) mHeaderView.findViewById(R.id.loveButton);
         ImageView love = (ImageView) mHeaderView.findViewById(R.id.love);
@@ -139,14 +136,14 @@ public class PhotoView extends ActionBarActivity {
             love.setImageResource(R.drawable.photo_like);
             loveText.setTextColor(this.getResources().getColor(R.color.light_gray));
         }
-        loveButton.setOnClickListener(new LoveListner(this, mPhoto, "photos", mLikeCount));
+        loveButton.setOnClickListener(new LoveListner(getActivity(), mPhoto, "photos", mLikeCount));
         LinearLayout shareButton = (LinearLayout) mHeaderView.findViewById(R.id.shareButton);
-        shareButton.setOnClickListener(new ShareListner(this, "photos", mPhoto, mShareCount));
+        shareButton.setOnClickListener(new ShareListner(getActivity(), "photos", mPhoto, mShareCount));
         if (mPhoto.getUser().getId() == mMyid) {
             mDescription.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setEdit();
+                    ((PhotoView)getActivity()).setEdit();
                 }
             });
         }
@@ -155,7 +152,7 @@ public class PhotoView extends ActionBarActivity {
     protected void initComment() {
 
         final LinearLayout commentBox = (LinearLayout) mHeaderView.findViewById(R.id.commentBox);
-        final View moreComment = LayoutInflater.from(this).inflate(R.layout.more_comments, null);
+        final View moreComment = LayoutInflater.from(getActivity()).inflate(R.layout.more_comments, null);
         mTotalCommentCount = mPhoto.getCommentCount();
         mViewCommentCount = mPhoto.getCommentList().size();
         if (mTotalCommentCount > 10)
@@ -174,7 +171,7 @@ public class PhotoView extends ActionBarActivity {
                             lastCommentId = commentList.get(0).getId();
                             Collections.reverse(commentList);
                             for (Comment comment : commentList) {
-                                commentBox.addView(CommentView.makeComment(getBaseContext(), comment), 2);
+                                commentBox.addView(CommentView.makeComment(getActivity(), comment), 2);
                                 mViewCommentCount++;
                             }
 
@@ -187,18 +184,18 @@ public class PhotoView extends ActionBarActivity {
         });
         for (int i = 0; i < mPhoto.getCommentList().size(); i++) {
             Comment comment = mPhoto.getCommentList().get(i);
-            View view = CommentView.makeComment(this, comment);
+            View view = CommentView.makeComment(getActivity(), comment);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new EnterCommentListner(PhotoView.this, "photos", mPhoto, mCommentCount);
+                    new EnterCommentListner(getActivity(), "photos", mPhoto, mCommentCount);
                 }
             });
             commentBox.addView(view);
         }
 
         LinearLayout commentButton = (LinearLayout) mHeaderView.findViewById(R.id.commentButton);
-        commentButton.setOnClickListener(new EnterCommentListner(PhotoView.this, "photos", mPhoto, mCommentCount, commentBox));
+        commentButton.setOnClickListener(new EnterCommentListner(getActivity(), "photos", mPhoto, mCommentCount, commentBox));
         final EditText mEnterComment = (EditText) mHeaderView.findViewById(R.id.enterComment);
         ImageView send = (ImageView) mHeaderView.findViewById(R.id.send);
         send.setOnClickListener(new View.OnClickListener() {
@@ -210,7 +207,7 @@ public class PhotoView extends ActionBarActivity {
                     flag = true;
                     String contents = mEnterComment.getText().toString();
                     mEnterComment.setText("");
-                    Toast.makeText(getBaseContext(), getString(R.string.description_ok), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getString(R.string.description_ok), Toast.LENGTH_LONG).show();
                     new WriteCommentAsyncTask(new Handler(Looper.getMainLooper()) {
                         @Override
                         public void handleMessage(Message msg) {
@@ -218,7 +215,7 @@ public class PhotoView extends ActionBarActivity {
                             flag = false;
                             if (msg.what == 0) {
                                 Comment comment = (Comment) msg.obj;
-                                commentBox.addView(CommentView.makeComment(getBaseContext(), comment));
+                                commentBox.addView(CommentView.makeComment(getActivity(), comment));
                                 mTotalCommentCount++;
                                 mPhoto.setCommentCount(mTotalCommentCount);
                                 mCommentCount.setText(getString(R.string.comment_count, mPhoto.getCommentCount()));
@@ -236,12 +233,11 @@ public class PhotoView extends ActionBarActivity {
     PhotoAsyncTask photoAsyncTask;
     NearByPhotoAsyncTask nearByPhotoAsyncTask;
     protected void init() {
-        setContentView(R.layout.photo);
-        mLoading = findViewById(R.id.refresh);
+        mLoading = mView.findViewById(R.id.refresh);
         startLoading();
-        listView = (ListView) findViewById(R.id.listView);
-        mHeaderView =  LayoutInflater.from(this).inflate(R.layout.photo_header, null, false);
-        mFooterView =  LayoutInflater.from(this).inflate(R.layout.near_by, null, false);
+        listView = (ListView) mView.findViewById(R.id.listView);
+        mHeaderView =  LayoutInflater.from(getActivity()).inflate(R.layout.photo_header, null, false);
+        mFooterView =  LayoutInflater.from(getActivity()).inflate(R.layout.near_by, null, false);
         listView.addHeaderView(mHeaderView);
         listView.addFooterView(mFooterView);
         listView.setAdapter(new BaseAdapter() {
@@ -267,7 +263,6 @@ public class PhotoView extends ActionBarActivity {
         });
         photoAsyncTask= new PhotoAsyncTask(handler);
         photoAsyncTask.execute(mAccessToken, mPhotoId);
-        initActionBar();
         nearByPhotoAsyncTask = new NearByPhotoAsyncTask(nearByHandler);
         nearByPhotoAsyncTask.execute(mAccessToken, mPhotoId);
 
@@ -282,10 +277,12 @@ public class PhotoView extends ActionBarActivity {
                     if(isNearBy) {
                         titleView.setText(getString(R.string.near_by));
                         dayButton.setVisibility(View.GONE);
+                        ((PhotoActivity)getActivity()).mViewPager.setSwipeEnabled(false);
                         isNearBy = false;
                     }
                 }else {
                     if(!isNearBy) {
+                        ((PhotoActivity)getActivity()).mViewPager.setSwipeEnabled(true);
                         if(mPhoto!=null) titleView.setText(mPhoto.getDay().getTitle());
                         dayButton.setVisibility(View.VISIBLE);
                         isNearBy = true;
@@ -320,7 +317,7 @@ public class PhotoView extends ActionBarActivity {
 
         for (int i = 0; i < mNearByPhotos.size(); i++) {
             final Photo photo = mNearByPhotos.get(i);
-            View nearByItem = LayoutInflater.from(this).inflate(R.layout.near_by_item, null);
+            View nearByItem = LayoutInflater.from(getActivity()).inflate(R.layout.near_by_item, null);
             ImageView image = (ImageView) nearByItem.findViewById(R.id.profileImage);
             TextView name = (TextView) nearByItem.findViewById(R.id.profileName);
             TextView date = (TextView) nearByItem.findViewById(R.id.date);
@@ -330,8 +327,8 @@ public class PhotoView extends ActionBarActivity {
             TextView commentCount = (TextView) nearByItem.findViewById(R.id.commentCount);
             TextView shareCount = (TextView) nearByItem.findViewById(R.id.shareCount);
 
-            Glide.with(this).load(photo.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(this)).into(image);
-            name.setText(Util.parseName(photo.getUser(), this));
+            Glide.with(this).load(photo.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(getActivity())).into(image);
+            name.setText(Util.parseName(photo.getUser(), getActivity()));
             Glide.with(this).load(photo.getMediumUrl()).into(nearPhoto);
             description.setText(photo.getPlaceName());
             likeCount.setText(photo.getLoveCount() + "");
@@ -342,78 +339,13 @@ public class PhotoView extends ActionBarActivity {
                 nearBy1.addView(nearByItem);
             else
                 nearBy2.addView(nearByItem);
-            nearByItem.setOnClickListener(new EnterPhotoListner(photo.getId(), this));
+            nearByItem.setOnClickListener(new EnterPhotoListner(photo.getId(), getActivity()));
         }
     }
-
-    protected void initActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        LayoutInflater mInflater = LayoutInflater.from(this);
-        ColorDrawable colorDrawable = new ColorDrawable(getResources().getColor(R.color.theme_color));
-        actionBar.setBackgroundDrawable(colorDrawable);
-
-        View mCustomActionBar = mInflater.inflate(R.layout.action_bar_photo, null);
-        ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
-        titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        actionBar.setCustomView(mCustomActionBar);
-        actionBar.setDisplayShowCustomEnabled(true);
-        View moreVert = mCustomActionBar.findViewById(R.id.moreVert);
-        moreVert.setOnClickListener(new EditLisnter());
-        dayButton = findViewById(R.id.dayButton);
-    }
-
-    protected void initEditActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        LayoutInflater mInflater = LayoutInflater.from(this);
-        ColorDrawable colorDrawable = new ColorDrawable(getResources().getColor(R.color.theme_color));
-        actionBar.setBackgroundDrawable(colorDrawable);
-        View mCustomActionBar = mInflater.inflate(R.layout.action_bar_default, null);
-        ImageButton back = (ImageButton) mCustomActionBar.findViewById(R.id.actionBarBack);
-        titleView = (TextView) mCustomActionBar.findViewById(R.id.actionBarTitle);
-        titleView.setText(getString(R.string.action_bar_edit_title));
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                backOnEditView(mBeforeDescription);
-            }
-        });
-        actionBar.setCustomView(mCustomActionBar);
-        actionBar.setDisplayShowCustomEnabled(true);
-        TextView done = (TextView) mCustomActionBar.findViewById(R.id.actionBarDone);
-
-        done.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mBeforeDescription = mDescription.getText().toString();
-                new PhotoEditAsyncTask(new Handler(Looper.getMainLooper()) {
-                    @Override
-                    public void handleMessage(Message msg) {
-                        super.handleMessage(msg);
-                        if (msg.what == 0)
-                            backOnEditView(mBeforeDescription);
-                        else
-                            Toast.makeText(getBaseContext(), getString(R.string.common_error), Toast.LENGTH_LONG).show();
-
-                    }
-                }).execute(mAccessToken, mPhoto.getId(), mBeforeDescription);
-            }
-        });
-    }
-
     protected void startLoading() {
         isLoading = true;
         mLoading.setVisibility(View.VISIBLE);
-        Animation rotate = AnimationUtils.loadAnimation(getBaseContext(), R.anim.rotate);
+        Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
         mLoading.startAnimation(rotate);
     }
 
@@ -421,16 +353,6 @@ public class PhotoView extends ActionBarActivity {
         isLoading = false;
         mLoading.setVisibility(View.GONE);
         mLoading.clearAnimation();
-    }
-
-    protected void backOnEditView(String description) {
-        mDescription.setFocusable(false);
-        mDescription.setFocusableInTouchMode(false);
-        mDescription.setText(description);
-        isEdit = false;
-        initActionBar();
-        mImm.hideSoftInputFromWindow(mDescription.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        titleView.setText(mPhoto.getDay().getTitle());
     }
 
     @Override
@@ -442,84 +364,14 @@ public class PhotoView extends ActionBarActivity {
         super.onDestroy();
     }
 
-    class EditLisnter implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            if (mPhoto.getUser().getId() == mMyid) {
-                View.OnClickListener del = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new PhotoDeleteAsyncTask(new Handler(Looper.getMainLooper()) {
-                            @Override
-                            public void handleMessage(Message msg) {
-                                mPhotoDialog.dismiss();
-                                super.handleMessage(msg);
-                                if (msg.what == 0) {
-                                    Toast.makeText(getBaseContext(), getString(R.string.remove_photo_ok), Toast.LENGTH_LONG).show();
-                                    finish();
-                                } else {
-                                    Toast.makeText(getBaseContext(), getString(R.string.remove_photo_error), Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        }).execute(mAccessToken, mPhoto.getId());
-                    }
-                };
-                View.OnClickListener edit = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mPhotoDialog.dismiss();
-                        setEdit();
-                    }
-                };
-                View.OnClickListener cover = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new CoverAsyncTask(new Handler(Looper.getMainLooper()) {
-                            @Override
-                            public void handleMessage(Message msg) {
-                                super.handleMessage(msg);
-                                if (msg.what == 0) {
-                                    Toast.makeText(getBaseContext(), getString(R.string.cover_ok), Toast.LENGTH_LONG).show();
-                                    mPhotoDialog.dismiss();
-                                } else {
-                                    Toast.makeText(getBaseContext(), getString(R.string.common_error), Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        }).execute(mAccessToken, mPhoto.getId());
-                    }
-                };
-                mPhotoDialog = new PhotoDialog(PhotoView.this, cover, del, edit);
-                mPhotoDialog.show();
-            } else {
-                mPhotoDialog = new PhotoDialog(PhotoView.this, true);
-                View.OnClickListener report = new ReportListner("photos", mPhoto.getId(), getBaseContext(), mPhotoDialog);
-                View.OnClickListener share = new ShareListner(getBaseContext(), "photos", mPhoto, mShareCount);
-                mPhotoDialog.setLisnter(report,share);
-                mPhotoDialog.show();
-            }
-        }
-
-    }
     @Override
-    public void onBackPressed() {
-        if(!isEdit)
-            super.onBackPressed();
-        else
-            backOnEditView(mBeforeDescription);
+    public void onDestroyView() {
+        nearByPhotoAsyncTask.cancel(true);
+        photoAsyncTask.cancel(true);
+        System.gc();
+        super.onDestroyView();
+    }
 
-    }
-    protected void setEdit(){
-        mDescription.setFocusable(true);
-        mDescription.setFocusableInTouchMode(true);
-        isEdit = true;
-        mBeforeDescription = mDescription.getText().toString();
-        mDescription.requestFocus(mBeforeDescription.length() - 1);
-        initEditActionBar();
-        mImm.showSoftInput(mDescription, InputMethodManager.RESULT_UNCHANGED_SHOWN);
-        mImm.showSoftInput(mDescription, InputMethodManager.SHOW_FORCED);
-        mImm.showSoftInput(mDescription, InputMethodManager.SHOW_IMPLICIT);
-        mImm.showSoftInput(mDescription, InputMethodManager.RESULT_SHOWN);
-    }
     @Override
     public void onResume()
     {
