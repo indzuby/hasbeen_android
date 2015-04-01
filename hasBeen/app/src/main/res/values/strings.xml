@@ -144,6 +144,7 @@
     <string name="load_status">%1$d places · %2$d photos</string>
     <string name="day_count">%d days</string>
     <string name="location_loading_text">Organizing photos in process.</string>
+    <string name="place_near_by">Place near by</string>
     <!--알람-->
     <string name="news">NEWS</string>
     <string name="you">YOU</string>

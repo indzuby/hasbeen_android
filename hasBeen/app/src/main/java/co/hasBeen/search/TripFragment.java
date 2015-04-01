@@ -23,6 +23,6 @@ public class TripFragment extends HasBeenFragment {
         return mView;
     }
     protected void init(){
-
+        
     }
 }

@@ -1,13 +1,11 @@
 package co.hasBeen.account;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -15,14 +13,14 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
+import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.SFSSLSocketFactory;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-27.
  */
-public class SignUpAsyncTask extends AsyncTask<String, Void, String> {
-    Handler mHandler;
+public class SignUpAsyncTask extends HasBeenAsyncTask<String, Void, String> {
     final static String DOMAIN = Session.SSL_DOMAIN;
     final static String SIGNUPEMAIL = "signUpWithEmail";
     final static String SIGNUPSOCIAL = "signUpWithSocial";
@@ -32,9 +30,6 @@ public class SignUpAsyncTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        HttpClient client = SFSSLSocketFactory.getHttpClient();
-        HttpResponse response;
-        Uri uri;
         try {
             if (params[0].equals(EMAIL))
                 uri = Uri.parse(DOMAIN + SIGNUPEMAIL);
@@ -80,7 +75,7 @@ public class SignUpAsyncTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String token) {
-
+        super.onPostExecute(token);
         Message msg = mHandler.obtainMessage();
         if (token!=null) {
             msg.obj = token;
@@ -92,6 +87,6 @@ public class SignUpAsyncTask extends AsyncTask<String, Void, String> {
     }
 
     public SignUpAsyncTask(Handler handler) {
-        mHandler = handler;
+        super(handler);
     }
 }

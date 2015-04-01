@@ -70,7 +70,7 @@ public class GalleryPlace extends ActionBarActivity implements OnMapReadyCallbac
             mPlaceName.setText(mPlace.getName());
         mPlaceCategory.setText(mPlace.getCategoryName());
         Glide.with(this).load(mPlace.getCategoryIconPrefix() + "88" + mPlace.getCategoryIconSuffix()).into(mPlaceIcon);
-
+        findViewById(R.id.check).setVisibility(View.VISIBLE);
     }
     @Override
     public void onMapReady(GoogleMap map) {

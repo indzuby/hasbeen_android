@@ -1,7 +1,6 @@
 package co.hasBeen.account;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
@@ -11,10 +10,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
@@ -27,25 +24,21 @@ import java.util.List;
 
 import co.hasBeen.model.network.LoginTokenRequest;
 import co.hasBeen.model.network.LoginTokenResponse;
-import co.hasBeen.utils.SFSSLSocketFactory;
+import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-27.
  */
-public class LogInAsyncTask extends AsyncTask<String, Void, LoginTokenResponse> {
-    Handler mHandler;
+public class LogInAsyncTask extends HasBeenAsyncTask<String, Void, LoginTokenResponse> {
     final static String URL=  Session.SSL_DOMAIN+"oauth/token";
     public final static String CLIENT = "hasBeenClientId";
     final static String SECRET="hasBeenSecret";
 
     @Override
     protected LoginTokenResponse doInBackground(String... params) {
-        HttpResponse response;
-        Uri uri;
         try {
             uri = Uri.parse(URL);
-            HttpClient httpclient = SFSSLSocketFactory.getHttpClient();
             HttpPost httppost = new HttpPost(uri.toString());
             httppost.addHeader("User-Agent","Android");
             httppost.addHeader("Content-Type","application/x-www-form-urlencoded");
@@ -80,7 +73,7 @@ public class LogInAsyncTask extends AsyncTask<String, Void, LoginTokenResponse> 
             // Execute HTTP Post Request
 
             Log.i("Request", gson.toJson(request));
-            response = httpclient.execute(httppost);
+            response = client.execute(httppost);
             StatusLine statusLine = response.getStatusLine();
 
             if (statusLine.getStatusCode() == 200) {
@@ -107,7 +100,7 @@ public class LogInAsyncTask extends AsyncTask<String, Void, LoginTokenResponse> 
 
     @Override
     protected void onPostExecute(LoginTokenResponse response) {
-
+        super.onPostExecute(response);
         Message msg = mHandler.obtainMessage();
         if (response != null) {
             msg.obj = response;
@@ -119,6 +112,6 @@ public class LogInAsyncTask extends AsyncTask<String, Void, LoginTokenResponse> 
     }
 
     public LogInAsyncTask(Handler handler) {
-        mHandler = handler;
+        super(handler);
     }
 }

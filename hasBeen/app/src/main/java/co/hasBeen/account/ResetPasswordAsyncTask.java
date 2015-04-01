@@ -1,45 +1,38 @@
 package co.hasBeen.account;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 
 import java.io.InputStream;
 
-import co.hasBeen.utils.SFSSLSocketFactory;
+import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by 주현 on 2015-03-23.
  */
-public class ResetPasswordAsyncTask extends AsyncTask<String, Void, Boolean> {
-    Handler mHandler;
+public class ResetPasswordAsyncTask extends HasBeenAsyncTask<String, Void, Boolean> {
     final static String URL = Session.SSL_DOMAIN+"resetPassword";
     public final static String CLIENT = "hasBeenClientId";
     final static String SECRET = "hasBeenSecret";
     @Override
     protected Boolean doInBackground(String... params) {
-        HttpResponse response;
-        Uri uri;
         try {
             uri = Uri.parse(URL+"?email="+params[0]);
-            HttpClient httpclient = SFSSLSocketFactory.getHttpClient();
             HttpGet httpGet = new HttpGet(uri.toString());
             httpGet.addHeader("User-Agent", "Android");
             httpGet.addHeader("Content-Type", "application/json");
             String authorization = CLIENT + ":" + SECRET;
             httpGet.addHeader("Authorization", "Basic " + Base64.encodeToString(authorization.getBytes(), Base64.NO_WRAP));
             // Add your data
-            response = httpclient.execute(httpGet);
+            response = client.execute(httpGet);
             StatusLine statusLine = response.getStatusLine();
 
             if (statusLine.getStatusCode() == 200) {
@@ -57,7 +50,7 @@ public class ResetPasswordAsyncTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean response) {
-
+        super.onPostExecute(response);
         Message msg = mHandler.obtainMessage();
         if (response != null) {
             msg.obj = response;
@@ -69,6 +62,6 @@ public class ResetPasswordAsyncTask extends AsyncTask<String, Void, Boolean> {
     }
 
     public ResetPasswordAsyncTask(Handler handler) {
-        mHandler = handler;
+        super(handler);
     }
 }

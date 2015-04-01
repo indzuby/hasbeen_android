@@ -2,7 +2,7 @@
 <RelativeLayout
     android:layout_height="56dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@drawable/place_selector"
+    android:background="@drawable/description_selector"
     android:layout_width="match_parent">
 
     <RelativeLayout
@@ -28,6 +28,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="16dp"
             android:layout_toRightOf="@+id/place_icon"
+            android:layout_toLeftOf="@+id/check"
             android:layout_height="wrap_content">
         <TextView
             android:layout_width="match_parent"
@@ -51,6 +52,15 @@
             android:layout_toRightOf="@+id/place_icon"
             />
         </LinearLayout>
+        <ImageView
+            android:id="@+id/check"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:visibility="gone"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/check_default"
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 
     <View
@@ -59,7 +69,6 @@
 
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginLeft="72dp"
         android:alpha="0.15"
         android:background="#000000"
         />

@@ -144,6 +144,7 @@
     <string name="load_status">장소 %1$d · 사진 %2$d </string>
     <string name="day_count">%d 일</string>
     <string name="location_loading_text">지역 정보를 가져오는 중입니다.</string>
+    <string name="place_near_by">근처 장소</string>
     <!--알람-->
     <string name="news">뉴스</string>
     <string name="you">나</string>
