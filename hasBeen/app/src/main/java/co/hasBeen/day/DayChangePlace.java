@@ -86,7 +86,7 @@ public class DayChangePlace extends ActionBarActivity implements OnMapReadyCallb
     protected void init() throws Exception{
         setContentView(R.layout.gallery_place_edit);
         String positionJson = getIntent().getStringExtra("position");
-        mPlaceName = (TextView) findViewById(R.id.profileName);
+        mPlaceName = (TextView) findViewById(R.id.name);
         mPlaceCategory = (TextView) findViewById(R.id.placeIcon);
         mPlaceIcon = (ImageView) findViewById(R.id.place_icon);
         database = new DatabaseHelper(this);

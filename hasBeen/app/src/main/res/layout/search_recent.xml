@@ -20,6 +20,6 @@
         android:paddingRight="16dp"
         android:paddingLeft="16dp"
         android:layout_centerVertical="true"
-        android:src="@drawable/cancel"
+        android:src="@drawable/delete"
         android:layout_height="match_parent" />
 </RelativeLayout>

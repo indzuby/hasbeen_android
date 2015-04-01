@@ -300,7 +300,7 @@ public class ProfileFragment extends HasBeenFragment {
     protected void initProfile() {
         ImageView coverImage = (ImageView) mView.findViewById(R.id.coverImage);
         ImageView profileImage = (ImageView) mView.findViewById(R.id.profileImage);
-        TextView profileName = (TextView) mView.findViewById(R.id.profileName);
+        TextView profileName = (TextView) mView.findViewById(R.id.name);
         TextView followerStatus = (TextView) mView.findViewById(R.id.followerStatus);
         TextView followingStatus = (TextView) mView.findViewById(R.id.followingStatus);
         ImageView setting = (ImageView) mView.findViewById(R.id.setting_follow);

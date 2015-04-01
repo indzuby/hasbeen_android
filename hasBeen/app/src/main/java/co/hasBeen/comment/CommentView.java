@@ -218,7 +218,7 @@ public class CommentView extends ActionBarActivity {
         contents.setText(comment.getContents());
         commentTime.setText(HasBeenDate.getGapTime(comment.getCreatedTime(),context));
         ImageView profileImage = (ImageView) commentView.findViewById(R.id.profileImage);
-        TextView profileName = (TextView) commentView.findViewById(R.id.profileName);
+        TextView profileName = (TextView) commentView.findViewById(R.id.name);
         Glide.with(context).load(comment.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(context)).into(profileImage);
         profileImage.setOnClickListener(new ProfileClickListner(context,comment.getUser().getId()));
         profileName.setOnClickListener(new ProfileClickListner(context, comment.getUser().getId()));

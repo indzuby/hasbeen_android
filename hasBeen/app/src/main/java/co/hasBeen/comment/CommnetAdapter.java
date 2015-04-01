@@ -55,7 +55,7 @@ public class CommnetAdapter extends BaseAdapter{
             view = inflater.inflate(R.layout.comment, null);
         }
         ImageView profileImage = (ImageView) view.findViewById(R.id.profileImage);
-        TextView profileName = (TextView) view.findViewById(R.id.profileName);
+        TextView profileName = (TextView) view.findViewById(R.id.name);
         TextView contents = (TextView) view.findViewById(R.id.contents);
         TextView commentTime = (TextView) view.findViewById(R.id.commentTime);
 

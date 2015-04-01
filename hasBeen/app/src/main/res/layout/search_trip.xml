@@ -24,4 +24,18 @@
         android:id="@+id/refresh"
         android:layout_centerInParent="true"
         android:src="@drawable/loading"/>
+    <RelativeLayout
+        android:id="@+id/mapButton"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="8dp"
+        android:background="@drawable/share_effect">
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/like_day"/>
+        </RelativeLayout>
 </RelativeLayout>

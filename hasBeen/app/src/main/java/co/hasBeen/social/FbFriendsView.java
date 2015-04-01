@@ -46,7 +46,7 @@ public class FbFriendsView extends ActionBarActivity{
                 super.handleMessage(msg);
                 if(msg.what==0) {
                     mFriends = (List) msg.obj;
-                    ListView listView = (ListView) findViewById(R.id.list);
+                    ListView listView = (ListView) findViewById(R.id.listView);
                     View mHeaderView = getHeaderView();
                     listView.addHeaderView(mHeaderView);
                     FollowingAdapter followingAdapter = new FollowingAdapter(mFriends, getBaseContext());

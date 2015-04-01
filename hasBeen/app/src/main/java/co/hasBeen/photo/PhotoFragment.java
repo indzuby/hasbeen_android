@@ -101,7 +101,7 @@ public class PhotoFragment extends Fragment {
     protected void intHeaderView() {
         View titleBox = mHeaderView.findViewById(R.id.dayTitleBox);
         ImageView profileImage = (ImageView) titleBox.findViewById(R.id.profileImage);
-        TextView profileName = (TextView) titleBox.findViewById(R.id.profileName);
+        TextView profileName = (TextView) titleBox.findViewById(R.id.name);
         TextView placeName = (TextView) titleBox.findViewById(R.id.placeName);
         TextView date = (TextView) titleBox.findViewById(R.id.date);
 
@@ -319,7 +319,7 @@ public class PhotoFragment extends Fragment {
             final Photo photo = mNearByPhotos.get(i);
             View nearByItem = LayoutInflater.from(getActivity()).inflate(R.layout.near_by_item, null);
             ImageView image = (ImageView) nearByItem.findViewById(R.id.profileImage);
-            TextView name = (TextView) nearByItem.findViewById(R.id.profileName);
+            TextView name = (TextView) nearByItem.findViewById(R.id.name);
             TextView date = (TextView) nearByItem.findViewById(R.id.date);
             ImageView nearPhoto = (ImageView) nearByItem.findViewById(R.id.photo);
             TextView description = (TextView) nearByItem.findViewById(R.id.description);

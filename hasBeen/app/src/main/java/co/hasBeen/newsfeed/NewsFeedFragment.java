@@ -60,7 +60,7 @@ public class NewsFeedFragment extends HasBeenFragment {
     boolean isDefault;
     void init(){
 
-        mListView = (PullToRefreshListView) mView.findViewById(R.id.list);
+        mListView = (PullToRefreshListView) mView.findViewById(R.id.listView);
         mListView.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
         mFeeds = new ArrayList<>();
         mFeedAdapter = new NewsFeedAdapter(getActivity(), mFeeds);

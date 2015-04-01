@@ -68,7 +68,7 @@ public class FollowingFragment extends Fragment {
         return mView;
     }
     protected void init() {
-        mList = (ListView) mView.findViewById(R.id.list);
+        mList = (ListView) mView.findViewById(R.id.listView);
 
         View mHeaderView = LayoutInflater.from(getActivity()).inflate(R.layout.follower_header, null, false);
         mCount = (TextView) mHeaderView.findViewById(R.id.count);

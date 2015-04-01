@@ -61,7 +61,7 @@ public class FollowingAdapter extends BaseAdapter {
         User toUser = follow.getToUser();
 
         ImageView profileImage = (ImageView) view.findViewById(R.id.profileImage);
-        TextView profileName = (TextView) view.findViewById(R.id.profileName);
+        TextView profileName = (TextView) view.findViewById(R.id.name);
         TextView followSatus = (TextView) view.findViewById(R.id.followStatus);
         ImageView followImage = (ImageView) view.findViewById(R.id.followImage);
 

@@ -88,7 +88,7 @@ public class GalleryPlace extends ActionBarActivity implements OnMapReadyCallbac
         setContentView(R.layout.gallery_place_edit);
         mPositionId = getIntent().getLongExtra("id",0);
 
-        mPlaceName = (TextView) findViewById(R.id.profileName);
+        mPlaceName = (TextView) findViewById(R.id.name);
         mPlaceCategory = (TextView) findViewById(R.id.placeIcon);
         mPlaceIcon = (ImageView) findViewById(R.id.place_icon);
         database = new DatabaseHelper(this);

@@ -355,4 +355,23 @@ public class JsonConverter {
         User user = gson.fromJson(reader, User.class);
         return user;
     }
+    public static List<User> convertJsonToUserList(Reader reader) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                if(f.getName().equals("coverPhoto"))
+                    return true;
+                return false;
+            }
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                return false;
+            }
+        }).create();
+        Type listType = new TypeToken<List<User>>(){}.getType();
+        List<User> users = gson.fromJson(reader, listType);
+        return users;
+    }
+
 }

@@ -41,7 +41,7 @@
                     android:textSize="12sp"
 
                     android:layout_below="@+id/placeName"
-                    android:id="@+id/profileName"/>
+                    android:id="@+id/name"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -68,7 +68,7 @@
                     android:id="@+id/date"
                     android:textColor="@color/light_gray"
 
-                    android:layout_alignTop="@+id/profileName"
+                    android:layout_alignTop="@+id/name"
                     android:layout_alignParentRight="true"
                     android:textSize="12sp"
                     />

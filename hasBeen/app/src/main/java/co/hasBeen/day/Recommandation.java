@@ -27,7 +27,7 @@ public class Recommandation {
             mRecommend = mInflater.inflate(R.layout.interested_in, null);
         }
         TextView placeName = (TextView) mRecommend.findViewById(R.id.placeName);
-        TextView profileName = (TextView) mRecommend.findViewById(R.id.profileName);
+        TextView profileName = (TextView) mRecommend.findViewById(R.id.name);
         ImageView profileImage = (ImageView) mRecommend.findViewById(R.id.profileImage);
         TextView date = (TextView) mRecommend.findViewById(R.id.date);
         ImageView mainPhoto = (ImageView) mRecommend.findViewById(R.id.mainPhoto);

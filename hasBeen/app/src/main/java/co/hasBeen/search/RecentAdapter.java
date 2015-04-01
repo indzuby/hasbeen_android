@@ -37,13 +37,9 @@ public class RecentAdapter extends BaseAdapter{
             e.printStackTrace();
         }
     }
-    public boolean isTypeEqual(RecentSearch recent){
-        return recent.getType().equals(mType);
-    }
     public RecentSearch noRecent(){
         RecentSearch noRecent = new RecentSearch();
         noRecent.setId(0L);
-        noRecent.setType("USER");
         return noRecent;
     }
     @Override

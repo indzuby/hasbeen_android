@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+import com.localytics.android.Localytics;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -107,6 +109,14 @@ public class PeopleFragment extends HasBeenFragment{
                 }
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Localytics.openSession();
+        Localytics.tagScreen("User Search");
+        Localytics.upload();
     }
 
     @Override

@@ -322,9 +322,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
         RecentSearch search = getRecentDao().queryBuilder().where().eq("keyword",recent.getKeyword()).and().eq("type",recent.getType()).queryForFirst();
         if(search!=null) {
-            getRecentDao().updateBuilder().updateColumnValue("create_date",new Date().getTime()).
+            UpdateBuilder<RecentSearch,Long>  updateBuilder = getRecentDao().updateBuilder();
+            updateBuilder.updateColumnValue("create_date",new Date().getTime()).
                         where().eq("keyword",recent.getKeyword()).and().eq("type",recent.getType());
-            getRecentDao().updateBuilder().update();
+            updateBuilder.update();
         }else
             getRecentDao().create(recent);
         return getRecentDao().extractId(recent);

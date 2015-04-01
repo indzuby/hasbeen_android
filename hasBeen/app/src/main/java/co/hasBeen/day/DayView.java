@@ -117,7 +117,7 @@ public class DayView extends ActionBarActivity{
     protected void initHeaderView(){
         View titleBox = findViewById(R.id.dayTitleBox);
         ImageView profileImage = (ImageView) titleBox.findViewById(R.id.profileImage);
-        TextView profileName = (TextView) titleBox.findViewById(R.id.profileName);
+        TextView profileName = (TextView) titleBox.findViewById(R.id.name);
         TextView placeName = (TextView) titleBox.findViewById(R.id.placeName);
         TextView date = (TextView) titleBox.findViewById(R.id.date);
         mImm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);

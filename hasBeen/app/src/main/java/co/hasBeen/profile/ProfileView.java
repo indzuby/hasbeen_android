@@ -271,7 +271,7 @@ public class ProfileView extends ActionBarActivity {
     protected void initProfile() {
         ImageView coverImage = (ImageView) findViewById(R.id.coverImage);
         ImageView profileImage = (ImageView) findViewById(R.id.profileImage);
-        TextView profileName = (TextView) findViewById(R.id.profileName);
+        TextView profileName = (TextView) findViewById(R.id.name);
         TextView followerStatus = (TextView) findViewById(R.id.followerStatus);
         TextView followingStatus = (TextView) findViewById(R.id.followingStatus);
         final ImageView followImage = (ImageView) findViewById(R.id.setting_follow);

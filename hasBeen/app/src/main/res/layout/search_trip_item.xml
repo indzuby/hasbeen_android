@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="56dp">
+    <RelativeLayout
+        android:id="@+id/day_top_box"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:alpha="0.8"
+        android:background="@color/day_background"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_toRightOf="@+id/imageBox"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/placeName"
+                android:singleLine="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/light_black"
+                android:textStyle="bold"
+                android:text="Paris,France - Versailles"
+                android:textSize="13sp" />
+            <LinearLayout
+                android:weightSum="3"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/name"
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:layout_alignParentLeft="true"
+                android:singleLine="true"
+                android:layout_toLeftOf="@+id/date"
+                android:text="박수현"
+                android:layout_height="wrap_content"
+                android:textColor="@color/light_gray"
+                android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/date"
+                    android:gravity="right"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:singleLine="true"
+                    android:text="2014.08.16"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/light_gray"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/imageBox"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="centerCrop"
+                android:id="@+id/mainPhoto"
+                android:src="@drawable/placeholder1" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+22"
+                android:id="@+id/photoCount"
+                android:padding="2dp"
+                android:layout_gravity="right|bottom"
+                android:layout_alignParentBottom="true"
+                android:textColor="@color/theme_white"
+                android:textSize="10sp"/>
+        </FrameLayout>
+    </RelativeLayout>
+</LinearLayout>

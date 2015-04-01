@@ -89,7 +89,7 @@ public class NewsFeedAdapter extends BaseAdapter {
         }
         newsfeedReason.setText(Util.getNewsFeedReason(feed.getNewsFeedType(),mContext));
         ImageView profileImage = (ImageView) view.findViewById(R.id.profileImage);
-        TextView profileName = (TextView) view.findViewById(R.id.profileName);
+        TextView profileName = (TextView) view.findViewById(R.id.name);
         TextView placeName = (TextView) view.findViewById(R.id.placeName);
         TextView date = (TextView) view.findViewById(R.id.date);
         TextView dayTitle = (TextView) view.findViewById(R.id.title);
@@ -97,25 +97,19 @@ public class NewsFeedAdapter extends BaseAdapter {
         final TextView likeCount = (TextView) view.findViewById(R.id.likeCount);
         final TextView commentCount = (TextView) view.findViewById(R.id.commentCount);
         final TextView shareCount = (TextView) view.findViewById(R.id.shareCount);
-//        View imageBox = view.findViewById(R.id.imageBox);
-//        ImageView mainImage = (ImageView) imageBox.findViewById(R.id.mainImage);
         FrameLayout imageBox = (FrameLayout) view.findViewById(R.id.imageBox);
         imageBox.removeAllViews();
         View imageLayout = getImageLayout(feed.getItineraryIndex(), feed.getPhotoList(), imageBox);
 
-//        ImageView mainImage = (ImageView) imageLayout.findViewById(R.id.mainImage);
 
-        profileName.setText(Util.parseName(feed.getUser(), mContext)); // coutry code -> name format
+        profileName.setText(Util.parseName(feed.getUser(), mContext));
         placeName.setText(feed.getMainPlace().getCity() + ", " + feed.getMainPlace().getCountry());
-//        date.setText(HasBeenDate.convertDate(feed.getDate()));
         dayTitle.setText(feed.getTitle());
         dayDescription.setText(feed.getDescription());
         likeCount.setText(mContext.getString(R.string.like_count,feed.getLoveCount()));
         commentCount.setText(mContext.getString(R.string.comment_count, feed.getCommentCount()));
         shareCount.setText(mContext.getString(R.string.share_count,feed.getShareCount()));
-//        socialAction.setText(mContext.getString(R.string.social_status,feed.getLoveCount(),feed.getCommentCount(),feed.getShareCount()));
         Glide.with(mContext).load(feed.getUser().getImageUrl()).transform(new CircleTransform(mContext)).into(profileImage);
-//        Glide.with(mContext).load(feed.getMainPhoto().getMediumUrl()).centerCrop().into(mainImage);
         imageBox.addView(imageLayout);
 
         LinearLayout commentButton = (LinearLayout) view.findViewById(R.id.commentButton);

@@ -58,7 +58,7 @@ public class UserAdapter extends BaseAdapter {
         User user = getItem(position);
 
         ImageView profileImage = (ImageView) view.findViewById(R.id.profileImage);
-        TextView profileName = (TextView) view.findViewById(R.id.profileName);
+        TextView profileName = (TextView) view.findViewById(R.id.name);
         TextView followSatus = (TextView) view.findViewById(R.id.followStatus);
         ImageView followImage = (ImageView) view.findViewById(R.id.followImage);
         followImage.setVisibility(View.GONE);
