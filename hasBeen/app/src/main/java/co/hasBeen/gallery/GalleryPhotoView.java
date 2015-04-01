@@ -16,6 +16,7 @@ import co.hasBeen.model.api.Photo;
  */
 public class GalleryPhotoView extends ActionBarActivity {
     final static int REQUEST_CODE = 2000;
+    Long mDayId;
     Long mPositionId;
     Long mPhotoId;
     ViewPager mViewPager;
@@ -24,11 +25,13 @@ public class GalleryPhotoView extends ActionBarActivity {
     GalleryPhotoPagerAdapter mAdapter;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPositionId = getIntent().getLongExtra("position_id",0);
+        mDayId = getIntent().getLongExtra("day_id",0);
         mPhotoId = getIntent().getLongExtra("photo_id", 0);
+        mPositionId = getIntent().getLongExtra("position_id",0);
         database = new DatabaseHelper(this);
         try {
-            photoList = database.selectPhotoByPositionId(mPositionId);
+            photoList = database.selectPhotosByDayId(mDayId);
+//            photoList = database.selectPhotoByPositionId(mPositionId);
         }catch (Exception e){
             e.printStackTrace();
         }

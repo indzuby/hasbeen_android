@@ -116,6 +116,8 @@ public class PhotoFragment extends Fragment {
         placeName.setText(mPhoto.getPlaceName());
         date.setText(HasBeenDate.convertDate(mPhoto.getTakenTime()));
         mDescription.setText(mPhoto.getDescription());
+        ((PhotoActivity)getActivity()).mDescription = mDescription;
+        ((PhotoActivity)getActivity()).mImm = mImm;
         mView.findViewById(R.id.title).setVisibility(View.GONE);
         mLikeCount.setText(getString(R.string.like_count, mPhoto.getLoveCount()));
         mCommentCount.setText(getString(R.string.comment_count, mPhoto.getCommentCount()));
@@ -143,7 +145,7 @@ public class PhotoFragment extends Fragment {
             mDescription.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((PhotoView)getActivity()).setEdit();
+                    ((PhotoActivity)getActivity()).setEdit();
                 }
             });
         }

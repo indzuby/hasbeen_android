@@ -80,6 +80,7 @@ public class GalleryAdapter extends BaseAdapter {
                 Intent intent = new Intent(mContext, GalleryPhotoView.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("photo_id", photo.getId());
+                intent.putExtra("day_id", photo.getDayId());
                 intent.putExtra("position_id", photo.getPositionId());
                 intent.putExtra("index",position);
                 mContext.startActivity(intent);

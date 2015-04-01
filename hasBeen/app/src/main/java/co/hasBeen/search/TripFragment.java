@@ -119,6 +119,8 @@ public class TripFragment extends HasBeenFragment {
 
     @Override
     public void onDestroy() {
+        if(tripAsyncTask!=null)
+            tripAsyncTask.cancel(true);
         System.gc();
         super.onDestroy();
     }
