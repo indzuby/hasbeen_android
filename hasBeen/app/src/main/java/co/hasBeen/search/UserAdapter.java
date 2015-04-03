@@ -62,7 +62,7 @@ public class UserAdapter extends BaseAdapter {
         TextView profileName = (TextView) view.findViewById(R.id.name);
         TextView followSatus = (TextView) view.findViewById(R.id.followStatus);
         ImageView followImage = (ImageView) view.findViewById(R.id.followImage);
-        followImage.setVisibility(View.GONE);
+//        followImage.setVisibility(View.GONE);
         Glide.with(mContext).load(user.getImageUrl()).placeholder(R.mipmap.profile_placeholder).transform(new CircleTransform(mContext)).into(profileImage);
         profileName.setText(Util.parseName(user, mContext));
         followSatus.setText(mContext.getString(R.string.follow_status,user.getFollowerCount(),user.getFollowingCount()));

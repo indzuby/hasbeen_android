@@ -31,7 +31,7 @@ public class SearchPeopleAsyncTask extends HasBeenAsyncTask<Object,Void,List<Use
         try {
             String url =URL+"?keyword="+params[1];
             if(params.length>=3)
-                url+="&lastUserId="+params[2];
+                url+="&page="+params[2];
             uri = Uri.parse(url);
             HttpGet get = new HttpGet(uri.toString());
             get.addHeader("User-Agent","Android");

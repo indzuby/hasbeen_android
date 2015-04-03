@@ -65,8 +65,11 @@ public class RecentAdapter extends BaseAdapter{
             view = inflater.inflate(R.layout.search_recent,null);
         }
         final TextView keyword = (TextView) view.findViewById(R.id.keyword);
-        if(getItemId(position)==0)
-            keyword.setText("최근 검색 결과가 없습니다.");
+        View cancel = view.findViewById(R.id.cancel);
+        if(getItemId(position)==0) {
+            keyword.setText("");
+            cancel.setVisibility(View.GONE);
+        }
         else {
             final RecentSearch recent = getItem(position);
             keyword.setText(recent.getKeyword());
@@ -76,7 +79,7 @@ public class RecentAdapter extends BaseAdapter{
                     keywordTouch(recent.getKeyword());
                 }
             });
-            View cancel = view.findViewById(R.id.cancel);
+            cancel.setVisibility(View.VISIBLE);
             cancel.setOnClickListener(new removeRecent(position));
         }
         return view;

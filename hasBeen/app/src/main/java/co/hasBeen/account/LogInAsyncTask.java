@@ -31,7 +31,7 @@ import co.hasBeen.utils.Session;
  * Created by zuby on 2015-01-27.
  */
 public class LogInAsyncTask extends HasBeenAsyncTask<String, Void, LoginTokenResponse> {
-    final static String URL=  Session.SSL_DOMAIN+"oauth/token";
+    final static String URL=  Session.DOMAIN+"oauth/token";
     public final static String CLIENT = "hasBeenClientId";
     final static String SECRET="hasBeenSecret";
 

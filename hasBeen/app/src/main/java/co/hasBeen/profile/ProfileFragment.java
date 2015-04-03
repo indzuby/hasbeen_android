@@ -33,8 +33,7 @@ import co.hasBeen.model.api.Loved;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.model.api.User;
 import co.hasBeen.profile.follow.FollowView;
-import co.hasBeen.profile.map.LikeDayAsyncTask;
-import co.hasBeen.profile.map.LikePhotoAsyncTask;
+import co.hasBeen.profile.map.LikeAsyncTask;
 import co.hasBeen.profile.map.ProfileDayAsyncTask;
 import co.hasBeen.profile.map.ProfilePhotoAsyncTask;
 import co.hasBeen.setting.ProfileImageListner;
@@ -364,14 +363,14 @@ public class ProfileFragment extends HasBeenFragment {
                 if (mLikeDays != null)
                     dayRendering(mLikeDays);
                 else
-                    new LikeDayAsyncTask(likeDayHandler).execute(mAccessToken,mUser.getId());
+                    new LikeAsyncTask(likeDayHandler).execute(mAccessToken,mUser.getId(),"Days");
 
 
             } else {
                 if (mLikePhotos != null)
                     photoRendering(mLikePhotos);
                 else
-                    new LikePhotoAsyncTask(likePhotoHandler).execute(mAccessToken,mUser.getId());
+                    new LikeAsyncTask(likePhotoHandler).execute(mAccessToken,mUser.getId(),"Photos");
             }
         }
     }

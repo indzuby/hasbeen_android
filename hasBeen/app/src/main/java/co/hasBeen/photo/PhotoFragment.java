@@ -1,6 +1,5 @@
 package co.hasBeen.photo;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -60,7 +58,6 @@ public class PhotoFragment extends Fragment {
     Long lastCommentId;
     Long mMyid;
     EditText mDescription;
-    InputMethodManager mImm;
     View mLoading;
     boolean isLoading;
     TextView titleView;
@@ -105,7 +102,6 @@ public class PhotoFragment extends Fragment {
         TextView placeName = (TextView) titleBox.findViewById(R.id.placeName);
         TextView date = (TextView) titleBox.findViewById(R.id.date);
 
-        mImm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         mDescription = (EditText) mHeaderView.findViewById(R.id.description);
         mLikeCount = (TextView) mHeaderView.findViewById(R.id.likeCount);
         mCommentCount = (TextView) mHeaderView.findViewById(R.id.commentCount);
@@ -116,8 +112,6 @@ public class PhotoFragment extends Fragment {
         placeName.setText(mPhoto.getPlaceName());
         date.setText(HasBeenDate.convertDate(mPhoto.getTakenTime()));
         mDescription.setText(mPhoto.getDescription());
-        ((PhotoActivity)getActivity()).mDescription = mDescription;
-        ((PhotoActivity)getActivity()).mImm = mImm;
         mView.findViewById(R.id.title).setVisibility(View.GONE);
         mLikeCount.setText(getString(R.string.like_count, mPhoto.getLoveCount()));
         mCommentCount.setText(getString(R.string.comment_count, mPhoto.getCommentCount()));
@@ -173,7 +167,7 @@ public class PhotoFragment extends Fragment {
                             lastCommentId = commentList.get(0).getId();
                             Collections.reverse(commentList);
                             for (Comment comment : commentList) {
-                                commentBox.addView(CommentView.makeComment(getActivity(), comment), 2);
+                                commentBox.addView(CommentView.makeComment(getActivity(), comment,null), 2);
                                 mViewCommentCount++;
                             }
 
@@ -186,7 +180,7 @@ public class PhotoFragment extends Fragment {
         });
         for (int i = 0; i < mPhoto.getCommentList().size(); i++) {
             Comment comment = mPhoto.getCommentList().get(i);
-            View view = CommentView.makeComment(getActivity(), comment);
+            View view = CommentView.makeComment(getActivity(), comment,null);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -217,7 +211,7 @@ public class PhotoFragment extends Fragment {
                             flag = false;
                             if (msg.what == 0) {
                                 Comment comment = (Comment) msg.obj;
-                                commentBox.addView(CommentView.makeComment(getActivity(), comment));
+                                commentBox.addView(CommentView.makeComment(getActivity(), comment,null));
                                 mTotalCommentCount++;
                                 mPhoto.setCommentCount(mTotalCommentCount);
                                 mCommentCount.setText(getString(R.string.comment_count, mPhoto.getCommentCount()));

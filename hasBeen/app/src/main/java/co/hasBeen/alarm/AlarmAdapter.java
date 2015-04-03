@@ -21,7 +21,7 @@ import co.hasBeen.day.DayView;
 import co.hasBeen.model.api.Alarm;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.model.api.User;
-import co.hasBeen.photo.PhotoView;
+import co.hasBeen.photo.PhotoActivity;
 import co.hasBeen.profile.ProfileClickListner;
 import co.hasBeen.profile.ProfileView;
 import co.hasBeen.utils.CircleTransform;
@@ -97,7 +97,7 @@ public class AlarmAdapter extends BaseAdapter {
             if (!flag) {
                 flag = true;
                 if (type == Alarm.Type.PHOTO_COMMENT || type == Alarm.Type.PHOTO_LOVE) {
-                    Intent intent = new Intent(mContext, PhotoView.class);
+                    Intent intent = new Intent(mContext, PhotoActivity.class);
                     intent.putExtra("id", alarm.getPhoto().getId());
                     mContext.startActivity(intent);
                 } else if (type == Alarm.Type.DAY_COMMENT || type == Alarm.Type.DAY_LOVE || type == Alarm.Type.DAY_POST) {

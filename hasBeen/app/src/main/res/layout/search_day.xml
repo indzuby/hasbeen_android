@@ -8,9 +8,8 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/theme_white"
-        android:divider="#22000000"
-        android:dividerHeight="2px"></ListView>
+        android:background="@color/day_background"
+        android:divider="@color/transparent"></ListView>
     <View
         android:layout_width="match_parent"
         android:alpha="0.1"
@@ -25,6 +24,7 @@
         android:layout_centerInParent="true"
         android:src="@drawable/loading"/>
     <RelativeLayout
+        android:visibility="gone"
         android:id="@+id/mapButton"
         android:layout_width="72dp"
         android:layout_height="72dp"

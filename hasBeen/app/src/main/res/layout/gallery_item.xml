@@ -8,7 +8,7 @@
     android:layout_height="@dimen/gallery_item_height">
     <ImageView
         android:layout_width="match_parent"
-        android:src="@drawable/photo_sample"
+
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         android:id="@+id/mainPhoto"

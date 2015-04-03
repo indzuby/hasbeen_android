@@ -30,7 +30,7 @@ public class ProfileFollowListner implements View.OnClickListener {
     public void onClick(View v) {
         ImageView icon = (ImageView) v;
         if(follow == null) {
-            icon.setImageResource(R.drawable.following);
+            icon.setImageResource(R.drawable.following_green);
             new DoFollowAsyncTask(new Handler(Looper.getMainLooper()) {
                 @Override
                 public void handleMessage(Message msg) {

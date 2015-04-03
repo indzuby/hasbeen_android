@@ -35,7 +35,7 @@ import co.hasBeen.utils.Session;
  * Created by 주현 on 2015-03-25.
  */
 public class SettingAccount extends ActionBarActivity implements View.OnClickListener {
-    final static long DEFAULT_BIRTHDAY = 1000;
+    final static long DEFAULT_BIRTHDAY = 1900;
     User mUser;
     String mAccessToken;
     EditText firstName,lastName,city,country,userName;
@@ -82,7 +82,7 @@ public class SettingAccount extends ActionBarActivity implements View.OnClickLis
             userName.setText(mUser.getUserName());
         Calendar calendar = new GregorianCalendar();
         calendar.setTimeInMillis(mUser.getBirthDay());
-        if(calendar.get(Calendar.YEAR)!=DEFAULT_BIRTHDAY)
+        if(calendar.get(Calendar.YEAR)>DEFAULT_BIRTHDAY)
             birthDay.setText(HasBeenDate.convertDate(mUser.getBirthDay()));
         city.setText(mUser.getCity());
         country.setText(mUser.getCountry());

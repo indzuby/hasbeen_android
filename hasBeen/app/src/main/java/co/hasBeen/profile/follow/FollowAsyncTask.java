@@ -1,4 +1,4 @@
-package co.hasBeen.search;
+package co.hasBeen.profile.follow;
 
 import android.net.Uri;
 import android.os.Handler;
@@ -13,56 +13,60 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
 
-import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Follow;
 import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
 
 /**
- * Created by 주현 on 2015-03-27.
+ * Created by 주현 on 2015-02-02.
  */
-public class SearchTripAsyncTask extends HasBeenAsyncTask<Object,Void,List<Day>> {
-    final static String URL = Session.DOMAIN+"search/days";
-    public SearchTripAsyncTask(Handler mHandler) {
-        super(mHandler);
-    }
+public class FollowAsyncTask extends HasBeenAsyncTask<Object,Void,List<Follow>> {
+
+//    final static String URL = "https://gist.githubusercontent.com/indzuby/43da0aae3a9e9875d670/raw/16c0c339eea735923c7d8a495403a5e543936757/FollowerList";
+    final static String URL = Session.DOMAIN+"users/";
     @Override
-    protected List<Day> doInBackground(Object... params) {
+    protected List<Follow> doInBackground(Object... params) {
         try {
-            String url =URL+"?keyword="+params[1];
-            if(params.length>=3)
-                url+="&lastUpdatedTime="+params[2];
-            uri = Uri.parse(url);
+            uri = Uri.parse(URL+params[1]+"/"+params[2]);
             HttpGet get = new HttpGet(uri.toString());
             get.addHeader("User-Agent","Android");
             get.addHeader("Content-Type","application/json");
             get.addHeader("Authorization","Bearer " +params[0]);
             response = client.execute(get);
             StatusLine statusLine = response.getStatusLine();
-            if (statusLine.getStatusCode() == 200) {
+            if(statusLine.getStatusCode() == 200) {
                 HttpEntity entity = response.getEntity();
                 InputStream content = entity.getContent();
+
+                //Read the server response and attempt to parse it as JSON
                 Reader reader = new InputStreamReader(content);
-                List<Day> days = JsonConverter.convertJsonDayList(reader);
+
+
+                List<Follow> Followers = JsonConverter.convertJsonFollowList(reader);
                 content.close();
-                return days;
+                return Followers;
             }
-        } catch (Exception e) {
+
+        }catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    protected void onPostExecute(List<Day> days) {
-        super.onPostExecute(days);
+    protected void onPostExecute(List<Follow> Followers) {
         Message msg = mHandler.obtainMessage();
-        if(days !=null) {
-            msg.obj = days;
+        if(Followers !=null) {
+            msg.obj = Followers;
             msg.what = 0;
         }else {
             msg.what = -1;
         }
         mHandler.sendMessage(msg);
+    }
+
+    public FollowAsyncTask(Handler handler) {
+        super(handler);
     }
 }

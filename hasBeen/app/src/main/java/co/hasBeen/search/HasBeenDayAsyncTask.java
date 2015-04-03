@@ -1,8 +1,14 @@
-package co.hasBeen.profile.map;
+package co.hasBeen.search;
 
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
@@ -11,23 +17,24 @@ import org.apache.http.client.methods.HttpGet;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Type;
 import java.util.List;
 
-import co.hasBeen.model.api.Loved;
+import co.hasBeen.model.api.Day;
+import co.hasBeen.model.api.Photo;
 import co.hasBeen.utils.HasBeenAsyncTask;
-import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
 
 /**
  * Created by zuby on 2015-01-27.
  */
-public class LikeDayAsyncTask extends HasBeenAsyncTask<Object,Void,List<Loved>> {
+public class HasBeenDayAsyncTask extends HasBeenAsyncTask<Object,Void,List<Day>> {
 //    final static String URL = "https://gist.githubusercontent.com/indzuby/c9e87b33ca65eac93065/raw/4000d9c125b1e56c60f77523dc806e4a9cdb303d/NewsFeed";
-    final static String URL = Session.DOMAIN+"users/";
+    final static String URL = Session.DOMAIN+"hasBeen/days";
     @Override
-    protected List<Loved> doInBackground(Object... params) {
+    protected List<Day> doInBackground(Object... params) {
         try {
-            uri = Uri.parse(URL+params[1]+"/lovedDays");
+            uri = Uri.parse(URL);
             HttpGet get = new HttpGet(uri.toString());
             get.addHeader("User-Agent","Android");
             get.addHeader("Content-Type","application/json");
@@ -40,7 +47,27 @@ public class LikeDayAsyncTask extends HasBeenAsyncTask<Object,Void,List<Loved>> 
 
                 //Read the server response and attempt to parse it as JSON
                 Reader reader = new InputStreamReader(content);
-                List<Loved> posts = JsonConverter.convertJsonLovedList(reader);
+
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                Gson gson = gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
+                    @Override
+                    public boolean shouldSkipField(FieldAttributes f) {
+                        if(f.getDeclaredClass() == Photo.class){
+                            if(f.getName().equals("day") || f.getName().equals("place"))
+                                return true;
+                        }
+                        if(f.getName().equals("coverPhoto"))
+                            return true;
+                        return false;
+                    }
+
+                    @Override
+                    public boolean shouldSkipClass(Class<?> clazz) {
+                        return false;
+                    }
+                }).create();
+                Type listType = new TypeToken<List<Day>>(){}.getType();
+                List<Day> posts = gson.fromJson(reader, listType);
                 content.close();
                 return posts;
             }
@@ -52,7 +79,7 @@ public class LikeDayAsyncTask extends HasBeenAsyncTask<Object,Void,List<Loved>> 
     }
 
     @Override
-    protected void onPostExecute(List<Loved> days) {
+    protected void onPostExecute(List<Day> days) {
 
         Message msg = mHandler.obtainMessage();
         if(days!=null) {
@@ -64,7 +91,7 @@ public class LikeDayAsyncTask extends HasBeenAsyncTask<Object,Void,List<Loved>> 
         mHandler.sendMessage(msg);
     }
 
-    public LikeDayAsyncTask(Handler handler) {
-        super(handler);
+    public HasBeenDayAsyncTask(Handler mHandler) {
+        super(mHandler);
     }
 }

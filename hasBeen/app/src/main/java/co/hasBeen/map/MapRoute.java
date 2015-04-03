@@ -27,7 +27,7 @@ import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.model.api.Place;
 import co.hasBeen.model.api.Position;
-import co.hasBeen.photo.PhotoView;
+import co.hasBeen.photo.PhotoActivity;
 import co.hasBeen.utils.Util;
 
 /**
@@ -133,7 +133,7 @@ public class MapRoute {
             public boolean onClusterItemClick(PhotoPin photoPin) {
                 if(!flag) {
                     flag = true;
-                    Intent intent = new Intent(mContext, PhotoView.class);
+                    Intent intent = new Intent(mContext, PhotoActivity.class);
                     intent.putExtra("id",photoPin.getPhoto().getId());
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);

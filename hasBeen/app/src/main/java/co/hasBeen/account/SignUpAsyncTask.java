@@ -21,7 +21,7 @@ import co.hasBeen.utils.Session;
  * Created by zuby on 2015-01-27.
  */
 public class SignUpAsyncTask extends HasBeenAsyncTask<String, Void, String> {
-    final static String DOMAIN = Session.SSL_DOMAIN;
+    final static String DOMAIN = Session.DOMAIN;
     final static String SIGNUPEMAIL = "signUpWithEmail";
     final static String SIGNUPSOCIAL = "signUpWithSocial";
     final static String AUTHORIZATION = "hasBeenClientId:hasBeenSecret";

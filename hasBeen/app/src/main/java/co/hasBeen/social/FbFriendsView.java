@@ -85,7 +85,7 @@ public class FbFriendsView extends ActionBarActivity{
         return mHeaderView;
     }
     protected void init() {
-        setContentView(R.layout.follower);
+        setContentView(R.layout.follow);
         initActionBar();
         mLoading = findViewById(R.id.refresh);
         startLoading();

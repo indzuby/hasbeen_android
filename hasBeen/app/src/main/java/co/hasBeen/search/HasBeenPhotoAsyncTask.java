@@ -27,7 +27,7 @@ import co.hasBeen.utils.Session;
 /**
  * Created by zuby on 2015-01-29.
  */
-public class SearchPhotoAsyncTask extends HasBeenAsyncTask<Object,Void,List<Photo>> {
+public class HasBeenPhotoAsyncTask extends HasBeenAsyncTask<Object,Void,List<Photo>> {
 
 //    final static String URL = "https://gist.githubusercontent.com/indzuby/01dd9766562e90d0af7e/raw/d4aca1859f83a9599dbe15541624b1499aae8ea2/photoNearBy";
     final static String URL = Session.DOMAIN+"hasBeen/photos";
@@ -91,7 +91,7 @@ public class SearchPhotoAsyncTask extends HasBeenAsyncTask<Object,Void,List<Phot
         mHandler.sendMessage(msg);
     }
 
-    public SearchPhotoAsyncTask(Handler mHandler) {
+    public HasBeenPhotoAsyncTask(Handler mHandler) {
         super(mHandler);
     }
 }

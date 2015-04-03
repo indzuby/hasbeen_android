@@ -30,7 +30,6 @@ import co.hasBeen.R;
 import co.hasBeen.model.api.Comment;
 import co.hasBeen.profile.ProfileClickListner;
 import co.hasBeen.report.ReportListner;
-import co.hasBeen.utils.CacheControl;
 import co.hasBeen.utils.CircleTransform;
 import co.hasBeen.utils.HasBeenDate;
 import co.hasBeen.utils.Session;
@@ -209,10 +208,10 @@ public class CommentView extends ActionBarActivity {
     public void onDestroy() {
         super.onDestroy();
         System.gc();
-        CacheControl.deleteCache(this);
     }
-    public static View makeComment(Context context,Comment comment){
-        View commentView = LayoutInflater.from(context).inflate(R.layout.comment,null);
+    public static View makeComment(Context context,Comment comment,View commentView){
+        if(commentView ==null)
+            commentView = LayoutInflater.from(context).inflate(R.layout.comment,null);
         TextView contents = (TextView) commentView.findViewById(R.id.contents);
         TextView commentTime = (TextView) commentView.findViewById(R.id.commentTime);
         contents.setText(comment.getContents());
@@ -225,7 +224,6 @@ public class CommentView extends ActionBarActivity {
         profileName.setText(Util.parseName(comment.getUser(),context));
         return commentView;
     }
-
     @Override
     public void onResume()
     {

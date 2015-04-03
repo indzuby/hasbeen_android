@@ -24,6 +24,7 @@ public class ShareListner implements View.OnClickListener {
         this.type = type;
         this.social = social;
         this.socialAction = socialAction;
+        id = social.getId();
         url = Session.WEP_DOMAIN + type+"/" + id;
     }
 

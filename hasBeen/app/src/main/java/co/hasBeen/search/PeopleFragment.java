@@ -28,12 +28,14 @@ import co.hasBeen.utils.Session;
  * Created by 주현 on 2015-03-24.
  */
 public class PeopleFragment extends HasBeenFragment{
+    final static String TYPE = "USER";
     String mAccessToken;
     List<User> mUserList;
     String mKeyword;
     ListView mListView;
     DatabaseHelper database;
     UserAdapter mUserAdapter;
+    boolean isComplete;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.search_people, container, false);
@@ -46,7 +48,7 @@ public class PeopleFragment extends HasBeenFragment{
 
     protected void initDefault(){
         // database
-        RecentAdapter adapter = new RecentAdapter(getActivity(),"USER");
+        RecentAdapter adapter = new RecentAdapter(getActivity(),TYPE);
         mListView.setAdapter(adapter);
     }
     SearchPeopleAsyncTask searchPeopleAsyncTask;
@@ -55,6 +57,7 @@ public class PeopleFragment extends HasBeenFragment{
         mUserList = new ArrayList<>();
         mUserAdapter = new UserAdapter(mUserList,getActivity());
         mListView.setAdapter(mUserAdapter);
+        isComplete = false;
         startLoading();
         searchPeopleAsyncTask = new SearchPeopleAsyncTask(userHandler);
         searchPeopleAsyncTask.execute(mAccessToken,keyword);
@@ -63,7 +66,7 @@ public class PeopleFragment extends HasBeenFragment{
     protected void insertRecentKeyword(String keyword) {
         RecentSearch recent = new RecentSearch();
         recent.setKeyword(keyword);
-        recent.setType("USER");
+        recent.setType(TYPE);
         recent.setCreateDate(new Date().getTime());
         try {
             database.insertRecent(recent);
@@ -85,6 +88,8 @@ public class PeopleFragment extends HasBeenFragment{
                         mUserAdapter.notifyDataSetChanged();
                     }
                 });
+                if(users.size()<=0)
+                    isComplete = true;
                 init();
             }else {
             }
@@ -100,11 +105,11 @@ public class PeopleFragment extends HasBeenFragment{
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if(visibleItemCount<totalItemCount && firstVisibleItem+visibleItemCount>=totalItemCount) {
-                    if(!isLoading) {
+                    if(!isLoading && !isComplete) {
                         startLoading();
                         User user = mUserList.get(mUserList.size()-1);
                         searchPeopleAsyncTask = new SearchPeopleAsyncTask(userHandler);
-                        searchPeopleAsyncTask.execute(mAccessToken,mKeyword,user.getId());
+                        searchPeopleAsyncTask.execute(mAccessToken,mKeyword,user.getPage());
                     }
                 }
             }
@@ -121,7 +126,7 @@ public class PeopleFragment extends HasBeenFragment{
 
     @Override
     public void onDestroy() {
-        if(searchPeopleAsyncTask!=null)
+        if(searchPeopleAsyncTask !=null)
             searchPeopleAsyncTask.cancel(true);
         System.gc();
         super.onDestroy();

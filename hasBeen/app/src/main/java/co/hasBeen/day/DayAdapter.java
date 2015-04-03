@@ -28,7 +28,6 @@ import co.hasBeen.model.api.Photo;
 import co.hasBeen.model.api.Position;
 import co.hasBeen.photo.EnterPhotoListner;
 import co.hasBeen.utils.HasBeenDate;
-import co.hasBeen.utils.RecycleUtils;
 import co.hasBeen.utils.Session;
 import co.hasBeen.utils.Util;
 import it.sephiroth.android.library.widget.HListView;
@@ -52,12 +51,6 @@ public class DayAdapter extends BaseAdapter {
         mAccessToken = Session.getString(mContext,"accessToken",null);
 
     }
-    public void recycle(){
-        for(PhotoAdapter adapter : recycleAdapter)
-            adapter.recycle();
-
-    }
-
     @Override
     public int getCount() {
         return mPositionList.size();
@@ -212,11 +205,6 @@ public class DayAdapter extends BaseAdapter {
     class PhotoAdapter extends BaseAdapter {
         List<Photo> mPhotoList;
         private List<WeakReference<View>> mRecycleList = new ArrayList<WeakReference<View>>();
-        public void recycle() {
-            for (WeakReference<View> ref : mRecycleList) {
-                RecycleUtils.recursiveRecycle(ref.get());
-            }
-        }
         public PhotoAdapter(List<Photo> mPhotoList) {
             this.mPhotoList = mPhotoList;
         }

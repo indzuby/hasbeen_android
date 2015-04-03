@@ -1,4 +1,4 @@
-package co.hasBeen.profile.follow;
+package co.hasBeen.profile.map;
 
 import android.net.Uri;
 import android.os.Handler;
@@ -13,25 +13,25 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
 
-import co.hasBeen.model.api.Follow;
+import co.hasBeen.model.api.Loved;
 import co.hasBeen.utils.HasBeenAsyncTask;
 import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
 
 /**
- * Created by 주현 on 2015-02-02.
+ * Created by zuby on 2015-01-29.
  */
-public class FollowingAsyncTask extends HasBeenAsyncTask<Object,Void,List<Follow>> {
-//    final static String URL = "https://gist.githubusercontent.com/indzuby/e0892db0c7155a62fc22/raw/86990d9574684a129edd71e8e1eafd1b80c5d635/FollowingList";
+public class LikeAsyncTask extends HasBeenAsyncTask<Object,Void,List<Loved>> {
+//    final static String URL = "https://gist.githubusercontent.com/indzuby/01dd9766562e90d0af7e/raw/d4aca1859f83a9599dbe15541624b1499aae8ea2/photoNearBy";
     final static String URL = Session.DOMAIN+"users/";
     @Override
-    protected List<Follow> doInBackground(Object... params) {
+    protected List<Loved> doInBackground(Object... params) {
         try {
-            uri = Uri.parse(URL+params[1]+"/following");
-            HttpGet get = new HttpGet(uri.toString());
-            get.addHeader("User-Agent","Android");
-            get.addHeader("Content-Type","application/json");
-            get.addHeader("Authorization","Bearer " +params[0]);
+                uri = Uri.parse(URL+params[1]+"/loved"+params[2]);
+                HttpGet get = new HttpGet(uri.toString());
+                get.addHeader("User-Agent","Android");
+                get.addHeader("Content-Type","application/json");
+                get.addHeader("Authorization","Bearer " +params[0]);
             response = client.execute(get);
             StatusLine statusLine = response.getStatusLine();
             if(statusLine.getStatusCode() == 200) {
@@ -40,9 +40,9 @@ public class FollowingAsyncTask extends HasBeenAsyncTask<Object,Void,List<Follow
 
                 //Read the server response and attempt to parse it as JSON
                 Reader reader = new InputStreamReader(content);
-                List<Follow> Followers = JsonConverter.convertJsonFollowList(reader);
+                List<Loved> photos = JsonConverter.convertJsonLovedList(reader);
                 content.close();
-                return Followers;
+                return photos;
             }
 
         }catch (Exception e) {
@@ -52,11 +52,11 @@ public class FollowingAsyncTask extends HasBeenAsyncTask<Object,Void,List<Follow
     }
 
     @Override
-    protected void onPostExecute(List<Follow> Followers) {
+    protected void onPostExecute(List<Loved>  photos) {
 
         Message msg = mHandler.obtainMessage();
-        if(Followers !=null) {
-            msg.obj = Followers;
+        if(photos !=null) {
+            msg.obj = photos;
             msg.what = 0;
         }else {
             msg.what = -1;
@@ -64,7 +64,7 @@ public class FollowingAsyncTask extends HasBeenAsyncTask<Object,Void,List<Follow
         mHandler.sendMessage(msg);
     }
 
-    public FollowingAsyncTask(Handler handler) {
-        super(handler);
+    public LikeAsyncTask(Handler mHandler) {
+        super(mHandler);
     }
 }

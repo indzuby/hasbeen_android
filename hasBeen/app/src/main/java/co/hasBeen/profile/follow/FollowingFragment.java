@@ -59,10 +59,10 @@ public class FollowingFragment extends Fragment {
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.follower, container, false);
+        mView = inflater.inflate(R.layout.follow, container, false);
         mUserId = getArguments().getLong("userId");
         mAccessToken = Session.getString(getActivity(), "accessToken", null);
-        new FollowingAsyncTask(followingHandler).execute(mAccessToken,mUserId);
+        new FollowAsyncTask(followingHandler).execute(mAccessToken,mUserId,"following");
         mType = getArguments().getString("type");
         init();
         return mView;

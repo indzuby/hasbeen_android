@@ -23,7 +23,6 @@ import co.hasBeen.model.api.Photo;
 import co.hasBeen.model.api.Place;
 import co.hasBeen.model.api.Position;
 import co.hasBeen.utils.HasBeenDate;
-import co.hasBeen.utils.HasBeenOpenCv;
 import co.hasBeen.utils.Util;
 
 /**
@@ -229,8 +228,6 @@ public class ItemModule {
         photo.setPlaceId(placeId);
         photo.setPositionId(positionId);
         photo.setClearestId(photo.getId());
-        if(photo.getEdgeCount()==null)
-            photo.setEdgeCount(HasBeenOpenCv.detectEdge(getThumbnail(photo.getPhotoId())));
         database.updatePhoto(photo);
 
     }

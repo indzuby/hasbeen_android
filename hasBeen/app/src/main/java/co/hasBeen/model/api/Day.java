@@ -30,6 +30,19 @@ public class Day extends Social{
     Long mainPlaceId;
     @DatabaseField(columnName = "created_time")
     Long createdTime;
+    User user;
+    int itineraryIndex;
+    Place mainPlace;
+    User following;
+    String newsFeedType;
+    List<Photo> photoList;
+    List<Position> positionList;
+    List<Comment> commentList;
+    Long updatedTime ;
+    List<Place> placeList;
+    Long tripId=0L;
+    String staticMapUrl;
+
 
     public Long getMainPlaceId() {
         return mainPlaceId;
@@ -102,16 +115,6 @@ public class Day extends Social{
     public Day() {
         load = false;
     }
-    User user;
-    int itineraryIndex;
-    Place mainPlace;
-    User following;
-    String newsFeedType;
-    List<Photo> photoList;
-    List<Position> positionList;
-    List<Comment> commentList;
-    Long updatedTime ;
-
     public User getUser() {
         return user;
     }
@@ -214,7 +217,6 @@ public class Day extends Social{
     public void setIsCheckedPosition(Boolean[] isCheckedPosition) {
         this.isCheckedPosition = isCheckedPosition;
     }
-    Long tripId=0L;
 
     public Long getTripId() {
         return tripId;
@@ -223,7 +225,6 @@ public class Day extends Social{
     public void setTripId(Long tripId) {
         this.tripId = tripId;
     }
-    String staticMapUrl;
 
     public String getStaticMapUrl() {
         return staticMapUrl;
@@ -232,7 +233,6 @@ public class Day extends Social{
     public void setStaticMapUrl(String staticMapUrl) {
         this.staticMapUrl = staticMapUrl;
     }
-    List<Place> placeList;
 
     public List<Place> getPlaceList() {
         return placeList;
@@ -260,5 +260,10 @@ public class Day extends Social{
 
     public Long getPrevDayId() {
         return prevDayId;
+    }
+    int page;
+
+    public int getPage() {
+        return page;
     }
 }

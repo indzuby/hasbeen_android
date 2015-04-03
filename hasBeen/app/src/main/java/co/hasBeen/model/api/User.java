@@ -138,4 +138,9 @@ public class User {
     public SignUpType getSignUpType() {
         return signUpType;
     }
+    int page;
+
+    public int getPage() {
+        return page;
+    }
 }

@@ -72,7 +72,7 @@ public class EnterCommentListner implements View.OnClickListener {
                                     String json = Session.getString(mContext,"comment",null);
                                     if(json!=null) {
                                         Comment comment = JsonConverter.convertJsonToComment(json);
-                                        mCommentBox.addView(CommentView.makeComment(mContext, comment));
+                                        mCommentBox.addView(CommentView.makeComment(mContext, comment,null));
                                     }
                                 }
 

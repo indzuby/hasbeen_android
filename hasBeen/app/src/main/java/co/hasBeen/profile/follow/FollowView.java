@@ -37,7 +37,7 @@ public class FollowView extends ActionBarActivity implements View.OnClickListene
     }
 
     protected void init() {
-        setContentView(R.layout.follow);
+        setContentView(R.layout.follow_view);
         initActionBar();
     }
     protected void initActionBar() {

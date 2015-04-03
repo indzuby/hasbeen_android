@@ -18,7 +18,7 @@ public class SearchPagerAdapter extends FragmentPagerAdapter {
         switch (index) {
             case 0: // index에 따라서 다른 fragment 돌려준다.
                 if (mTrip == null)
-                    mTrip = new TripFragment();
+                    mTrip = new DayFragment();
                 return mTrip;
             case 1:
                 if (mPeople == null)

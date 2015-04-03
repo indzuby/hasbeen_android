@@ -81,7 +81,7 @@ public class SearchDetailView extends ActionBarActivity implements View.OnClickL
     }
     protected void doSearch(String keyword){
         if(mViewPager.getCurrentItem()==TRIP) {
-            ((TripFragment)pagerAdapter.getItem(TRIP)).doSearch(keyword);
+            ((DayFragment)pagerAdapter.getItem(TRIP)).doSearch(keyword);
 
         }else {
             ((PeopleFragment)pagerAdapter.getItem(PEOPLE)).doSearch(keyword);

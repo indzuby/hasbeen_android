@@ -322,4 +322,9 @@ public class Photo extends Social{
     public void setBinary(String binary) {
         this.binary = binary;
     }
+    int page;
+
+    public int getPage() {
+        return page;
+    }
 }

@@ -19,7 +19,7 @@ import co.hasBeen.utils.Session;
  * Created by 주현 on 2015-03-23.
  */
 public class ResetPasswordAsyncTask extends HasBeenAsyncTask<String, Void, Boolean> {
-    final static String URL = Session.SSL_DOMAIN+"resetPassword";
+    final static String URL = Session.DOMAIN+"resetPassword";
     public final static String CLIENT = "hasBeenClientId";
     final static String SECRET = "hasBeenSecret";
     @Override

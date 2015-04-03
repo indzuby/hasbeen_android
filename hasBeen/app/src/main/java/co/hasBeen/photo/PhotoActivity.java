@@ -1,5 +1,6 @@
 package co.hasBeen.photo;
 
+import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -83,6 +84,7 @@ public class PhotoActivity extends ActionBarActivity {
             }
         });
         mViewPager.setCurrentItem(getIndex(mPhotoId));
+        mImm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
     }
     protected int getIndex(Long id) {
         int i=0;
@@ -151,7 +153,8 @@ public class PhotoActivity extends ActionBarActivity {
                             Toast.makeText(getBaseContext(), getString(R.string.common_error), Toast.LENGTH_LONG).show();
 
                     }
-                }).execute(mAccessToken, mPhoto.getId(), mBeforeDescription);
+                })
+                .execute(mAccessToken, mPhoto.getId(), mBeforeDescription);
             }
         });
     }
@@ -162,6 +165,7 @@ public class PhotoActivity extends ActionBarActivity {
         isEdit = false;
         initActionBar();
         mImm.hideSoftInputFromWindow(mDescription.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        mImm.hideSoftInputFromWindow(mDescription.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
         titleView.setText(mPhoto.getDay().getTitle());
     }
 
@@ -241,6 +245,8 @@ public class PhotoActivity extends ActionBarActivity {
 
     }
     public void setEdit(){
+        mPhoto = pagerAdapter.getPhoto(getIndex(mPhotoId));
+        mDescription = pagerAdapter.getItem(mViewPager.getCurrentItem()).mDescription;
         mDescription.setFocusable(true);
         mDescription.setFocusableInTouchMode(true);
         isEdit = true;

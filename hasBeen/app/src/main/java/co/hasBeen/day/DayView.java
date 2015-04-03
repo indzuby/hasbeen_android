@@ -216,7 +216,7 @@ public class DayView extends ActionBarActivity{
         List<Comment> comments = mDay.getCommentList();
         for(int i = 0 ;i<3 && i<comments.size();i++) {
             Comment comment = comments.get(i);
-            commentBox.addView(CommentView.makeComment(this, comment));
+            commentBox.addView(CommentView.makeComment(this, comment,null));
         }
         if(mDay.getCommentCount()>3)
             moreComments.setText(getString(R.string.more_comment,mDay.getCommentCount()-3));
@@ -460,8 +460,6 @@ public class DayView extends ActionBarActivity{
     public void onDestroy() {
         asyncTask.cancel(true);
         if(recommendationAsyncTask!=null) recommendationAsyncTask.cancel(true);
-        if(mDayAdapter!=null)
-            mDayAdapter.recycle();
         System.gc();
         super.onDestroy();
     }

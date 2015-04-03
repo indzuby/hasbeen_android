@@ -87,9 +87,9 @@ public class SearchFragment extends HasBeenFragment implements View.OnClickListe
                     isReload = true;
                     mReload.startAnimation(rotate);
                     if (nowTab == DAY)
-                        new SearchDayAsyncTask(dayHandler).execute(mAccessToken);
+                        new HasBeenDayAsyncTask(dayHandler).execute(mAccessToken);
                     else
-                        new SearchPhotoAsyncTask(photoHandler).execute(mAccessToken);
+                        new HasBeenPhotoAsyncTask(photoHandler).execute(mAccessToken);
                 }
             }
         });
@@ -124,7 +124,7 @@ public class SearchFragment extends HasBeenFragment implements View.OnClickListe
         }
         if (!isShowTab()) {
             startLoading();
-            new SearchDayAsyncTask(dayHandler).execute(mAccessToken);
+            new HasBeenDayAsyncTask(dayHandler).execute(mAccessToken);
         }
         setShowTab();
     }
@@ -193,14 +193,14 @@ public class SearchFragment extends HasBeenFragment implements View.OnClickListe
                 dayRendering();
             else {
                 startLoading();
-                new SearchDayAsyncTask(dayHandler).execute(mAccessToken);
+                new HasBeenDayAsyncTask(dayHandler).execute(mAccessToken);
             }
         } else {
             if (mPhotos != null)
                 photoRendering();
             else {
                 startLoading();
-                new SearchPhotoAsyncTask(photoHandler).execute(mAccessToken);
+                new HasBeenPhotoAsyncTask(photoHandler).execute(mAccessToken);
             }
         }
     }

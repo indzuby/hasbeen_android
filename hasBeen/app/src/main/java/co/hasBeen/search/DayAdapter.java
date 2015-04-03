@@ -13,11 +13,11 @@ import co.hasBeen.model.api.Day;
 /**
  * Created by 주현 on 2015-04-01.
  */
-public class TripAdapter extends BaseAdapter {
+public class DayAdapter extends BaseAdapter {
     List<Day> mDayList;
     Context mContext;
 
-    public TripAdapter(List<Day> mDayList, Context mContext) {
+    public DayAdapter(List<Day> mDayList, Context mContext) {
         this.mDayList = mDayList;
         this.mContext = mContext;
     }
@@ -42,17 +42,6 @@ public class TripAdapter extends BaseAdapter {
 
         Day day = getItem(position);
         View view = Recommandation.getPinView(day,mContext,convertView);
-//        ImageView mainPhoto = (ImageView) view.findViewById(R.id.mainPhoto);
-//        TextView photoCount = (TextView) view.findViewById(R.id.photoCount);
-//        TextView placeName = (TextView) view.findViewById(R.id.placeName);
-//        TextView name = (TextView) view.findViewById(R.id.name);
-//        TextView date = (TextView) view.findViewById(R.id.date);
-//        Glide.with(mContext).load(day.getMainPhoto().getSmallUrl()).centerCrop().into(mainPhoto);
-//        photoCount.setText((day.getPhotoCount()-1)+"");
-//        placeName.setText(Util.convertPlaceName(day.getPositionList()));
-//        name.setText(Util.parseName(day.getUser(),mContext));
-//        date.setText(HasBeenDate.convertDate(day.getDate()));
-//        view.setOnClickListener(new EnterDayListner(day.getId(),mContext));
         return view;
     }
 }

@@ -27,16 +27,18 @@ import co.hasBeen.utils.Session;
 /**
  * Created by 주현 on 2015-03-24.
  */
-public class TripFragment extends HasBeenFragment {
+public class DayFragment extends HasBeenFragment {
+    final static String TYPE = "DAY";
     String mAccessToken;
     ListView mListView;
-    TripAdapter mTripAdapter;
+    DayAdapter mDayAdapter;
     List<Day> mDayList;
     String mKeyword;
     DatabaseHelper database;
+    boolean isComplete;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.search_trip, container, false);
+        mView = inflater.inflate(R.layout.search_day, container, false);
         mAccessToken = Session.getString(getActivity(), "accessToken", null);
         database = new DatabaseHelper(getActivity());
         mListView = (ListView)mView.findViewById(R.id.listView);
@@ -46,21 +48,21 @@ public class TripFragment extends HasBeenFragment {
 
     protected void initDefault(){
         // database
-        RecentAdapter adapter = new RecentAdapter(getActivity(),"TRIP");
+        RecentAdapter adapter = new RecentAdapter(getActivity(),TYPE);
         mListView.setAdapter(adapter);
     }
-    SearchTripAsyncTask tripAsyncTask;
+    SearchDayAsyncTask dayAsyncTask;
     public void doSearch(String keyword){
         mKeyword = keyword;
         mDayList = new ArrayList<>();
-         mTripAdapter = new TripAdapter(mDayList,getActivity());
-        mListView.setAdapter(mTripAdapter);
+         mDayAdapter = new DayAdapter(mDayList,getActivity());
+        mListView.setAdapter(mDayAdapter);
         startLoading();
-        tripAsyncTask = new SearchTripAsyncTask(tripHandler);
-        tripAsyncTask.execute(mAccessToken, keyword);
+        dayAsyncTask = new SearchDayAsyncTask(dayHandler);
+        dayAsyncTask.execute(mAccessToken, keyword);
         insertRecentKeyword(keyword);
     }
-    Handler tripHandler = new Handler(Looper.getMainLooper()) {
+    Handler dayHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -71,9 +73,11 @@ public class TripFragment extends HasBeenFragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mTripAdapter.notifyDataSetChanged();
+                        mDayAdapter.notifyDataSetChanged();
                     }
                 });
+                if(days.size()<=0)
+                    isComplete = true;
                 init();
             }else {
             }
@@ -83,7 +87,7 @@ public class TripFragment extends HasBeenFragment {
     protected void insertRecentKeyword(String keyword) {
         RecentSearch recent = new RecentSearch();
         recent.setKeyword(keyword);
-        recent.setType("TRIP");
+        recent.setType(TYPE);
         recent.setCreateDate(new Date().getTime());
         try {
             database.insertRecent(recent);
@@ -100,9 +104,11 @@ public class TripFragment extends HasBeenFragment {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if(visibleItemCount<totalItemCount && firstVisibleItem+visibleItemCount>=totalItemCount) {
-                    if(!isLoading) {
+                    if(!isLoading && !isComplete) {
                         startLoading();
-//                        Day day = mDayList.get(mDayList.size()-1);
+                        Day day = mDayList.get(mDayList.size()-1);
+                        dayAsyncTask = new SearchDayAsyncTask(dayHandler);
+                        dayAsyncTask.execute(mAccessToken, mKeyword, day.getPage());
                     }
                 }
             }
@@ -113,14 +119,14 @@ public class TripFragment extends HasBeenFragment {
     public void onResume() {
         super.onResume();
         Localytics.openSession();
-        Localytics.tagScreen("Trip Search");
+        Localytics.tagScreen("Day Search");
         Localytics.upload();
     }
 
     @Override
     public void onDestroy() {
-        if(tripAsyncTask!=null)
-            tripAsyncTask.cancel(true);
+        if(dayAsyncTask !=null)
+            dayAsyncTask.cancel(true);
         System.gc();
         super.onDestroy();
     }

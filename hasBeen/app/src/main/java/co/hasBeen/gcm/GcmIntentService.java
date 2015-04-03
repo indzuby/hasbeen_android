@@ -22,7 +22,7 @@ import co.hasBeen.R;
 import co.hasBeen.day.DayView;
 import co.hasBeen.model.api.Alarm;
 import co.hasBeen.model.api.PushAlarm;
-import co.hasBeen.photo.PhotoView;
+import co.hasBeen.photo.PhotoActivity;
 import co.hasBeen.utils.CircleTransform;
 import co.hasBeen.utils.JsonConverter;
 
@@ -79,7 +79,7 @@ public class GcmIntentService extends IntentService {
             intent.putExtra("id",push.getId());
             if(type.equals(Alarm.Type.DAY_COMMENT))intent.putExtra("type","comment");
         }else if(type.equals(Alarm.Type.PHOTO_COMMENT) || type.equals(Alarm.Type.PHOTO_LOVE)){
-            intent = new Intent(this,PhotoView.class);
+            intent = new Intent(this, PhotoActivity.class);
             intent.putExtra("id",push.getId());
             if(type.equals(Alarm.Type.PHOTO_COMMENT))intent.putExtra("type","comment");
         }else if(type.equals(Alarm.Type.DAY_POST)) {
