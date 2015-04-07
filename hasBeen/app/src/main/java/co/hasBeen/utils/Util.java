@@ -1,9 +1,10 @@
 package co.hasBeen.utils;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -259,5 +260,19 @@ public class Util {
     public static String getVersion(Context context) throws Exception{
         PackageInfo i = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
         return i.versionName;
+    }
+    public static String getTutorialVersion(){
+        return "1.12";
+    }
+
+    public static Activity scanForActivity(Context cont) {
+        if (cont == null)
+            return null;
+        else if (cont instanceof Activity)
+            return (Activity)cont;
+        else if (cont instanceof ContextWrapper)
+            return scanForActivity(((ContextWrapper)cont).getBaseContext());
+
+        return null;
     }
 }

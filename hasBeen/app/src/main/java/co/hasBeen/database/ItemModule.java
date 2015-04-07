@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -30,7 +29,7 @@ import co.hasBeen.utils.Util;
  */
 public class ItemModule {
     Context mContext;
-    DatabaseHelper database;
+    DataBaseHelper database;
     ContentResolver resolver;
     Cursor cursor;
     String[] proj = {
@@ -45,12 +44,12 @@ public class ItemModule {
     public int photoCount;
     public ItemModule(Context context) throws SQLException {
         mContext = context;
-        database = new DatabaseHelper(context);
+        database = new DataBaseHelper(context);
         resolver = context.getContentResolver();
     }
 
     public void insertDay() throws Exception {
-        int[] idx = new int[proj.length];
+        int[] idx;
         Day lastDay = database.selectLastDay();
         Long lastDayTime = 0L;
         Day day = lastDay;
@@ -66,8 +65,7 @@ public class ItemModule {
                 new String[]{"" + lastDayTime},
                 MediaStore.Images.Media.DATE_TAKEN);
         if (cursor != null && cursor.moveToFirst()) {
-            for (int i = 0; i < idx.length; i++)
-                idx[i] = cursor.getColumnIndex(proj[i]);
+            idx = getIdx(cursor);
             do {
                 long photoID = cursor.getInt(idx[0]);
                 String photoPath = cursor.getString(idx[1]);
@@ -102,7 +100,6 @@ public class ItemModule {
             database.updateDay(day);
         }
     }
-
     public List<Day> bringTenDay(Long date) throws Exception {
         insertDay();
         List<Day> days = database.selectBeforeTenDay(date);
@@ -132,6 +129,12 @@ public class ItemModule {
                 }
             }
         }). execute(photo,place);
+    }
+    public int[] getIdx(Cursor cursor) {
+        int[] idx = new int[proj.length];
+        for (int i = 0; i < idx.length; i++)
+            idx[i] = cursor.getColumnIndex(proj[i]);
+        return idx;
     }
     public Day makeDayData(Photo photo) {
         Day day = new Day();
@@ -233,7 +236,7 @@ public class ItemModule {
     }
 
 
-    public List<Position> getPhotosByDate(Long dayId) throws Exception {
+    public List<Position> getPhotosByDayid(Long dayId) throws Exception {
         Day day = database.selectDay(dayId);
         photoCount = 0 ;
         insertPhotos(day.getDate(), dayId);
@@ -245,7 +248,7 @@ public class ItemModule {
     }
 
     public void insertPhotos(Long date, Long dayId) throws Exception {
-        int[] idx = new int[proj.length];
+        int[] idx;
         Long startDayTime = HasBeenDate.getBeforeDay(date, 1);
         Long endDayTime = HasBeenDate.getBeforeDay(date, -1);
         cursor = MediaStore.Images.Media.query(resolver,
@@ -255,38 +258,30 @@ public class ItemModule {
                 new String[]{"" + startDayTime, "" + endDayTime},
                 MediaStore.Images.Media.DATE_TAKEN);
         if (cursor != null && cursor.moveToFirst()) {
-            for (int i = 0; i < idx.length; i++)
-                idx[i] = cursor.getColumnIndex(proj[i]);
+            idx = getIdx(cursor);
             do {
-                long photoID = cursor.getInt(idx[0]);
-                String photoPath = cursor.getString(idx[1]);
-                String displayName = cursor.getString(idx[2]);
-                String format = cursor.getString(idx[4]);
-                float lat = cursor.getFloat(idx[5]);
-                float lon = cursor.getFloat(idx[6]);
-                if (lat == 0 || lon == 0) continue;
-                if (isNotJpg(format)) continue;
-                long dataTaken = Util.getDateTime(photoPath);
-                if (displayName != null && HasBeenDate.isSameDate(date, dataTaken)) {
-                    if (database.hasPhotoId(photoID)) continue;
-                    Photo photo = new Photo();
-                    photo.setTitle("");
-                    photo.setCity("");
-                    photo.setCountry("");
-                    photo.setDescription("");
-                    photo.setPlaceName("");
-                    photo.setLat(lat);
-                    photo.setLon(lon);
-                    photo.setTakenTime(dataTaken);
-                    photo.setDayId(dayId);
-                    photo.setPhotoId(new Long(photoID));
-                    photo.setPhotoPath(photoPath);
-                    database.insertPhoto(photo);
-                }
+                insertPhoto(cursor, date, dayId, idx);
             } while (cursor.moveToNext());
         }
     }
-
+    public boolean insertPhoto(Cursor cursor,Long date ,Long dayId,int[] idx) throws Exception{
+        long photoID = cursor.getInt(idx[0]);
+        String photoPath = cursor.getString(idx[1]);
+        String displayName = cursor.getString(idx[2]);
+        String format = cursor.getString(idx[4]);
+        float lat = cursor.getFloat(idx[5]);
+        float lon = cursor.getFloat(idx[6]);
+        if (lat == 0 || lon == 0) return false;
+        if (isNotJpg(format)) return false;
+        long dataTaken = Util.getDateTime(photoPath);
+        if (displayName != null && HasBeenDate.isSameDate(date, dataTaken)) {
+            if (database.hasPhotoId(photoID)) return false;
+            Photo photo = makePhotoData(lat, lon, dataTaken, photoID, photoPath);
+            photo.setDayId(dayId);
+            database.insertPhoto(photo);
+        }
+        return true;
+    }
     boolean isRun=true;
     Photo bestPhoto = null;
     public void insertPosition(Long dayId) throws Exception {
@@ -338,8 +333,5 @@ public class ItemModule {
         if (aPlace.getVenueId()!=null && bPlace.getVenueId()!=null && aPlace.getVenueId().equals(bPlace.getVenueId()))
             return true;
         return false;
-    }
-    public Bitmap getThumbnail(long id) {
-        return MediaStore.Images.Thumbnails.getThumbnail(resolver, id, MediaStore.Images.Thumbnails.MINI_KIND, null);
     }
 }

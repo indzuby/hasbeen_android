@@ -5,17 +5,12 @@
     android:background="@color/day_background"
     android:orientation="vertical">
     <ListView
+        android:paddingTop="15dp"
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/day_background"
         android:divider="@color/transparent"></ListView>
-    <View
-        android:layout_width="match_parent"
-        android:alpha="0.1"
-        android:layout_below="@+id/listView"
-        android:background="#000"
-        android:layout_height="2px" />
     <ImageView
         android:layout_width="wrap_content"
         android:visibility="gone"

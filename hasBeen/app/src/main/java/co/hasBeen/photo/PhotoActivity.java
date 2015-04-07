@@ -1,6 +1,7 @@
 package co.hasBeen.photo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -181,6 +182,7 @@ public class PhotoActivity extends ActionBarActivity {
         public void onClick(View v) {
             if(mPhotoList==null) return;
             mPhoto = pagerAdapter.getPhoto(getIndex(mPhotoId));
+            if(mPhoto==null || mPhoto.getUser()==null) return;
             if (mPhoto.getUser().getId() == mMyid) {
                 View.OnClickListener del = new View.OnClickListener() {
                     @Override
@@ -192,6 +194,9 @@ public class PhotoActivity extends ActionBarActivity {
                                 super.handleMessage(msg);
                                 if (msg.what == 0) {
                                     Toast.makeText(getBaseContext(), getString(R.string.remove_photo_ok), Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent();
+                                    intent.putExtra("id",mPhotoId);
+                                    setResult(Session.DLETE_CODE,intent);
                                     finish();
                                 } else {
                                     Toast.makeText(getBaseContext(), getString(R.string.remove_photo_error), Toast.LENGTH_LONG).show();

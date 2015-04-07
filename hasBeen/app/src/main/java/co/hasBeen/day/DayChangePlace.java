@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.hasBeen.R;
-import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.geolocation.PlaceFourSquare;
 import co.hasBeen.map.MapRoute;
 import co.hasBeen.model.api.Category;
@@ -44,7 +44,7 @@ public class DayChangePlace extends ActionBarActivity implements OnMapReadyCallb
     List<Category> mCategories;
     ListView mListView;
     Place mPlace;
-    DatabaseHelper database;
+    DataBaseHelper database;
     Position mPosition;
     float mLat,mLon;
     ImageView mPlaceIcon;
@@ -74,7 +74,7 @@ public class DayChangePlace extends ActionBarActivity implements OnMapReadyCallb
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
-        MapRoute mapRoute = new MapRoute(map,getBaseContext());
+        MapRoute mapRoute = new MapRoute(map,this);
         UiSettings setting = map.getUiSettings();
         setting.setZoomControlsEnabled(true);
         setting.setMyLocationButtonEnabled(false);
@@ -89,7 +89,7 @@ public class DayChangePlace extends ActionBarActivity implements OnMapReadyCallb
         mPlaceName = (TextView) findViewById(R.id.name);
         mPlaceCategory = (TextView) findViewById(R.id.placeIcon);
         mPlaceIcon = (ImageView) findViewById(R.id.place_icon);
-        database = new DatabaseHelper(this);
+        database = new DataBaseHelper(this);
         mPosition = JsonConverter.convertJsonToPosition(positionJson);
         initActionBar();
         initMap();

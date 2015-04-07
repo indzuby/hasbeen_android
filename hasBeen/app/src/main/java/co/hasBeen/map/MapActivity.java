@@ -89,7 +89,7 @@ public class MapActivity extends ActionBarActivity implements OnMapReadyCallback
         Long positionId = getIntent().getLongExtra("positionId",0);
         String data = getIntent().getStringExtra("day");
         mDay = JsonConverter.convertJsonToDay(data);
-        mMapRoute = new MapRoute(mMap,getBaseContext());
+        mMapRoute = new MapRoute(mMap,this);
         mMapRoute.createRouteDay(mDay.getPositionList());
         initActionBar();
         initFooter(positionId);

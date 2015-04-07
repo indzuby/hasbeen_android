@@ -14,7 +14,7 @@ import android.widget.ToggleButton;
 import java.util.List;
 
 import co.hasBeen.R;
-import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.model.api.Position;
 import co.hasBeen.utils.HasBeenDate;
@@ -27,13 +27,13 @@ public class GalleryShareAdapter extends BaseAdapter{
     Boolean[] isCheckedPosition;
     Context mContext;
     List<Position> mPositions;
-    DatabaseHelper database;
+    DataBaseHelper database;
     public GalleryShareAdapter(Context context, List positions, Boolean[] isCheckedPosition) {
 
         mContext = context;
         mPositions = positions;
         this.isCheckedPosition = isCheckedPosition;
-        database = new DatabaseHelper(context);
+        database = new DataBaseHelper(context);
     }
 
     @Override

@@ -47,7 +47,7 @@
     <string name="action_bar_done">DONE</string>
     <string name="action_bar_select_day">Select Day</string>
     <string name="action_bar_reset_password">Reset your password</string>
-    <string name="tab_newsfeed">Newsfeed</string>
+    <string name="tab_home">Home</string>
     <string name="tab_search">Search</string>
     <string name="tab_gallery">Gallery</string>
     <string name="tab_alarm">Alarm</string>
@@ -61,7 +61,7 @@
     <string name="already_account">I already have a account.</string>
     <string name="sign_up">sign up</string>
     <string name="last_name">Last name</string>
-    <string name="user_name">User name</string>
+    <string name="username">Username</string>
     <string name="gender">Gender</string>
     <string name="forgot_email_text">Please write your Email</string>
     <string name="reset_ok">New password was send by email.</string>
@@ -182,10 +182,14 @@
     <string name="title_size_error">Title must be at least 2 and most 255 letters.</string>
     <string name="session_gone">Your session expired, please sign in again.</string>
     <string name="dup_email">That email is being used.</string>
-    <string name="day_deleted"> This day trip was deleted.\nPlease pull to refresh.</string>
+    <string name="day_deleted"> This day trip was deleted.</string>
     <string name="remove_photo_error">Last photo on place, Please delete place.</string>
     <string name="remove_place_error">Last place on day trip, Please delete day trip.</string>
     <string name="password_error">Incorrect password.</string>
+    <string name="username_dup_error">UserName is exist.</string>
+    <string name="username_simbol_error">A username must contain only numbers and letters.</string>
+    <string name="username_error">A username must have at least one letter.</string>
+
     <!--확인-->
     <string name="sign_up_ok">Sign up done, please sign in.</string>
     <string name="report_ok">Reported</string>

@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/hasBeen.iml" filepath="$PROJECT_DIR$/hasBeen.iml" />
-      <module fileurl="file://$PROJECT_DIR$/lib/opencv/opencv.iml" filepath="$PROJECT_DIR$/lib/opencv/opencv.iml" />
       <module fileurl="file://$PROJECT_DIR$/pullToRefresh/pullToRefresh.iml" filepath="$PROJECT_DIR$/pullToRefresh/pullToRefresh.iml" />
     </modules>
   </component>

@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import co.hasBeen.R;
-import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.utils.HasBeenDate;
 
@@ -22,7 +22,7 @@ import co.hasBeen.utils.HasBeenDate;
 public class GalleryPhotoEdit extends Activity {
     Long mPhotoId;
     Photo mPhoto;
-    DatabaseHelper database;
+    DataBaseHelper database;
     ImageView mEditButton;
     boolean isEdit;
     @Override
@@ -30,7 +30,7 @@ public class GalleryPhotoEdit extends Activity {
         super.onCreate(savedInstanceState);
         mPhotoId = getIntent().getLongExtra("id",0);
         try{
-            database = new DatabaseHelper(this);
+            database = new DataBaseHelper(this);
             mPhoto = database.selectPhoto(mPhotoId);
             isEdit = false;
             init();

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.hasBeen.R;
-import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.day.PositionDialog;
 import co.hasBeen.map.EnterMapLisnter;
 import co.hasBeen.model.api.Day;
@@ -36,7 +36,7 @@ public class GalleryPositionAdapter extends BaseAdapter{
     static final int RESULT = 2;
     protected Context mContext;
     protected List<Position> mPositions;
-    DatabaseHelper database;
+    DataBaseHelper database;
     Long mPositionId;
     int mIndex;
     List<View> mItemList;
@@ -44,7 +44,7 @@ public class GalleryPositionAdapter extends BaseAdapter{
     public GalleryPositionAdapter(Context context, List positions,Day mDay) {
         mContext = context;
         mPositions = positions;
-        database = new DatabaseHelper(context);
+        database = new DataBaseHelper(context);
         mItemList = new ArrayList<>();
         this.mDay =mDay;
     }

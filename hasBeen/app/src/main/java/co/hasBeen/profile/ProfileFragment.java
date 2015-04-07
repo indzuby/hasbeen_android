@@ -55,7 +55,7 @@ public class ProfileFragment extends HasBeenFragment {
     int subTab = DAY;
     GoogleMap mMap;
     SupportMapFragment mMapFragment;
-    MapRoute mMapRoute;
+    public MapRoute mMapRoute;
 
     List<Day> mDays;
     List<Photo> mPhotos;
@@ -114,8 +114,12 @@ public class ProfileFragment extends HasBeenFragment {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mDays = (List<Day>) msg.obj;
-                    dayRendering(mDays);
+                    List days = (List<Day>) msg.obj;
+                    if(mDays==null || days.size()!=mDays.size()) {
+                        mDays = days;
+                        dayRendering(mDays);
+                        ((TextView) mView.findViewById(R.id.dayCount)).setText(mDays.size()+"");
+                    }
                     stopLoading();
                     break;
                 case -1:
@@ -129,8 +133,13 @@ public class ProfileFragment extends HasBeenFragment {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mPhotos = (List<Photo>) msg.obj;
-                    photoRendering(mPhotos);
+                    List photos =(List<Photo>) msg.obj;
+                    if(mPhotos==null || photos.size()!=mPhotos.size()) {
+                        mPhotos = photos;
+                        photoRendering(mPhotos);
+                        ((TextView) mView.findViewById(R.id.photoCount)).setText(mPhotos.size()+"");
+                    }
+                    stopLoading();
                     break;
                 case -1:
                     break;
@@ -143,12 +152,15 @@ public class ProfileFragment extends HasBeenFragment {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mLovedDays = (List<Loved>) msg.obj;
-                    mLikeDays = new ArrayList<>();
-                    for(Loved love : mLovedDays)
-                        mLikeDays.add(love.getDay());
-
-                    dayRendering(mLikeDays);
+                    List days = (List<Loved>) msg.obj;;
+                    if(mLovedDays==null ||mLovedDays.size()!= days.size()) {
+                        mLovedDays = days;
+                        mLikeDays = new ArrayList<>();
+                        for (Loved love : mLovedDays)
+                            mLikeDays.add(love.getDay());
+                        dayRendering(mLikeDays);
+                    }
+                    stopLoading();
                     break;
                 case -1:
                     break;
@@ -161,12 +173,15 @@ public class ProfileFragment extends HasBeenFragment {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mLovedPhotos = (List<Loved>) msg.obj;
-                    mLikePhotos = new ArrayList<>();
-                    for(Loved love : mLovedPhotos)
-                        mLikePhotos.add(love.getPhoto());
-
-                    photoRendering(mLikePhotos);
+                    List photos = (List<Loved>) msg.obj;
+                    if(mLovedPhotos==null||photos.size()!=mLovedPhotos.size()) {
+                        mLovedPhotos = photos;
+                        mLikePhotos = new ArrayList<>();
+                        for (Loved love : mLovedPhotos)
+                            mLikePhotos.add(love.getPhoto());
+                        photoRendering(mLikePhotos);
+                    }
+                    stopLoading();
                     break;
                 case -1:
                     break;
@@ -190,7 +205,7 @@ public class ProfileFragment extends HasBeenFragment {
             @Override
             public void onMapReady(GoogleMap map) {
                 mMap = map;
-                mMapRoute = new MapRoute(map, getActivity());
+                mMapRoute = new MapRoute(map, getActivity().getBaseContext());
                 UiSettings setting = map.getUiSettings();
                 setting.setZoomControlsEnabled(false);
                 setting.setRotateGesturesEnabled(false);
@@ -306,7 +321,8 @@ public class ProfileFragment extends HasBeenFragment {
         TextView dayCount = (TextView) mView.findViewById(R.id.dayCount);
         TextView photoCount = (TextView) mView.findViewById(R.id.photoCount);
         TextView loveCount = (TextView) mView.findViewById(R.id.loveCount);
-        if(mUser.getCoverPhoto()!=null) Glide.with(getActivity()).load(mUser.getCoverPhoto().getLargeUrl()).placeholder(R.drawable.coverholder).into(coverImage);
+
+        if(mUser.getCoverPhoto()!=null) Glide.with(getActivity()).load(mUser.getCoverPhoto().getLargeUrl()).placeholder(Util.getPlaceHolder((int)Math.random()*10)).into(coverImage);
         else Glide.with(getActivity()).load(R.drawable.coverholder).into(coverImage);
         Glide.with(getActivity()).load(mUser.getImageUrl()).transform(new CircleTransform(getActivity())).into(profileImage);
         profileName.setText(Util.parseName(mUser, getActivity()));
@@ -346,55 +362,62 @@ public class ProfileFragment extends HasBeenFragment {
     }
 
     protected void mapRendering(int flag) {
+        if(mUser==null) return;
+        startLoading();
         if (flag == DAY) {
-            if (mDays != null)
-                dayRendering(mDays);
-            else
+//            if (mDays != null)
+//                dayRendering(mDays);
+//            else
                 new ProfileDayAsyncTask(dayHandler).execute(mAccessToken,mUser.getId());
 
         } else if (flag == PHOTO) {
-            if (mPhotos != null)
-                photoRendering(mPhotos);
-            else
+//            if (mPhotos != null)
+//                photoRendering(mPhotos);
+//            else
                 new ProfilePhotoAsyncTask(photoHandler).execute(mAccessToken,mUser.getId());
 
         } else if (flag == LOVE) {
             if (subTab == DAY) {
-                if (mLikeDays != null)
-                    dayRendering(mLikeDays);
-                else
+//                if (mLikeDays != null)
+//                    dayRendering(mLikeDays);
+//                else
                     new LikeAsyncTask(likeDayHandler).execute(mAccessToken,mUser.getId(),"Days");
 
 
             } else {
-                if (mLikePhotos != null)
-                    photoRendering(mLikePhotos);
-                else
+//                if (mLikePhotos != null)
+//                    photoRendering(mLikePhotos);
+//                else
                     new LikeAsyncTask(likePhotoHandler).execute(mAccessToken,mUser.getId(),"Photos");
             }
         }
     }
 
     protected void dayRendering(final List<Day> days) {
-        try {
-            LatLng location = new LatLng(days.get(0).getMainPlace().getLat(), days.get(0).getMainPlace().getLon());
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
-            mMapRoute.addMarkerCluster(days);
-        }catch (Exception e) {
+        if(days.size()>0) {
+            try {
+                LatLng location = new LatLng(days.get(0).getMainPlace().getLat(), days.get(0).getMainPlace().getLon());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
+                mMapRoute.addMarkerClusterDay(days);
+            } catch (Exception e) {
+
+                e.printStackTrace();
+            }
+        }else
             mMap.clear();
-            e.printStackTrace();
-        }
     }
 
     protected void photoRendering(final List<Photo> photos) {
-        try {
-            LatLng location = new LatLng(photos.get(0).getLat(), photos.get(0).getLon());
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
-            mMapRoute.addMarkerClusterPhoto(photos);
-        }catch (Exception e) {
+        if(photos.size()>0) {
+            try {
+                LatLng location = new LatLng(photos.get(0).getLat(), photos.get(0).getLon());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
+                mMapRoute.addMarkerClusterPhoto(photos);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else
             mMap.clear();
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -404,5 +427,15 @@ public class ProfileFragment extends HasBeenFragment {
         Localytics.openSession();
         Localytics.tagScreen("Profile Framgent");
         Localytics.upload();
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Long id = data.getLongExtra("id",0);
+        if(requestCode==Session.REQUEST_PHOTO_CODE && resultCode==Session.DLETE_CODE) {
+            mMapRoute.removeDayPin(id);
+        }else if(requestCode==Session.REQUEST_DAY_CODE && resultCode==Session.DLETE_CODE) {
+            mMapRoute.removePhotoPin(id);
+        }
     }
 }

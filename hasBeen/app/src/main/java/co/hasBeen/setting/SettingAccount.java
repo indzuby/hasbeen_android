@@ -78,8 +78,8 @@ public class SettingAccount extends ActionBarActivity implements View.OnClickLis
         firstName.setText(mUser.getFirstName());
         firstName.setSelection(mUser.getFirstName().length());
         lastName.setText(mUser.getLastName());
-        if(mUser.getUserName()!=null)
-            userName.setText(mUser.getUserName());
+        if(mUser.getUsername()!=null)
+            userName.setText(mUser.getUsername());
         Calendar calendar = new GregorianCalendar();
         calendar.setTimeInMillis(mUser.getBirthDay());
         if(calendar.get(Calendar.YEAR)>DEFAULT_BIRTHDAY)
@@ -126,7 +126,7 @@ public class SettingAccount extends ActionBarActivity implements View.OnClickLis
     public void showDatePicker(){
         Calendar calendar = new GregorianCalendar();
         calendar.setTimeInMillis(mUser.getBirthDay());
-        if(calendar.get(Calendar.YEAR)==DEFAULT_BIRTHDAY)
+        if(calendar.get(Calendar.YEAR)<=DEFAULT_BIRTHDAY)
             calendar = new GregorianCalendar();
         new DatePickerDialog(SettingAccount.this,dateSetListener,calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
@@ -158,6 +158,10 @@ public class SettingAccount extends ActionBarActivity implements View.OnClickLis
                 if(mUser!=null) {
                     startLoading();
                     initData();
+                    if(isValidateData()) {
+                        stopLoading();
+                        return ;
+                    }
                     new EditAccountAsyncTask(new Handler(Looper.getMainLooper()){
                         @Override
                         public void handleMessage(Message msg) {
@@ -167,7 +171,7 @@ public class SettingAccount extends ActionBarActivity implements View.OnClickLis
                                 Toast.makeText(getBaseContext(),getString(R.string.account_update_success),Toast.LENGTH_LONG).show();
                                 finish();
                             }else {
-                                Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
+                                Toast.makeText(getBaseContext(),getString(R.string.username_dup_error),Toast.LENGTH_LONG).show();
                             }
                         }
                     }).execute(mAccessToken,mUser);
@@ -175,12 +179,36 @@ public class SettingAccount extends ActionBarActivity implements View.OnClickLis
             }
         });
     }
+    protected boolean isValidateData(){
+        if((mUser.getFirstName().length()<1 || mUser.getFirstName().length()>255)
+                && (mUser.getLastName().length()<1 || mUser.getLastName().length()>255)
+                && (mUser.getUsername().length()<2 || mUser.getUsername().length()>255)) {
+            Toast.makeText(this,getString(R.string.name_size_error),Toast.LENGTH_LONG).show();
+            return true;
+        }
+        int count = 0 ;
+        for(int i =0 ; i <mUser.getUsername().length();i++) {
+            char a = mUser.getUsername().charAt(i);
+            if(Character.isLetter(a)) count++;
+            if(!Character.isLetterOrDigit(a)) {
+                Toast.makeText(this,getString(R.string.username_simbol_error),Toast.LENGTH_LONG).show();
+                return true;
+            }
+        }
+        if(count<=0) {
+            Toast.makeText(this, getString(R.string.username_error), Toast.LENGTH_LONG).show();
+            return true;
+        }
+        return false;
+    }
     protected void initData(){
         mUser.setFirstName(firstName.getText().toString());
         mUser.setLastName(lastName.getText().toString());
         mUser.setCity(city.getText().toString());
         mUser.setCountry(country.getText().toString());
-        mUser.setUserName(userName.getText().toString());
+        mUser.setUsername(userName.getText().toString());
+        if(userName.getText().toString().length()<=0)
+            mUser.setUsername(null);
     }
     @Override
     public void onResume()

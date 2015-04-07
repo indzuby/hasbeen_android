@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import co.hasBeen.R;
-import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.model.api.RecentSearch;
 import co.hasBeen.model.api.User;
 import co.hasBeen.utils.HasBeenFragment;
@@ -33,7 +33,7 @@ public class PeopleFragment extends HasBeenFragment{
     List<User> mUserList;
     String mKeyword;
     ListView mListView;
-    DatabaseHelper database;
+    DataBaseHelper database;
     UserAdapter mUserAdapter;
     boolean isComplete;
     @Override
@@ -41,7 +41,7 @@ public class PeopleFragment extends HasBeenFragment{
         mView = inflater.inflate(R.layout.search_people, container, false);
         mAccessToken = Session.getString(getActivity(), "accessToken", null);
         mListView = (ListView)mView.findViewById(R.id.listView);
-        database = new DatabaseHelper(getActivity());
+        database = new DataBaseHelper(getActivity());
         initDefault();
         return mView;
     }

@@ -27,7 +27,7 @@ import java.util.Map;
 
 import co.hasBeen.R;
 import co.hasBeen.TutorialDialog;
-import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.model.api.Place;
@@ -47,7 +47,7 @@ public class GalleryUpload extends ActionBarActivity {
     TextView mTextArea;
     String mData;
     Day mDayUpload;
-    DatabaseHelper database;
+    DataBaseHelper database;
     Long mUserid;
     ContentResolver resolver;
     EditText mTitle;
@@ -58,7 +58,7 @@ public class GalleryUpload extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        database = new DatabaseHelper(this);
+        database = new DataBaseHelper(this);
         resolver = getContentResolver();
         try {
             init();

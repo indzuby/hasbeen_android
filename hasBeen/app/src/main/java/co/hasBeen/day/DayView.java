@@ -330,16 +330,19 @@ public class DayView extends ActionBarActivity{
                     View.OnClickListener del = new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            Toast.makeText(getBaseContext(),getString(R.string.remove_day_ok),Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent();
+                            intent.putExtra("id",mDayId);
+                            setResult(Session.DLETE_CODE,intent);
+                            finish();
+                            mDayDialog.dismiss();
                             new DayDeleteAsyncTask(new Handler(Looper.getMainLooper()){
                                 @Override
                                 public void handleMessage(Message msg) {
-                                    mDayDialog.dismiss();
                                     super.handleMessage(msg);
                                     if(msg.what==0) {
-                                        Toast.makeText(getBaseContext(),getString(R.string.remove_day_ok),Toast.LENGTH_LONG).show();
-                                        finish();
                                     }else {
-                                        Toast.makeText(getBaseContext(),getString(R.string.common_error),Toast.LENGTH_LONG).show();
+                                        Log.i("DAY ERROR","DELETE ERROR");
                                     }
                                 }
                             }).execute(mAccessToken,mDay.getId());
@@ -484,6 +487,9 @@ public class DayView extends ActionBarActivity{
                 mListView.setSelection(mPositions.indexOf(mDay.getPositionList().get(index))+1);
                 mListView.setScrollY(mListView.getScrollY()-Util.convertDpToPixel(56,this));
             }
+        }else if(requestCode==Session.REQUEST_PHOTO_CODE && resultCode==Session.DLETE_CODE) {
+            startActivity(getIntent());
+            finish();
         }
     }
 

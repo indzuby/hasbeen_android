@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 import com.localytics.android.Localytics;
 
 import co.hasBeen.R;
-import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.utils.HasBeenDate;
 
@@ -27,12 +27,11 @@ public class GalleryPhotoFragment extends Fragment {
     final static int REQUEST_CODE = 2000;
     Long mPhotoId;
     Photo mPhoto;
-    DatabaseHelper database;
+    DataBaseHelper database;
     View mActionBar;
     View mFilter;
     public View mDescription;
-    boolean toogle = true; // true : actionbar,description show , false : hide
-
+    boolean toogle = true;
     protected void init() throws Exception {
         ImageView photo = (ImageView) mView.findViewById(R.id.photo);
         Glide.with(this).load(mPhoto.getPhotoPath()).placeholder(R.drawable.placeholder1)
@@ -113,7 +112,7 @@ public class GalleryPhotoFragment extends Fragment {
         mView = inflater.inflate(R.layout.gallery_photo, container, false);
         mPhotoId = getArguments().getLong("id");
         try {
-            database = new DatabaseHelper(getActivity());
+            database = new DataBaseHelper(getActivity());
             mPhoto = database.selectPhoto(mPhotoId);
             init();
         } catch (Exception e) {

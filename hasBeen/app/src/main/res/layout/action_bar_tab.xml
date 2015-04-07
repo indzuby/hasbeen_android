@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-6dp"
-                android:text="@string/tab_newsfeed"
+                android:text="@string/tab_home"
                 android:textColor="@color/theme_white"
                 android:textSize="10dp"
                 android:textStyle="normal" />

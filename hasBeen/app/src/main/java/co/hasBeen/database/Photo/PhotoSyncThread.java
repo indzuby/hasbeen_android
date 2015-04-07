@@ -1,59 +1,75 @@
 package co.hasBeen.database.Photo;
 
-import android.os.AsyncTask;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
 import java.io.File;
 import java.util.List;
 
-import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.model.api.Photo;
+import co.hasBeen.utils.Session;
 
 /**
  * Created by 주현 on 2015-03-13.
  */
-public class DeleteAsyncTask extends AsyncTask<Object,Void,Void> {
+public class PhotoSyncThread extends Thread {
+
     Long dayid;
-    DatabaseHelper database;
+    DataBaseHelper database;
     List<Photo> mPhotoList;
     Handler handler;
-
-    public DeleteAsyncTask(Long dayid, DatabaseHelper database, Handler handler) {
+    boolean isCancel = false;
+    Context mContext;
+    public PhotoSyncThread(Long dayid, Context context, Handler handler) {
         this.dayid = dayid;
-        this.database = database;
+        mContext = context;
+        database = new DataBaseHelper(context);
         this.handler = handler;
     }
-
+    public void cancel(){
+        isCancel = true;
+    }
     @Override
-    protected Void doInBackground(Object... params) {
-        try {
-            mPhotoList = database.selectClearestPhotosByDayId(dayid);
-            for(Photo photo : mPhotoList) {
-                if(isDeleted(photo.getPhotoPath())) {
-                    if(isMainPhotoInDay(photo))
-                        setNewMainPhotoInDay(photo);
-                    if(isMainPhotoInPosition(photo))
-                        setNewMainPositionDay(photo);
-                    if(isClearestPhoto(photo))
-                        setNewClearestPhoto(photo);
-                    database.removePhoto(photo.getId());
+    public void run() {
+        boolean flag;
+        while(!isCancel) {
+            try {
+                flag = false;
+//                mPhotoList = database.selectPhotosByDayId(dayid);
+//                for (Photo photo : mPhotoList) {
+//                    if (isDeleted(photo.getPhotoPath())) {
+//                        if (isMainPhotoInDay(photo))
+//                            setNewMainPhotoInDay(photo);
+//                        if (isMainPhotoInPosition(photo))
+//                            setNewMainPositionDay(photo);
+//                        database.removePhoto(photo.getId());
+//                        flag = true;
+//                    }
+//                    if (isEmptyPosition(photo.getPositionId()))
+//                        database.removePosition(photo.getPositionId());
+//                }
+//                if (isEmptyDay(dayid))
+//                    database.removeDay(dayid);
+                boolean modfiy = Session.getBoolean(mContext, "modifyDay" + dayid, false);
+                if(modfiy) {
+                    Session.putBoolean(mContext, "modifyDay" + dayid, false);
+                    flag = true;
                 }
-                if(isEmptyPosition(photo.getPositionId()))
-                    database.removePosition(photo.getPositionId());
+                if(flag) {
+                    Message msg = handler.obtainMessage();
+                    msg.what = 0;
+                    handler.sendMessage(msg);
+                }
+                Thread.sleep(3000);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Message msg = handler.obtainMessage();
+                msg.what = -1;
+                handler.sendMessage(msg);
             }
-            if(isEmptyDay(dayid))
-                database.removeDay(dayid);
-            Message msg = handler.obtainMessage();
-            msg.what = 0 ;
-            handler.sendMessage(msg);
-        }catch (Exception e){
-            e.printStackTrace();
-            Message msg = handler.obtainMessage();
-            msg.what = -1 ;
-            handler.sendMessage(msg);
         }
-        return null;
     }
     protected boolean isDeleted(String photoPath) {
         File file = new File(photoPath);

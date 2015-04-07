@@ -1,4 +1,4 @@
-package co.hasBeen.gcm;
+package co.hasBeen.broadcast;
 
 import android.app.Activity;
 import android.content.Context;

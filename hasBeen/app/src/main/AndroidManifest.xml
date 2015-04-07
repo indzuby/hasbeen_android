@@ -28,8 +28,6 @@
         </activity>
         <activity android:name=".map.MapActivity"
             android:screenOrientation="portrait" android:theme="@style/hasBeen" />
-        <activity android:name="co.hasBeen.gallery.GalleryPhoto"
-            android:screenOrientation="portrait" android:theme="@style/NoActionBar" android:label="@string/app_name" />
         <activity android:name="co.hasBeen.gallery.GalleryPhotoView"
             android:screenOrientation="portrait" android:theme="@style/NoActionBar" android:label="@string/app_name" />
         <activity android:name="co.hasBeen.gallery.GalleryPhotoEdit"
@@ -85,7 +83,7 @@
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"></meta-data>
         <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="@string/map_id"/>
         <receiver
-            android:name=".gcm.GcmBroadcastReceiver"
+            android:name=".broadcast.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -93,7 +91,14 @@
                 <category android:name="co.hasBeen" />
             </intent-filter>
         </receiver>
-        <service android:name=".gcm.GcmIntentService" />
+        <receiver android:name=".broadcast.NewPhotoReceiver">
+            <intent-filter>
+                <action android:name="com.android.camera.NEW_PICTURE" />
+
+                <data android:mimeType="image/*"/>
+            </intent-filter>
+        </receiver>
+        <service android:name=".broadcast.GcmIntentService" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="f4eda658152616f3f3f8fdff1b4fe9ba8099ea35" />

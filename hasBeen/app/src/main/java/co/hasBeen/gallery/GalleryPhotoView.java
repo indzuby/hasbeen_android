@@ -8,7 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import java.util.List;
 
 import co.hasBeen.R;
-import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.model.api.Photo;
 
 /**
@@ -21,14 +21,14 @@ public class GalleryPhotoView extends ActionBarActivity {
     Long mPhotoId;
     ViewPager mViewPager;
     List<Photo> photoList;
-    DatabaseHelper database;
+    DataBaseHelper database;
     GalleryPhotoPagerAdapter mAdapter;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDayId = getIntent().getLongExtra("day_id",0);
         mPhotoId = getIntent().getLongExtra("photo_id", 0);
         mPositionId = getIntent().getLongExtra("position_id",0);
-        database = new DatabaseHelper(this);
+        database = new DataBaseHelper(this);
         try {
             photoList = database.selectPhotosByDayId(mDayId);
 //            photoList = database.selectPhotoByPositionId(mPositionId);

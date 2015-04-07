@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.hasBeen.R;
-import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.model.api.RecentSearch;
 
 /**
@@ -21,11 +21,11 @@ import co.hasBeen.model.api.RecentSearch;
 public class RecentAdapter extends BaseAdapter{
     Context mContext;
     List<RecentSearch> mRecentList;
-    DatabaseHelper database;
+    DataBaseHelper database;
     String mType;
     public RecentAdapter(Context mContext,String type) {
         this.mContext = mContext;
-        database = new DatabaseHelper(mContext);
+        database = new DataBaseHelper(mContext);
         mType = type;
         try {
             mRecentList = database.getRecentSearch(type);

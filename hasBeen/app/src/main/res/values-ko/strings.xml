@@ -47,7 +47,7 @@
     <string name="action_bar_done">확인</string>
     <string name="action_bar_select_day">여행일 선택</string>
     <string name="action_bar_reset_password">비밀번호 초기화</string>
-    <string name="tab_newsfeed">뉴스피드</string>
+    <string name="tab_home">홈</string>
     <string name="tab_search">검색</string>
     <string name="tab_gallery">갤러리</string>
     <string name="tab_alarm">알람</string>
@@ -61,7 +61,7 @@
     <string name="already_account">계정이 이미 있으신가요? </string>
     <string name="sign_up">가입하기</string>
     <string name="last_name">성</string>
-    <string name="user_name">사용자 이름</string>
+    <string name="username">사용자이름</string>
     <string name="gender">성별</string>
     <string name="forgot_email_text">Email을 입력하세요</string>
     <string name="reset_ok">새로운 비밀번호가 이메일로 전송되었습니다.</string>
@@ -180,11 +180,14 @@
     <string name="title_size_error">제목은 2글자이상 255글자 이하여야합니다.</string>
     <string name="session_gone">세션이 만료되었습니다 다시 로그인 해주세요.</string>
     <string name="dup_email">중복된 이메일입니다.</string>
-    <string name="day_deleted">삭제된 여행입니다.\n당겨서 새로고침 해주세요</string>
+    <string name="day_deleted">삭제된 여행입니다.</string>
     <string name="remove_photo_error">마지막 사진이네요. 장소를 삭제해주세요.</string>
     <string name="remove_place_error">마지막 장소네요. 여행을 삭제해주세요.</string>
     <string name="login_error">이메일,패스워드를 확인해주세요.</string>
     <string name="password_error">패스워드를 확인해주세요.</string>
+    <string name="username_dup_error">사용자 이름이 중복되었습니다.</string>
+    <string name="username_simbol_error">사용자 이름은 특수문자가 포함될 수 없습니다.</string>
+    <string name="username_error">사용자 이름은 한글자 이상의 문자가 포합되어야합니다.</string>
     <!--확인-->
     <string name="sign_up_ok">회원가입 완료, 로그인 해주세요.</string>
     <string name="report_ok">신고했습니다.</string>

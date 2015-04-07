@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import co.hasBeen.R;
-import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.database.ItemModule;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Position;
@@ -29,12 +29,12 @@ import co.hasBeen.utils.Util;
 public class GalleryDayAdapter extends BaseAdapter {
     Context mContext;
     List<Day> mGalleryList;
-    DatabaseHelper database;
+    DataBaseHelper database;
     ItemModule itemModule;
     public GalleryDayAdapter(Context context, List<Day> galleryList) throws Exception{
         mContext = context;
         mGalleryList = galleryList;
-        database = new DatabaseHelper(context);
+        database = new DataBaseHelper(context);
         itemModule = new ItemModule(context);
     }
     @Override
@@ -78,8 +78,9 @@ public class GalleryDayAdapter extends BaseAdapter {
                 });
                 return view;
             }
-            if(!database.hasPhotoId(day.getMainPhotoId()))
+            if(!database.hasPhotoId(day.getMainPhotoId())) {
                 day = database.selectDay(day.getId());
+            }
             day.setMainPhoto(database.selectPhoto(day.getMainPhotoId()));
             Glide.with(mContext).load(day.getMainPhoto().getPhotoPath()).placeholder(Util.getPlaceHolder(position)).into(mainPhoto);
             initPlaceName(placeName,day);

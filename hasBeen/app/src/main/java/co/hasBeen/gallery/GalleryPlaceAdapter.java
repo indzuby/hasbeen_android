@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.model.api.Category;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.model.api.Place;
@@ -31,13 +31,13 @@ public class GalleryPlaceAdapter extends BaseAdapter{
     List<Category> mCategories;
     Position mPosition;
     Context mContext;
-    DatabaseHelper database;
+    DataBaseHelper database;
     public int mIndex;
     public GalleryPlaceAdapter(Context context ,List<Category> categories,Position position) {
         mCategories = categories;
         mContext = context;
         mPosition = position;
-        database = new DatabaseHelper(mContext);
+        database = new DataBaseHelper(mContext);
     }
 
     @Override

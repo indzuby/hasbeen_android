@@ -31,7 +31,7 @@ import java.util.Arrays;
 import co.hasBeen.MainActivity;
 import co.hasBeen.R;
 import co.hasBeen.error.ErrorCheck;
-import co.hasBeen.gcm.GcmRegister;
+import co.hasBeen.broadcast.GcmRegister;
 import co.hasBeen.model.network.LoginTokenResponse;
 import io.fabric.sdk.android.Fabric;
 

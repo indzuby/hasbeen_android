@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import co.hasBeen.R;
-import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.model.api.Category;
 import co.hasBeen.model.api.Place;
 import co.hasBeen.model.api.Position;
@@ -31,14 +31,14 @@ public class DayPlaceAdapter extends BaseAdapter{
     List<Category> mCategories;
     Position mPosition;
     Context mContext;
-    DatabaseHelper database;
+    DataBaseHelper database;
     public int mIndex;
     String  mAccessToken;
     public DayPlaceAdapter(Context context, List<Category> categories, Position position) {
         mCategories = categories;
         mContext = context;
         mPosition = position;
-        database = new DatabaseHelper(mContext);
+        database = new DataBaseHelper(mContext);
         mAccessToken = Session.getString(mContext, "accessToken", null);
     }
 

@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.localytics.android.Localytics;
 
-import org.opencv.android.OpenCVLoader;
 
 import co.hasBeen.account.LoginActivity;
 import co.hasBeen.alarm.AlarmCountAsyncTask;
@@ -36,16 +35,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     int tabIcon[] = {R.drawable.newsfeed_pressed,R.drawable.search_pressed,R.drawable.gallery_pressed,R.drawable.alarm_pressed,R.drawable.profile_pressed};
     TextView mCount;
     AlarmCount mAlarmCount;
-    static {
-
-        if (!OpenCVLoader.initDebug()) {
-            // Handle initialization error
-        } else {
-            System.loadLibrary("opencv_java");
-            System.loadLibrary("opencv_info");
-            //System.loadLibrary("opencv_core");
-        }
-    }
     private String TAG = "MainActivity";
     TabPagerAdapter mPagerAdapter;
     ViewPager mViewPager;
@@ -181,12 +170,22 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     static final int RESULT = 2;
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         Log.d("MyAdapter", "onActivityResult");
         if(resultCode == RESULT_OK && requestCode == REQUEST_LOGOUT) {
             finish();
             Intent intent = new Intent(this,LoginActivity.class);
             startActivity(intent);
+        }
+        if(requestCode==Session.REQUEST_PHOTO_CODE && resultCode==Session.DLETE_CODE) {
+            Long id = data.getLongExtra("id",0);
+            ProfileFragment profile = (ProfileFragment)mPagerAdapter.getItem(4);
+            profile.mMapRoute.removeDayPin(id);
+        }else if(requestCode==Session.REQUEST_DAY_CODE && resultCode==Session.DLETE_CODE) {
+            Long id = data.getLongExtra("id",0);
+            ProfileFragment profile = (ProfileFragment)mPagerAdapter.getItem(4);
+            profile.mMapRoute.removePhotoPin(id);
         }
     }
 

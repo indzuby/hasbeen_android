@@ -207,7 +207,7 @@ public class SearchFragment extends HasBeenFragment implements View.OnClickListe
 
     protected void dayRendering() {
         try {
-            mMapRoute.addMarkerCluster(mDays);
+            mMapRoute.addMarkerClusterDay(mDays);
             if (isReload) {
                 mReload.clearAnimation();
                 mReload.setImageResource(R.drawable.refresh);

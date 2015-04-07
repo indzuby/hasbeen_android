@@ -27,10 +27,9 @@ import java.util.List;
 
 import co.hasBeen.R;
 import co.hasBeen.TutorialDialog;
-import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.database.ItemModule;
-import co.hasBeen.database.Photo.AddAsyncTask;
-import co.hasBeen.database.Photo.DeleteAsyncTask;
+import co.hasBeen.database.Photo.PhotoSyncThread;
 import co.hasBeen.day.DayDialog;
 import co.hasBeen.map.EnterMapLisnter;
 import co.hasBeen.model.api.Day;
@@ -51,7 +50,7 @@ public class GalleryDayView extends ActionBarActivity {
     View mLoading;
     Day mDay;
     boolean isLoading;
-    DatabaseHelper database;
+    DataBaseHelper database;
     TextView titleView;
     DayDialog mDayDialog;
     EditText mDayTitle;
@@ -67,34 +66,13 @@ public class GalleryDayView extends ActionBarActivity {
         mDayId = getIntent().getLongExtra("id", 0);
         init();
     }
-
-    AddAsyncTask addAsyncTask;
-    Handler deleteHandler = new Handler(Looper.getMainLooper()) {
+    Handler syncHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 0) {
                 try {
-                    mItemModule.photoCount = 0 ;
                     new LoadThread().start();
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                           int before = mItemModule.photoCount;
-                            while (before < totalCount) {
-                                if (before != mItemModule.photoCount) {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            dialog.setPhotoCount(mItemModule.photoCount);
-                                        }
-                                    });
-                                    before = mItemModule.photoCount;
-                                }
-                            }
-                            dialog.dismiss();
-                        }
-                    }).start();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -114,7 +92,7 @@ public class GalleryDayView extends ActionBarActivity {
                         }
                     });
                 }
-                mPositionList = mItemModule.getPhotosByDate(mDayId);
+                mPositionList = mItemModule.getPhotosByDayid(mDayId);
                 initPlace(mPositionList);
                 mDay.setPositionList(mPositionList);
                 View fullScreen = findViewById(R.id.fullScreen);
@@ -124,14 +102,21 @@ public class GalleryDayView extends ActionBarActivity {
                     public void run() {
                         mPositionAdapter = new GalleryPositionAdapter(GalleryDayView.this, mPositionList, mDay);
                         mListView.setAdapter(mPositionAdapter);
+
                         showTutorial();
                         try {
                             initHeader();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        if(dialog.isShowing())
+                            dialog.dismiss();
                     }
                 });
+                if(photoSyncThread ==null) {
+                    photoSyncThread = new PhotoSyncThread(mDayId, getBaseContext(), syncHandler);
+                    photoSyncThread.start();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -149,12 +134,32 @@ public class GalleryDayView extends ActionBarActivity {
             }
         }
     }
+    public void showProgress(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int before = mItemModule.photoCount;
+                while (before < totalCount) {
+                    if (before != mItemModule.photoCount) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                dialog.setPhotoCount(mItemModule.photoCount);
+                            }
+                        });
+                        before = mItemModule.photoCount;
+                    }
+                }
+                dialog.dismiss();
+            }
+        }).start();
+    }
+
+    PhotoSyncThread photoSyncThread;
     protected void init() {
         setContentView(R.layout.gallery_list);
-
-
         try {
-            database = new DatabaseHelper(getBaseContext());
+            database = new DataBaseHelper(getBaseContext());
             mDay = database.selectDay(mDayId);
             mItemModule = new ItemModule(this);
             mPositionList = new ArrayList<>();
@@ -165,8 +170,10 @@ public class GalleryDayView extends ActionBarActivity {
             initActionBar();
             totalCount = mDay.getPhotoCount();
             Log.i("totalCount",totalCount+"");
+            initProgress();
+            mItemModule.photoCount = 0 ;
+            new LoadThread().start();
             showProgress();
-            new DeleteAsyncTask(mDayId, database, deleteHandler).execute();
             ImageButton shareButton = (ImageButton) findViewById(R.id.shareButton);
             shareButton.setOnClickListener(new View.OnClickListener() {
 
@@ -177,9 +184,7 @@ public class GalleryDayView extends ActionBarActivity {
                     startActivityForResult(intent, GalleryShare.REQUEST_UPLOAD);
                 }
             });
-            mDay.setMainPlace(database.selectPlace(mDay.getMainPlaceId()));
-            ImageView map = (ImageView) findViewById(R.id.map);
-            Glide.with(this).load(Util.getMapUrl(mDay.getMainPlace().getLat(), mDay.getMainPlace().getLon())).centerCrop().placeholder(Util.getPlaceHolder(1)).into(map);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -240,7 +245,9 @@ public class GalleryDayView extends ActionBarActivity {
         mDescription.setText(mDay.getDescription());
         totalPhoto.setText(getString(R.string.total_photo_count, mDay.getPhotoCount()));
         findViewById(R.id.socialAction).setVisibility(View.GONE);
-
+        mDay.setMainPlace(database.selectPlace(mDay.getMainPlaceId()));
+        ImageView map = (ImageView) findViewById(R.id.map);
+        Glide.with(this).load(Util.getMapUrl(mDay.getMainPlace().getLat(), mDay.getMainPlace().getLon())).centerCrop().placeholder(Util.getPlaceHolder(1)).into(map);
         mDayTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -356,7 +363,6 @@ public class GalleryDayView extends ActionBarActivity {
                 e.printStackTrace();
             }
         }
-
     }
 
     @Override
@@ -369,10 +375,17 @@ public class GalleryDayView extends ActionBarActivity {
 
     LoadDialog dialog;
 
-    protected void showProgress() {
+    protected void initProgress() {
         dialog = new LoadDialog(this);
-        dialog.setCancelable(false);
         dialog.setMaxCount(totalCount);
         dialog.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(dialog!=null && dialog.isShowing()) dialog.dismiss();
+        if(photoSyncThread !=null)
+            photoSyncThread.cancel();
     }
 }

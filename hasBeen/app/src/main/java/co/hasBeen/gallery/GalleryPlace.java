@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.hasBeen.R;
-import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.geolocation.PlaceFourSquare;
 import co.hasBeen.map.MapRoute;
 import co.hasBeen.model.api.Category;
@@ -44,7 +44,7 @@ public class GalleryPlace extends ActionBarActivity implements OnMapReadyCallbac
     ListView mListView;
     Long mPositionId;
     Place mPlace;
-    DatabaseHelper database;
+    DataBaseHelper database;
 
     float mLat,mLon;
     ImageView mPlaceIcon;
@@ -75,7 +75,7 @@ public class GalleryPlace extends ActionBarActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
-        MapRoute mapRoute = new MapRoute(map,getBaseContext());
+        MapRoute mapRoute = new MapRoute(map,this);
         UiSettings setting = map.getUiSettings();
         setting.setZoomControlsEnabled(true);
         setting.setMyLocationButtonEnabled(false);
@@ -91,7 +91,7 @@ public class GalleryPlace extends ActionBarActivity implements OnMapReadyCallbac
         mPlaceName = (TextView) findViewById(R.id.name);
         mPlaceCategory = (TextView) findViewById(R.id.placeIcon);
         mPlaceIcon = (ImageView) findViewById(R.id.place_icon);
-        database = new DatabaseHelper(this);
+        database = new DataBaseHelper(this);
         mPosition = database.selectPosition(mPositionId);
         initActionBar();
         initMap();

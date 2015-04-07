@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
+import co.hasBeen.utils.Session;
+import co.hasBeen.utils.Util;
+
 /**
  * Created by 주현 on 2015-03-13.
  */
@@ -24,7 +27,7 @@ public class EnterDayListner implements View.OnClickListener {
             Intent intent = new Intent(mContext, DayView.class);
             intent.putExtra("id",id);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mContext.startActivity(intent);
+            Util.scanForActivity(mContext).startActivityForResult(intent, Session.REQUEST_DAY_CODE);
             flag = false;
         }
     }

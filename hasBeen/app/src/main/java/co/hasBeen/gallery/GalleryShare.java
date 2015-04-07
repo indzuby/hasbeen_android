@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import co.hasBeen.R;
-import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Position;
 import co.hasBeen.utils.HasBeenDate;
@@ -34,7 +34,7 @@ public class GalleryShare extends ActionBarActivity{
     List<Position> mPositions;
     Day mDay;
     Boolean[] isCheckedPosition;
-    DatabaseHelper database ;
+    DataBaseHelper database ;
     TextView mTextDate;
     TextView mTextArea;
     ListView mListView;
@@ -44,7 +44,7 @@ public class GalleryShare extends ActionBarActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gallery_share_photos);
         mDayId = getIntent().getLongExtra("id",0);
-        database = new DatabaseHelper(this);
+        database = new DataBaseHelper(this);
         mListView = (ListView) findViewById(R.id.listView);
         mTextDate = (TextView) findViewById(R.id.date);
         mTextArea = (TextView) findViewById(R.id.placeName);

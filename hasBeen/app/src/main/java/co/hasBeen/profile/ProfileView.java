@@ -277,7 +277,7 @@ public class ProfileView extends ActionBarActivity {
         TextView dayCount = (TextView) findViewById(R.id.dayCount);
         TextView photoCount = (TextView) findViewById(R.id.photoCount);
         TextView loveCount = (TextView) findViewById(R.id.loveCount);
-        if(mUser.getCoverPhoto()!=null) Glide.with(this).load(mUser.getCoverPhoto().getLargeUrl()).placeholder(R.drawable.placeholder1).into(coverImage);
+        if(mUser.getCoverPhoto()!=null) Glide.with(this).load(mUser.getCoverPhoto().getLargeUrl()).placeholder(Util.getPlaceHolder((int)Math.random()*10)).into(coverImage);
         else Glide.with(this).load(R.drawable.coverholder).into(coverImage);
         Glide.with(this).load(mUser.getImageUrl()).placeholder(R.mipmap.profile_placeholder).transform(new CircleTransform(this)).into(profileImage);
         profileName.setText(Util.parseName(mUser, this));
@@ -400,7 +400,7 @@ public class ProfileView extends ActionBarActivity {
         try {
             LatLng location = new LatLng(days.get(0).getMainPlace().getLat(), days.get(0).getMainPlace().getLon());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
-            mMapRoute.addMarkerCluster(days);
+            mMapRoute.addMarkerClusterDay(days);
         }catch (Exception e) {
             mMap.clear();
             e.printStackTrace();

@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import co.hasBeen.R;
-import co.hasBeen.database.DatabaseHelper;
+import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.RecentSearch;
 import co.hasBeen.utils.HasBeenFragment;
@@ -34,13 +34,13 @@ public class DayFragment extends HasBeenFragment {
     DayAdapter mDayAdapter;
     List<Day> mDayList;
     String mKeyword;
-    DatabaseHelper database;
+    DataBaseHelper database;
     boolean isComplete;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.search_day, container, false);
         mAccessToken = Session.getString(getActivity(), "accessToken", null);
-        database = new DatabaseHelper(getActivity());
+        database = new DataBaseHelper(getActivity());
         mListView = (ListView)mView.findViewById(R.id.listView);
         initDefault();
         return mView;

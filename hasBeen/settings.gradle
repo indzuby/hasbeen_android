@@ -1,2 +1,1 @@
-include ':app', ':opencv', ':pullToRefresh'
-project(':opencv').projectDir = new File('lib/opencv')
+include ':app', ':pullToRefresh'

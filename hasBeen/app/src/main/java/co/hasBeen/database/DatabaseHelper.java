@@ -26,7 +26,7 @@ import co.hasBeen.model.api.RecentSearch;
 /**
  * Created by zuby on 2015-01-13.
  */
-public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
+public class DataBaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "hasBeen";
     private static final int DATABASE_VERSION = 2;
 
@@ -36,7 +36,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<Position,Long> position;
     private Dao<RecentSearch,Long> recent;
     private Context mContext;
-    public DatabaseHelper(Context context) {
+    public DataBaseHelper(Context context) {
         super(context,DATABASE_NAME, null  , DATABASE_VERSION);
         mContext = context;
     }
@@ -339,6 +339,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         DeleteBuilder<RecentSearch,Long> deleteBuilder = getRecentDao().deleteBuilder();
         deleteBuilder.where().eq("id",id);
         deleteBuilder.delete();
+    }
+    public boolean hasPhotoByPhotoId(Long id ) throws SQLException{
+        Long count = getPhotoDao().queryBuilder().where().eq("photo_id",id).countOf();
+        if(count==0) return false;
+        return true;
+    }
+    public Photo getPhotoByPhotoId(Long id) throws SQLException{
+        return getPhotoDao().queryBuilder().where().eq("photo_id",id).queryForFirst();
     }
 }
 //select * from photo where id = clearest_id
