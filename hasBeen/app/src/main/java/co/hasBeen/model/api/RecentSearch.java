@@ -16,6 +16,16 @@ public class RecentSearch {
     Long createDate;
     @DatabaseField
     String type;
+    @DatabaseField(columnName = "place_id")
+    String placeId;
+
+    public String getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(String placeId) {
+        this.placeId = placeId;
+    }
 
     public Long getId() {
         return id;

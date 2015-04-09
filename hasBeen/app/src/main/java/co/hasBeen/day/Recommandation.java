@@ -24,7 +24,7 @@ public class Recommandation {
         View mRecommend = view;
         if (view == null){
             LayoutInflater mInflater = LayoutInflater.from(context);
-            mRecommend = mInflater.inflate(R.layout.interested_in, null);
+            mRecommend = mInflater.inflate(R.layout.recommnadtion, null);
         }
         TextView placeName = (TextView) mRecommend.findViewById(R.id.placeName);
         TextView profileName = (TextView) mRecommend.findViewById(R.id.name);

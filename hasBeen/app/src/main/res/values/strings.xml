@@ -170,7 +170,7 @@
     <string name="follow_status">%1$d follower · %2$d following</string>
     <string name="follower_count">%d follower</string>
     <string name="following_count">%d following</string>
-
+    <string name="map">Map</string>
     <!--에러-->
     <string name="internet_error">Please check your nextwork connection.</string>
     <string name="common_error">Error has occurred.</string>

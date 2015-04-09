@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ListView
+        android:id="@+id/listView"
+        android:background="@color/day_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/transparent"></ListView>
+
+    <LinearLayout
+        android:id="@+id/likeBar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="11dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:background="@drawable/filter"
+        android:visibility="gone"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:id="@+id/likeDayButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/theme_color"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/likeDayIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/like_day" />
+
+            <TextView
+                android:id="@+id/likeDayText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:text="Day"
+                android:textColor="@color/theme_white"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/likePhotoButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/theme_white"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/likePhotoIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/like_photo2" />
+
+            <TextView
+                android:id="@+id/likePhotoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:text="Photo"
+                android:textColor="@color/light_gray"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/scrollTop"
+        android:layout_margin="16dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="right"
+        android:visibility="gone"
+        android:src="@drawable/scroll_top" />
+    <ImageView
+        android:id="@+id/refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/loading" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/actionbar_shadow"
+        android:layout_height="wrap_content"/>
+</FrameLayout>

@@ -120,7 +120,6 @@ public class ProfileFragment extends HasBeenFragment {
                         dayRendering(mDays);
                         ((TextView) mView.findViewById(R.id.dayCount)).setText(mDays.size()+"");
                     }
-                    stopLoading();
                     break;
                 case -1:
                     break;
@@ -139,7 +138,6 @@ public class ProfileFragment extends HasBeenFragment {
                         photoRendering(mPhotos);
                         ((TextView) mView.findViewById(R.id.photoCount)).setText(mPhotos.size()+"");
                     }
-                    stopLoading();
                     break;
                 case -1:
                     break;
@@ -160,7 +158,6 @@ public class ProfileFragment extends HasBeenFragment {
                             mLikeDays.add(love.getDay());
                         dayRendering(mLikeDays);
                     }
-                    stopLoading();
                     break;
                 case -1:
                     break;
@@ -181,7 +178,6 @@ public class ProfileFragment extends HasBeenFragment {
                             mLikePhotos.add(love.getPhoto());
                         photoRendering(mLikePhotos);
                     }
-                    stopLoading();
                     break;
                 case -1:
                     break;
@@ -205,7 +201,7 @@ public class ProfileFragment extends HasBeenFragment {
             @Override
             public void onMapReady(GoogleMap map) {
                 mMap = map;
-                mMapRoute = new MapRoute(map, getActivity().getBaseContext());
+                mMapRoute = new MapRoute(map, getActivity());
                 UiSettings setting = map.getUiSettings();
                 setting.setZoomControlsEnabled(false);
                 setting.setRotateGesturesEnabled(false);
@@ -405,6 +401,7 @@ public class ProfileFragment extends HasBeenFragment {
             }
         }else
             mMap.clear();
+        stopLoading();
     }
 
     protected void photoRendering(final List<Photo> photos) {
@@ -418,6 +415,7 @@ public class ProfileFragment extends HasBeenFragment {
             }
         }else
             mMap.clear();
+        stopLoading();
     }
 
     @Override
@@ -428,14 +426,12 @@ public class ProfileFragment extends HasBeenFragment {
         Localytics.tagScreen("Profile Framgent");
         Localytics.upload();
     }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Long id = data.getLongExtra("id",0);
-        if(requestCode==Session.REQUEST_PHOTO_CODE && resultCode==Session.DLETE_CODE) {
-            mMapRoute.removeDayPin(id);
-        }else if(requestCode==Session.REQUEST_DAY_CODE && resultCode==Session.DLETE_CODE) {
-            mMapRoute.removePhotoPin(id);
-        }
+    public void removePhotoPin(Long id){
+        mapRendering(PHOTO);
+        mMapRoute.removePhotoPin();
+    }
+    public void removeDayPin(Long id){
+        mapRendering(DAY);
+        mMapRoute.removeDayPin();
     }
 }

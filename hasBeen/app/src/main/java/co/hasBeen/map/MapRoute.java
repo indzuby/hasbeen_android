@@ -178,23 +178,11 @@ public class MapRoute {
         LatLng location = new LatLng(photos.get(0).getLat(),photos.get(0).getLon());
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 3));
     }
-    public void removeDayPin(Long id){
-        for(DayPin dayPin : dayPins) {
-            if(dayPin.getDay().getId().equals(id)) {
-                dayCluster.removeItem(dayPin);
-                dayCluster.notifyAll();
-                break;
-            }
-        }
+    public void removeDayPin(){
+        clusterDayDialog.dismiss();
     }
-    public void removePhotoPin(Long id){
-        for(PhotoPin photoPin : photoPins) {
-            if(photoPin.getPhoto().getId().equals(id)) {
-                photoCluster.removeItem(photoPin);
-                photoCluster.notifyAll();
-                break;
-            }
-        }
+    public void removePhotoPin(){
+        clusterPhotoDialog.dismiss();
     }
     protected boolean needDialog(float zoom , int size){
         if(zoom>=14 || (zoom>=12 && size<=9) || (zoom>=8 && size<=4))

@@ -12,20 +12,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AbsListView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.LatLng;
 import com.localytics.android.Localytics;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import co.hasBeen.R;
+import co.hasBeen.map.MapRoute;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Loved;
 import co.hasBeen.model.api.Photo;
@@ -34,7 +40,6 @@ import co.hasBeen.profile.follow.FollowView;
 import co.hasBeen.profile.map.LikeAsyncTask;
 import co.hasBeen.profile.map.ProfileDayAsyncTask;
 import co.hasBeen.profile.map.ProfilePhotoAsyncTask;
-import co.hasBeen.search.DayAdapter;
 import co.hasBeen.utils.CircleTransform;
 import co.hasBeen.utils.Session;
 import co.hasBeen.utils.Util;
@@ -42,7 +47,7 @@ import co.hasBeen.utils.Util;
 /**
  * Created by 주현 on 2015-02-05.
  */
-public class ProfileView extends ActionBarActivity {
+public class ProfileView_ extends ActionBarActivity {
     final static int DAY = 1;
     final static int PHOTO = 2;
     final static int LOVE = 3;
@@ -57,15 +62,17 @@ public class ProfileView extends ActionBarActivity {
     List<Photo> mPhotos;
     List<Day> mLikeDays;
     List<Photo> mLikePhotos;
-    ListView listView;
+
+    SupportMapFragment mMapFragment;
+    MapRoute mMapRoute;
+    GoogleMap mMap;
     TextView titleView ;
-    View mHeaderView;
-    DayAdapter dayAdapter;
+
     Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (ProfileView.this != null) {
+            if (ProfileView_.this != null) {
                 switch (msg.what) {
                     case 0:
                         mUser = (User) msg.obj;
@@ -87,6 +94,7 @@ public class ProfileView extends ActionBarActivity {
                 case 0:
                     mDays = (List<Day>) msg.obj;
                     dayRendering(mDays);
+                    stopLoading();
                     break;
                 case -1:
                     break;
@@ -121,7 +129,7 @@ public class ProfileView extends ActionBarActivity {
                     for(Loved love : mLovedDays)
                         mLikeDays.add(love.getDay());
 
-                    dayRendering(mLikeDays);
+                        dayRendering(mLikeDays);
                     break;
                 case -1:
                     break;
@@ -140,6 +148,7 @@ public class ProfileView extends ActionBarActivity {
                     mLikePhotos = new ArrayList<>();
                     for(Loved love : mLovedPhotos)
                         mLikePhotos.add(love.getPhoto());
+
                     photoRendering(mLikePhotos);
                     break;
                 case -1:
@@ -181,60 +190,33 @@ public class ProfileView extends ActionBarActivity {
         mCustomActionBar.findViewById(R.id.moreVert).setVisibility(View.GONE);
         actionBar.setCustomView(mCustomActionBar);
         actionBar.setDisplayShowCustomEnabled(true);
+
     }
-    boolean hasLikeBar = true;
-    int beforeVisibleItem;
-    View scrollTop;
     protected void init(){
-        setContentView(R.layout.profile_list);
+        setContentView(R.layout.profile);
         initActionBar();
         mLoading = findViewById(R.id.refresh);
-        listView = (ListView)findViewById(R.id.listView);
-        mHeaderView =  LayoutInflater.from(this).inflate(R.layout.profile_header, null, false);
-        listView.addHeaderView(mHeaderView);
-        nowTabIndicator(R.id.dayButton);
-        hasLikeBar = true;
-        beforeVisibleItem = 0 ;
-        scrollTop = findViewById(R.id.scrollTop);
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
+        mMapFragment = ((SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map));
 
-            }
-
+        mMapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if(mHeaderView.findViewById(R.id.likeButton).isSelected()){
-                    if(hasLikeBar) {
-                        if(beforeVisibleItem<firstVisibleItem) {
-                            Animation ani = AnimationUtils.loadAnimation(getBaseContext(),R.anim.slide_down);
-                            findViewById(R.id.likeBar).startAnimation(ani);
-                            findViewById(R.id.likeBar).setVisibility(View.GONE);
-                            hasLikeBar = false;
-                        }
-                    }else {
-                        if(beforeVisibleItem>firstVisibleItem) {
-                            Animation ani = AnimationUtils.loadAnimation(getBaseContext(),R.anim.slide_up);
-                            findViewById(R.id.likeBar).startAnimation(ani);
-                            findViewById(R.id.likeBar).setVisibility(View.VISIBLE);
-                            hasLikeBar = true;
-                        }
-                    }
-                    beforeVisibleItem = firstVisibleItem;
-                }
-                if(firstVisibleItem==0)
-                    scrollTop.setVisibility(View.GONE);
-                else
-                    scrollTop.setVisibility(View.VISIBLE);
+            public void onMapReady(GoogleMap map) {
+                mMap = map;
+                mMapRoute = new MapRoute(map, ProfileView_.this);
+                UiSettings setting = map.getUiSettings();
+                nowTabIndicator(R.id.dayButton);
+                setting.setZoomControlsEnabled(false);
+                setting.setRotateGesturesEnabled(false);
+                setting.setMyLocationButtonEnabled(false);
             }
         });
-        scrollTop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listView.setSmoothScrollbarEnabled(true);
-                listView.setSelection(0);
-            }
-        });
+        RelativeLayout dayButton = (RelativeLayout) findViewById(R.id.dayButton);
+        RelativeLayout photoButton = (RelativeLayout) findViewById(R.id.photoButton);
+        RelativeLayout likeButton = (RelativeLayout) findViewById(R.id.likeButton);
+        dayButton.setOnClickListener(new ProfileBarOnClickListner());
+        photoButton.setOnClickListener(new ProfileBarOnClickListner());
+        likeButton.setOnClickListener(new ProfileBarOnClickListner());
     }
     class ProfileBarOnClickListner implements View.OnClickListener {
         @Override
@@ -262,39 +244,39 @@ public class ProfileView extends ActionBarActivity {
     }
     public void nowTabIndicator(int id){
         clearSelect();
-        mHeaderView.findViewById(id).setSelected(true);
+        findViewById(id).setSelected(true);
         if(id == R.id.dayButton)
-            ((TextView) mHeaderView.findViewById(R.id.dayCount)).setTextColor(getResources().getColor(R.color.light_black));
+            ((TextView) findViewById(R.id.dayCount)).setTextColor(getResources().getColor(R.color.light_black));
         else if(id == R.id.photoButton)
-            ((TextView) mHeaderView.findViewById(R.id.photoCount)).setTextColor(getResources().getColor(R.color.light_black));
+            ((TextView) findViewById(R.id.photoCount)).setTextColor(getResources().getColor(R.color.light_black));
         else {
-            hasLikeBar = true;
             findViewById(R.id.likeBar).setVisibility(View.VISIBLE);
-            ((TextView) mHeaderView.findViewById(R.id.loveCount)).setTextColor(getResources().getColor(R.color.light_black));
+            ((TextView) findViewById(R.id.loveCount)).setTextColor(getResources().getColor(R.color.light_black));
         }
     }
     protected void clearSelect() {
-        mHeaderView.findViewById(R.id.dayButton).setSelected(false);
-        mHeaderView.findViewById(R.id.photoButton).setSelected(false);
-        mHeaderView.findViewById(R.id.likeButton).setSelected(false);
+        findViewById(R.id.dayButton).setSelected(false);
+        findViewById(R.id.photoButton).setSelected(false);
+        findViewById(R.id.likeButton).setSelected(false);
         findViewById(R.id.likeBar).setVisibility(View.GONE);
-        ((TextView) mHeaderView.findViewById(R.id.loveCount)).setTextColor(getResources().getColor(R.color.light_gray));
-        ((TextView) mHeaderView.findViewById(R.id.photoCount)).setTextColor(getResources().getColor(R.color.light_gray));
-        ((TextView) mHeaderView.findViewById(R.id.dayCount)).setTextColor(getResources().getColor(R.color.light_gray));
+        ((TextView) findViewById(R.id.loveCount)).setTextColor(getResources().getColor(R.color.light_gray));
+        ((TextView) findViewById(R.id.photoCount)).setTextColor(getResources().getColor(R.color.light_gray));
+        ((TextView) findViewById(R.id.dayCount)).setTextColor(getResources().getColor(R.color.light_gray));
+        if(mMap!=null) mMap.clear();
     }
     protected String getProfileTitle(String name){
         return name+getString(R.string.possessive)+" "+getString(R.string.action_bar_profile_title);
     }
     protected void initProfile() {
-        ImageView coverImage = (ImageView) mHeaderView.findViewById(R.id.coverImage);
-        ImageView profileImage = (ImageView) mHeaderView.findViewById(R.id.profileImage);
-        TextView profileName = (TextView) mHeaderView.findViewById(R.id.name);
-        TextView followerStatus = (TextView) mHeaderView.findViewById(R.id.followerStatus);
-        TextView followingStatus = (TextView) mHeaderView.findViewById(R.id.followingStatus);
-        final ImageView followImage = (ImageView) mHeaderView.findViewById(R.id.setting_follow);
-        TextView dayCount = (TextView) mHeaderView.findViewById(R.id.dayCount);
-        TextView photoCount = (TextView) mHeaderView.findViewById(R.id.photoCount);
-        TextView loveCount = (TextView) mHeaderView.findViewById(R.id.loveCount);
+        ImageView coverImage = (ImageView) findViewById(R.id.coverImage);
+        ImageView profileImage = (ImageView) findViewById(R.id.profileImage);
+        TextView profileName = (TextView) findViewById(R.id.name);
+        TextView followerStatus = (TextView) findViewById(R.id.followerStatus);
+        TextView followingStatus = (TextView) findViewById(R.id.followingStatus);
+        final ImageView followImage = (ImageView) findViewById(R.id.setting_follow);
+        TextView dayCount = (TextView) findViewById(R.id.dayCount);
+        TextView photoCount = (TextView) findViewById(R.id.photoCount);
+        TextView loveCount = (TextView) findViewById(R.id.loveCount);
         if(mUser.getCoverPhoto()!=null) Glide.with(this).load(mUser.getCoverPhoto().getLargeUrl()).placeholder(Util.getPlaceHolder((int)Math.random()*10)).into(coverImage);
         else Glide.with(this).load(R.drawable.coverholder).into(coverImage);
         Glide.with(this).load(mUser.getImageUrl()).placeholder(R.mipmap.profile_placeholder).transform(new CircleTransform(this)).into(profileImage);
@@ -332,13 +314,6 @@ public class ProfileView extends ActionBarActivity {
         dayCount.setText(mUser.getDayCount() + "");
         photoCount.setText(mUser.getPhotoCount() + "");
         loveCount.setText(mUser.getLoveCount() + "");
-        View dayButton = mHeaderView.findViewById(R.id.dayButton);
-        View photoButton = mHeaderView.findViewById(R.id.photoButton);
-        View likeButton = mHeaderView.findViewById(R.id.likeButton);
-
-        dayButton.setOnClickListener(new ProfileBarOnClickListner());
-        photoButton.setOnClickListener(new ProfileBarOnClickListner());
-        likeButton.setOnClickListener(new ProfileBarOnClickListner());
     }
 
     protected void initLikeBar() {
@@ -392,13 +367,11 @@ public class ProfileView extends ActionBarActivity {
     }
 
     protected void mapRendering(int flag) {
-        if(mUser==null) return;
-        startLoading();
         if (flag == DAY) {
             if (mDays != null)
                 dayRendering(mDays);
             else
-                new ProfileDayAsyncTask(dayHandler).execute(mAccessToken, mUser.getId());
+                new ProfileDayAsyncTask(dayHandler).execute(mAccessToken,mUser.getId());
 
         } else if (flag == PHOTO) {
             if (mPhotos != null)
@@ -421,15 +394,28 @@ public class ProfileView extends ActionBarActivity {
             }
         }
     }
-    public void dayRendering(List<Day> days) {
-        DayAdapter dayAdapter = new DayAdapter(days,this);
-        listView.setAdapter(dayAdapter);
-        stopLoading();
+
+    protected void dayRendering( List<Day> days) {
+
+        try {
+            LatLng location = new LatLng(days.get(0).getMainPlace().getLat(), days.get(0).getMainPlace().getLon());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
+            mMapRoute.addMarkerClusterDay(days);
+        }catch (Exception e) {
+            mMap.clear();
+            e.printStackTrace();
+        }
     }
-    public void photoRendering(List<Photo> photos) {
-        PhotoAdapter photoAdapter = new PhotoAdapter(photos,this);
-        listView.setAdapter(photoAdapter);
-        stopLoading();
+
+    protected void photoRendering( List<Photo> photos) {
+        try {
+            LatLng location = new LatLng(photos.get(0).getLat(), photos.get(0).getLon());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 5));
+            mMapRoute.addMarkerClusterPhoto(photos);
+        }catch (Exception e) {
+            mMap.clear();
+            e.printStackTrace();
+        }
     }
     View mLoading;
     boolean isLoading;

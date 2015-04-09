@@ -88,6 +88,7 @@
     <string name="like_count">%d likes ·&#160;</string>
     <string name="comment_count">%d comments ·&#160;</string>
     <string name="share_count">%d shares</string>
+    <string name="map">Map</string>
     <!--여행기-->
     <string name="photo_count">%d photos</string>
     <string name="total_photo_count">total %d photos</string>

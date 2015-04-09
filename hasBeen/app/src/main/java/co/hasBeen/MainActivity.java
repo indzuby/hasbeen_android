@@ -181,11 +181,12 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         if(requestCode==Session.REQUEST_PHOTO_CODE && resultCode==Session.DLETE_CODE) {
             Long id = data.getLongExtra("id",0);
             ProfileFragment profile = (ProfileFragment)mPagerAdapter.getItem(4);
-            profile.mMapRoute.removeDayPin(id);
+            profile.removePhotoPin(id);
         }else if(requestCode==Session.REQUEST_DAY_CODE && resultCode==Session.DLETE_CODE) {
             Long id = data.getLongExtra("id",0);
             ProfileFragment profile = (ProfileFragment)mPagerAdapter.getItem(4);
-            profile.mMapRoute.removePhotoPin(id);
+            profile.removeDayPin(id);
+
         }
     }
 

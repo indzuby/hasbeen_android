@@ -87,6 +87,7 @@
     <string name="like_count">%d 좋아요 ·&#160;</string>
     <string name="comment_count">%d 댓글 ·&#160;</string>
     <string name="share_count">%d 공유</string>
+    <string name="map">지도</string>
     <!--여행기-->
     <string name="photo_count">%d 장</string>
     <string name="total_photo_count">총 %d 장</string>

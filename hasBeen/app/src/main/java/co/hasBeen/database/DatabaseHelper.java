@@ -28,7 +28,7 @@ import co.hasBeen.model.api.RecentSearch;
  */
 public class DataBaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "hasBeen";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private Dao<Photo,Long> photos;
     private Dao<Place,Long> place;
@@ -58,6 +58,9 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try{
             if(oldVersion<2) {
+                TableUtils.createTable(connectionSource, RecentSearch.class);
+            }else if(oldVersion<3) {
+                TableUtils.dropTable(connectionSource,RecentSearch.class,true);
                 TableUtils.createTable(connectionSource, RecentSearch.class);
             }
         }catch (Exception e) {

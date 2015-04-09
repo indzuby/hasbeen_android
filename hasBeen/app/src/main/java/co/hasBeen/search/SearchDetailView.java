@@ -3,6 +3,9 @@ package co.hasBeen.search;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -28,6 +31,7 @@ public class SearchDetailView extends ActionBarActivity implements View.OnClickL
     ViewPager mViewPager;
     public EditText mSearchText;
     SearchPagerAdapter pagerAdapter;
+    boolean isKeyPress=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,11 +60,33 @@ public class SearchDetailView extends ActionBarActivity implements View.OnClickL
         mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_DONE){
-                    String serach = mSearchText.getText().toString();
-                    doSearch(serach);
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    String search = mSearchText.getText().toString();
+                    doSearch(search);
                 }
                 return false;
+            }
+        });
+        mSearchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String search = mSearchText.getText().toString();
+                Log.i("key",s.toString());
+                if(search.length()>2 && !isKeyPress) {
+                    if(mViewPager.getCurrentItem()==TRIP) {
+                        doSearch(s.toString());
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
         View cancel = findViewById(R.id.cancel);
@@ -80,14 +106,21 @@ public class SearchDetailView extends ActionBarActivity implements View.OnClickL
             mPeopleButton.setSelected(true);
     }
     protected void doSearch(String keyword){
+        if(isKeyPress) mSearchText.setText(keyword);
         if(mViewPager.getCurrentItem()==TRIP) {
-            ((DayFragment)pagerAdapter.getItem(TRIP)).doSearch(keyword);
-
+            ((DayFragment)pagerAdapter.getItem(TRIP)).doRecommnad(keyword);
         }else {
             ((PeopleFragment)pagerAdapter.getItem(PEOPLE)).doSearch(keyword);
         }
+        isKeyPress = false;
     }
-
+    protected void doSearch(String keyword, String placeId) {
+        if(isKeyPress) mSearchText.setText(keyword);
+        if(mViewPager.getCurrentItem()==TRIP) {
+            ((DayFragment)pagerAdapter.getItem(TRIP)).doSearch(keyword,placeId);
+        }
+        isKeyPress = false;
+    }
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.tripButton) {

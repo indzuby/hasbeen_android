@@ -26,7 +26,7 @@ public class EnterDayListner implements View.OnClickListener {
             flag = true;
             Intent intent = new Intent(mContext, DayView.class);
             intent.putExtra("id",id);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Util.scanForActivity(mContext).startActivityForResult(intent, Session.REQUEST_DAY_CODE);
             flag = false;
         }

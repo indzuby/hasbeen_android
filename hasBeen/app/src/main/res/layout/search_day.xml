@@ -5,7 +5,6 @@
     android:background="@color/day_background"
     android:orientation="vertical">
     <ListView
-        android:paddingTop="15dp"
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

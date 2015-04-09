@@ -76,7 +76,7 @@ public class RecentAdapter extends BaseAdapter{
             keyword.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    keywordTouch(recent.getKeyword());
+                    keywordTouch(recent.getKeyword(),recent.getPlaceId());
                 }
             });
             cancel.setVisibility(View.VISIBLE);
@@ -84,10 +84,10 @@ public class RecentAdapter extends BaseAdapter{
         }
         return view;
     }
-    protected void keywordTouch(String keyword){
+    protected void keywordTouch(String keyword, String placeId){
         SearchDetailView searchView = ((SearchDetailView)mContext);
-        searchView.mSearchText.setText(keyword);
-        searchView.doSearch(keyword);
+        searchView.isKeyPress = true;
+        searchView.doSearch(keyword,placeId);
     }
     class removeRecent implements View.OnClickListener {
         int index;

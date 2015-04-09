@@ -227,6 +227,10 @@ public class Util {
         return (width - catgoryWith) / 3 - 2;
     }
 
+    public static int getProfilePhotoHeight(Context mContext) {
+        int width = mContext.getResources().getDisplayMetrics().widthPixels;
+        return width / 3 - 2;
+    }
     public static int getTripHeight(Context mContext) {
         int width = mContext.getResources().getDisplayMetrics().widthPixels;
         int catgoryWith = Util.convertDpToPixel(32, mContext);
