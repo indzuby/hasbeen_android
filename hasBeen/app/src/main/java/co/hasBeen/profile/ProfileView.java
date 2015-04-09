@@ -274,9 +274,11 @@ public class ProfileView extends ActionBarActivity {
         }
     }
     protected void clearSelect() {
+        hasLikeBar=false;
         mHeaderView.findViewById(R.id.dayButton).setSelected(false);
         mHeaderView.findViewById(R.id.photoButton).setSelected(false);
         mHeaderView.findViewById(R.id.likeButton).setSelected(false);
+        findViewById(R.id.likeBar).clearAnimation();
         findViewById(R.id.likeBar).setVisibility(View.GONE);
         ((TextView) mHeaderView.findViewById(R.id.loveCount)).setTextColor(getResources().getColor(R.color.light_gray));
         ((TextView) mHeaderView.findViewById(R.id.photoCount)).setTextColor(getResources().getColor(R.color.light_gray));
