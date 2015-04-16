@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.hasBeen.R;
-import co.hasBeen.TutorialDialog;
+import co.hasBeen.main.TutorialDialog;
 import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.database.ItemModule;
 import co.hasBeen.database.Photo.PhotoSyncThread;

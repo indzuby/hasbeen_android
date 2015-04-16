@@ -1,4 +1,4 @@
-package co.hasBeen;
+package co.hasBeen.main;
 
 import android.content.Context;
 import android.support.multidex.MultiDex;

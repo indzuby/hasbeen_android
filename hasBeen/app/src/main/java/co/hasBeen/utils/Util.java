@@ -15,9 +15,9 @@ import android.graphics.Path;
 import android.media.ExifInterface;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 
-import org.bson.BasicBSONObject;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -181,15 +181,14 @@ public class Util {
     }
 
     public static String getBinaryBitmap(Bitmap bitmap, boolean isMap) {
-        BasicBSONObject basicBSONObject = new BasicBSONObject();
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         if (!isMap)
             bitmap.compress(Bitmap.CompressFormat.JPEG, 80, bos);
         else
             bitmap.compress(Bitmap.CompressFormat.PNG, 80, bos);
         byte[] bitmapdata = bos.toByteArray();
-        basicBSONObject.put("binary", bitmapdata);
-        return basicBSONObject.toString();
+        String binary  =  Base64.encodeToString(bitmapdata,Base64.DEFAULT);
+        return binary;
     }
 
     public static String getLargeImage(Photo photo) throws Exception {
@@ -280,3 +279,4 @@ public class Util {
         return null;
     }
 }
+

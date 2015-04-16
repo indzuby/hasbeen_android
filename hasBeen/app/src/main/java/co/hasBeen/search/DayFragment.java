@@ -36,7 +36,7 @@ public class DayFragment extends HasBeenFragment {
     ListView mListView;
     DayAdapter mDayAdapter;
     List<Day> mDayList;
-    String mKeyword;
+    String mKeyword,mPlaceId;
     DataBaseHelper database;
     boolean isComplete;
     @Override
@@ -57,9 +57,11 @@ public class DayFragment extends HasBeenFragment {
     SearchDayAsyncTask dayAsyncTask;
     public void doSearch(String keyword,String placeId){
         mKeyword = keyword;
+        mPlaceId = placeId;
         mDayList = new ArrayList<>();
          mDayAdapter = new DayAdapter(mDayList,getActivity());
         mListView.setAdapter(mDayAdapter);
+        isComplete = false;
         dayAsyncTask = new SearchDayAsyncTask(dayHandler);
         dayAsyncTask.execute(mAccessToken, placeId);
         insertRecentKeyword(keyword,placeId);
@@ -100,6 +102,7 @@ public class DayFragment extends HasBeenFragment {
                     isComplete = true;
                 init();
             }else {
+                isComplete = true;
             }
             stopLoading();
         }
@@ -126,10 +129,11 @@ public class DayFragment extends HasBeenFragment {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if(visibleItemCount<totalItemCount && firstVisibleItem+visibleItemCount>=totalItemCount) {
                     if(!isLoading && !isComplete) {
+                        Log.i("Complete",isComplete+"");
                         startLoading();
                         Day day = mDayList.get(mDayList.size()-1);
                         dayAsyncTask = new SearchDayAsyncTask(dayHandler);
-                        dayAsyncTask.execute(mAccessToken, mKeyword, day.getPage());
+                        dayAsyncTask.execute(mAccessToken, mPlaceId, day.getPage());
                     }
                 }
             }

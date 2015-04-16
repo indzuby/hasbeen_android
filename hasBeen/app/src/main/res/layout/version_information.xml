@@ -50,7 +50,7 @@
         android:layout_width="0dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/white_bg_selector"
-        android:text="@string/update_verstion"
+        android:text="@string/update_version"
         android:textColor="@color/theme_color"
         android:textStyle="bold"
         android:textSize="13sp"

@@ -24,7 +24,7 @@ import com.localytics.android.Localytics;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.hasBeen.MainActivity;
+import co.hasBeen.main.MainActivity;
 import co.hasBeen.R;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Loved;

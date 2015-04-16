@@ -28,7 +28,7 @@ import com.localytics.android.Localytics;
 
 import java.util.Arrays;
 
-import co.hasBeen.MainActivity;
+import co.hasBeen.main.MainActivity;
 import co.hasBeen.R;
 import co.hasBeen.error.ErrorCheck;
 import co.hasBeen.broadcast.GcmRegister;

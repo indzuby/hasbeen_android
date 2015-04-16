@@ -1,4 +1,4 @@
-package co.hasBeen;
+package co.hasBeen.main;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.localytics.android.Localytics;
 
-
+import co.hasBeen.R;
 import co.hasBeen.account.LoginActivity;
 import co.hasBeen.alarm.AlarmCountAsyncTask;
 import co.hasBeen.alarm.AlarmFragment;
@@ -25,7 +25,9 @@ import co.hasBeen.gallery.GalleryFragment;
 import co.hasBeen.model.api.AlarmCount;
 import co.hasBeen.newsfeed.NewsFeedFragment;
 import co.hasBeen.profile.ProfileFragment;
+import co.hasBeen.setting.LatestAsyncTask;
 import co.hasBeen.utils.Session;
+import co.hasBeen.utils.Util;
 
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener{
@@ -73,6 +75,24 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         clearSelect();
         newsfeed.setSelected(true);
         getAlarmCount();
+            String mAccessToken = Session.getString(this,"accessToken","");
+            new LatestAsyncTask(new Handler(Looper.getMainLooper()) {
+                @Override
+                public void handleMessage(Message msg) {
+                    super.handleMessage(msg);
+                    if(msg.what==0) {
+                        try {
+                            String lVersion = (String)msg.obj;
+                            String cVersion = Util.getVersion(getBaseContext());
+                            if(lVersion.compareTo(cVersion)>0) {
+                                new VersionConfirm(MainActivity.this).show();
+                            }
+                        }catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }).execute(mAccessToken);
     }
     public void getAlarmCount(){
         String accessToken = Session.getString(this,"accessToken",null);

@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import co.hasBeen.MainActivity;
+import co.hasBeen.main.MainActivity;
 import co.hasBeen.R;
 import co.hasBeen.day.DayView;
 import co.hasBeen.model.api.Alarm;

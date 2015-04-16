@@ -15,14 +15,14 @@
 
     <application
         android:allowBackup="true"
-        android:name=".HasBeenApplicaiton"
+        android:name=".main.HasBeenApplicaiton"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="co.hasBeen.MainActivity"
+            android:name=".main.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/hasBeen">
         </activity>

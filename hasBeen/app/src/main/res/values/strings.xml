@@ -91,16 +91,18 @@
     <string name="photo_count">%d photos</string>
     <string name="total_photo_count">total %d photos</string>
     <string name="write_comment">leave your comment</string>
-    <string name="recommedation">Interesting trips for you.</string>
+    <string name="recommendation">Interesting trips for you.</string>
     <string name="remove_day">Delete day trip</string>
     <string name="edit_day">Edit day trip</string>
     <string name="change_place">Change place</string>
     <string name="merge_place">Merge to above place</string>
     <string name="remove_place">Remove this place</string>
     <string name="choose_trip">Choose your trip</string>
-    <string name="remove_cofirm">Are you sure you want delete this?</string>
+    <string name="remove_confirm">Are you sure you want delete this?</string>
+    <string name="version_confirm">Please, update Application.</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="update"> Yes, update</string>
     <string name="uploading">Uploading..\nYou will be noticed when it\'s done.</string>
     <string name="uploading_count">%1$d/%2$d photos</string>
     <string name="loading">Loading..</string>
@@ -133,7 +135,8 @@
     <!--검색-->
     <string name="day">Days</string>
     <string name="photo">Photos</string>
-    <string name="search_hint">Search trips and people.</string>
+    <string name="hint_trips">Search trips by city or country.</string>
+    <string name="hint_users">Search users by name or username.</string>
     <string name="trip">Trip</string>
     <string name="people">People</string>
     <!--갤러리-->
@@ -188,7 +191,7 @@
     <string name="remove_place_error">Last place on day trip, Please delete day trip.</string>
     <string name="password_error">Incorrect password.</string>
     <string name="username_dup_error">UserName is exist.</string>
-    <string name="username_simbol_error">A username must contain only numbers and letters.</string>
+    <string name="username_symbol_error">A username must contain only numbers and letters.</string>
     <string name="username_error">A username must have at least one letter.</string>
 
     <!--확인-->
@@ -210,7 +213,7 @@
     <string name="support_title">Support</string>
     <string name="account_title">Account</string>
     <string name="logout">Log out</string>
-    <string name="setting_account">Setting account</string>
+    <string name="setting_account">Account setting</string>
     <string name="find_facebook">Find facebook friends</string>
     <string name="about_hasbeen">About hasBeen</string>
     <string name="version">Version</string>
@@ -223,7 +226,7 @@
 
     <string name="current_version">Current Version v%s</string>
     <string name="latest_version">Latest Version v%s</string>
-    <string name="update_verstion">Update Application </string>
+    <string name="update_version">Update Application.</string>
     <string name="islatest_version">This app is latest.</string>
 
     <string name="male">Male</string>

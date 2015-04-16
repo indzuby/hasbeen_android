@@ -8,7 +8,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -19,38 +18,24 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.localytics.android.Localytics;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import co.hasBeen.MainActivity;
 import co.hasBeen.R;
-import co.hasBeen.account.LoginActivity;
 import co.hasBeen.map.MapRoute;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Loved;
 import co.hasBeen.model.api.Photo;
-import co.hasBeen.model.api.Position;
 import co.hasBeen.model.api.User;
 import co.hasBeen.profile.ProfileAsyncTask;
-import co.hasBeen.profile.ProfileFragment;
-import co.hasBeen.profile.follow.FollowView;
-import co.hasBeen.setting.ProfileImageListner;
-import co.hasBeen.setting.SettingView;
-import co.hasBeen.utils.CircleTransform;
-import co.hasBeen.utils.HasBeenDate;
-import co.hasBeen.utils.JsonConverter;
 import co.hasBeen.utils.Session;
 import co.hasBeen.utils.Util;
 

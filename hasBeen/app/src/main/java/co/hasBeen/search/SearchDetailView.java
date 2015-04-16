@@ -42,7 +42,6 @@ public class SearchDetailView extends ActionBarActivity implements View.OnClickL
     protected void init(){
         mTripButton =  findViewById(R.id.tripButton);
         mPeopleButton =  findViewById(R.id.peopleButton);
-        mTripButton.setSelected(true);
         mTripButton.setOnClickListener(this);
         mPeopleButton.setOnClickListener(this);
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -96,14 +95,20 @@ public class SearchDetailView extends ActionBarActivity implements View.OnClickL
                 mSearchText.setText("");
             }
         });
+        changeTab(TRIP);
     }
     protected void changeTab(int position){
         mTripButton.setSelected(false);
         mPeopleButton.setSelected(false);
-        if (position==0)
+        mSearchText.setText("");
+        if (position==0) {
             mTripButton.setSelected(true);
-        else if (position==1)
+            mSearchText.setHint(getString(R.string.hint_trips));
+        }
+        else if (position==1) {
             mPeopleButton.setSelected(true);
+            mSearchText.setHint(getString(R.string.hint_users));
+        }
     }
     protected void doSearch(String keyword){
         if(isKeyPress) mSearchText.setText(keyword);

@@ -1,4 +1,4 @@
-package co.hasBeen;
+package co.hasBeen.main;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;

@@ -92,6 +92,7 @@ public class PeopleFragment extends HasBeenFragment{
                     isComplete = true;
                 init();
             }else {
+                isComplete = true;
             }
             stopLoading();
         }

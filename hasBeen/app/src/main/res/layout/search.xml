@@ -86,7 +86,7 @@
                 android:singleLine="true"
                 android:layout_gravity="center_vertical"
                 android:background="@color/theme_white"
-                android:text="@string/search_hint"
+                android:text="@string/hint_trips"
                 />
             </LinearLayout>
         <ImageView

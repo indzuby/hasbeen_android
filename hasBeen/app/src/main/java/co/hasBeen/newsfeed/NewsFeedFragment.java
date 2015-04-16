@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import co.hasBeen.MainActivity;
+import co.hasBeen.main.MainActivity;
 import co.hasBeen.R;
 import co.hasBeen.account.FacebookApi;
 import co.hasBeen.account.LoginActivity;

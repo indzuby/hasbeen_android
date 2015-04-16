@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import co.hasBeen.R;
-import co.hasBeen.TutorialDialog;
+import co.hasBeen.main.TutorialDialog;
 import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.model.api.Day;
 import co.hasBeen.model.api.Photo;

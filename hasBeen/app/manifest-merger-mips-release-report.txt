@@ -92,7 +92,7 @@ MERGED from io.fabric.sdk.android:fabric:1.2.0:9:5
 		ADDED from AndroidManifest.xml:23:9
 	android:name
 		ADDED from AndroidManifest.xml:18:9
-activity#co.hasBeen.MainActivity
+activity#co.hasBeen.main.MainActivity
 ADDED from AndroidManifest.xml:25:9
 	android:theme
 		ADDED from AndroidManifest.xml:27:13

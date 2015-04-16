@@ -73,7 +73,7 @@
         android:background="@color/day_background"
         android:gravity="center"
         android:layout_gravity="center_horizontal"
-        android:text="@string/recommedation"
+        android:text="@string/recommendation"
         android:textColor="@color/light_gray"
         android:textStyle="bold"
         android:textSize="13sp"

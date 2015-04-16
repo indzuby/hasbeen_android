@@ -1,4 +1,4 @@
-package co.hasBeen;
+package co.hasBeen.main;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+
+import co.hasBeen.R;
 
 /**
  * Created by 주현 on 2015-03-23.

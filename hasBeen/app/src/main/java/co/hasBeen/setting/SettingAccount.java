@@ -191,7 +191,7 @@ public class SettingAccount extends ActionBarActivity implements View.OnClickLis
             char a = mUser.getUsername().charAt(i);
             if(Character.isLetter(a)) count++;
             if(!Character.isLetterOrDigit(a)) {
-                Toast.makeText(this,getString(R.string.username_simbol_error),Toast.LENGTH_LONG).show();
+                Toast.makeText(this,getString(R.string.username_symbol_error),Toast.LENGTH_LONG).show();
                 return true;
             }
         }

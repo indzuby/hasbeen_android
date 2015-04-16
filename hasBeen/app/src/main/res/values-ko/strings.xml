@@ -92,16 +92,17 @@
     <string name="photo_count">%d 장</string>
     <string name="total_photo_count">총 %d 장</string>
     <string name="write_comment">댓글 달기</string>
-    <string name="recommedation">흥미로운 여행을 추천해드립니다.</string>
+    <string name="recommendation">흥미로운 여행을 추천해드립니다.</string>
     <string name="remove_day">여행 삭제</string>
     <string name="edit_day">여행 수정</string>
     <string name="change_place">장소 바꾸기</string>
     <string name="merge_place">위 장소와 합치기</string>
     <string name="remove_place">장소 지우기</string>
     <string name="choose_trip">여행기 선택하기</string>
-    <string name="remove_cofirm"> 정말로 삭제할거에요??</string>
+    <string name="remove_confirm"> 정말로 삭제할거에요??</string>
     <string name="delete">삭제</string>
     <string name="cancel">취소</string>
+    <string name="update"> 업데이트</string>
     <string name="uploading">업로드 중..\n업로드가 완료되면 알려드릴게요.</string>
     <string name="uploading_count">%1$d/%2$d 장</string>
     <string name="loading">로딩 중..</string>
@@ -134,7 +135,8 @@
     <!--검색-->
     <string name="day">여행</string>
     <string name="photo">사진</string>
-    <string name="search_hint">여행,사람을 검색할 수 있습니다.</string>
+    <string name="hint_trips">도시 또는 나라로 여행을 검색하세요.</string>
+    <string name="hint_users">사용자를 검색하세요.</string>
     <string name="trip">여행</string>
     <string name="people">사람</string>
     <!--갤러리-->
@@ -187,7 +189,7 @@
     <string name="login_error">이메일,패스워드를 확인해주세요.</string>
     <string name="password_error">패스워드를 확인해주세요.</string>
     <string name="username_dup_error">사용자 이름이 중복되었습니다.</string>
-    <string name="username_simbol_error">사용자 이름은 특수문자가 포함될 수 없습니다.</string>
+    <string name="username_symbol_error">사용자 이름은 특수문자가 포함될 수 없습니다.</string>
     <string name="username_error">사용자 이름은 한글자 이상의 문자가 포합되어야합니다.</string>
     <!--확인-->
     <string name="sign_up_ok">회원가입 완료, 로그인 해주세요.</string>
@@ -219,7 +221,7 @@
 
     <string name="current_version">현재 버전 v%s</string>
     <string name="latest_version">최신 버전 v%s</string>
-    <string name="update_verstion">최신 버전으로 업데이트</string>
+    <string name="update_version">최신 버전으로 업데이트</string>
     <string name="islatest_version">최신 버전입니다.</string>
     <string name="about_text">hasBeen은 당신의 여행기와 순간들을\n 공유할 수 있는 훌륭한 여행 커뮤니티입니다.</string>
     <string name="follow_all">모두 팔로우</string>
@@ -234,4 +236,5 @@
     <string name="current_password">현재 비밀번호</string>
     <string name="new_password" >새로운 비밀번호</string>
     <string name="password_confirm" >비밀번호 확인</string>
+    <string name="version_confirm">최신버전으로 업데이트 해주세요.</string>
 </resources>
