@@ -27,7 +27,10 @@ public class ProfileDayAsyncTask extends HasBeenAsyncTask<Object,Void,List<Day>>
     @Override
     protected List<Day> doInBackground(Object... params) {
         try {
-            uri = Uri.parse(URL+params[1]+"/days");
+            if(params.length<=2)
+                uri = Uri.parse(URL+params[1]+"/allDays");
+            else
+                uri = Uri.parse(URL+params[1]+"/days?lastDayId="+params[2]);
             HttpGet get = new HttpGet(uri.toString());
             get.addHeader("User-Agent","Android");
             get.addHeader("Content-Type","application/json");

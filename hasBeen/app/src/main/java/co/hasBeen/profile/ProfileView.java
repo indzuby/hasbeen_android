@@ -20,6 +20,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.localytics.android.Localytics;
 
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ import co.hasBeen.model.api.User;
 import co.hasBeen.profile.follow.FollowView;
 import co.hasBeen.profile.map.LikeAsyncTask;
 import co.hasBeen.profile.map.ProfileDayAsyncTask;
+import co.hasBeen.profile.map.ProfileMap;
 import co.hasBeen.profile.map.ProfilePhotoAsyncTask;
 import co.hasBeen.search.DayAdapter;
 import co.hasBeen.utils.CircleTransform;
@@ -42,7 +45,7 @@ import co.hasBeen.utils.Util;
 /**
  * Created by 주현 on 2015-02-05.
  */
-public class ProfileView extends ActionBarActivity {
+public class ProfileView extends ActionBarActivity implements View.OnClickListener{
     final static int DAY = 1;
     final static int PHOTO = 2;
     final static int LOVE = 3;
@@ -61,6 +64,8 @@ public class ProfileView extends ActionBarActivity {
     TextView titleView ;
     View mHeaderView;
     DayAdapter dayAdapter;
+    PhotoAdapter photoAdapter;
+    PullToRefreshListView refreshListView;
     Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -85,7 +90,8 @@ public class ProfileView extends ActionBarActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mDays = (List<Day>) msg.obj;
+                    List<Day> list = (List<Day>) msg.obj;
+                    mDays.addAll(list);
                     dayRendering(mDays);
                     break;
                 case -1:
@@ -101,7 +107,8 @@ public class ProfileView extends ActionBarActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    mPhotos = (List<Photo>) msg.obj;
+                    List<Photo> list = (List<Photo>) msg.obj;
+                    mPhotos.addAll(list);
                     photoRendering(mPhotos);
                     break;
                 case -1:
@@ -117,7 +124,6 @@ public class ProfileView extends ActionBarActivity {
             switch (msg.what) {
                 case 0:
                     List<Loved> mLovedDays = (List<Loved>) msg.obj;
-                    mLikeDays = new ArrayList<>();
                     for(Loved love : mLovedDays)
                         mLikeDays.add(love.getDay());
 
@@ -137,7 +143,6 @@ public class ProfileView extends ActionBarActivity {
             switch (msg.what) {
                 case 0:
                     List<Loved> mLovedPhotos = (List<Loved>) msg.obj;
-                    mLikePhotos = new ArrayList<>();
                     for(Loved love : mLovedPhotos)
                         mLikePhotos.add(love.getPhoto());
                     photoRendering(mLikePhotos);
@@ -185,18 +190,33 @@ public class ProfileView extends ActionBarActivity {
     boolean hasLikeBar = true;
     int beforeVisibleItem;
     View scrollTop;
+    public void initList(){
+        mDays = new ArrayList<>();
+        mPhotos = new ArrayList<>();
+        mLikeDays = new ArrayList<>();
+        mLikePhotos = new ArrayList<>();
+    }
     protected void init(){
         setContentView(R.layout.profile_list);
+        initList();
         initActionBar();
         mLoading = findViewById(R.id.refresh);
-        listView = (ListView)findViewById(R.id.listView);
+        refreshListView = (PullToRefreshListView) findViewById(R.id.listView);
+        listView = refreshListView.getRefreshableView();
         mHeaderView =  LayoutInflater.from(this).inflate(R.layout.profile_header, null, false);
         listView.addHeaderView(mHeaderView);
         nowTabIndicator(R.id.dayButton);
         hasLikeBar = true;
         beforeVisibleItem = 0 ;
         scrollTop = findViewById(R.id.scrollTop);
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        scrollTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listView.setSmoothScrollbarEnabled(true);
+                listView.setSelection(0);
+            }
+        });
+        refreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
 
@@ -228,37 +248,81 @@ public class ProfileView extends ActionBarActivity {
                     scrollTop.setVisibility(View.VISIBLE);
             }
         });
-        scrollTop.setOnClickListener(new View.OnClickListener() {
+        refreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
-            public void onClick(View v) {
-                listView.setSmoothScrollbarEnabled(true);
-                listView.setSelection(0);
+            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+                finish();
+                startActivity(getIntent());
+            }
+        });
+        refreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
+            @Override
+            public void onLastItemVisible() {
+                if(!isLoading) {
+                    startLoading();
+                    mapScrollRendering(nowTab);
+                }
             }
         });
     }
-    class ProfileBarOnClickListner implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            nowTabIndicator(v.getId());
-            switch (v.getId()) {
-                case R.id.dayButton:
-                    nowTab = DAY;
-                    mapRendering(DAY);
-                    break;
-                case R.id.photoButton:
-                    nowTab = PHOTO;
-                    mapRendering(PHOTO);
-                    break;
-                case R.id.likeButton:
-                    nowTab = LOVE;
-                    subTab = DAY;
-                    initLikeBar();
-                    mapRendering(LOVE);
-                    break;
-                default:
-                    break;
-            }
+    @Override
+    public void onClick(View v) {
+        initList();
+        switch (v.getId()) {
+            case R.id.likeDayButton:
+                selectLikeDay();
+                subTab = DAY;
+                mapRendering(LOVE);
+                return;
+            case R.id.likePhotoButton:
+                selectLikePhoto();
+                subTab = PHOTO;
+                mapRendering(LOVE);
+                return;
+            case R.id.mapButton:
+                Intent intent = new Intent(this, ProfileMap.class);
+                intent.putExtra("userId",mUserId);
+                startActivity(intent);
+                return;
         }
+        nowTabIndicator(v.getId());
+        switch (v.getId()) {
+            case R.id.dayButton:
+                mapRendering(DAY);
+                nowTab = DAY;
+                break;
+            case R.id.photoButton:
+                mapRendering(PHOTO);
+                nowTab = PHOTO;
+                break;
+            case R.id.likeButton:
+                initLikeBar();
+                subTab = DAY;
+                mapRendering(LOVE);
+                nowTab = LOVE;
+                break;
+            default:
+                break;
+        }
+    }
+    public void selectLikeDay(){
+        findViewById(R.id.likeDayButton).setBackgroundColor(getResources().getColor(R.color.theme_color));
+        ((ImageView) findViewById(R.id.likeDayIcon)).setImageResource(R.drawable.like_day);
+        ((TextView) findViewById(R.id.likeDayText)).setTextColor(getResources().getColor(R.color.theme_white));
+        findViewById(R.id.likePhotoButton).setBackgroundColor(getResources().getColor(R.color.theme_white));
+        ((ImageView) findViewById(R.id.likePhotoIcon)).setImageResource(R.drawable.like_photo2);
+        ((TextView) findViewById(R.id.likePhotoText)).setTextColor(getResources().getColor(R.color.light_gray));
+        findViewById(R.id.likeBar).setBackground(getResources().getDrawable(R.drawable.filter));
+    }
+    public void selectLikePhoto(){
+        findViewById(R.id.likeDayButton).setBackgroundColor(getResources().getColor(R.color.theme_white));
+        ((ImageView) findViewById(R.id.likeDayIcon)).setImageResource(R.drawable.like_day2);
+        ((TextView) findViewById(R.id.likeDayText)).setTextColor(getResources().getColor(R.color.light_gray));
+        findViewById(R.id.likeBar).setBackground(getResources().getDrawable(R.drawable.filter2));
+        findViewById(R.id.likePhotoButton).setBackgroundColor(getResources().getColor(R.color.theme_color));
+        ((ImageView) findViewById(R.id.likePhotoIcon)).setImageResource(R.drawable.like_photo);
+        ((TextView) findViewById(R.id.likePhotoText)).setTextColor(getResources().getColor(R.color.theme_white));
+
     }
     public void nowTabIndicator(int id){
         clearSelect();
@@ -278,6 +342,7 @@ public class ProfileView extends ActionBarActivity {
         mHeaderView.findViewById(R.id.dayButton).setSelected(false);
         mHeaderView.findViewById(R.id.photoButton).setSelected(false);
         mHeaderView.findViewById(R.id.likeButton).setSelected(false);
+        mHeaderView.findViewById(R.id.mapButton).setSelected(false);
         findViewById(R.id.likeBar).clearAnimation();
         findViewById(R.id.likeBar).setVisibility(View.GONE);
         ((TextView) mHeaderView.findViewById(R.id.loveCount)).setTextColor(getResources().getColor(R.color.light_gray));
@@ -337,17 +402,19 @@ public class ProfileView extends ActionBarActivity {
         View dayButton = mHeaderView.findViewById(R.id.dayButton);
         View photoButton = mHeaderView.findViewById(R.id.photoButton);
         View likeButton = mHeaderView.findViewById(R.id.likeButton);
+        View mapButton = mHeaderView.findViewById(R.id.mapButton);
+        dayButton.setOnClickListener(this);
+        photoButton.setOnClickListener(this);
+        likeButton.setOnClickListener(this);
+        mapButton.setOnClickListener(this);
 
-        dayButton.setOnClickListener(new ProfileBarOnClickListner());
-        photoButton.setOnClickListener(new ProfileBarOnClickListner());
-        likeButton.setOnClickListener(new ProfileBarOnClickListner());
     }
 
     protected void initLikeBar() {
         LinearLayout dayButton = (LinearLayout) findViewById(R.id.likeDayButton);
         LinearLayout photoButton = (LinearLayout) findViewById(R.id.likePhotoButton);
-        dayButton.setOnClickListener(new LikeBarOnClickListner());
-        photoButton.setOnClickListener(new LikeBarOnClickListner());
+        dayButton.setOnClickListener(this);
+        photoButton.setOnClickListener(this);
         findViewById(R.id.likeDayButton).setBackgroundColor(getResources().getColor(R.color.theme_color));
         ((ImageView) findViewById(R.id.likeDayIcon)).setImageResource(R.drawable.like_day);
         ((TextView) findViewById(R.id.likeDayText)).setTextColor(getResources().getColor(R.color.theme_white));
@@ -357,80 +424,75 @@ public class ProfileView extends ActionBarActivity {
         ((ImageView) findViewById(R.id.likePhotoIcon)).setImageResource(R.drawable.like_photo2);
         ((TextView) findViewById(R.id.likePhotoText)).setTextColor(getResources().getColor(R.color.light_gray));
     }
-
-    class LikeBarOnClickListner implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.likeDayButton:
-                    findViewById(R.id.likeDayButton).setBackgroundColor(getResources().getColor(R.color.theme_color));
-                    ((ImageView) findViewById(R.id.likeDayIcon)).setImageResource(R.drawable.like_day);
-                    ((TextView) findViewById(R.id.likeDayText)).setTextColor(getResources().getColor(R.color.theme_white));
-
-                    findViewById(R.id.likePhotoButton).setBackgroundColor(getResources().getColor(R.color.theme_white));
-                    ((ImageView) findViewById(R.id.likePhotoIcon)).setImageResource(R.drawable.like_photo2);
-                    ((TextView) findViewById(R.id.likePhotoText)).setTextColor(getResources().getColor(R.color.light_gray));
-                    findViewById(R.id.likeBar).setBackground(getResources().getDrawable(R.drawable.filter));
-                    subTab = DAY;
-                    mapRendering(LOVE);
-                    break;
-                case R.id.likePhotoButton:
-
-                    findViewById(R.id.likeDayButton).setBackgroundColor(getResources().getColor(R.color.theme_white));
-                    ((ImageView) findViewById(R.id.likeDayIcon)).setImageResource(R.drawable.like_day2);
-                    ((TextView) findViewById(R.id.likeDayText)).setTextColor(getResources().getColor(R.color.light_gray));
-                    findViewById(R.id.likeBar).setBackground(getResources().getDrawable(R.drawable.filter2));
-
-                    findViewById(R.id.likePhotoButton).setBackgroundColor(getResources().getColor(R.color.theme_color));
-                    ((ImageView) findViewById(R.id.likePhotoIcon)).setImageResource(R.drawable.like_photo);
-                    ((TextView) findViewById(R.id.likePhotoText)).setTextColor(getResources().getColor(R.color.theme_white));
-
-                    subTab = PHOTO;
-                    mapRendering(LOVE);
-
-                    break;
-            }
-        }
-    }
-
     protected void mapRendering(int flag) {
         if(mUser==null) return;
         startLoading();
+        long lastId = 0L ;
         if (flag == DAY) {
-            if (mDays != null)
-                dayRendering(mDays);
-            else
-                new ProfileDayAsyncTask(dayHandler).execute(mAccessToken, mUser.getId());
+            dayAdapter = new DayAdapter(mDays,this);
+            refreshListView.setAdapter(dayAdapter);
+            new ProfileDayAsyncTask(dayHandler).execute(mAccessToken, mUser.getId(),lastId);
 
         } else if (flag == PHOTO) {
-            if (mPhotos != null)
-                photoRendering(mPhotos);
-            else
-                new ProfilePhotoAsyncTask(photoHandler).execute(mAccessToken,mUser.getId());
+            photoAdapter = new PhotoAdapter(mPhotos,this);
+            refreshListView.setAdapter(photoAdapter);
+            new ProfilePhotoAsyncTask(photoHandler).execute(mAccessToken,mUser.getId(),lastId);
 
         } else if (flag == LOVE) {
             if (subTab == DAY) {
-                if (mLikeDays != null)
-                    dayRendering(mLikeDays);
-                else
-                    new LikeAsyncTask(likeDayHandler).execute(mAccessToken,mUser.getId(),"Days");
+                dayAdapter = new DayAdapter(mLikeDays,this);
+                refreshListView.setAdapter(dayAdapter);
+                new LikeAsyncTask(likeDayHandler).execute(mAccessToken,mUser.getId(),"Days",lastId);
 
             } else {
-                if (mLikePhotos != null)
-                    photoRendering(mLikePhotos);
-                else
-                    new LikeAsyncTask(likePhotoHandler).execute(mAccessToken,mUser.getId(),"Photos");
+                photoAdapter = new PhotoAdapter(mLikePhotos,this);
+                refreshListView.setAdapter(photoAdapter);
+                new LikeAsyncTask(likePhotoHandler).execute(mAccessToken,mUser.getId(),"Photos",lastId);
+            }
+        }
+    }
+    protected void mapScrollRendering(int flag) {
+        if(mUser==null) return;
+        startLoading();
+        long lastId = 0L ;
+        if (flag == DAY) {
+            if (mDays.size()>0)
+                lastId = mDays.get(mDays.size()-1).getId();
+            new ProfileDayAsyncTask(dayHandler).execute(mAccessToken, mUser.getId(),lastId);
+
+        } else if (flag == PHOTO) {
+            if (mPhotos.size()>0)
+                lastId = mPhotos.get(mPhotos.size()-1).getId();
+            new ProfilePhotoAsyncTask(photoHandler).execute(mAccessToken,mUser.getId(),lastId);
+
+        } else if (flag == LOVE) {
+            if (subTab == DAY) {
+                if (mLikeDays.size()>0)
+                    lastId = mLikeDays.get(mLikeDays.size()-1).getId();
+                new LikeAsyncTask(likeDayHandler).execute(mAccessToken,mUser.getId(),"Days",lastId);
+            } else {
+                if (mLikePhotos.size()>0)
+                    lastId = mLikePhotos.get(mLikePhotos.size()-1).getId();
+                new LikeAsyncTask(likePhotoHandler).execute(mAccessToken,mUser.getId(),"Photos",lastId);
             }
         }
     }
     public void dayRendering(List<Day> days) {
-        DayAdapter dayAdapter = new DayAdapter(days,this);
-        listView.setAdapter(dayAdapter);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                dayAdapter.notifyDataSetChanged();
+            }
+        });
         stopLoading();
     }
     public void photoRendering(List<Photo> photos) {
-        PhotoAdapter photoAdapter = new PhotoAdapter(photos,this);
-        listView.setAdapter(photoAdapter);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                photoAdapter.notifyDataSetChanged();
+            }
+        });
         stopLoading();
     }
     View mLoading;

@@ -41,8 +41,8 @@ public class Recommandation {
         profileName.setText(Util.parseName(user, context));
         Glide.with(context).load(user.getImageUrl()).asBitmap().transform(new CircleTransform(context)).into(profileImage);
         date.setText(HasBeenDate.convertDate(day.getDate()));
-        Glide.with(context).load(day.getMainPhoto().getMediumUrl()).placeholder(Util.getPlaceHolder(day.getItineraryIndex())).into(mainPhoto);
-//        Glide.with(context).load(day.getPhotoList().get(0).getMediumUrl()).placeholder(Util.getPlaceHolder(day.getItineraryIndex())).into(mainPhoto);
+        if(day.getMainPhoto()!=null)Glide.with(context).load(day.getMainPhoto().getMediumUrl()).placeholder(Util.getPlaceHolder(day.getItineraryIndex())).into(mainPhoto);
+        else Glide.with(context).load(day.getPhotoList().get(0).getMediumUrl()).placeholder(Util.getPlaceHolder(day.getItineraryIndex())).into(mainPhoto);
         loveCount.setText(day.getLoveCount()+"");
         commentCount.setText(day.getCommentCount() + "");
         shareCount.setText(day.getShareCount() + "");

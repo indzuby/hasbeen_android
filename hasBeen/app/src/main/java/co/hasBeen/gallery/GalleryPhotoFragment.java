@@ -19,6 +19,7 @@ import co.hasBeen.R;
 import co.hasBeen.database.DataBaseHelper;
 import co.hasBeen.model.api.Photo;
 import co.hasBeen.utils.HasBeenDate;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by zuby on 2015-01-16.
@@ -34,6 +35,7 @@ public class GalleryPhotoFragment extends Fragment {
     boolean toogle = true;
     protected void init() throws Exception {
         ImageView photo = (ImageView) mView.findViewById(R.id.photo);
+        PhotoViewAttacher mAttacher;
         Glide.with(this).load(mPhoto.getPhotoPath()).placeholder(R.drawable.placeholder1)
                 .into(photo);
         initActionBar();

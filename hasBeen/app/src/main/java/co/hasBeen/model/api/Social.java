@@ -12,6 +12,15 @@ public class Social {
     int shareCount;
     int commentCount;
     Loved love;
+    Long loveId;
+
+    public Long getLoveId() {
+        return loveId;
+    }
+
+    public void setLoveId(Long loveId) {
+        this.loveId = loveId;
+    }
 
     public Loved getLove() {
         return love;

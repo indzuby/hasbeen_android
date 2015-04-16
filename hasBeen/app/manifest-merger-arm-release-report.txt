@@ -364,91 +364,111 @@ ADDED from AndroidManifest.xml:79:9
 		ADDED from AndroidManifest.xml:79:102
 	android:name
 		ADDED from AndroidManifest.xml:79:56
-activity#co.hasBeen.search.SearchDetailView
+activity#co.hasBeen.profile.map.ProfileMap
 ADDED from AndroidManifest.xml:80:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:80:19
-	android:windowSoftInputMode
-		ADDED from AndroidManifest.xml:80:142
+	android:label
+		ADDED from AndroidManifest.xml:80:136
 	android:theme
-		ADDED from AndroidManifest.xml:80:107
+		ADDED from AndroidManifest.xml:80:105
 	android:name
 		ADDED from AndroidManifest.xml:80:56
-meta-data#com.facebook.sdk.ApplicationId
+activity#co.hasBeen.search.SearchDetailView
 ADDED from AndroidManifest.xml:81:9
-	android:value
-		ADDED from AndroidManifest.xml:81:68
-	android:name
-		ADDED from AndroidManifest.xml:81:20
-activity#com.facebook.LoginActivity
-ADDED from AndroidManifest.xml:82:9
 	android:screenOrientation
-		ADDED from AndroidManifest.xml:82:19
+		ADDED from AndroidManifest.xml:81:19
 	android:windowSoftInputMode
-		ADDED from AndroidManifest.xml:82:98
+		ADDED from AndroidManifest.xml:81:142
+	android:theme
+		ADDED from AndroidManifest.xml:81:107
 	android:name
-		ADDED from AndroidManifest.xml:82:56
-meta-data#com.google.android.gms.version
+		ADDED from AndroidManifest.xml:81:56
+meta-data#com.facebook.sdk.ApplicationId
+ADDED from AndroidManifest.xml:82:9
+	android:value
+		ADDED from AndroidManifest.xml:82:68
+	android:name
+		ADDED from AndroidManifest.xml:82:20
+activity#com.facebook.LoginActivity
 ADDED from AndroidManifest.xml:83:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:83:19
+	android:windowSoftInputMode
+		ADDED from AndroidManifest.xml:83:98
+	android:name
+		ADDED from AndroidManifest.xml:83:56
+meta-data#com.google.android.gms.version
+ADDED from AndroidManifest.xml:84:9
 MERGED from com.google.android.gms:play-services:6.5.87:21:9
 	android:value
-		ADDED from AndroidManifest.xml:83:66
-	android:name
-		ADDED from AndroidManifest.xml:83:20
-meta-data#com.google.android.maps.v2.API_KEY
-ADDED from AndroidManifest.xml:84:9
-	android:value
-		ADDED from AndroidManifest.xml:84:70
+		ADDED from AndroidManifest.xml:84:66
 	android:name
 		ADDED from AndroidManifest.xml:84:20
-receiver#co.hasBeen.gcm.GcmBroadcastReceiver
+meta-data#com.google.android.maps.v2.API_KEY
 ADDED from AndroidManifest.xml:85:9
+	android:value
+		ADDED from AndroidManifest.xml:85:70
+	android:name
+		ADDED from AndroidManifest.xml:85:20
+receiver#co.hasBeen.broadcast.GcmBroadcastReceiver
+ADDED from AndroidManifest.xml:86:9
 	android:permission
+		ADDED from AndroidManifest.xml:88:13
+	android:name
 		ADDED from AndroidManifest.xml:87:13
-	android:name
-		ADDED from AndroidManifest.xml:86:13
 intent-filter#co.hasBeen+com.google.android.c2dm.intent.RECEIVE+com.google.android.c2dm.intent.REGISTRATION
-ADDED from AndroidManifest.xml:88:13
+ADDED from AndroidManifest.xml:89:13
 action#com.google.android.c2dm.intent.RECEIVE
-ADDED from AndroidManifest.xml:89:17
-	android:name
-		ADDED from AndroidManifest.xml:89:25
-action#com.google.android.c2dm.intent.REGISTRATION
 ADDED from AndroidManifest.xml:90:17
 	android:name
 		ADDED from AndroidManifest.xml:90:25
-category#co.hasBeen
+action#com.google.android.c2dm.intent.REGISTRATION
 ADDED from AndroidManifest.xml:91:17
 	android:name
-		ADDED from AndroidManifest.xml:91:27
-service#co.hasBeen.gcm.GcmIntentService
-ADDED from AndroidManifest.xml:94:9
+		ADDED from AndroidManifest.xml:91:25
+category#co.hasBeen
+ADDED from AndroidManifest.xml:92:17
 	android:name
-		ADDED from AndroidManifest.xml:94:18
-meta-data#io.fabric.ApiKey
+		ADDED from AndroidManifest.xml:92:27
+receiver#co.hasBeen.broadcast.NewPhotoReceiver
 ADDED from AndroidManifest.xml:95:9
-	android:value
-		ADDED from AndroidManifest.xml:97:13
 	android:name
-		ADDED from AndroidManifest.xml:96:13
+		ADDED from AndroidManifest.xml:95:19
+intent-filter#com.android.camera.NEW_PICTURE
+ADDED from AndroidManifest.xml:96:13
+action#com.android.camera.NEW_PICTURE
+ADDED from AndroidManifest.xml:97:17
+	android:name
+		ADDED from AndroidManifest.xml:97:25
+service#co.hasBeen.broadcast.GcmIntentService
+ADDED from AndroidManifest.xml:102:9
+	android:name
+		ADDED from AndroidManifest.xml:102:18
+meta-data#io.fabric.ApiKey
+ADDED from AndroidManifest.xml:103:9
+	android:value
+		ADDED from AndroidManifest.xml:105:13
+	android:name
+		ADDED from AndroidManifest.xml:104:13
 meta-data#LOCALYTICS_APP_KEY
-ADDED from AndroidManifest.xml:98:9
+ADDED from AndroidManifest.xml:106:9
 	android:value
-		ADDED from AndroidManifest.xml:98:54
+		ADDED from AndroidManifest.xml:106:54
 	android:name
-		ADDED from AndroidManifest.xml:98:20
+		ADDED from AndroidManifest.xml:106:20
 receiver#com.localytics.android.ReferralReceiver
-ADDED from AndroidManifest.xml:99:9
+ADDED from AndroidManifest.xml:107:9
 	android:exported
-		ADDED from AndroidManifest.xml:99:74
+		ADDED from AndroidManifest.xml:107:74
 	android:name
-		ADDED from AndroidManifest.xml:99:19
+		ADDED from AndroidManifest.xml:107:19
 intent-filter#com.android.vending.INSTALL_REFERRER
-ADDED from AndroidManifest.xml:100:13
+ADDED from AndroidManifest.xml:108:13
 action#com.android.vending.INSTALL_REFERRER
-ADDED from AndroidManifest.xml:101:17
+ADDED from AndroidManifest.xml:109:17
 	android:name
-		ADDED from AndroidManifest.xml:101:25
+		ADDED from AndroidManifest.xml:109:25
 uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
 MERGED from com.android.support:multidex:1.0.0:18:5

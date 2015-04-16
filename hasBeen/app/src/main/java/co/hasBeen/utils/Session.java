@@ -10,11 +10,11 @@ import android.preference.PreferenceManager;
 public class Session {
 //    public final static String DOMAIN = "http://testapi.hasbeen.co/";
 //    public final static String DOMAIN = "http://api.mango4.me/";
-//    public final static String DOMAIN = "http://192.168.0.5:8080/";
     public final static int DLETE_CODE = 4040;
     public final static int REQUEST_DAY_CODE = 3001;
     public final static int REQUEST_PHOTO_CODE = 3002;
     public final static String DOMAIN = "https://api.hasbeen.co/";
+//    public final static String DOMAIN = "http://192.168.0.5:8080/";
 
     public final static String WEP_DOMAIN = "http://www.hasbeen.co/#/";
     public static void putString(Context context,String key , String value){

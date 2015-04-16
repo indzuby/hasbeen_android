@@ -27,11 +27,14 @@ public class LikeAsyncTask extends HasBeenAsyncTask<Object,Void,List<Loved>> {
     @Override
     protected List<Loved> doInBackground(Object... params) {
         try {
-                uri = Uri.parse(URL+params[1]+"/loved"+params[2]);
-                HttpGet get = new HttpGet(uri.toString());
-                get.addHeader("User-Agent","Android");
-                get.addHeader("Content-Type","application/json");
-                get.addHeader("Authorization","Bearer " +params[0]);
+            if(params.length<=3)
+                uri = Uri.parse(URL+params[1]+"/allLoved"+params[2]);
+            else
+                uri = Uri.parse(URL+params[1]+"/loved"+params[2]+"?lastLoveId="+params[3]);
+            HttpGet get = new HttpGet(uri.toString());
+            get.addHeader("User-Agent","Android");
+            get.addHeader("Content-Type","application/json");
+            get.addHeader("Authorization","Bearer " +params[0]);
             response = client.execute(get);
             StatusLine statusLine = response.getStatusLine();
             if(statusLine.getStatusCode() == 200) {

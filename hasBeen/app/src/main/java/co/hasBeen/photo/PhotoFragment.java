@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +93,6 @@ public class PhotoFragment extends Fragment {
             }
         }
     };
-
     protected void intHeaderView() {
         View titleBox = mHeaderView.findViewById(R.id.dayTitleBox);
         ImageView profileImage = (ImageView) titleBox.findViewById(R.id.profileImage);
@@ -107,9 +105,9 @@ public class PhotoFragment extends Fragment {
         mCommentCount = (TextView) mHeaderView.findViewById(R.id.commentCount);
         mShareCount = (TextView) mHeaderView.findViewById(R.id.shareCount);
         Glide.with(this).load(mPhoto.getUser().getImageUrl()).asBitmap().transform(new CircleTransform(getActivity())).placeholder(R.drawable.placeholder1).into(profileImage);
-        Log.i(TAG, mPhoto.getPlaceName());
         profileName.setText(Util.parseName(mPhoto.getUser(), getActivity()));
-        placeName.setText(mPhoto.getPlaceName());
+        if(mPhoto.getPlaceName()!=null)
+            placeName.setText(mPhoto.getPlaceName());
         date.setText(HasBeenDate.convertDate(mPhoto.getTakenTime()));
         mDescription.setText(mPhoto.getDescription());
         mView.findViewById(R.id.title).setVisibility(View.GONE);
@@ -121,7 +119,6 @@ public class PhotoFragment extends Fragment {
         Glide.with(this).load(mPhoto.getLargeUrl()).placeholder(R.drawable.placeholder1).into(imageView);
         profileImage.setOnClickListener(new ProfileClickListner(getActivity(), mPhoto.getUser().getId()));
         profileName.setOnClickListener(new ProfileClickListner(getActivity(), mPhoto.getUser().getId()));
-
         LinearLayout loveButton = (LinearLayout) mHeaderView.findViewById(R.id.loveButton);
         ImageView love = (ImageView) mHeaderView.findViewById(R.id.love);
         TextView loveText = (TextView) loveButton.findViewById(R.id.loveText);

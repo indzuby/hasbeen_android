@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/listView"
         android:background="@color/day_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/transparent"></ListView>
+        android:divider="@color/transparent"></com.handmark.pulltorefresh.library.PullToRefreshListView>
 
     <LinearLayout
         android:id="@+id/likeBar"

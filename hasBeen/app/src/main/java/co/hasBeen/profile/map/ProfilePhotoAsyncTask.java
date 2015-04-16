@@ -28,7 +28,10 @@ public class ProfilePhotoAsyncTask extends HasBeenAsyncTask<Object,Void,List<Pho
     @Override
     protected List<Photo> doInBackground(Object... params) {
         try {
-            uri = Uri.parse(URL+params[1]+"/photos");
+            if(params.length<=2)
+                uri = Uri.parse(URL+params[1]+"/allPhotos");
+            else
+                uri = Uri.parse(URL+params[1]+"/photos?lastPhotoId="+params[2]);
             HttpGet get = new HttpGet(uri.toString());
             get.addHeader("User-Agent","Android");
             get.addHeader("Content-Type","application/json");
