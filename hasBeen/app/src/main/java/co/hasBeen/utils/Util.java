@@ -265,7 +265,7 @@ public class Util {
         return i.versionName;
     }
     public static String getTutorialVersion(){
-        return "1.12";
+        return "1.2";
     }
 
     public static Activity scanForActivity(Context cont) {

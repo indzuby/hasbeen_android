@@ -48,7 +48,7 @@
     <string name="action_bar_select_day">Select Day</string>
     <string name="action_bar_reset_password">Reset your password</string>
     <string name="tab_home">Home</string>
-    <string name="tab_search">Search</string>
+    <string name="tab_explorer">Explorer</string>
     <string name="tab_gallery">Gallery</string>
     <string name="tab_alarm">Alarm</string>
     <string name="tab_profile">Profile</string>

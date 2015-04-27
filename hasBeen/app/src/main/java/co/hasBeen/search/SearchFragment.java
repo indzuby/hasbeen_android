@@ -115,7 +115,7 @@ public class SearchFragment extends HasBeenFragment implements View.OnClickListe
         boolean tutorial = Session.getBoolean(getActivity(),"searchTutorial",false);
         if(!tutorial) {
             try {
-                TutorialDialog dialog = new TutorialDialog(getActivity(), getString(R.string.search_day_tutorial, Util.getVersion(getActivity())));
+                TutorialDialog dialog = new TutorialDialog(getActivity(), getString(R.string.search_day_tutorial,Util.getTutorialVersion()));
                 dialog.show();
                 Session.putBoolean(getActivity(), "searchTutorial", true);
             }catch (Exception e){

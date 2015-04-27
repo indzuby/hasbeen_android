@@ -171,7 +171,7 @@ public class DayView extends ActionBarActivity{
             previus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new EnterDayListner(mDay.getPrevDayId(),getBaseContext()).onClick(v);
+                    new EnterDayListner(mDay.getPrevDayId(),DayView.this).onClick(v);
                     finish();
                 }
             });
@@ -181,7 +181,7 @@ public class DayView extends ActionBarActivity{
             next.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new EnterDayListner(mDay.getNextDayId(),getBaseContext()).onClick(v);
+                    new EnterDayListner(mDay.getNextDayId(),DayView.this).onClick(v);
                     finish();
                 }
             });
@@ -361,7 +361,7 @@ public class DayView extends ActionBarActivity{
                 }else if(mDay!=null){
                     mDayDialog = new DayDialog(DayView.this,true);
                     View.OnClickListener report = new ReportListner("days",mDay.getId(),getBaseContext(),mDayDialog);
-                    View.OnClickListener share = new ShareListner(getBaseContext(), "days",mDay,mShareCount);
+                    View.OnClickListener share = new ShareListner(DayView.this, "days",mDay,mShareCount);
                     mDayDialog.setListner(report,share);
                     mDayDialog.show();
                 }

@@ -126,7 +126,7 @@ public class GalleryDayView extends ActionBarActivity {
         boolean tutorial = Session.getBoolean(this, "galleryTutorial", false);
         if (!tutorial) {
             try {
-                TutorialDialog dialog = new TutorialDialog(this, getString(R.string.gallery_tutorial, Util.getVersion(this)));
+                TutorialDialog dialog = new TutorialDialog(this, getString(R.string.gallery_tutorial, Util.getTutorialVersion()));
                 dialog.show();
                 Session.putBoolean(this, "galleryTutorial", true);
             } catch (Exception e) {

@@ -66,9 +66,10 @@ public class DayFragment extends HasBeenFragment {
         dayAsyncTask.execute(mAccessToken, placeId);
         insertRecentKeyword(keyword,placeId);
     }
+    PlaceAutocompleteAsyncTask autoCompleteAsync;
     public void doRecommnad(String keyword){
         startLoading();
-        new PlaceAutocompleteAsyncTask(new Handler(Looper.getMainLooper()) {
+        autoCompleteAsync = new PlaceAutocompleteAsyncTask(new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
@@ -82,7 +83,8 @@ public class DayFragment extends HasBeenFragment {
                     mListView.setAdapter(adapter);
                 }
             }
-        },getActivity()).execute(keyword);
+        },getActivity());
+        autoCompleteAsync.execute(keyword);
     }
     Handler dayHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -152,6 +154,8 @@ public class DayFragment extends HasBeenFragment {
     public void onDestroy() {
         if(dayAsyncTask !=null)
             dayAsyncTask.cancel(true);
+        if(autoCompleteAsync !=null)
+            autoCompleteAsync.cancel(true);
         System.gc();
         super.onDestroy();
     }

@@ -234,7 +234,7 @@ public class PhotoActivity extends ActionBarActivity {
             } else {
                 mPhotoDialog = new PhotoDialog(PhotoActivity.this, true);
                 View.OnClickListener report = new ReportListner("photos", mPhoto.getId(), getBaseContext(), mPhotoDialog);
-                View.OnClickListener share = new ShareListner(getBaseContext(), "photos", mPhoto, mShareCount);
+                View.OnClickListener share = new ShareListner(PhotoActivity.this, "photos", mPhoto, pagerAdapter.getItem(mViewPager.getCurrentItem()).mShareCount);
                 mPhotoDialog.setLisnter(report,share);
                 mPhotoDialog.show();
             }

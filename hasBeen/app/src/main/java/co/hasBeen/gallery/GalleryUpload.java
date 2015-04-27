@@ -69,12 +69,10 @@ public class GalleryUpload extends ActionBarActivity {
 
     protected void init() throws Exception {
         setContentView(R.layout.gallery_upload);
-
-
         boolean tutorial = Session.getBoolean(this,"uploadTutorial",false);
         if(!tutorial) {
             try {
-                TutorialDialog dialog = new TutorialDialog(this, getString(R.string.upload_tutorial, Util.getVersion(this)));
+                TutorialDialog dialog = new TutorialDialog(this, getString(R.string.upload_tutorial, Util.getTutorialVersion()));
                 dialog.show();
                 Session.putBoolean(this, "uploadTutorial", true);
             }catch (Exception e){
